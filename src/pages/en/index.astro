@@ -1,15 +1,15 @@
 ---
-import { SITE } from '../config';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { t } from '../i18n/ui';
+import { SITE } from '../../config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/ui';
 
-const locale = 'fr' as const;
+const locale = 'en' as const;
 ---
 
 <BaseLayout
   locale={locale}
   title={SITE.name}
-  description="Site personnel de Guillaume Ojardias — développeur backend Python et chef de projet débutant. Notes, projets, et blog en français et en anglais."
+  description="Personal site of Guillaume Ojardias — Python backend developer and beginner project manager. Notes, projects, and a blog in French and English."
 >
   <section class="space-y-6">
     <p class="text-sm uppercase tracking-wide text-zinc-500">
@@ -20,19 +20,19 @@ const locale = 'fr' as const;
     </h1>
     <div class="space-y-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
       <p>
-        Je développe des backends en Python depuis plusieurs années — APIs, traitement de données,
-        observabilité — et je me forme à la gestion de projet pour pouvoir coordonner des équipes
-        autour de problèmes que je sais résoudre techniquement.
+        I have been building Python backends for several years — APIs, data pipelines,
+        observability — and I am training in project management so I can coordinate teams
+        around problems I already know how to solve technically.
       </p>
       <p>
-        Sur ce site, tu trouveras un blog où je note ce que j'apprends, en particulier sur la
-        transition dev → chef de projet, et quelques retours d'expérience plus techniques.
+        On this site you will find a blog where I write down what I am learning, especially
+        about the dev → project manager transition, and a few more technical retrospectives.
       </p>
     </div>
 
     <div class="flex flex-wrap gap-3 pt-2">
       <a
-        href="/blog/"
+        href="/en/blog/"
         class="inline-flex items-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
         {t(locale, 'home.cta.blog')}

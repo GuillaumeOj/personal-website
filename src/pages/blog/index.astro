@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import PostList from '../../components/PostList.astro';
+import { SITE } from '../../config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../i18n/ui';
+
+const locale = 'fr' as const;
+const posts = (await getCollection('blog'))
+  .filter((post) => post.data.lang === locale && !post.data.draft)
+  .sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${t(locale, 'blog.title')} — ${SITE.name}`}
+  description={t(locale, 'blog.subtitle')}
+>
+  <section class="space-y-3">
+    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+      {t(locale, 'blog.title')}
+    </h1>
+    <p class="text-zinc-600 dark:text-zinc-400">
+      {t(locale, 'blog.subtitle')}
+    </p>
+  </section>
+
+  <div class="mt-10">
+    <PostList posts={posts} locale={locale} />
+  </div>
+</BaseLayout>

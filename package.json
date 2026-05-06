@@ -2,6 +2,7 @@
   "name": "guillaume-ojardias",
   "type": "module",
   "version": "0.0.1",
+  "private": true,
   "engines": {
     "node": ">=22.12.0"
   },
@@ -9,9 +10,29 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
+    "typecheck": "astro check",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "astro": "^6.2.2"
+    "@astrojs/rss": "4.0.18",
+    "@astrojs/sitemap": "3.7.2",
+    "@fontsource/inter": "5.2.8",
+    "@fontsource/jetbrains-mono": "5.2.8",
+    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/vite": "4.2.4",
+    "astro": "6.2.2",
+    "tailwindcss": "4.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "@biomejs/biome": "2.4.14",
+    "@playwright/test": "1.59.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
   }
 }

@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../config';
+import { formatDate, localizedPath, t } from '../i18n/ui';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  post: CollectionEntry<'blog'>;
+}
+
+const { locale, post } = Astro.props;
+---
+
+<BaseLayout
+  locale={locale}
+  title={post.data.title}
+  description={post.data.description}
+>
+  <article class="space-y-6">
+    <header class="space-y-2">
+      <p class="text-sm uppercase tracking-wide text-zinc-500">
+        <span>{t(locale, 'blog.published')}</span>{' '}
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate, locale)}
+        </time>
+      </p>
+      <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
+        {post.data.title}
+      </h1>
+      <p class="text-lg text-zinc-600 dark:text-zinc-400">
+        {post.data.description}
+      </p>
+    </header>
+
+    <div
+      class="prose prose-zinc max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4"
+    >
+      <slot />
+    </div>
+
+    <footer class="border-t border-zinc-200 pt-6 dark:border-zinc-800">
+      <a
+        href={localizedPath(locale, '/blog')}
+        class="text-sm text-zinc-600 dark:text-zinc-400"
+      >
+        {t(locale, 'blog.backToList')}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

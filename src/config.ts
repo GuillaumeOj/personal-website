@@ -1,7 +1,7 @@
 export const SITE = {
   name: 'Guillaume Ojardias',
   url: 'https://guillaume-ojardias.vercel.app',
-  defaultLocale: 'fr',
+  defaultLocale: 'fr' as const,
   locales: ['fr', 'en'] as const,
   social: {
     github: 'https://github.com/GuillaumeOj',

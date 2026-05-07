@@ -1,7 +1,9 @@
+import type { CollectionEntry } from 'astro:content';
 import bookmarkPlugin from '@notion-render/bookmark-plugin';
 import { NotionRenderer } from '@notion-render/client';
 import hljsPlugin from '@notion-render/hljs-plugin';
 import { Client } from '@notionhq/client';
+import { getMockHtml } from './mock-posts';
 
 const notion = new Client({ auth: import.meta.env.NOTION_TOKEN });
 
@@ -23,6 +25,14 @@ export async function renderNotionPage(pageId: string): Promise<string> {
   const blocks = await fetchAllBlocks(pageId);
   // biome-ignore lint/suspicious/noExplicitAny: NotionRenderer.render expects a loose Block union
   return renderer.render(...(blocks as any[]));
+}
+
+export async function renderPostBody(
+  post: CollectionEntry<'blog'>,
+): Promise<string> {
+  const mockHtml = getMockHtml(post);
+  if (mockHtml !== undefined) return mockHtml;
+  return renderNotionPage(post.id);
 }
 
 async function fetchAllBlocks(blockId: string) {

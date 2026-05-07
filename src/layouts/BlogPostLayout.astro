@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { locale, post } = Astro.props;
+const { author } = post.data;
 ---
 
 <BaseLayout
@@ -34,6 +35,21 @@ const { locale, post } = Astro.props;
           {formatDate(post.data.pubDate, locale)}
         </time>
       </p>
+      {
+        author && (
+          <p class="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+            {author.avatarUrl && (
+              <img
+                src={author.avatarUrl}
+                alt=""
+                loading="lazy"
+                class="h-6 w-6 rounded-full object-cover"
+              />
+            )}
+            <span>{author.name}</span>
+          </p>
+        )
+      }
       <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
         {post.data.title}
       </h1>

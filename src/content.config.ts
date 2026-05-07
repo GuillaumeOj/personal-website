@@ -1,8 +1,26 @@
 import { defineCollection } from 'astro:content';
 import { notionLoader, notionPageSchema } from '@astro-notion/loader';
-import { transformedPropertySchema } from '@astro-notion/loader/schemas';
+import {
+  propertySchema,
+  transformedPropertySchema,
+} from '@astro-notion/loader/schemas';
 import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
+
+type RawPeopleProperty = z.infer<typeof propertySchema.people>;
+type RawNotionUser = {
+  id: string;
+  name?: string | null;
+  avatar_url?: string | null;
+};
+
+const authorSchema = propertySchema.people.transform(
+  (property: RawPeopleProperty) => {
+    const first = property.people[0] as RawNotionUser | undefined;
+    if (!first?.name) return undefined;
+    return { name: first.name, avatarUrl: first.avatar_url ?? null };
+  },
+);
 
 function buildBlogLoader(): Loader {
   const auth = import.meta.env.NOTION_TOKEN;
@@ -33,6 +51,7 @@ const pageSchema = notionPageSchema({
     translationKey: transformedPropertySchema.rich_text,
     tags: transformedPropertySchema.multi_select.optional(),
     draft: transformedPropertySchema.checkbox,
+    author: authorSchema.optional(),
   }),
 });
 
@@ -72,6 +91,7 @@ const blog = defineCollection({
       tags: page.properties.tags ?? [],
       draft: page.properties.draft,
       cover,
+      author: page.properties.author,
     };
   }),
 });

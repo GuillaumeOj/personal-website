@@ -15,7 +15,7 @@ interface Props {
 const { locale, title, description, ogImage } = Astro.props;
 const fullTitle = title === SITE.name ? title : `${title} — ${SITE.name}`;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
-const ogImageUrl = new URL(ogImage ?? '/og-image.png', SITE.url).toString();
+const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 ---
 
 <!doctype html>
@@ -23,7 +23,9 @@ const ogImageUrl = new URL(ogImage ?? '/og-image.png', SITE.url).toString();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="any" href="/memoji.png" />
+    <link rel="apple-touch-icon" href="/memoji.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="alternate"

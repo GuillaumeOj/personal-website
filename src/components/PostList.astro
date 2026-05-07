@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '../config';
-import { articlePath, formatDate, t } from '../i18n/ui';
+import { t } from '../i18n/ui';
+import ArticleCard from './ArticleCard.astro';
 
 interface Props {
   posts: CollectionEntry<'blog'>[];
@@ -15,36 +16,10 @@ const { posts, locale } = Astro.props;
   posts.length === 0 ? (
     <p class="text-zinc-500">{t(locale, 'blog.empty')}</p>
   ) : (
-    <ul class="space-y-8 list-none p-0">
-      {posts.map((post) => {
-        const href = articlePath(
-          locale,
-          post.data.translationKey,
-          post.data.slug,
-        );
-        return (
-          <li class="border-b border-zinc-100 pb-8 last:border-b-0 dark:border-zinc-900">
-            <article>
-              <h2 class="text-xl font-semibold tracking-tight">
-                <a
-                  href={href}
-                  class="text-zinc-900 no-underline hover:underline dark:text-zinc-100"
-                >
-                  {post.data.title}
-                </a>
-              </h2>
-              <p class="mt-1 text-sm text-zinc-500">
-                <time datetime={post.data.pubDate.toISOString()}>
-                  {formatDate(post.data.pubDate, locale)}
-                </time>
-              </p>
-              <p class="mt-3 text-zinc-600 dark:text-zinc-400">
-                {post.data.description}
-              </p>
-            </article>
-          </li>
-        );
-      })}
-    </ul>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {posts.map((post, i) => (
+        <ArticleCard post={post} locale={locale} priority={i === 0} />
+      ))}
+    </div>
   )
 }

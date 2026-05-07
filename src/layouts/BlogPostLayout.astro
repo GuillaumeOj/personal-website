@@ -10,12 +10,14 @@ interface Props {
 }
 
 const { locale, post } = Astro.props;
+const { author } = post.data;
 ---
 
 <BaseLayout
   locale={locale}
   title={post.data.title}
   description={post.data.description}
+  ogImage={post.data.cover}
 >
   <article class="space-y-6">
     {
@@ -28,12 +30,29 @@ const { locale, post } = Astro.props;
       )
     }
     <header class="space-y-2">
-      <p class="text-sm uppercase tracking-wide text-zinc-500">
-        <span>{t(locale, 'blog.published')}</span>{' '}
-        <time datetime={post.data.pubDate.toISOString()}>
-          {formatDate(post.data.pubDate, locale)}
-        </time>
-      </p>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <p>
+          <span>{t(locale, 'blog.published')}</span>{' '}
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate, locale)}
+          </time>
+        </p>
+        {
+          author && (
+            <span class="inline-flex items-center gap-2">
+              {author.avatarUrl && (
+                <img
+                  src={author.avatarUrl}
+                  alt=""
+                  loading="lazy"
+                  class="h-6 w-6 rounded-full object-cover"
+                />
+              )}
+              <span>{author.name}</span>
+            </span>
+          )
+        }
+      </div>
       <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
         {post.data.title}
       </h1>

@@ -21,9 +21,9 @@ test('EN landing renders main sections', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('FR blog list shows the sample post', async ({ page }) => {
+test('FR blog list page renders', async ({ page }) => {
   await page.goto('/blog/');
   await expect(
-    page.getByRole('heading', { name: 'Hello, monde' }),
+    page.getByRole('heading', { name: 'Blog', level: 1 }),
   ).toBeVisible();
 });

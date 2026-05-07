@@ -17,8 +17,7 @@ const { posts, locale } = Astro.props;
   ) : (
     <ul class="space-y-8 list-none p-0">
       {posts.map((post) => {
-        const slug = post.id.replace(/^[a-z]{2}\//, '');
-        const href = localizedPath(locale, `/blog/${slug}`);
+        const href = localizedPath(locale, `/blog/${post.data.slug}`);
         return (
           <li class="border-b border-zinc-100 pb-8 last:border-b-0 dark:border-zinc-900">
             <article>

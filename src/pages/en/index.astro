@@ -9,7 +9,7 @@ const locale = 'en' as const;
 <BaseLayout
   locale={locale}
   title={SITE.name}
-  description="Personal site of Guillaume Ojardias — Python backend developer and beginner project manager. Notes, projects, and a blog in French and English."
+  description="Personal site of Guillaume Ojardias — Django/DRF backend developer, founder of Fusily. Notes, projects, and a blog in French and English."
 >
   <section class="space-y-6">
     <p class="text-sm uppercase tracking-wide text-zinc-500">
@@ -20,13 +20,16 @@ const locale = 'en' as const;
     </h1>
     <div class="space-y-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
       <p>
-        I have been building Python backends for several years — APIs, data pipelines,
-        observability — and I am training in project management so I can coordinate teams
-        around problems I already know how to solve technically.
+        Today I am building
+        <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a>, a
+        mobile app (iOS/Android) to make cooking more social and more efficient day-to-day,
+        while cutting down on household food waste. On the tech side, I work across the full
+        stack: Django backend (my playground for years, with Django REST Framework and
+        PostgreSQL), React Native mobile app, and Next.js website.
       </p>
       <p>
-        On this site you will find a blog where I write down what I am learning, especially
-        about the dev → project manager transition, and a few more technical retrospectives.
+        On the blog: Python backend notes, lessons from building Fusily, and whatever else
+        catches my curiosity along the way.
       </p>
     </div>
 
@@ -42,13 +45,85 @@ const locale = 'en' as const;
 
   <section class="mt-16 space-y-4">
     <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+      {t(locale, 'home.experience.title')}
+    </h2>
+    <ul class="space-y-5 list-none p-0">
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/fusily.png"
+          alt="Fusily logo"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Founder & Fullstack Developer</strong>
+            <span class="text-zinc-500">
+              — <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a> ·
+              Sep. 2024 → present
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            iOS/Android mobile app to create, share and plan recipes, while reducing food waste.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/sketchfab.png"
+          alt="Sketchfab logo"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Backend Python Developer</strong>
+            <span class="text-zinc-500">
+              — <a href="https://sketchfab.com" target="_blank" rel="noopener noreferrer">Sketchfab</a>,
+              then <a href="https://www.fab.com" target="_blank" rel="noopener noreferrer">Epic Games (FAB)</a> ·
+              May 2021 → Feb. 2024
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            Django/DRF backend for Sketchfab, the collaborative 3D platform; after Epic Games'
+            acquisition, contributed to the launch of FAB, the asset marketplace for creators.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/mergify.svg"
+          alt="Mergify logo"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain dark:bg-white dark:p-1"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Python Developer (internship)</strong>
+            <span class="text-zinc-500">
+              — <a href="https://mergify.com" target="_blank" rel="noopener noreferrer">Mergify</a> ·
+              Aug. 2020 → Feb. 2021
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            Final-year internship on the Git/GitHub pull-request automation tool.
+          </p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="mt-16 space-y-4">
+    <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
       {t(locale, 'home.contact.title')}
     </h2>
     <ul class="space-y-2 text-zinc-700 list-none p-0 dark:text-zinc-300">
-      <li>
-        <span class="text-zinc-500">{t(locale, 'home.contact.email')} —</span>{' '}
-        <a href={`mailto:${SITE.social.email}`}>{SITE.social.email}</a>
-      </li>
       <li>
         <span class="text-zinc-500">{t(locale, 'home.contact.github')} —</span>{' '}
         <a href={SITE.social.github} rel="me noopener">{SITE.social.github.replace('https://', '')}</a>

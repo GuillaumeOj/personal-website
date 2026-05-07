@@ -9,7 +9,7 @@ const locale = 'fr' as const;
 <BaseLayout
   locale={locale}
   title={SITE.name}
-  description="Site personnel de Guillaume Ojardias — développeur backend Python et chef de projet débutant. Notes, projets, et blog en français et en anglais."
+  description="Site personnel de Guillaume Ojardias — développeur backend Django/DRF, fondateur de Fusily. Notes, projets et blog en français et en anglais."
 >
   <section class="space-y-6">
     <p class="text-sm uppercase tracking-wide text-zinc-500">
@@ -20,13 +20,16 @@ const locale = 'fr' as const;
     </h1>
     <div class="space-y-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
       <p>
-        Je développe des backends en Python depuis plusieurs années — APIs, traitement de données,
-        observabilité — et je me forme à la gestion de projet pour pouvoir coordonner des équipes
-        autour de problèmes que je sais résoudre techniquement.
+        Aujourd'hui je construis
+        <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a>, une
+        app mobile (iOS/Android) pour rendre la cuisine plus sociale et plus efficace au
+        quotidien, tout en limitant les gaspillages domestiques. Côté tech, je couvre tout le
+        stack : backend Django (mon terrain de jeu depuis plusieurs années, avec Django REST
+        Framework et PostgreSQL), app mobile React Native et site web Next.js.
       </p>
       <p>
-        Sur ce site, tu trouveras un blog où je note ce que j'apprends, en particulier sur la
-        transition dev → chef de projet, et quelques retours d'expérience plus techniques.
+        Sur le blog : backend Python, leçons apprises en construisant Fusily, et tout ce qui
+        pique ma curiosité en route.
       </p>
     </div>
 
@@ -42,13 +45,86 @@ const locale = 'fr' as const;
 
   <section class="mt-16 space-y-4">
     <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+      {t(locale, 'home.experience.title')}
+    </h2>
+    <ul class="space-y-5 list-none p-0">
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/fusily.png"
+          alt="Logo Fusily"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Fondateur & développeur fullstack</strong>
+            <span class="text-zinc-500">
+              — <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a> ·
+              sept. 2024 → aujourd'hui
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            Application mobile iOS/Android pour créer, partager et planifier des recettes, tout en
+            réduisant le gaspillage alimentaire.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/sketchfab.png"
+          alt="Logo Sketchfab"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Développeur backend Python</strong>
+            <span class="text-zinc-500">
+              — <a href="https://sketchfab.com" target="_blank" rel="noopener noreferrer">Sketchfab</a>,
+              puis <a href="https://www.fab.com" target="_blank" rel="noopener noreferrer">Epic Games (FAB)</a> ·
+              mai 2021 → févr. 2024
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            Backend Django/DRF de Sketchfab, plateforme 3D collaborative ; après le rachat par Epic
+            Games, contribution au lancement de FAB, la marketplace d'assets pour créateurs.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4">
+        <img
+          src="/logos/mergify.svg"
+          alt="Logo Mergify"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain dark:bg-white dark:p-1"
+        />
+        <div class="space-y-1">
+          <p class="text-zinc-900 dark:text-zinc-100">
+            <strong>Développeur Python (stage)</strong>
+            <span class="text-zinc-500">
+              — <a href="https://mergify.com" target="_blank" rel="noopener noreferrer">Mergify</a> ·
+              août 2020 → févr. 2021
+            </span>
+          </p>
+          <p class="text-zinc-700 dark:text-zinc-300">
+            Stage de fin d'études sur l'outil d'automatisation de pull requests Git/GitHub.
+          </p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="mt-16 space-y-4">
+    <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
       {t(locale, 'home.contact.title')}
     </h2>
     <ul class="space-y-2 text-zinc-700 list-none p-0 dark:text-zinc-300">
-      <li>
-        <span class="text-zinc-500">{t(locale, 'home.contact.email')} —</span>{' '}
-        <a href={`mailto:${SITE.social.email}`}>{SITE.social.email}</a>
-      </li>
       <li>
         <span class="text-zinc-500">{t(locale, 'home.contact.github')} —</span>{' '}
         <a href={SITE.social.github} rel="me noopener">{SITE.social.github.replace('https://', '')}</a>

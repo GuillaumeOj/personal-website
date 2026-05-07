@@ -6,7 +6,6 @@ export const SITE = {
   social: {
     github: 'https://github.com/GuillaumeOj',
     linkedin: 'https://www.linkedin.com/in/guillaume-o/',
-    email: '7831777+GuillaumeOj@users.noreply.github.com',
   },
 };
 

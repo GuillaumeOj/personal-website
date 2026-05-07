@@ -19,10 +19,15 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@astro-notion/loader": "1.1.2",
     "@astrojs/rss": "4.0.18",
     "@astrojs/sitemap": "3.7.2",
     "@fontsource/inter": "5.2.8",
     "@fontsource/jetbrains-mono": "5.2.8",
+    "@notion-render/bookmark-plugin": "0.0.2",
+    "@notion-render/client": "0.0.2",
+    "@notion-render/hljs-plugin": "0.0.2",
+    "@notionhq/client": "5.20.0",
     "@tailwindcss/typography": "0.5.19",
     "@tailwindcss/vite": "4.2.4",
     "astro": "6.2.2",

@@ -13,6 +13,9 @@ export default defineConfig({
     },
   },
   integrations: [sitemap()],
+  image: {
+    remotePatterns: [{ protocol: 'https', hostname: '**.amazonaws.com' }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

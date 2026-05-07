@@ -3,7 +3,7 @@ import {
   isPageEvent,
   type NotionPayload,
   verifySignature,
-} from '../src/lib/notion-webhook';
+} from '../src/lib/notion-webhook.js';
 
 function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {

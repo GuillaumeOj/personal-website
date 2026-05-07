@@ -86,3 +86,9 @@ export const localizedPath = (locale: Locale, path: string): string => {
   if (locale === 'fr') return cleaned;
   return `/en${cleaned === '/' ? '' : cleaned}`;
 };
+
+export const articlePath = (
+  locale: Locale,
+  translationKey: string,
+  slug: string,
+): string => `${localizedPath(locale, `/blog/${translationKey}/${slug}`)}/`;

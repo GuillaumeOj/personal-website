@@ -1,23 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
 import ArticleCard from '../components/ArticleCard.astro';
-import type { Locale } from '../config';
-import { t } from '../i18n/ui';
+import { type Locale, SITE } from '../config';
+import { localizedPath, t } from '../i18n/ui';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPostsForLocale } from '../lib/posts';
 
-const all = await getCollection('blog');
-const latest = (lang: Locale) =>
-  all
-    .filter((post) => post.data.lang === lang && !post.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    .slice(0, 3);
-
-const posts: Record<Locale, ReturnType<typeof latest>> = {
-  fr: latest('fr'),
-  en: latest('en'),
-};
-
-const locales: Locale[] = ['fr', 'en'];
+const [fr, en] = await Promise.all([
+  getPostsForLocale('fr', 3),
+  getPostsForLocale('en', 3),
+]);
+const postsByLocale: Record<Locale, typeof fr> = { fr, en };
 ---
 
 <BaseLayout
@@ -26,19 +18,16 @@ const locales: Locale[] = ['fr', 'en'];
   description={t('fr', 'error.404.message')}
 >
   {
-    locales.map((locale) => (
+    SITE.locales.map((locale) => (
       <section
         data-locale={locale}
         class:list={[
           'locale-block space-y-10',
-          locale === 'en' && 'hidden',
+          locale !== SITE.defaultLocale && 'hidden',
         ]}
       >
         <header class="space-y-4 text-center">
-          <p
-            class="font-mono text-7xl font-bold tracking-tight text-zinc-900 sm:text-8xl dark:text-zinc-100"
-            style="display:inline-block;animation:var(--animate-wobble);transform-origin:center;"
-          >
+          <p class="inline-block origin-center animate-wobble font-mono text-7xl font-bold tracking-tight text-zinc-900 sm:text-8xl dark:text-zinc-100">
             {t(locale, 'error.404.title')}
           </p>
           <p class="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
@@ -49,7 +38,7 @@ const locales: Locale[] = ['fr', 'en'];
           </p>
           <p>
             <a
-              href={locale === 'en' ? '/en/' : '/'}
+              href={localizedPath(locale, '/')}
               class="text-sm text-zinc-600 dark:text-zinc-400"
             >
               {t(locale, 'error.backHome')}
@@ -57,13 +46,13 @@ const locales: Locale[] = ['fr', 'en'];
           </p>
         </header>
 
-        {posts[locale].length > 0 && (
+        {postsByLocale[locale].length > 0 && (
           <div class="space-y-4">
             <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
               {t(locale, 'error.recentArticles')}
             </h2>
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {posts[locale].map((post) => (
+              {postsByLocale[locale].map((post) => (
                 <ArticleCard post={post} locale={locale} />
               ))}
             </div>
@@ -76,8 +65,7 @@ const locales: Locale[] = ['fr', 'en'];
 
 <script is:inline>
   (() => {
-    const isEn = location.pathname.startsWith('/en/');
-    const target = isEn ? 'en' : 'fr';
+    const target = location.pathname.startsWith('/en/') ? 'en' : 'fr';
     document.documentElement.lang = target;
     document.querySelectorAll('.locale-block').forEach((el) => {
       el.classList.toggle(

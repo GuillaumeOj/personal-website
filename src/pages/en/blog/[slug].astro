@@ -1,16 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
+import { articlePath } from '../../../i18n/ui';
+import { getPostsForLocale } from '../../../lib/posts';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts
-    .filter((post) => post.data.lang === 'en' && !post.data.draft)
-    .map((post) => ({
-      params: { slug: post.data.slug },
-      props: {
-        target: `/en/blog/${post.data.translationKey}/${post.data.slug}/`,
-      },
-    }));
+  const posts = await getPostsForLocale('en');
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: {
+      target: articlePath('en', post.data.translationKey, post.data.slug),
+    },
+  }));
 }
 
 return Astro.redirect((Astro.props as { target: string }).target, 301);

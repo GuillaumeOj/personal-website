@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import type { Locale } from '../config';
-import { otherLocale, t } from '../i18n/ui';
+import { articlePath, localizedPath, otherLocale, t } from '../i18n/ui';
+import { findSibling } from '../lib/posts';
 
 interface Props {
   locale: Locale;
@@ -19,16 +19,10 @@ let normalized: string;
 
 if (articleMatch) {
   const [, translationKey] = articleMatch;
-  const sibling = (await getCollection('blog')).find(
-    (p) =>
-      p.data.translationKey === translationKey &&
-      p.data.lang === target &&
-      !p.data.draft,
-  );
-  const langPrefix = target === 'en' ? '/en' : '';
+  const sibling = await findSibling(translationKey, target);
   normalized = sibling
-    ? `${langPrefix}/blog/${translationKey}/${sibling.data.slug}/`
-    : `${langPrefix}/blog/`;
+    ? articlePath(target, translationKey, sibling.data.slug)
+    : `${localizedPath(target, '/blog')}/`;
 } else {
   const stripped =
     locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;

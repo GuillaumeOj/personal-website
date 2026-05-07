@@ -1,13 +1,11 @@
-import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { SITE } from '../config';
-import { t } from '../i18n/ui';
+import { articlePath, t } from '../i18n/ui';
+import { getPostsForLocale } from '../lib/posts';
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection('blog'))
-    .filter((post) => post.data.lang === 'fr' && !post.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const posts = await getPostsForLocale('fr');
 
   return rss({
     title: `${SITE.name} — ${t('fr', 'blog.title')}`,
@@ -17,7 +15,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${post.data.translationKey}/${post.data.slug}/`,
+      link: articlePath('fr', post.data.translationKey, post.data.slug),
     })),
   });
 }

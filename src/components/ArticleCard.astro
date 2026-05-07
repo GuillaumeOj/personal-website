@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '../config';
-import { localizedPath } from '../i18n/ui';
+import { articlePath } from '../i18n/ui';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -9,10 +9,7 @@ interface Props {
 }
 
 const { post, locale } = Astro.props;
-const href = localizedPath(
-  locale,
-  `/blog/${post.data.translationKey}/${post.data.slug}`,
-);
+const href = articlePath(locale, post.data.translationKey, post.data.slug);
 ---
 
 <a

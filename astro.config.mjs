@@ -2,12 +2,13 @@
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
+import { SITE } from './src/config.ts';
 
 export default defineConfig({
-  site: 'https://guillaume-ojardias.vercel.app',
+  site: SITE.url,
   i18n: {
-    defaultLocale: 'fr',
-    locales: ['fr', 'en'],
+    defaultLocale: SITE.defaultLocale,
+    locales: [...SITE.locales],
     routing: {
       prefixDefaultLocale: false,
     },

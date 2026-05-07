@@ -30,6 +30,7 @@ const pageSchema = notionPageSchema({
     pubDate: transformedPropertySchema.date,
     lang: transformedPropertySchema.select,
     slug: transformedPropertySchema.rich_text,
+    translationKey: transformedPropertySchema.rich_text,
     tags: transformedPropertySchema.multi_select.optional(),
     draft: transformedPropertySchema.checkbox,
   }),
@@ -46,6 +47,13 @@ const blog = defineCollection({
         `Notion page has invalid lang "${lang}" (expected fr|en)`,
       );
     }
+    const slug = page.properties.slug;
+    const translationKey = page.properties.translationKey;
+    if (!page.properties.draft && !translationKey) {
+      throw new Error(
+        `Notion page "${page.properties.Name}" (slug "${slug}") is missing the translationKey property — set a shared key on FR/EN pairs`,
+      );
+    }
     const pubDate = page.properties.pubDate?.start ?? new Date();
     let cover: string | undefined;
     if (page.cover) {
@@ -59,7 +67,8 @@ const blog = defineCollection({
       description: page.properties.description,
       pubDate,
       lang,
-      slug: page.properties.slug,
+      slug,
+      translationKey,
       tags: page.properties.tags ?? [],
       draft: page.properties.draft,
       cover,

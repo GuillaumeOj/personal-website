@@ -1,7 +1,5 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
-import { renderNotionPage } from '../../lib/notion';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -9,18 +7,11 @@ export async function getStaticPaths() {
     .filter((post) => post.data.lang === 'fr' && !post.data.draft)
     .map((post) => ({
       params: { slug: post.data.slug },
-      props: { post },
+      props: {
+        target: `/blog/${post.data.translationKey}/${post.data.slug}/`,
+      },
     }));
 }
 
-interface Props {
-  post: CollectionEntry<'blog'>;
-}
-
-const { post } = Astro.props;
-const html = await renderNotionPage(post.id);
+return Astro.redirect((Astro.props as { target: string }).target, 301);
 ---
-
-<BlogPostLayout locale="fr" post={post}>
-  <Fragment set:html={html} />
-</BlogPostLayout>

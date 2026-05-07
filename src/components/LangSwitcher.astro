@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import type { Locale } from '../config';
 import { otherLocale, t } from '../i18n/ui';
 
@@ -10,10 +11,31 @@ const { locale } = Astro.props;
 const target = otherLocale(locale);
 
 const currentPath = Astro.url.pathname;
-const stripped =
-  locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
-const targetPath = target === 'fr' ? stripped : `/en${stripped === '/' ? '' : stripped}`;
-const normalized = targetPath.endsWith('/') ? targetPath : `${targetPath}/`;
+const articleMatch = currentPath.match(
+  /^(?:\/en)?\/blog\/([^/]+)\/([^/]+)\/?$/,
+);
+
+let normalized: string;
+
+if (articleMatch) {
+  const [, translationKey] = articleMatch;
+  const sibling = (await getCollection('blog')).find(
+    (p) =>
+      p.data.translationKey === translationKey &&
+      p.data.lang === target &&
+      !p.data.draft,
+  );
+  const langPrefix = target === 'en' ? '/en' : '';
+  normalized = sibling
+    ? `${langPrefix}/blog/${translationKey}/${sibling.data.slug}/`
+    : `${langPrefix}/blog/`;
+} else {
+  const stripped =
+    locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
+  const targetPath =
+    target === 'fr' ? stripped : `/en${stripped === '/' ? '' : stripped}`;
+  normalized = targetPath.endsWith('/') ? targetPath : `${targetPath}/`;
+}
 ---
 
 <a

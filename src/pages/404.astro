@@ -1,0 +1,77 @@
+---
+import ArticleCard from '../components/ArticleCard.astro';
+import { type Locale, SITE } from '../config';
+import { localizedPath, t } from '../i18n/ui';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPostsForLocale } from '../lib/posts';
+
+const [fr, en] = await Promise.all([
+  getPostsForLocale('fr', 3),
+  getPostsForLocale('en', 3),
+]);
+const postsByLocale: Record<Locale, typeof fr> = { fr, en };
+---
+
+<BaseLayout
+  locale="fr"
+  title={t('fr', 'error.404.title')}
+  description={t('fr', 'error.404.message')}
+>
+  {
+    SITE.locales.map((locale) => (
+      <section
+        data-locale={locale}
+        class:list={[
+          'locale-block space-y-10',
+          locale !== SITE.defaultLocale && 'hidden',
+        ]}
+      >
+        <header class="space-y-4 text-center">
+          <p class="inline-block origin-center animate-wobble font-mono text-7xl font-bold tracking-tight text-zinc-900 sm:text-8xl dark:text-zinc-100">
+            {t(locale, 'error.404.title')}
+          </p>
+          <p class="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            {t(locale, 'error.404.lead')}
+          </p>
+          <p class="mx-auto max-w-xl text-zinc-600 dark:text-zinc-400">
+            {t(locale, 'error.404.message')}
+          </p>
+          <p>
+            <a
+              href={localizedPath(locale, '/')}
+              class="text-sm text-zinc-600 dark:text-zinc-400"
+            >
+              {t(locale, 'error.backHome')}
+            </a>
+          </p>
+        </header>
+
+        {postsByLocale[locale].length > 0 && (
+          <div class="space-y-4">
+            <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+              {t(locale, 'error.recentArticles')}
+            </h2>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {postsByLocale[locale].map((post) => (
+                <ArticleCard post={post} locale={locale} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<script is:inline>
+  (() => {
+    const target = location.pathname.startsWith('/en/') ? 'en' : 'fr';
+    document.documentElement.lang = target;
+    document.querySelectorAll('.locale-block').forEach((el) => {
+      el.classList.toggle(
+        'hidden',
+        el.getAttribute('data-locale') !== target,
+      );
+    });
+  })();
+</script>

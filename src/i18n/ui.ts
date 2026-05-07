@@ -24,6 +24,12 @@ const dictionaries = {
     'theme.system': 'Thème système',
     'lang.switch': 'Switch to English',
     'footer.builtWith': 'Construit avec Astro, déployé sur Vercel.',
+    'error.404.title': '404',
+    'error.404.lead': 'Cette page a pris un café…',
+    'error.404.message':
+      'Elle n’existe pas (ou plus). Voici les derniers articles du blog en attendant.',
+    'error.recentArticles': 'Derniers articles',
+    'error.backHome': 'Retour à l’accueil',
   },
   en: {
     'nav.home': 'Home',
@@ -48,6 +54,12 @@ const dictionaries = {
     'theme.system': 'System theme',
     'lang.switch': 'Passer en français',
     'footer.builtWith': 'Built with Astro, deployed on Vercel.',
+    'error.404.title': '404',
+    'error.404.lead': 'This page took a coffee break…',
+    'error.404.message':
+      'It doesn’t exist (or not anymore). Here are the latest blog articles instead.',
+    'error.recentArticles': 'Latest articles',
+    'error.backHome': 'Back to home',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
@@ -74,3 +86,9 @@ export const localizedPath = (locale: Locale, path: string): string => {
   if (locale === 'fr') return cleaned;
   return `/en${cleaned === '/' ? '' : cleaned}`;
 };
+
+export const articlePath = (
+  locale: Locale,
+  translationKey: string,
+  slug: string,
+): string => `${localizedPath(locale, `/blog/${translationKey}/${slug}`)}/`;

@@ -1,26 +1,16 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
-import { renderNotionPage } from '../../../lib/notion';
+import { articlePath } from '../../../i18n/ui';
+import { getPostsForLocale } from '../../../lib/posts';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts
-    .filter((post) => post.data.lang === 'en' && !post.data.draft)
-    .map((post) => ({
-      params: { slug: post.data.slug },
-      props: { post },
-    }));
+  const posts = await getPostsForLocale('en');
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: {
+      target: articlePath('en', post.data.translationKey, post.data.slug),
+    },
+  }));
 }
 
-interface Props {
-  post: CollectionEntry<'blog'>;
-}
-
-const { post } = Astro.props;
-const html = await renderNotionPage(post.id);
+return Astro.redirect((Astro.props as { target: string }).target, 301);
 ---
-
-<BlogPostLayout locale="en" post={post}>
-  <Fragment set:html={html} />
-</BlogPostLayout>

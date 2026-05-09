@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '../config';
 import { formatDate, localizedPath, t } from '../i18n/ui';
@@ -22,9 +23,12 @@ const { author } = post.data;
   <article class="space-y-6">
     {
       post.data.cover && (
-        <img
+        <Image
           src={post.data.cover}
+          inferSize
           alt=""
+          loading="eager"
+          fetchpriority="high"
           class="aspect-[3/1] w-full rounded-lg object-cover"
         />
       )

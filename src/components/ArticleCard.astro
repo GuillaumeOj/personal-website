@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '../config';
 import { articlePath, formatDate } from '../i18n/ui';
@@ -21,8 +22,9 @@ const { author } = post.data;
   {
     post.data.cover ? (
       <div class="aspect-[16/9] w-full overflow-hidden">
-        <img
+        <Image
           src={post.data.cover}
+          inferSize
           alt=""
           loading={priority ? 'eager' : 'lazy'}
           fetchpriority={priority ? 'high' : 'auto'}

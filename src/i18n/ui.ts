@@ -24,6 +24,7 @@ const dictionaries = {
     'theme.system': 'Thème système',
     'lang.switch': 'Switch to English',
     'footer.builtWith': 'Construit avec Astro, déployé sur Vercel.',
+    'footer.rss': 'Flux RSS',
     'error.404.title': '404',
     'error.404.lead': 'Cette page a pris un café…',
     'error.404.message':
@@ -54,6 +55,7 @@ const dictionaries = {
     'theme.system': 'System theme',
     'lang.switch': 'Passer en français',
     'footer.builtWith': 'Built with Astro, deployed on Vercel.',
+    'footer.rss': 'RSS feed',
     'error.404.title': '404',
     'error.404.lead': 'This page took a coffee break…',
     'error.404.message':

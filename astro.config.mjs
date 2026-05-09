@@ -15,7 +15,10 @@ export default defineConfig({
   },
   integrations: [sitemap()],
   image: {
-    remotePatterns: [{ protocol: 'https', hostname: '**.amazonaws.com' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+    ],
   },
   vite: {
     plugins: [tailwindcss()],

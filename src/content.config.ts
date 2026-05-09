@@ -6,6 +6,7 @@ import {
 } from '@astro-notion/loader/schemas';
 import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { uploadNotionFileIfMissing } from './lib/blob-images';
 
 type RawPeopleProperty = z.infer<typeof propertySchema.people>;
 type RawNotionUser = {
@@ -59,7 +60,7 @@ type NotionPage = z.infer<typeof pageSchema>;
 
 const blog = defineCollection({
   loader: buildBlogLoader(),
-  schema: pageSchema.transform((page: NotionPage) => {
+  schema: pageSchema.transform(async (page: NotionPage) => {
     const lang = page.properties.lang;
     if (lang !== 'fr' && lang !== 'en') {
       throw new Error(
@@ -79,7 +80,7 @@ const blog = defineCollection({
       cover =
         page.cover.type === 'external'
           ? page.cover.external.url
-          : page.cover.file.url;
+          : await uploadNotionFileIfMissing(page.cover.file.url);
     }
     return {
       title: page.properties.Name,

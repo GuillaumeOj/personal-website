@@ -3,6 +3,7 @@ import bookmarkPlugin from '@notion-render/bookmark-plugin';
 import { NotionRenderer } from '@notion-render/client';
 import hljsPlugin from '@notion-render/hljs-plugin';
 import { Client } from '@notionhq/client';
+import { uploadNotionFileIfMissing } from './blob-images';
 import { getMockHtml } from './mock-posts';
 
 const notion = new Client({ auth: import.meta.env.NOTION_TOKEN });
@@ -23,8 +24,26 @@ function ensurePlugins() {
 export async function renderNotionPage(pageId: string): Promise<string> {
   await ensurePlugins();
   const blocks = await fetchAllBlocks(pageId);
+  const rewritten = await rewriteImageBlocks(blocks);
   // biome-ignore lint/suspicious/noExplicitAny: NotionRenderer.render expects a loose Block union
-  return renderer.render(...(blocks as any[]));
+  return renderer.render(...(rewritten as any[]));
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: Notion block union is wide; we only inspect image blocks
+async function rewriteImageBlocks(blocks: any[]): Promise<any[]> {
+  return Promise.all(
+    blocks.map(async (block) => {
+      if (block?.type !== 'image' || block.image?.type !== 'file') return block;
+      const newUrl = await uploadNotionFileIfMissing(block.image.file.url);
+      return {
+        ...block,
+        image: {
+          ...block.image,
+          file: { ...block.image.file, url: newUrl },
+        },
+      };
+    }),
+  );
 }
 
 export async function renderPostBody(

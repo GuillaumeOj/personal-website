@@ -1,6 +1,6 @@
 ---
 import { SITE, type Locale } from '../config';
-import { t } from '../i18n/ui';
+import { localizedPath, t } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -8,6 +8,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
+const rssHref = localizedPath(locale, '/rss.xml');
 ---
 
 <footer class="border-t border-zinc-200 dark:border-zinc-800">
@@ -15,6 +16,15 @@ const year = new Date().getFullYear();
     class="mx-auto flex max-w-3xl flex-col gap-3 px-6 py-8 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between"
   >
     <p>© {year} {SITE.name}</p>
+    <p>
+      <a
+        href={rssHref}
+        type="application/rss+xml"
+        class="hover:text-zinc-900 dark:hover:text-zinc-100"
+      >
+        {t(locale, 'footer.rss')}
+      </a>
+    </p>
     <p>{t(locale, 'footer.builtWith')}</p>
   </div>
 </footer>

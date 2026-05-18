@@ -6,6 +6,49 @@ import { Client } from '@notionhq/client';
 import { uploadNotionFileIfMissing } from './blob-images';
 import { getMockHtml } from './mock-posts';
 
+export interface TocHeading {
+  id: string;
+  text: string;
+}
+
+export interface RenderedPost {
+  html: string;
+  headings: TocHeading[];
+}
+
+const slugify = (text: string): string =>
+  text
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+
+export function processHeadings(html: string): RenderedPost {
+  const headings: TocHeading[] = [];
+  const seen = new Map<string, number>();
+
+  const processed = html.replace(
+    /<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g,
+    (_match, attrs = '', inner) => {
+      const text = inner
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const base = slugify(text) || 'section';
+      const count = seen.get(base) ?? 0;
+      seen.set(base, count + 1);
+      const id = count === 0 ? base : `${base}-${count}`;
+      headings.push({ id, text });
+      return `<h2${attrs} id="${id}">${inner}</h2>`;
+    },
+  );
+
+  return { html: processed, headings };
+}
+
 const notion = new Client({ auth: import.meta.env.NOTION_TOKEN });
 
 const renderer = new NotionRenderer({ client: notion });
@@ -48,10 +91,11 @@ async function rewriteImageBlocks(blocks: any[]): Promise<any[]> {
 
 export async function renderPostBody(
   post: CollectionEntry<'blog'>,
-): Promise<string> {
+): Promise<RenderedPost> {
   const mockHtml = getMockHtml(post);
-  if (mockHtml !== undefined) return mockHtml;
-  return renderNotionPage(post.id);
+  const raw =
+    mockHtml !== undefined ? mockHtml : await renderNotionPage(post.id);
+  return processHeadings(raw);
 }
 
 async function fetchAllBlocks(blockId: string) {

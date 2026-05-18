@@ -1,16 +1,19 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import TableOfContents from '../components/TableOfContents.astro';
 import type { Locale } from '../config';
 import { formatDate, localizedPath, t } from '../i18n/ui';
+import type { TocHeading } from '../lib/notion';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
   locale: Locale;
   post: CollectionEntry<'blog'>;
+  headings?: TocHeading[];
 }
 
-const { locale, post } = Astro.props;
+const { locale, post, headings = [] } = Astro.props;
 const { author } = post.data;
 ---
 
@@ -20,6 +23,7 @@ const { author } = post.data;
   description={post.data.description}
   ogImage={post.data.cover}
 >
+  <TableOfContents locale={locale} headings={headings} />
   <article class="space-y-6">
     {
       post.data.cover && (
@@ -66,7 +70,7 @@ const { author } = post.data;
     </header>
 
     <div
-      class="prose prose-zinc max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4"
+      class="prose prose-zinc max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4 prose-h2:scroll-mt-24"
     >
       <slot />
     </div>

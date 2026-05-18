@@ -6,7 +6,10 @@ import {
 } from '@astro-notion/loader/schemas';
 import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { uploadNotionFileIfMissing } from './lib/blob-images';
+import {
+  uploadAvatarIfMissing,
+  uploadNotionFileIfMissing,
+} from './lib/blob-images';
 
 type RawPeopleProperty = z.infer<typeof propertySchema.people>;
 type RawNotionUser = {
@@ -16,10 +19,13 @@ type RawNotionUser = {
 };
 
 const authorSchema = propertySchema.people.transform(
-  (property: RawPeopleProperty) => {
+  async (property: RawPeopleProperty) => {
     const first = property.people[0] as RawNotionUser | undefined;
     if (!first?.name) return undefined;
-    return { name: first.name, avatarUrl: first.avatar_url ?? null };
+    const avatarUrl = first.avatar_url
+      ? await uploadAvatarIfMissing(first.avatar_url)
+      : null;
+    return { name: first.name, avatarUrl };
   },
 );
 

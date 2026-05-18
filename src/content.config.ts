@@ -16,10 +16,13 @@ type RawNotionUser = {
 };
 
 const authorSchema = propertySchema.people.transform(
-  (property: RawPeopleProperty) => {
+  async (property: RawPeopleProperty) => {
     const first = property.people[0] as RawNotionUser | undefined;
     if (!first?.name) return undefined;
-    return { name: first.name, avatarUrl: first.avatar_url ?? null };
+    const avatarUrl = first.avatar_url
+      ? await uploadNotionFileIfMissing(first.avatar_url)
+      : null;
+    return { name: first.name, avatarUrl };
   },
 );
 

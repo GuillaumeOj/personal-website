@@ -1,0 +1,143 @@
+---
+import type { Locale } from '../config';
+import { t } from '../i18n/ui';
+import type { TocHeading } from '../lib/notion';
+
+interface Props {
+  locale: Locale;
+  headings: TocHeading[];
+}
+
+const { locale, headings } = Astro.props;
+const label = t(locale, 'blog.tocLabel');
+---
+
+{
+  headings.length > 0 && (
+    <aside
+      aria-label={label}
+      class="fixed top-32 z-10 hidden w-52 xl:block left-[max(1.5rem,calc(50%-39rem))]"
+      data-toc
+    >
+      <p class="mb-3 text-xs font-medium tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
+        {label}
+      </p>
+      <ol class="relative space-y-0 border-l border-zinc-200 dark:border-zinc-800">
+        {headings.map((h) => (
+          <li class="relative" data-toc-state="upcoming">
+            <span
+              class="absolute top-0 -left-px h-full w-px bg-zinc-900 opacity-0 transition-opacity dark:bg-zinc-100"
+              data-toc-rail
+              aria-hidden="true"
+            />
+            <a
+              href={`#${h.id}`}
+              data-toc-link={h.id}
+              class="block py-1.5 pl-4 text-sm leading-snug text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-zinc-100"
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  )
+}
+
+<style is:global>
+  [data-toc-state='visited'] [data-toc-rail],
+  [data-toc-state='active'] [data-toc-rail] {
+    opacity: 1;
+  }
+  [data-toc-state='visited'] > a {
+    color: #3f3f46;
+  }
+  html.dark [data-toc-state='visited'] > a {
+    color: #d4d4d8;
+  }
+  [data-toc-state='active'] > a {
+    color: #18181b;
+    font-weight: 500;
+  }
+  html.dark [data-toc-state='active'] > a {
+    color: #f4f4f5;
+  }
+</style>
+
+<script>
+  const ACTIVATION_RATIO = 0.25;
+  const SCROLL_OFFSET = 96;
+
+  const init = (): void => {
+    const toc = document.querySelector<HTMLElement>('[data-toc]');
+    if (!toc) return;
+
+    const items = Array.from(
+      toc.querySelectorAll<HTMLElement>('[data-toc-state]'),
+    );
+    if (items.length === 0) return;
+
+    const entries = items
+      .map((item) => {
+        const link = item.querySelector<HTMLAnchorElement>('[data-toc-link]');
+        const id = link?.dataset.tocLink;
+        const heading = id ? document.getElementById(id) : null;
+        return { item, link, heading, id };
+      })
+      .filter((e) => e.link && e.heading) as Array<{
+      item: HTMLElement;
+      link: HTMLAnchorElement;
+      heading: HTMLElement;
+      id: string;
+    }>;
+
+    if (entries.length === 0) return;
+
+    const update = (): void => {
+      const activationY = window.innerHeight * ACTIVATION_RATIO;
+      let activeIndex = -1;
+      entries.forEach((e, i) => {
+        if (e.heading.getBoundingClientRect().top <= activationY) {
+          activeIndex = i;
+        }
+      });
+      entries.forEach((e, i) => {
+        const state =
+          i < activeIndex
+            ? 'visited'
+            : i === activeIndex
+              ? 'active'
+              : 'upcoming';
+        if (e.item.dataset.tocState !== state) {
+          e.item.dataset.tocState = state;
+        }
+      });
+    };
+
+    let frame = 0;
+    const schedule = (): void => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+
+    entries.forEach((e) => {
+      e.link.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        const top =
+          window.scrollY + e.heading.getBoundingClientRect().top - SCROLL_OFFSET;
+        window.scrollTo({ top, behavior: 'smooth' });
+        history.pushState(null, '', `#${e.id}`);
+      });
+    });
+
+    update();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+  };
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>

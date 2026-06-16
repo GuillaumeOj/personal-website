@@ -42,14 +42,31 @@ async function uploadIfMissing(url: string, key: string): Promise<string> {
     if (!(error instanceof BlobNotFoundError)) throw error;
   }
 
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: {
+      // Image CDNs such as Google's (lh3.googleusercontent.com, the source of
+      // Google-account avatars) serve a generic placeholder to header-less
+      // automated fetches. Identify as a browser so we get the real image.
+      'user-agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
+        '(KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      accept: 'image/avif,image/webp,image/png,image/*,*/*;q=0.8',
+    },
+  });
   if (!res.ok) return url;
+  const contentType = res.headers.get('content-type');
   const body = await res.arrayBuffer();
+  // Never pin a non-image or a suspiciously tiny body (placeholders are a few
+  // hundred bytes). Falling back to the source URL lets the browser load the
+  // live image directly, which still resolves to the real avatar.
+  if (!contentType?.startsWith('image/') || body.byteLength < 1024) {
+    return url;
+  }
   const { url: publicUrl } = await put(key, body, {
     access: 'public',
     token,
     addRandomSuffix: false,
-    contentType: res.headers.get('content-type') ?? undefined,
+    contentType,
   });
   return publicUrl;
 }

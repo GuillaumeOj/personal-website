@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import type { ThemeVariants } from '../lib/projects';
+
+interface Props {
+  variants: ThemeVariants;
+  alt?: string;
+  class?: string;
+  priority?: boolean;
+  /** Candidate widths for the generated srcset (capped at the source width). */
+  widths?: number[];
+  /** `sizes` hint describing the rendered width across breakpoints. */
+  sizes?: string;
+}
+
+const {
+  variants,
+  alt = '',
+  class: className = '',
+  priority = false,
+  widths = [400, 640, 960, 1280],
+  sizes = '(min-width: 768px) 720px, 100vw',
+} = Astro.props;
+const { light, dark } = variants;
+const loading = priority ? 'eager' : 'lazy';
+const fetchpriority = priority ? 'high' : 'auto';
+const sameImage = light === dark;
+---
+
+{
+  sameImage ? (
+    <Image
+      src={light}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      loading={loading}
+      fetchpriority={fetchpriority}
+      class={className}
+    />
+  ) : (
+    <>
+      <Image
+        src={light}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        class={`${className} block dark:hidden`}
+      />
+      <Image
+        src={dark}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading="lazy"
+        fetchpriority="auto"
+        class={`${className} hidden dark:block`}
+      />
+    </>
+  )
+}

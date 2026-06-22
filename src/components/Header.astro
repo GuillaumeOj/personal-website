@@ -32,6 +32,11 @@ const { locale } = Astro.props;
         class="rounded-md px-2 py-1 text-zinc-600 no-underline transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
         >{t(locale, 'nav.blog')}</a
       >
+      <a
+        href={localizedPath(locale, '/projects')}
+        class="rounded-md px-2 py-1 text-zinc-600 no-underline transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
+        >{t(locale, 'nav.projects')}</a
+      >
       <span class="mx-1 h-5 w-px bg-zinc-200 dark:bg-zinc-800" aria-hidden="true"></span>
       <LangSwitcher locale={locale} />
       <ThemeToggle locale={locale} />

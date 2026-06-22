@@ -1,0 +1,16 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import { getProjects } from '../../../lib/projects';
+
+export const getStaticPaths = (() =>
+  getProjects().map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }))) satisfies GetStaticPaths;
+
+const locale = 'en' as const;
+const { project } = Astro.props;
+---
+
+<ProjectLayout locale={locale} project={project} />

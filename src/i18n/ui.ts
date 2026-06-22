@@ -4,6 +4,7 @@ const dictionaries = {
   fr: {
     'nav.home': 'Accueil',
     'nav.blog': 'Blog',
+    'nav.projects': 'Projets',
     'nav.skipToContent': 'Aller au contenu',
     'home.tagline':
       'Développeur backend Django/DRF • Fondateur & fullstack chez Fusily',
@@ -19,6 +20,18 @@ const dictionaries = {
     'blog.published': 'Publié le',
     'blog.backToList': '← Tous les articles',
     'blog.tocLabel': 'Sommaire',
+    'projects.title': 'Projets',
+    'projects.subtitle': 'Une sélection de projets que j’ai réalisés.',
+    'projects.empty': 'Aucun projet pour le moment.',
+    'projects.visit': 'Visiter le projet',
+    'projects.viewSource': 'Voir le code source',
+    'projects.aim': 'Objectif',
+    'projects.stack': 'Stack technique',
+    'projects.backToList': '← Tous les projets',
+    'projects.context.personal': 'Personnel',
+    'projects.context.client': 'Client',
+    'projects.context.side': 'Projet perso',
+    'projects.context.oss': 'Open source',
     'theme.toggle': 'Changer le thème',
     'theme.light': 'Thème clair',
     'theme.dark': 'Thème sombre',
@@ -36,6 +49,7 @@ const dictionaries = {
   en: {
     'nav.home': 'Home',
     'nav.blog': 'Blog',
+    'nav.projects': 'Projects',
     'nav.skipToContent': 'Skip to content',
     'home.tagline':
       'Django/DRF backend developer • Founder & fullstack at Fusily',
@@ -51,6 +65,18 @@ const dictionaries = {
     'blog.published': 'Published on',
     'blog.backToList': '← All posts',
     'blog.tocLabel': 'On this page',
+    'projects.title': 'Projects',
+    'projects.subtitle': 'A selection of projects I have built.',
+    'projects.empty': 'No projects yet.',
+    'projects.visit': 'Visit project',
+    'projects.viewSource': 'View source code',
+    'projects.aim': 'Goal',
+    'projects.stack': 'Tech stack',
+    'projects.backToList': '← All projects',
+    'projects.context.personal': 'Personal',
+    'projects.context.client': 'Client',
+    'projects.context.side': 'Side project',
+    'projects.context.oss': 'Open source',
     'theme.toggle': 'Toggle theme',
     'theme.light': 'Light theme',
     'theme.dark': 'Dark theme',
@@ -96,3 +122,6 @@ export const articlePath = (
   translationKey: string,
   slug: string,
 ): string => `${localizedPath(locale, `/blog/${translationKey}/${slug}`)}/`;
+
+export const projectPath = (locale: Locale, slug: string): string =>
+  `${localizedPath(locale, `/projects/${slug}`)}/`;

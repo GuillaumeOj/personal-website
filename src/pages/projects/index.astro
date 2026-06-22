@@ -1,0 +1,29 @@
+---
+import ProjectList from '../../components/ProjectList.astro';
+import { SITE } from '../../config';
+import { t } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/projects';
+
+const locale = 'fr' as const;
+const projects = getProjects();
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${t(locale, 'projects.title')} — ${SITE.name}`}
+  description={t(locale, 'projects.subtitle')}
+>
+  <section class="space-y-3">
+    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+      {t(locale, 'projects.title')}
+    </h1>
+    <p class="text-zinc-600 dark:text-zinc-400">
+      {t(locale, 'projects.subtitle')}
+    </p>
+  </section>
+
+  <div class="mt-10">
+    <ProjectList projects={projects} locale={locale} />
+  </div>
+</BaseLayout>

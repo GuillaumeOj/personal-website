@@ -6,6 +6,8 @@ export const SITE = {
   social: {
     github: 'https://github.com/GuillaumeOj',
     linkedin: 'https://www.linkedin.com/in/guillaume-o/',
+    malt: 'https://www.malt.fr/profile/guillaumeojardias',
+    fiverr: 'https://www.fiverr.com/sellers/guillaume_oj/',
   },
 };
 

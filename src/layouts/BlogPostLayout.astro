@@ -33,12 +33,12 @@ const { author } = post.data;
           alt=""
           loading="eager"
           fetchpriority="high"
-          class="aspect-[3/1] w-full rounded-lg object-cover"
+          class="aspect-[3/1] w-full rounded-2xl object-cover"
         />
       )
     }
     <header class="space-y-2">
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-zinc-500 dark:text-zinc-400">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
         <p>
           <span>{t(locale, 'blog.published')}</span>{' '}
           <time datetime={post.data.pubDate.toISOString()}>
@@ -61,24 +61,22 @@ const { author } = post.data;
           )
         }
       </div>
-      <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-        {post.data.title}
-      </h1>
-      <p class="text-lg text-zinc-600 dark:text-zinc-400">
+      <h1 class="page-title">{post.data.title}</h1>
+      <p class="text-lg text-muted">
         {post.data.description}
       </p>
     </header>
 
     <div
-      class="prose prose-zinc max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4 prose-h2:scroll-mt-24"
+      class="prose prose-stone max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4 prose-h2:scroll-mt-24"
     >
       <slot />
     </div>
 
-    <footer class="border-t border-zinc-200 pt-6 dark:border-zinc-800">
+    <footer class="border-t border-line pt-6">
       <a
         href={localizedPath(locale, '/blog')}
-        class="text-sm text-zinc-600 dark:text-zinc-400"
+        class="text-sm text-accent-ink no-underline hover:underline"
       >
         {t(locale, 'blog.backToList')}
       </a>

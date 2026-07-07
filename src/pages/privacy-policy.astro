@@ -1,0 +1,16 @@
+---
+import LegalDocument from '../components/legal/LegalDocument.astro';
+import { t } from '../i18n/ui';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { privacyPolicy } from '../lib/legal';
+
+const locale = 'fr' as const;
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'footer.privacy')}
+  description={t(locale, 'footer.privacy')}
+>
+  <LegalDocument doc={privacyPolicy[locale]} />
+</BaseLayout>

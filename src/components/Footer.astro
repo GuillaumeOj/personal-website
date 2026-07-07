@@ -1,6 +1,7 @@
 ---
 import { SITE, type Locale } from '../config';
-import { localizedPath, t } from '../i18n/ui';
+import { localizedPath, navItems, t } from '../i18n/ui';
+import SocialLinks from './SocialLinks.astro';
 
 interface Props {
   locale: Locale;
@@ -9,22 +10,61 @@ interface Props {
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const rssHref = localizedPath(locale, '/rss.xml');
+const navLinks = navItems(locale);
+
+const legalLinks = [
+  { href: localizedPath(locale, '/legal-notice'), label: t(locale, 'footer.legalNotice') },
+  { href: localizedPath(locale, '/privacy-policy'), label: t(locale, 'footer.privacy') },
+];
+
+const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
+const colLink =
+  'text-sm text-muted no-underline transition-colors hover:text-ink-strong';
 ---
 
-<footer class="border-t border-zinc-200 dark:border-zinc-800">
-  <div
-    class="mx-auto flex max-w-3xl flex-col gap-3 px-6 py-8 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between"
-  >
-    <p>© {year} {SITE.name}</p>
-    <p>
-      <a
-        href={rssHref}
-        type="application/rss+xml"
-        class="hover:text-zinc-900 dark:hover:text-zinc-100"
-      >
-        {t(locale, 'footer.rss')}
-      </a>
-    </p>
-    <p>{t(locale, 'footer.builtWith')}</p>
+<footer class="mt-24 border-t border-line">
+  <div class="mx-auto max-w-6xl px-6 py-12">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="space-y-4 sm:col-span-2 lg:col-span-2">
+        <p class="font-display text-base font-semibold text-ink-strong">
+          {SITE.name}
+        </p>
+        <SocialLinks locale={locale} />
+      </div>
+
+      <nav class="space-y-3" aria-label={t(locale, 'footer.nav')}>
+        <p class={colHeading}>{t(locale, 'footer.nav')}</p>
+        <ul class="space-y-2 list-none p-0">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class={colLink}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav class="space-y-3" aria-label={t(locale, 'footer.legal')}>
+        <p class={colHeading}>{t(locale, 'footer.legal')}</p>
+        <ul class="space-y-2 list-none p-0">
+          {legalLinks.map((link) => (
+            <li>
+              <a href={link.href} class={colLink}>{link.label}</a>
+            </li>
+          ))}
+          <li>
+            <a href={rssHref} type="application/rss+xml" class={colLink}>
+              {t(locale, 'footer.rss')}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {SITE.name}</p>
+      <p>{t(locale, 'footer.builtWith')}</p>
+    </div>
   </div>
 </footer>

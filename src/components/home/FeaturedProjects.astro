@@ -1,0 +1,40 @@
+---
+import type { Locale } from '../../config';
+import { featured } from '../../lib/home';
+import { localizedPath } from '../../i18n/ui';
+import { getProjects } from '../../lib/projects';
+import ProjectCard from '../ProjectCard.astro';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const items = getProjects().slice(0, 3);
+const allHref = localizedPath(locale, '/projects');
+---
+
+<Section id="projects">
+  <div class="reveal flex flex-wrap items-end justify-between gap-4">
+    <SectionHeader
+      locale={locale}
+      eyebrow={featured.eyebrow}
+      title={featured.title}
+      class="max-w-2xl space-y-4"
+    />
+    <a href={allHref} class="btn btn-secondary">
+      {featured.cta[locale]}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <div class="reveal mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      items.map((project) => (
+        <ProjectCard project={project} locale={locale} priority={false} />
+      ))
+    }
+  </div>
+</Section>

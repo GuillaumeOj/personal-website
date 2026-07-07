@@ -17,7 +17,7 @@ const { author } = post.data;
 
 <a
   href={href}
-  class="group flex flex-col overflow-hidden rounded-lg border border-zinc-200 no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:hover:border-zinc-700 dark:hover:shadow-black/40"
+  class="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
 >
   {
     post.data.cover ? (
@@ -32,17 +32,17 @@ const { author } = post.data;
         />
       </div>
     ) : (
-      <div class="aspect-[16/9] w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800" />
+      <div class="aspect-[16/9] w-full bg-surface-sunken" />
     )
   }
-  <div class="flex flex-1 flex-col gap-2 p-4">
-    <h3 class="text-base font-semibold tracking-tight text-zinc-900 group-hover:underline dark:text-zinc-100">
+  <div class="flex flex-1 flex-col gap-2 p-5">
+    <h3 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
       {post.data.title}
     </h3>
-    <p class="line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400">
+    <p class="line-clamp-3 text-sm leading-relaxed text-muted">
       {post.data.description}
     </p>
-    <div class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2 text-xs text-zinc-500 dark:text-zinc-400">
+    <div class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-3 text-xs text-muted">
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDate(post.data.pubDate, locale)}
       </time>

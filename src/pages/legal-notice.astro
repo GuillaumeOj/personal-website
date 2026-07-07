@@ -1,0 +1,16 @@
+---
+import LegalDocument from '../components/legal/LegalDocument.astro';
+import { t } from '../i18n/ui';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { legalNotice } from '../lib/legal';
+
+const locale = 'fr' as const;
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'footer.legalNotice')}
+  description={t(locale, 'footer.legalNotice')}
+>
+  <LegalDocument doc={legalNotice[locale]} />
+</BaseLayout>

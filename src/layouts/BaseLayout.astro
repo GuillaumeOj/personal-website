@@ -10,9 +10,16 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  /** `prose` keeps the readable max-w-3xl column (blog, project detail).
+   *  `full` lets the page own its section widths (the home landing). */
+  container?: 'prose' | 'full';
 }
 
-const { locale, title, description, ogImage } = Astro.props;
+const { locale, title, description, ogImage, container = 'prose' } = Astro.props;
+const mainClass =
+  container === 'full'
+    ? 'flex-1'
+    : 'mx-auto w-full max-w-3xl flex-1 px-6 py-12';
 const fullTitle = title === SITE.name ? title : `${title} — ${SITE.name}`;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
 const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
@@ -53,6 +60,7 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 
     <script is:inline>
       (() => {
+        document.documentElement.classList.add('js');
         const stored = localStorage.getItem('theme');
         const mode = stored === 'light' || stored === 'dark' || stored === 'system'
           ? stored
@@ -69,14 +77,40 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
   <body class="flex min-h-screen flex-col font-sans">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-zinc-900 focus:px-4 focus:py-2 focus:text-white focus:no-underline dark:focus:bg-zinc-100 dark:focus:text-zinc-900"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-ink-strong focus:px-4 focus:py-2 focus:text-paper focus:no-underline"
     >
       {t(locale, 'nav.skipToContent')}
     </a>
     <Header locale={locale} />
-    <main id="main" class="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
+    <main id="main" class={mainClass}>
       <slot />
     </main>
     <Footer locale={locale} />
+
+    <script is:inline>
+      (() => {
+        const els = document.querySelectorAll('.reveal');
+        if (
+          !els.length ||
+          !('IntersectionObserver' in window) ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          els.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+        els.forEach((el) => io.observe(el));
+      })();
+    </script>
   </body>
 </html>

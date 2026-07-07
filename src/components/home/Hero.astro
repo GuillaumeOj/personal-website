@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import memoji from '../../assets/memoji.png';
+import type { Locale } from '../../config';
+import { hero } from '../../lib/home';
+import { localizedPath } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const projectsHref = localizedPath(locale, '/projects');
+---
+
+<section class="relative overflow-x-clip px-6 pt-16 pb-8 sm:pt-24 sm:pb-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="grid items-center gap-10 lg:grid-cols-[1.5fr_1fr]">
+      <div class="reveal space-y-7">
+        <p class="eyebrow">{hero.eyebrow[locale]}</p>
+        <h1
+          class="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink-strong sm:text-5xl lg:text-[3.75rem]"
+        >
+          {hero.title[locale]}
+        </h1>
+        <p class="max-w-xl text-lg leading-relaxed text-muted">
+          {hero.lead[locale]}
+        </p>
+        <div class="flex flex-wrap gap-3 pt-1">
+          <a href="#contact" class="btn btn-primary">{hero.ctaPrimary[locale]}</a>
+          <a href={projectsHref} class="btn btn-secondary">
+            {hero.ctaSecondary[locale]}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal justify-self-center lg:justify-self-end">
+        <div class="relative">
+          <div
+            class="absolute inset-0 -z-10 scale-110 rounded-full bg-accent/20 blur-2xl"
+            aria-hidden="true"
+          >
+          </div>
+          <Image
+            src={memoji}
+            alt="Memoji de Guillaume Ojardias"
+            width={256}
+            height={256}
+            loading="eager"
+            class="h-44 w-44 rounded-full bg-surface object-cover ring-1 ring-line sm:h-60 sm:w-60"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

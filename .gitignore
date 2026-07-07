@@ -29,6 +29,7 @@ playwright-report/
 test-results/
 coverage/
 
-# claude-code worktrees
+# claude-code worktrees + local settings
 .claude/worktrees/
+.claude/settings.local.json
 .vercel

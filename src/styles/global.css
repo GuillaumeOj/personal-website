@@ -3,6 +3,8 @@
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
+@import "@fontsource/bricolage-grotesque/600.css";
+@import "@fontsource/bricolage-grotesque/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 
@@ -10,13 +12,49 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+/*
+ * Warm semantic palette. Tokens live on :root and flip under .dark, so
+ * components use `bg-paper` / `text-ink` / `text-accent` and adapt to the theme
+ * automatically — no `dark:` duplication for core surfaces and text.
+ */
+:root {
+  --paper: #faf8f4; /* page background — warm paper */
+  --surface: #ffffff; /* raised cards, slightly elevated against paper */
+  --surface-sunken: #f3efe8; /* recessed wells, tags */
+  --ink: #292524; /* body text — charcoal */
+  --ink-strong: #1c1917; /* headings */
+  --muted: #78716c; /* secondary text */
+  --line: #e7e2d9; /* hairlines / borders */
+  --accent: #ea7317; /* amber — fills, marks, timeline */
+  --accent-ink: #b45309; /* amber, darkened for AA text/links on paper */
+  --accent-contrast: #ffffff; /* text sitting on an accent/button fill */
+  --btn-bg: #b45309; /* solid button fill — darkened for AA against white text */
+}
+
+.dark {
+  --paper: #1a1613; /* warm espresso */
+  --surface: #24201c;
+  --surface-sunken: #221e1a;
+  --ink: #e7e5e4;
+  --ink-strong: #fafaf9;
+  --muted: #a8a29e;
+  --line: #37322e;
+  --accent: #fb923c; /* brighter amber holds up on dark */
+  --accent-ink: #fdba74;
+  --accent-contrast: #1c1917;
+  --btn-bg: #fb923c;
+}
+
+@theme inline {
+  --font-display:
+    "Bricolage Grotesque", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-sans:
     "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   --font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     monospace;
+
   --animate-wobble: wobble 3.2s ease-in-out infinite;
   @keyframes wobble {
     0%,
@@ -27,6 +65,58 @@
       transform: rotate(2deg);
     }
   }
+
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-btn-bg: var(--btn-bg);
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;
+  }
+
+  .btn-primary {
+    background: var(--btn-bg);
+    color: var(--accent-contrast);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.06);
+  }
+
+  .btn-secondary {
+    @apply border;
+    border-color: var(--line);
+    color: var(--ink-strong);
+  }
+
+  .btn-secondary:hover {
+    background: var(--surface-sunken);
+  }
+
+  /* Shared page/section headline treatment. */
+  .page-title {
+    @apply font-display text-3xl font-bold tracking-tight text-ink-strong sm:text-4xl;
+  }
+
+  /* Monospace section label with an amber tick. */
+  .eyebrow {
+    @apply flex items-center gap-2.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-ink;
+  }
+
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-accent;
+  }
 }
 
 @layer base {
@@ -36,18 +126,48 @@
   }
 
   body {
-    @apply bg-white text-zinc-900 antialiased;
-    @apply dark:bg-zinc-950 dark:text-zinc-100;
+    @apply bg-paper text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
   }
 
   ::selection {
-    @apply bg-zinc-900 text-white;
-    @apply dark:bg-zinc-100 dark:text-zinc-900;
+    background: var(--accent);
+    color: var(--accent-contrast);
   }
 
   a {
-    @apply underline decoration-zinc-300 underline-offset-4 transition-colors;
-    @apply hover:decoration-zinc-900;
-    @apply dark:decoration-zinc-700 dark:hover:decoration-zinc-100;
+    @apply underline underline-offset-4 transition-colors;
+    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  a:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+/*
+ * Scroll-reveal. Elements start hidden only when JS is available and the user
+ * has not asked to reduce motion, so no-JS and reduced-motion visitors always
+ * see fully-rendered content. The IntersectionObserver in BaseLayout adds
+ * `is-visible`.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -3,8 +3,8 @@ import { localizedPath, otherLocale, t } from '../../src/i18n/ui';
 
 describe('t', () => {
   it('returns the translation in the requested locale', () => {
-    expect(t('fr', 'nav.home')).toBe('Accueil');
-    expect(t('en', 'nav.home')).toBe('Home');
+    expect(t('fr', 'nav.projects')).toBe('Projets');
+    expect(t('en', 'nav.projects')).toBe('Projects');
   });
 
   it('returns the same key for both locales', () => {

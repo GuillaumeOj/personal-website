@@ -1,0 +1,28 @@
+---
+import type { Locale } from '../../config';
+
+interface Props {
+  locale: Locale;
+  eyebrow: Record<Locale, string>;
+  title: Record<Locale, string>;
+  lead?: Record<Locale, string>;
+  /** Wrapper classes; defaults to the standard revealed, measured column. */
+  class?: string;
+}
+
+const {
+  locale,
+  eyebrow,
+  title,
+  lead,
+  class: className = 'reveal max-w-2xl space-y-4',
+} = Astro.props;
+---
+
+<div class={className}>
+  <p class="eyebrow">{eyebrow[locale]}</p>
+  <h2 class="font-display text-3xl font-semibold tracking-tight text-ink-strong sm:text-4xl">
+    {title[locale]}
+  </h2>
+  {lead && <p class="text-lg leading-relaxed text-muted">{lead[locale]}</p>}
+</div>

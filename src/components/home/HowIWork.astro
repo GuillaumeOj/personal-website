@@ -1,0 +1,38 @@
+---
+import type { Locale } from '../../config';
+import { howIWork } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Section id="how-i-work" class="bg-surface-sunken">
+  <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+    <SectionHeader
+      locale={locale}
+      eyebrow={howIWork.eyebrow}
+      title={howIWork.title}
+      class="reveal space-y-4 lg:sticky lg:top-24 lg:self-start"
+    />
+
+    <dl class="reveal space-y-8">
+      {
+        howIWork.points.map((point) => (
+          <div class="border-l-2 border-accent/40 pl-5">
+            <dt class="font-display text-lg font-semibold text-ink-strong">
+              {point.label[locale]}
+            </dt>
+            <dd class="mt-1.5 leading-relaxed text-muted">
+              {point.desc[locale]}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</Section>

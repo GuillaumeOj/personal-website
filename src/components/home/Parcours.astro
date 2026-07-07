@@ -1,0 +1,62 @@
+---
+import type { Locale } from '../../config';
+import { parcours } from '../../lib/home';
+import { getExperience } from '../../lib/experience';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const entries = getExperience();
+---
+
+<Section id="parcours" class="bg-surface-sunken">
+  <SectionHeader
+    locale={locale}
+    eyebrow={parcours.eyebrow}
+    title={parcours.title}
+  />
+
+  <ul class="reveal mt-10 space-y-4 list-none p-0">
+    {
+      entries.map((entry) => (
+        <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
+          <img
+            src={entry.logo}
+            alt={entry.alt}
+            width="48"
+            height="48"
+            loading="lazy"
+            class:list={[
+              'mt-0.5 h-12 w-12 shrink-0 rounded-lg object-contain',
+              entry.logoPlate && 'bg-white p-1.5',
+            ]}
+          />
+          <div class="space-y-1">
+            <p class="flex flex-wrap items-baseline gap-x-2">
+              <strong class="font-display font-semibold text-ink-strong">
+                {entry.role[locale]}
+              </strong>
+              <span class="text-sm text-muted">
+                —{' '}
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent-ink no-underline hover:underline"
+                >
+                  {entry.org}
+                </a>{' '}
+                · {entry.period[locale]}
+              </span>
+            </p>
+            <p class="leading-relaxed text-muted">{entry.description[locale]}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

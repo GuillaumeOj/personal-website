@@ -12,6 +12,12 @@ interface Props {
 const { locale } = Astro.props;
 const f = contact.form;
 
+const statusLabels = JSON.stringify({
+  success: f.success[locale],
+  error: f.error[locale],
+  sending: f.sending[locale],
+});
+
 const fieldLabel =
   'font-mono text-xs uppercase tracking-[0.14em] text-muted';
 const fieldInput =
@@ -34,6 +40,7 @@ const fieldInput =
     <form
       class="reveal space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
       data-contact-form
+      data-labels={statusLabels}
       novalidate
     >
       <div class="grid gap-5 sm:grid-cols-2">
@@ -83,22 +90,67 @@ const fieldInput =
           required></textarea>
       </div>
 
+      {/* Honeypot: hidden from users, tempting to bots. */}
+      <div class="hidden" aria-hidden="true">
+        <label>
+          Company
+          <input type="text" name="company" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
+
       <div class="flex flex-wrap items-center gap-4 pt-1">
         <button type="submit" class="btn btn-primary">{f.submit[locale]}</button>
-        <p class="text-sm text-muted" data-contact-note>{f.note[locale]}</p>
+        <p class="text-sm text-muted" data-contact-status role="status" aria-live="polite"></p>
       </div>
     </form>
   </div>
 </Section>
 
 <script>
-  // The form is intentionally inert until Brevo is wired: block submission and
-  // point the visitor at the direct email fallback instead of losing their input.
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    form
-      .querySelector<HTMLElement>('[data-contact-note]')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
+  if (form) {
+    const labels = JSON.parse(form.dataset.labels!);
+    const status = form.querySelector<HTMLElement>('[data-contact-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submitLabel = button?.textContent ?? '';
+
+    const setStatus = (message: string, ok: boolean) => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = `text-sm ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (status) status.textContent = '';
+      if (button) {
+        button.disabled = true;
+        button.textContent = labels.sending;
+      }
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setStatus(labels.success, true);
+        form.reset();
+      } catch {
+        setStatus(labels.error, false);
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = submitLabel;
+        }
+      }
+    });
+  }
 </script>

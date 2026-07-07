@@ -244,9 +244,14 @@ export const contact = {
       en: 'In a few lines: what you want to build, for whom, and by when.',
     },
     submit: { fr: 'Envoyer', en: 'Send' },
-    note: {
-      fr: 'Ce formulaire n’est pas encore actif — il sera bientôt disponible.',
-      en: 'This form isn’t live yet — it’ll be available soon.',
+    sending: { fr: 'Envoi…', en: 'Sending…' },
+    success: {
+      fr: 'Merci ! Votre message est parti, je vous réponds sous 24 h.',
+      en: 'Thanks! Your message is on its way — I’ll reply within 24 h.',
+    },
+    error: {
+      fr: 'Une erreur est survenue, merci de réessayer.',
+      en: 'Something went wrong, please try again.',
     },
   },
 };

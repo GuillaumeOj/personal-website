@@ -1,16 +1,10 @@
+import { json } from '../src/lib/http.js';
 import {
   classifyPayload,
   isPageEvent,
   type NotionPayload,
   verifySignature,
 } from '../src/lib/notion-webhook.js';
-
-function json(status: number, body: unknown): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json' },
-  });
-}
 
 export async function POST(req: Request): Promise<Response> {
   const rawBody = await req.text();

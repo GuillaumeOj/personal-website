@@ -1,0 +1,41 @@
+---
+import type { Locale } from '../../config';
+import { whatIDo } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Section id="what-i-do">
+  <SectionHeader
+    locale={locale}
+    eyebrow={whatIDo.eyebrow}
+    title={whatIDo.title}
+    lead={whatIDo.lead}
+  />
+
+  <ol class="reveal mt-12 grid list-none gap-4 p-0 sm:grid-cols-3">
+    {
+      whatIDo.pillars.map((pillar, i) => (
+        <li class="rounded-2xl border border-line bg-surface p-6">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-sm text-accent-ink">
+              0{i + 1}
+            </span>
+            <h3 class="font-display text-lg font-semibold text-ink-strong">
+              {pillar.label[locale]}
+            </h3>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-muted">
+            {pillar.desc[locale]}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

@@ -1,0 +1,104 @@
+---
+import type { Locale } from '../../config';
+import { contact } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+import SocialLinks from '../SocialLinks.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const f = contact.form;
+
+const fieldLabel =
+  'font-mono text-xs uppercase tracking-[0.14em] text-muted';
+const fieldInput =
+  'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/30';
+---
+
+<Section id="contact">
+  <div class="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+    <div class="reveal space-y-6 lg:sticky lg:top-24 lg:self-start">
+      <SectionHeader
+        locale={locale}
+        eyebrow={contact.eyebrow}
+        title={contact.title}
+        lead={contact.lead}
+        class="space-y-4"
+      />
+      <SocialLinks locale={locale} />
+    </div>
+
+    <form
+      class="reveal space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+      data-contact-form
+      novalidate
+    >
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div class="space-y-1.5">
+          <label class={fieldLabel} for="contact-name">{f.name[locale]}</label>
+          <input
+            class={fieldInput}
+            id="contact-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+          />
+        </div>
+        <div class="space-y-1.5">
+          <label class={fieldLabel} for="contact-email">{f.email[locale]}</label>
+          <input
+            class={fieldInput}
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class={fieldLabel} for="contact-type">{f.projectType[locale]}</label>
+        <select class={fieldInput} id="contact-type" name="projectType">
+          {
+            f.projectTypeOptions.map((opt) => (
+              <option value={opt.value}>{opt.label[locale]}</option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class={fieldLabel} for="contact-message">{f.message[locale]}</label>
+        <textarea
+          class:list={[fieldInput, 'min-h-32 resize-y']}
+          id="contact-message"
+          name="message"
+          rows="5"
+          placeholder={f.messagePlaceholder[locale]}
+          required></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 pt-1">
+        <button type="submit" class="btn btn-primary">{f.submit[locale]}</button>
+        <p class="text-sm text-muted" data-contact-note>{f.note[locale]}</p>
+      </div>
+    </form>
+  </div>
+</Section>
+
+<script>
+  // The form is intentionally inert until Brevo is wired: block submission and
+  // point the visitor at the direct email fallback instead of losing their input.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    form
+      .querySelector<HTMLElement>('[data-contact-note]')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+</script>

@@ -15,10 +15,8 @@ const posts = await getPostsForLocale(locale);
   description={t(locale, 'blog.subtitle')}
 >
   <section class="space-y-3">
-    <h1 class="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-      {t(locale, 'blog.title')}
-    </h1>
-    <p class="text-zinc-600 dark:text-zinc-400">
+    <h1 class="page-title">{t(locale, 'blog.title')}</h1>
+    <p class="text-lg text-muted">
       {t(locale, 'blog.subtitle')}
     </p>
   </section>

@@ -1,8 +1,15 @@
 ---
+import Contact from '../../components/home/Contact.astro';
+import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
+import Hero from '../../components/home/Hero.astro';
+import HowIWork from '../../components/home/HowIWork.astro';
+import Methodology from '../../components/home/Methodology.astro';
+import Parcours from '../../components/home/Parcours.astro';
+import Services from '../../components/home/Services.astro';
+import TechStack from '../../components/home/TechStack.astro';
+import WhatIDo from '../../components/home/WhatIDo.astro';
 import { SITE } from '../../config';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import SocialLinks from '../../components/SocialLinks.astro';
-import { t } from '../../i18n/ui';
 
 const locale = 'en' as const;
 ---
@@ -10,120 +17,16 @@ const locale = 'en' as const;
 <BaseLayout
   locale={locale}
   title={SITE.name}
-  description="Personal site of Guillaume Ojardias — Django/DRF backend developer, founder of Fusily. Notes, projects, and a blog in French and English."
+  description="Guillaume Ojardias, freelance fullstack developer — web and mobile applications, from frontend to backend through deployment. Python/Django, React Native, Next.js, PostgreSQL."
+  container="full"
 >
-  <section class="space-y-6">
-    <p class="text-sm uppercase tracking-wide text-zinc-500">
-      {t(locale, 'home.tagline')}
-    </p>
-    <h1 class="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-100">
-      {t(locale, 'home.intro.title')}
-    </h1>
-    <div class="space-y-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
-      <p>
-        Today I am building
-        <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a>, a
-        mobile app (iOS/Android) to make cooking more social and more efficient day-to-day,
-        while cutting down on household food waste. On the tech side, I work across the full
-        stack: Django backend (my playground for years, with Django REST Framework and
-        PostgreSQL), React Native mobile app, and Next.js website.
-      </p>
-      <p>
-        On the blog: Python backend notes, lessons from building Fusily, and whatever else
-        catches my curiosity along the way.
-      </p>
-    </div>
-
-    <div class="flex flex-wrap gap-3 pt-2">
-      <a
-        href="/en/blog/"
-        class="inline-flex items-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-      >
-        {t(locale, 'home.cta.blog')}
-      </a>
-    </div>
-  </section>
-
-  <section class="mt-16 space-y-4">
-    <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-      {t(locale, 'home.experience.title')}
-    </h2>
-    <ul class="space-y-5 list-none p-0">
-      <li class="flex items-start gap-4">
-        <img
-          src="/logos/fusily.png"
-          alt="Fusily logo"
-          width="48"
-          height="48"
-          loading="lazy"
-          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
-        />
-        <div class="space-y-1">
-          <p class="text-zinc-900 dark:text-zinc-100">
-            <strong>Founder & Fullstack Developer</strong>
-            <span class="text-zinc-500">
-              — <a href="https://fusily.com" target="_blank" rel="noopener noreferrer">Fusily</a> ·
-              Sep. 2024 → present
-            </span>
-          </p>
-          <p class="text-zinc-700 dark:text-zinc-300">
-            iOS/Android mobile app to create, share and plan recipes, while reducing food waste.
-          </p>
-        </div>
-      </li>
-      <li class="flex items-start gap-4">
-        <img
-          src="/logos/sketchfab.png"
-          alt="Sketchfab logo"
-          width="48"
-          height="48"
-          loading="lazy"
-          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain"
-        />
-        <div class="space-y-1">
-          <p class="text-zinc-900 dark:text-zinc-100">
-            <strong>Backend Python Developer</strong>
-            <span class="text-zinc-500">
-              — <a href="https://sketchfab.com" target="_blank" rel="noopener noreferrer">Sketchfab</a>,
-              then <a href="https://www.fab.com" target="_blank" rel="noopener noreferrer">Epic Games (FAB)</a> ·
-              May 2021 → Feb. 2024
-            </span>
-          </p>
-          <p class="text-zinc-700 dark:text-zinc-300">
-            Django/DRF backend for Sketchfab, the collaborative 3D platform; after Epic Games'
-            acquisition, contributed to the launch of FAB, the asset marketplace for creators.
-          </p>
-        </div>
-      </li>
-      <li class="flex items-start gap-4">
-        <img
-          src="/logos/mergify.svg"
-          alt="Mergify logo"
-          width="48"
-          height="48"
-          loading="lazy"
-          class="mt-1 h-12 w-12 flex-shrink-0 rounded-md object-contain dark:bg-white dark:p-1"
-        />
-        <div class="space-y-1">
-          <p class="text-zinc-900 dark:text-zinc-100">
-            <strong>Python Developer (internship)</strong>
-            <span class="text-zinc-500">
-              — <a href="https://mergify.com" target="_blank" rel="noopener noreferrer">Mergify</a> ·
-              Aug. 2020 → Feb. 2021
-            </span>
-          </p>
-          <p class="text-zinc-700 dark:text-zinc-300">
-            Final-year internship on the Git/GitHub pull-request automation tool.
-          </p>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section class="mt-16 space-y-4">
-    <h2 class="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-      {t(locale, 'home.contact.title')}
-    </h2>
-    <SocialLinks locale={locale} />
-  </section>
+  <Hero locale={locale} />
+  <WhatIDo locale={locale} />
+  <TechStack locale={locale} />
+  <Services locale={locale} />
+  <HowIWork locale={locale} />
+  <Methodology locale={locale} />
+  <FeaturedProjects locale={locale} />
+  <Parcours locale={locale} />
+  <Contact locale={locale} />
 </BaseLayout>

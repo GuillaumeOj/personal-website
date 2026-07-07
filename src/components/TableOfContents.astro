@@ -19,21 +19,21 @@ const label = t(locale, 'blog.tocLabel');
       class="fixed top-32 z-10 hidden w-52 xl:block left-[max(1.5rem,calc(50%-39rem))]"
       data-toc
     >
-      <p class="mb-3 text-xs font-medium tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
+      <p class="mb-3 font-mono text-xs font-medium tracking-wider text-muted uppercase">
         {label}
       </p>
-      <ol class="relative space-y-0 border-l border-zinc-200 dark:border-zinc-800">
+      <ol class="relative space-y-0 border-l border-line">
         {headings.map((h) => (
           <li class="relative" data-toc-state="upcoming">
             <span
-              class="absolute top-0 -left-px h-full w-px bg-zinc-900 opacity-0 transition-opacity dark:bg-zinc-100"
+              class="absolute top-0 -left-px h-full w-px bg-accent opacity-0 transition-opacity"
               data-toc-rail
               aria-hidden="true"
             />
             <a
               href={`#${h.id}`}
               data-toc-link={h.id}
-              class="block py-1.5 pl-4 text-sm leading-snug text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-zinc-100"
+              class="block py-1.5 pl-4 text-sm leading-snug text-muted transition-colors hover:text-ink-strong"
             >
               {h.text}
             </a>
@@ -50,17 +50,11 @@ const label = t(locale, 'blog.tocLabel');
     opacity: 1;
   }
   [data-toc-state='visited'] > a {
-    color: #3f3f46;
-  }
-  html.dark [data-toc-state='visited'] > a {
-    color: #d4d4d8;
+    color: var(--ink);
   }
   [data-toc-state='active'] > a {
-    color: #18181b;
+    color: var(--ink-strong);
     font-weight: 500;
-  }
-  html.dark [data-toc-state='active'] > a {
-    color: #f4f4f5;
   }
 </style>
 

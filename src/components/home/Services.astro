@@ -1,0 +1,54 @@
+---
+import type { Locale } from '../../config';
+import { services } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Section id="services">
+  <SectionHeader
+    locale={locale}
+    eyebrow={services.eyebrow}
+    title={services.title}
+  />
+
+  <div class="reveal mt-12 grid gap-6 md:grid-cols-2">
+    {
+      services.items.map((service) => (
+        <div class="flex flex-col rounded-2xl border border-line bg-surface p-7">
+          <h3 class="font-display text-xl font-semibold text-ink-strong">
+            {service.label[locale]}
+          </h3>
+          <p class="mt-2 text-muted">{service.desc[locale]}</p>
+          <ul class="mt-6 space-y-3 border-t border-line pt-6 text-sm text-ink list-none p-0">
+            {service.features.map((feature) => (
+              <li class="flex items-start gap-3">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="mt-0.5 h-4 w-4 shrink-0 text-accent"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="m5 10.5 3.2 3.2L15 6.5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>{feature[locale]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>

@@ -2,16 +2,11 @@ import type { Locale } from '../config';
 
 const dictionaries = {
   fr: {
-    'nav.home': 'Accueil',
     'nav.blog': 'Blog',
     'nav.projects': 'Projets',
+    'nav.services': 'Services',
+    'nav.contact': 'Contact',
     'nav.skipToContent': 'Aller au contenu',
-    'home.tagline':
-      'Développeur backend Django/DRF • Fondateur & fullstack chez Fusily',
-    'home.intro.title': 'Salut, moi c’est Guillaume.',
-    'home.cta.blog': 'Lire le blog',
-    'home.experience.title': 'Parcours',
-    'home.contact.title': 'Me contacter',
     'home.contact.github': 'GitHub',
     'home.contact.linkedin': 'LinkedIn',
     'home.contact.malt': 'Malt',
@@ -23,8 +18,15 @@ const dictionaries = {
     'blog.backToList': '← Tous les articles',
     'blog.tocLabel': 'Sommaire',
     'projects.title': 'Projets',
-    'projects.subtitle': 'Une sélection de projets que j’ai réalisés.',
+    'projects.subtitle':
+      'Une sélection de projets web et mobiles que j’ai réalisés.',
     'projects.empty': 'Aucun projet pour le moment.',
+    'projects.filter.all': 'Tous',
+    'projects.filter.web': 'Web',
+    'projects.filter.saas': 'SaaS',
+    'projects.filter.mobile': 'Mobile',
+    'projects.filter.label': 'Filtrer par type',
+    'projects.filter.none': 'Aucun projet pour ce filtre.',
     'projects.visit': 'Visiter le projet',
     'projects.viewSource': 'Voir le code source',
     'projects.aim': 'Objectif',
@@ -41,6 +43,10 @@ const dictionaries = {
     'lang.switch': 'Switch to English',
     'footer.builtWith': 'Construit avec Astro, déployé sur Vercel.',
     'footer.rss': 'Flux RSS',
+    'footer.nav': 'Navigation',
+    'footer.legal': 'Légal',
+    'footer.legalNotice': 'Mentions légales',
+    'footer.privacy': 'Politique de confidentialité',
     'error.404.title': '404',
     'error.404.lead': 'Cette page a pris un café…',
     'error.404.message':
@@ -49,16 +55,11 @@ const dictionaries = {
     'error.backHome': 'Retour à l’accueil',
   },
   en: {
-    'nav.home': 'Home',
     'nav.blog': 'Blog',
     'nav.projects': 'Projects',
+    'nav.services': 'Services',
+    'nav.contact': 'Contact',
     'nav.skipToContent': 'Skip to content',
-    'home.tagline':
-      'Django/DRF backend developer • Founder & fullstack at Fusily',
-    'home.intro.title': 'Hi, I’m Guillaume.',
-    'home.cta.blog': 'Read the blog',
-    'home.experience.title': 'Experience',
-    'home.contact.title': 'Get in touch',
     'home.contact.github': 'GitHub',
     'home.contact.linkedin': 'LinkedIn',
     'home.contact.malt': 'Malt',
@@ -70,8 +71,14 @@ const dictionaries = {
     'blog.backToList': '← All posts',
     'blog.tocLabel': 'On this page',
     'projects.title': 'Projects',
-    'projects.subtitle': 'A selection of projects I have built.',
+    'projects.subtitle': 'A selection of web and mobile projects I have built.',
     'projects.empty': 'No projects yet.',
+    'projects.filter.all': 'All',
+    'projects.filter.web': 'Web',
+    'projects.filter.saas': 'SaaS',
+    'projects.filter.mobile': 'Mobile',
+    'projects.filter.label': 'Filter by type',
+    'projects.filter.none': 'No projects for this filter.',
     'projects.visit': 'Visit project',
     'projects.viewSource': 'View source code',
     'projects.aim': 'Goal',
@@ -88,6 +95,10 @@ const dictionaries = {
     'lang.switch': 'Passer en français',
     'footer.builtWith': 'Built with Astro, deployed on Vercel.',
     'footer.rss': 'RSS feed',
+    'footer.nav': 'Navigation',
+    'footer.legal': 'Legal',
+    'footer.legalNotice': 'Legal notice',
+    'footer.privacy': 'Privacy policy',
     'error.404.title': '404',
     'error.404.lead': 'This page took a coffee break…',
     'error.404.message':
@@ -129,3 +140,37 @@ export const articlePath = (
 
 export const projectPath = (locale: Locale, slug: string): string =>
   `${localizedPath(locale, `/projects/${slug}`)}/`;
+
+export interface NavItem {
+  href: string;
+  label: string;
+  /** Kept in the compact (mobile) header row. */
+  compact: boolean;
+}
+
+/** Primary navigation, shared by Header and Footer. */
+export const navItems = (locale: Locale): NavItem[] => {
+  const home = localizedPath(locale, '/');
+  return [
+    {
+      href: `${home}#services`,
+      label: t(locale, 'nav.services'),
+      compact: false,
+    },
+    {
+      href: localizedPath(locale, '/projects'),
+      label: t(locale, 'nav.projects'),
+      compact: true,
+    },
+    {
+      href: localizedPath(locale, '/blog'),
+      label: t(locale, 'nav.blog'),
+      compact: true,
+    },
+    {
+      href: `${home}#contact`,
+      label: t(locale, 'nav.contact'),
+      compact: false,
+    },
+  ];
+};

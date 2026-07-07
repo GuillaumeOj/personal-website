@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { locale, project } = Astro.props;
-const { description, aim } = project.content[locale];
+const { description, aim, longDescription } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
@@ -21,12 +21,12 @@ const name = localizedName(project, locale);
   <article class="space-y-8">
     <a
       href={localizedPath(locale, '/projects')}
-      class="inline-block text-sm text-zinc-600 dark:text-zinc-400"
+      class="inline-block text-sm text-muted no-underline hover:text-ink-strong"
     >
       {t(locale, 'projects.backToList')}
     </a>
 
-    <div class="flex justify-center overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+    <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage
         variants={screenshot}
         priority
@@ -35,11 +35,18 @@ const name = localizedName(project, locale);
     </div>
 
     <header class="space-y-3">
-      <span class="text-sm text-zinc-500 dark:text-zinc-400">{contextLabel}</span>
-      <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-        {name}
-      </h1>
-      <p class="text-lg text-zinc-600 dark:text-zinc-400">{description}</p>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-sm text-muted">{contextLabel}</span>
+        {
+          project.platform.map((platform) => (
+            <span class="rounded-full bg-surface-sunken px-2.5 py-0.5 font-mono text-xs uppercase tracking-wide text-accent-ink">
+              {t(locale, `projects.filter.${platform}`)}
+            </span>
+          ))
+        }
+      </div>
+      <h1 class="page-title">{name}</h1>
+      <p class="text-lg text-muted">{description}</p>
       <div class="flex flex-wrap gap-3 pt-1">
         {
           project.url && (
@@ -47,7 +54,7 @@ const name = localizedName(project, locale);
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              class="btn btn-primary"
             >
               {t(locale, 'projects.visit')}
             </a>
@@ -59,7 +66,7 @@ const name = localizedName(project, locale);
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 no-underline transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              class="btn btn-secondary"
             >
               {t(locale, 'projects.viewSource')}
             </a>
@@ -68,21 +75,25 @@ const name = localizedName(project, locale);
       </div>
     </header>
 
-    <dl class="space-y-6 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+    <div class="space-y-6 border-t border-line pt-6 leading-relaxed text-ink">
+      <p>{longDescription}</p>
+    </div>
+
+    <dl class="space-y-6 border-t border-line pt-6">
       <div class="space-y-1">
-        <dt class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
           {t(locale, 'projects.aim')}
         </dt>
-        <dd class="text-zinc-600 dark:text-zinc-400">{aim}</dd>
+        <dd class="text-ink">{aim}</dd>
       </div>
       <div class="space-y-2">
-        <dt class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
           {t(locale, 'projects.stack')}
         </dt>
         <dd class="flex flex-wrap gap-1.5">
           {
             project.stack.map((tag) => (
-              <span class="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+              <span class="rounded-md bg-surface-sunken px-2 py-0.5 font-mono text-xs text-muted">
                 {tag}
               </span>
             ))

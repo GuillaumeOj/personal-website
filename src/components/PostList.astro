@@ -14,7 +14,7 @@ const { posts, locale } = Astro.props;
 
 {
   posts.length === 0 ? (
-    <p class="text-zinc-500">{t(locale, 'blog.empty')}</p>
+    <p class="text-muted">{t(locale, 'blog.empty')}</p>
   ) : (
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       {posts.map((post, i) => (

@@ -1,0 +1,31 @@
+---
+import type { LegalDoc } from '../../lib/legal';
+
+interface Props {
+  doc: LegalDoc;
+}
+
+const { doc } = Astro.props;
+---
+
+<article class="space-y-8">
+  <header class="space-y-2">
+    <h1 class="page-title">{doc.title}</h1>
+    <p class="text-sm text-muted">{doc.updated}</p>
+  </header>
+
+  <div class="space-y-8">
+    {
+      doc.sections.map((section) => (
+        <section class="space-y-2">
+          <h2 class="font-display text-xl font-semibold text-ink-strong">
+            {section.h}
+          </h2>
+          {section.body.map((p) => (
+            <p class="leading-relaxed text-muted">{p}</p>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</article>

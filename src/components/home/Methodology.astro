@@ -1,0 +1,45 @@
+---
+import type { Locale } from '../../config';
+import { methodology } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Section id="methodology">
+  <SectionHeader
+    locale={locale}
+    eyebrow={methodology.eyebrow}
+    title={methodology.title}
+    lead={methodology.lead}
+  />
+
+  <ol class="mt-12 ml-4 list-none border-l-2 border-line p-0">
+    {
+      methodology.phases.map((phase, i) => (
+        <li
+          class="reveal relative pb-10 pl-10 last:pb-0"
+          style={`--reveal-delay:${i * 90}ms`}
+        >
+          <span
+            class="absolute left-0 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-paper font-mono text-sm font-medium text-accent-ink ring-2 ring-accent"
+            aria-hidden="true"
+          >
+            {i + 1}
+          </span>
+          <h3 class="font-display text-lg font-semibold text-ink-strong">
+            {phase.label[locale]}
+          </h3>
+          <p class="mt-1.5 max-w-xl leading-relaxed text-muted">
+            {phase.desc[locale]}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

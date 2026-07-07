@@ -6,6 +6,7 @@ const dictionaries = {
     'nav.projects': 'Projets',
     'nav.services': 'Services',
     'nav.contact': 'Contact',
+    'nav.menu': 'Menu',
     'nav.skipToContent': 'Aller au contenu',
     'home.contact.github': 'GitHub',
     'home.contact.linkedin': 'LinkedIn',
@@ -59,6 +60,7 @@ const dictionaries = {
     'nav.projects': 'Projects',
     'nav.services': 'Services',
     'nav.contact': 'Contact',
+    'nav.menu': 'Menu',
     'nav.skipToContent': 'Skip to content',
     'home.contact.github': 'GitHub',
     'home.contact.linkedin': 'LinkedIn',
@@ -144,33 +146,18 @@ export const projectPath = (locale: Locale, slug: string): string =>
 export interface NavItem {
   href: string;
   label: string;
-  /** Kept in the compact (mobile) header row. */
-  compact: boolean;
 }
 
 /** Primary navigation, shared by Header and Footer. */
 export const navItems = (locale: Locale): NavItem[] => {
   const home = localizedPath(locale, '/');
   return [
-    {
-      href: `${home}#services`,
-      label: t(locale, 'nav.services'),
-      compact: false,
-    },
+    { href: `${home}#services`, label: t(locale, 'nav.services') },
     {
       href: localizedPath(locale, '/projects'),
       label: t(locale, 'nav.projects'),
-      compact: true,
     },
-    {
-      href: localizedPath(locale, '/blog'),
-      label: t(locale, 'nav.blog'),
-      compact: true,
-    },
-    {
-      href: `${home}#contact`,
-      label: t(locale, 'nav.contact'),
-      compact: false,
-    },
+    { href: localizedPath(locale, '/blog'), label: t(locale, 'nav.blog') },
+    { href: `${home}#contact`, label: t(locale, 'nav.contact') },
   ];
 };

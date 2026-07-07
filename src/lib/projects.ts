@@ -71,7 +71,6 @@ export interface Project {
   /** Wide hero used on the detail view; falls back to `cover` */
   banner?: LocalizedImage;
   year?: number;
-  featured?: boolean;
   /**
    * Per-locale copy: short card `description`, the project's `aim`, and a
    * longer `longDescription` shown on the detail page.
@@ -96,7 +95,6 @@ export const projects: Project[] = [
       en: { light: fusilyEnLight, dark: fusilyEnDark },
     },
     year: 2024,
-    featured: true,
     content: {
       fr: {
         description:
@@ -200,12 +198,22 @@ export const projects: Project[] = [
   },
 ];
 
+/** Explicit display order (first → last) for the list and the home teaser. */
+const DISPLAY_ORDER = [
+  'fusily',
+  'eva-biezunski-avocate',
+  'dotcraft',
+  'personal-website',
+];
+
+/** Rank a slug by its place in DISPLAY_ORDER; unlisted projects sort last. */
+const displayRank = (slug: string): number => {
+  const index = DISPLAY_ORDER.indexOf(slug);
+  return index === -1 ? DISPLAY_ORDER.length : index;
+};
+
 export const getProjects = (): Project[] =>
-  [...projects].sort(
-    (a, b) =>
-      Number(b.featured ?? false) - Number(a.featured ?? false) ||
-      (b.year ?? 0) - (a.year ?? 0),
-  );
+  [...projects].sort((a, b) => displayRank(a.slug) - displayRank(b.slug));
 
 export const getProjectBySlug = (slug: string): Project | undefined =>
   projects.find((p) => p.slug === slug);

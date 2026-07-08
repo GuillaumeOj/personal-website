@@ -1,43 +1,77 @@
 ---
 import type { Locale } from '../config';
-import { articlePath, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, localizedPath, t } from '../i18n/ui';
 import { findSibling } from '../lib/posts';
+import Dropdown from './Dropdown.astro';
+import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const target = otherLocale(locale);
 
 const currentPath = Astro.url.pathname;
 const articleMatch = currentPath.match(
   /^(?:\/en)?\/blog\/([^/]+)\/([^/]+)\/?$/,
 );
 
-let normalized: string;
-
-if (articleMatch) {
-  const [, translationKey] = articleMatch;
-  const sibling = await findSibling(translationKey, target);
-  normalized = sibling
-    ? articlePath(target, translationKey, sibling.data.slug)
-    : `${localizedPath(target, '/blog')}/`;
-} else {
+/** The equivalent of the current page in `target`, preserving blog siblings. */
+const pathFor = async (target: Locale): Promise<string> => {
+  if (articleMatch) {
+    const [, translationKey] = articleMatch;
+    const sibling = await findSibling(translationKey, target);
+    return sibling
+      ? articlePath(target, translationKey, sibling.data.slug)
+      : `${localizedPath(target, '/blog')}/`;
+  }
   const stripped =
     locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
   const targetPath =
     target === 'fr' ? stripped : `/en${stripped === '/' ? '' : stripped}`;
-  normalized = targetPath.endsWith('/') ? targetPath : `${targetPath}/`;
-}
+  return targetPath.endsWith('/') ? targetPath : `${targetPath}/`;
+};
+
+const LOCALES: { code: Locale; label: string }[] = [
+  { code: 'fr', label: 'Français' },
+  { code: 'en', label: 'English' },
+];
+const options = await Promise.all(
+  LOCALES.map(async ({ code, label }) => ({
+    code,
+    label,
+    // Only the other locale needs a link; the current one renders inert.
+    href: code === locale ? null : await pathFor(code),
+  })),
+);
 ---
 
-<a
-  href={normalized}
-  hreflang={target}
-  data-lang-switcher
-  aria-label={t(locale, 'lang.switch')}
-  class="inline-flex h-9 items-center justify-center rounded-md border border-line px-3 text-sm font-medium uppercase tracking-wide text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong"
->
-  {target}
-</a>
+<Dropdown label={t(locale, 'lang.menu')}>
+  <Icon slot="trigger" name="globe" size={16} />
+  <span slot="trigger" class="uppercase tracking-wide">{locale}</span>
+  <Icon slot="trigger" name="chevron-down" size={14} />
+
+  {
+    options.map((option) =>
+      option.code === locale ? (
+        <span
+          role="menuitem"
+          aria-current="true"
+          class="menu-item font-medium text-ink-strong"
+        >
+          <span class="flex-1">{option.label}</span>
+          <Icon name="check" size={16} class="text-accent-ink" />
+        </span>
+      ) : (
+        <a
+          href={option.href}
+          hreflang={option.code}
+          role="menuitem"
+          class="menu-item"
+        >
+          <span class="flex-1">{option.label}</span>
+        </a>
+      ),
+    )
+  }
+</Dropdown>

@@ -5,10 +5,12 @@ test('FR landing renders main sections', async ({ page }) => {
   await expect(page).toHaveTitle(/Guillaume Ojardias/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'applications web et mobiles',
+    'application web ou mobile',
   );
   await expect(
-    page.getByRole('heading', { name: 'Ce que je peux construire pour vous' }),
+    page.getByRole('heading', {
+      name: 'Web ou mobile : le produit adapté à votre besoin.',
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole('heading', { name: 'Parlons de votre projet' }),
@@ -19,7 +21,7 @@ test('EN landing renders main sections', async ({ page }) => {
   await page.goto('/en/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.getByRole('heading', { level: 1 })).toContainText(
-    'web & mobile apps',
+    'web or mobile app',
   );
   await expect(
     page.getByRole('heading', { name: 'Let’s talk about your project' }),

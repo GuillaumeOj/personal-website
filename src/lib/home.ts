@@ -163,7 +163,10 @@ export const howIWork = {
 };
 
 export const methodology = {
-  title: { fr: 'Comment se déroule votre projet', en: 'How your project unfolds' },
+  title: {
+    fr: 'Comment se déroule votre projet',
+    en: 'How your project unfolds',
+  },
   lead: {
     fr: 'Un déroulé simple et prévisible, à chaque étape.',
     en: 'A simple, predictable flow at every step.',
@@ -208,7 +211,10 @@ export const featured = {
 
 export const about = {
   eyebrow: { fr: 'À propos', en: 'About me' },
-  title: { fr: 'Qui construira votre projet', en: 'Who will build your project' },
+  title: {
+    fr: 'Qui construira votre projet',
+    en: 'Who will build your project',
+  },
   experienceLabel: { fr: 'Parcours', en: 'Experience' },
   techLabel: { fr: 'Stack technique', en: 'Tech stack' },
 };

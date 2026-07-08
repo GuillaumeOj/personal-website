@@ -126,6 +126,11 @@
     @apply font-display text-xl font-semibold text-ink-strong sm:text-2xl;
   }
 
+  /* A row inside a dropdown menu ([data-dropdown-menu]). */
+  .menu-item {
+    @apply flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-sm text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong;
+  }
+
   /* Monospace section label with an amber tick. */
   .eyebrow {
     @apply flex items-center gap-2.5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-accent-ink;

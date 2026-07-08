@@ -4,53 +4,53 @@ export const hero = {
     en: 'Fullstack developer · freelance',
   },
   title: {
-    fr: 'Je conçois vos applications web et mobiles, du début à la fin.',
-    en: 'I build your web & mobile apps, end to end.',
+    fr: 'Votre application web ou mobile, de l’idée à la mise en ligne.',
+    en: 'Your web or mobile app, from idea to launch.',
   },
   lead: {
-    fr: 'Du frontend au backend, jusqu’au déploiement et à la maintenance — un seul interlocuteur pour tout votre projet.',
-    en: 'From frontend to backend, through deployment and maintenance — a single point of contact for your whole project.',
+    fr: 'Confiez tout votre projet à un seul partenaire — design, développement, déploiement et suivi — et restez concentré sur votre activité.',
+    en: 'Hand your whole project to a single partner — design, development, deployment and follow-up — and stay focused on your business.',
   },
   ctaPrimary: {
     fr: 'Discutons de votre projet',
     en: 'Let’s talk about your project',
   },
-  ctaSecondary: { fr: 'Voir mes projets', en: 'See my work' },
+  ctaSecondary: { fr: 'Voir des réalisations', en: 'See recent work' },
 };
 
 export const whatIDo = {
-  eyebrow: { fr: 'Ce que je fais', en: 'What I do' },
+  eyebrow: { fr: 'Ce que vous obtenez', en: 'What you get' },
   title: {
-    fr: 'Des applications web et mobiles, complètes.',
-    en: 'Complete web & mobile applications.',
+    fr: 'Un produit web ou mobile complet, prêt pour vos utilisateurs.',
+    en: 'A complete web or mobile product, ready for your users.',
   },
   lead: {
-    fr: 'Je prends en charge toute la chaîne : interfaces soignées, logique métier robuste, base de données, API, et mise en production.',
-    en: 'I own the whole chain: polished interfaces, robust business logic, database, APIs, and shipping to production.',
+    fr: 'Interfaces soignées, logique métier robuste, base de données, API et mise en production : toute la chaîne est couverte, avec un seul interlocuteur.',
+    en: 'Polished interfaces, robust business logic, database, APIs and shipping to production: the whole chain is covered, with a single point of contact.',
   },
   pillars: [
     {
       key: 'frontend',
       label: { fr: 'Frontend', en: 'Frontend' },
       desc: {
-        fr: 'Interfaces web et mobiles responsives, accessibles et agréables à utiliser.',
-        en: 'Responsive, accessible web & mobile interfaces that feel good to use.',
+        fr: 'Des interfaces web et mobiles responsives, accessibles et agréables pour vos utilisateurs.',
+        en: 'Responsive, accessible web & mobile interfaces your users enjoy.',
       },
     },
     {
       key: 'backend',
       label: { fr: 'Backend', en: 'Backend' },
       desc: {
-        fr: 'API, logique métier et bases de données pensées pour durer.',
-        en: 'APIs, business logic and databases built to last.',
+        fr: 'API, logique métier et bases de données solides, prêtes à encaisser la croissance.',
+        en: 'Solid APIs, business logic and databases, ready to handle growth.',
       },
     },
     {
       key: 'devops',
       label: { fr: 'DevOps', en: 'DevOps' },
       desc: {
-        fr: 'Déploiement, hébergement et automatisation, du premier commit à la production.',
-        en: 'Deployment, hosting and automation, from the first commit to production.',
+        fr: 'Déploiement, hébergement et automatisation : votre produit est en ligne et le reste.',
+        en: 'Deployment, hosting and automation: your product goes live and stays live.',
       },
     },
   ],
@@ -79,8 +79,8 @@ export const tech = {
 
 export const services = {
   title: {
-    fr: 'Ce que je peux construire pour vous',
-    en: 'What I can build for you',
+    fr: 'Web ou mobile : le produit adapté à votre besoin.',
+    en: 'Web or mobile: the product that fits your need.',
   },
   items: [
     {
@@ -122,17 +122,17 @@ export const services = {
 };
 
 export const howIWork = {
-  eyebrow: { fr: 'Ma façon de travailler', en: 'How I work' },
+  eyebrow: { fr: 'Travailler ensemble', en: 'Working together' },
   title: {
-    fr: 'Une collaboration claire, un projet qui vous appartient',
+    fr: 'Une collaboration claire, un projet qui reste le vôtre',
     en: 'Clear collaboration, a project that stays yours',
   },
   points: [
     {
       label: { fr: 'Design sur mesure', en: 'Design from scratch' },
       desc: {
-        fr: 'Je conçois l’interface depuis zéro si nécessaire, adaptée à votre besoin.',
-        en: 'I design the interface from scratch when needed, tailored to your need.',
+        fr: 'Une interface pensée pour votre besoin et vos utilisateurs, pas un template recyclé.',
+        en: 'An interface designed for your need and your users, not a recycled template.',
       },
     },
     {
@@ -141,15 +141,15 @@ export const howIWork = {
         en: 'Clean, maintainable code',
       },
       desc: {
-        fr: 'Un code lisible, testé (tests unitaires et e2e) et documenté, pensé pour évoluer sans mauvaises surprises.',
-        en: 'Readable, tested (unit and e2e) and documented code, built to evolve without nasty surprises.',
+        fr: 'Un code lisible, testé (tests unitaires et e2e) et documenté, qui évolue sans mauvaises surprises.',
+        en: 'Readable, tested (unit and e2e) and documented code that evolves without nasty surprises.',
       },
     },
     {
       label: { fr: 'Maintenance', en: 'Maintenance' },
       desc: {
-        fr: 'Je reste disponible pour faire vivre et améliorer votre application dans le temps.',
-        en: 'I stay available to maintain and improve your application over time.',
+        fr: 'Votre application continue d’évoluer et de s’améliorer, bien après la livraison.',
+        en: 'Your app keeps evolving and improving, well after launch.',
       },
     },
     {
@@ -163,7 +163,7 @@ export const howIWork = {
 };
 
 export const methodology = {
-  title: { fr: 'Comment se déroule un projet', en: 'How a project unfolds' },
+  title: { fr: 'Comment se déroule votre projet', en: 'How your project unfolds' },
   lead: {
     fr: 'Un déroulé simple et prévisible, à chaque étape.',
     en: 'A simple, predictable flow at every step.',
@@ -179,15 +179,15 @@ export const methodology = {
     {
       label: { fr: 'Design', en: 'Design' },
       desc: {
-        fr: 'Je conçois les écrans et les parcours avant d’écrire une ligne de code.',
-        en: 'I design the screens and flows before writing a line of code.',
+        fr: 'Les écrans et les parcours sont conçus avant d’écrire une ligne de code.',
+        en: 'The screens and flows are designed before a single line of code.',
       },
     },
     {
       label: { fr: 'Développement', en: 'Development' },
       desc: {
-        fr: 'Je construis l’application par itérations, avec des points réguliers.',
-        en: 'I build the app in iterations, with regular check-ins.',
+        fr: 'Votre application est construite par itérations, avec des points réguliers.',
+        en: 'Your app is built in iterations, with regular check-ins.',
       },
     },
     {
@@ -202,13 +202,13 @@ export const methodology = {
 
 export const featured = {
   eyebrow: { fr: 'Réalisations', en: 'Work' },
-  title: { fr: 'Quelques projets récents', en: 'Selected recent work' },
+  title: { fr: 'Des projets déjà en ligne', en: 'Products already live' },
   cta: { fr: 'Tous les projets', en: 'All projects' },
 };
 
 export const about = {
   eyebrow: { fr: 'À propos', en: 'About me' },
-  title: { fr: 'Mon parcours & ma stack', en: 'Background & stack' },
+  title: { fr: 'Qui construira votre projet', en: 'Who will build your project' },
   experienceLabel: { fr: 'Parcours', en: 'Experience' },
   techLabel: { fr: 'Stack technique', en: 'Tech stack' },
 };
@@ -217,8 +217,8 @@ export const contact = {
   eyebrow: { fr: 'Contact', en: 'Contact' },
   title: { fr: 'Parlons de votre projet', en: 'Let’s talk about your project' },
   lead: {
-    fr: 'Décrivez-moi votre idée en quelques mots, je vous réponds sous 24 h.',
-    en: 'Tell me about your idea in a few words — I reply within 24 h.',
+    fr: 'Décrivez votre idée en quelques mots, vous avez une réponse sous 24 h.',
+    en: 'Tell me about your idea in a few words — you’ll get a reply within 24 h.',
   },
   form: {
     name: { fr: 'Nom', en: 'Name' },
@@ -244,8 +244,8 @@ export const contact = {
     submit: { fr: 'Envoyer', en: 'Send' },
     sending: { fr: 'Envoi…', en: 'Sending…' },
     success: {
-      fr: 'Merci ! Votre message est parti, je vous réponds sous 24 h.',
-      en: 'Thanks! Your message is on its way — I’ll reply within 24 h.',
+      fr: 'Merci ! Votre message est parti, vous avez une réponse sous 24 h.',
+      en: 'Thanks! Your message is on its way — you’ll get a reply within 24 h.',
     },
     error: {
       fr: 'Une erreur est survenue, merci de réessayer.',

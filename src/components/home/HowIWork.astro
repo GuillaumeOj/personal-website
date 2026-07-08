@@ -36,15 +36,15 @@ const { locale } = Astro.props;
     </dl>
   </div>
 
-  <div class="mt-16 border-t border-line pt-12">
-    <h3 class="reveal subheading">
+  <div class="mt-16">
+    <h3 class="reveal subheading border-t border-line pt-12">
       {methodology.title[locale]}
     </h3>
     <p class="reveal mt-3 max-w-2xl text-lg leading-relaxed text-muted">
       {methodology.lead[locale]}
     </p>
 
-    <ol class="mt-10 ml-4 list-none border-l-2 border-line p-0">
+    <ol class="reveal mt-10 ml-4 list-none border-l-2 border-line p-0">
       {
         methodology.phases.map((phase, i) => (
           <li class="reveal relative pb-10 pl-10 last:pb-0">

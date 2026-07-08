@@ -134,19 +134,26 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
           return;
         }
 
-        // Snap landing: full-height sections slide ~100vh at once, so an
-        // observer would fire mid-slide and the reveal would finish before the
-        // section settles. Instead, reveal the elements in view once the scroll
-        // (snap) comes to rest, staggered, so each element animates in place.
+        // Snap landing: full-height sections slide ~100vh at once. Reveal each
+        // element the moment it scrolls into view (leading-edge, rAF-throttled)
+        // so content is already fading in as the section arrives instead of
+        // popping in only after the snap settles. `scrollend` is a safety net
+        // for anything still hidden once motion stops.
         if (document.documentElement.classList.contains('snap-home')) {
           const inView = (el) => {
             const r = el.getBoundingClientRect();
-            return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+            return r.top < window.innerHeight * 0.95 && r.bottom > window.innerHeight * 0.05;
           };
-          let timer;
+          let ticking = false;
           const onScroll = () => {
-            clearTimeout(timer);
-            timer = setTimeout(reveal, 120);
+            // Fire on the leading edge (via rAF) so reveals start mid-slide
+            // rather than 50ms after the snap has come to rest.
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+              ticking = false;
+              reveal();
+            });
           };
           const reveal = () => {
             // Read every candidate before writing so no measurement flushes a
@@ -155,12 +162,14 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
               (el) => !el.classList.contains('is-visible') && inView(el),
             );
             pending.forEach((el, i) => {
-              el.style.setProperty('--reveal-delay', `${i * 90}ms`);
+              // Small lead-in delay, then a capped stagger so a section full of
+              // reveals doesn't leave the last few elements hidden long after
+              // the snap has settled.
+              el.style.setProperty('--reveal-delay', `${120 + Math.min(i, 6) * 55}ms`);
               el.classList.add('is-visible');
             });
             // Nothing left to animate — stop listening so the closures release.
             if (els.every((el) => el.classList.contains('is-visible'))) {
-              clearTimeout(timer);
               window.removeEventListener('scroll', onScroll);
               window.removeEventListener('scrollend', reveal);
             }

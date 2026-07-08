@@ -13,9 +13,18 @@ interface Props {
   /** `prose` keeps the readable max-w-3xl column (blog, project detail).
    *  `full` lets the page own its section widths (the home landing). */
   container?: 'prose' | 'full';
+  /** Enables full-height scroll-snap between sections (the home landing). */
+  snap?: boolean;
 }
 
-const { locale, title, description, ogImage, container = 'prose' } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  ogImage,
+  container = 'prose',
+  snap = false,
+} = Astro.props;
 const mainClass =
   container === 'full'
     ? 'flex-1'
@@ -26,7 +35,7 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} class:list={[{ 'snap-home': snap }]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -89,7 +98,7 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 
     <script is:inline>
       (() => {
-        const els = document.querySelectorAll('.reveal');
+        const els = [...document.querySelectorAll('.reveal')];
         if (
           !els.length ||
           !('IntersectionObserver' in window) ||
@@ -98,6 +107,46 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
           els.forEach((el) => el.classList.add('is-visible'));
           return;
         }
+
+        // Snap landing: full-height sections slide ~100vh at once, so an
+        // observer would fire mid-slide and the reveal would finish before the
+        // section settles. Instead, reveal the elements in view once the scroll
+        // (snap) comes to rest, staggered, so each element animates in place.
+        if (document.documentElement.classList.contains('snap-home')) {
+          const inView = (el) => {
+            const r = el.getBoundingClientRect();
+            return r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+          };
+          let timer;
+          const onScroll = () => {
+            clearTimeout(timer);
+            timer = setTimeout(reveal, 120);
+          };
+          const reveal = () => {
+            // Read every candidate before writing so no measurement flushes a
+            // pending style change; stagger through the shared --reveal-delay.
+            const pending = els.filter(
+              (el) => !el.classList.contains('is-visible') && inView(el),
+            );
+            pending.forEach((el, i) => {
+              el.style.setProperty('--reveal-delay', `${i * 90}ms`);
+              el.classList.add('is-visible');
+            });
+            // Nothing left to animate — stop listening so the closures release.
+            if (els.every((el) => el.classList.contains('is-visible'))) {
+              clearTimeout(timer);
+              window.removeEventListener('scroll', onScroll);
+              window.removeEventListener('scrollend', reveal);
+            }
+          };
+          reveal();
+          window.addEventListener('scroll', onScroll, { passive: true });
+          if ('onscrollend' in window) {
+            window.addEventListener('scrollend', reveal);
+          }
+          return;
+        }
+
         const io = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {

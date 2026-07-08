@@ -66,6 +66,19 @@
     }
   }
 
+  --animate-glow: glow 3.6s ease-in-out infinite;
+  @keyframes glow {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: scale(1.05);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.25);
+    }
+  }
+
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-sunken: var(--surface-sunken);
@@ -106,6 +119,11 @@
   /* Shared page/section headline treatment. */
   .page-title {
     @apply font-display text-3xl font-bold tracking-tight text-ink-strong sm:text-4xl;
+  }
+
+  /* Sub-heading inside a section, below the SectionHeader h2. */
+  .subheading {
+    @apply font-display text-xl font-semibold text-ink-strong sm:text-2xl;
   }
 
   /* Monospace section label with an amber tick. */
@@ -153,8 +171,8 @@
 /*
  * Scroll-reveal. Elements start hidden only when JS is available and the user
  * has not asked to reduce motion, so no-JS and reduced-motion visitors always
- * see fully-rendered content. The IntersectionObserver in BaseLayout adds
- * `is-visible`.
+ * see fully-rendered content. BaseLayout adds `is-visible` and staggers via
+ * `--reveal-delay` (on scroll-rest for the snap landing, on intersection else).
  */
 @media (prefers-reduced-motion: no-preference) {
   html.js .reveal {
@@ -169,5 +187,36 @@
   html.js .reveal.is-visible {
     opacity: 1;
     transform: none;
+  }
+}
+
+/*
+ * Full-height scroll-snap for the home landing (`snap-home` on <html>, set by
+ * BaseLayout's `snap` prop). Every direct section of <main> becomes a
+ * viewport-tall slide and the root scroller snaps one slide per scroll — the
+ * slide contract lives here, so Section and Hero only own their inner layout.
+ * The short footer gets `snap-align: end` (a reachable snap point at the very
+ * bottom, else mandatory snapping traps the last section) and `margin-top: 0`
+ * (drops the paper band under the sunken About slide). Snapping is disabled
+ * under reduced-motion; the full-height layout is not.
+ */
+html.snap-home main > section {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-top: 4rem;
+}
+
+html.snap-home footer {
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.snap-home {
+    scroll-snap-type: y mandatory;
+  }
+
+  html.snap-home footer {
+    scroll-snap-align: end;
   }
 }

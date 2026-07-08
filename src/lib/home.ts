@@ -57,8 +57,6 @@ export const whatIDo = {
 };
 
 export const tech = {
-  eyebrow: { fr: 'Technologies', en: 'Technologies' },
-  title: { fr: 'Mes outils de prédilection', en: 'Tools I master' },
   groups: [
     {
       label: { fr: 'Backend', en: 'Backend' },
@@ -80,7 +78,6 @@ export const tech = {
 };
 
 export const services = {
-  eyebrow: { fr: 'Services', en: 'Services' },
   title: {
     fr: 'Ce que je peux construire pour vous',
     en: 'What I can build for you',
@@ -166,7 +163,6 @@ export const howIWork = {
 };
 
 export const methodology = {
-  eyebrow: { fr: 'Méthodologie', en: 'Methodology' },
   title: { fr: 'Comment se déroule un projet', en: 'How a project unfolds' },
   lead: {
     fr: 'Un déroulé simple et prévisible, à chaque étape.',
@@ -210,9 +206,11 @@ export const featured = {
   cta: { fr: 'Tous les projets', en: 'All projects' },
 };
 
-export const parcours = {
-  eyebrow: { fr: 'Parcours', en: 'Experience' },
-  title: { fr: 'D’où je viens', en: 'Where I come from' },
+export const about = {
+  eyebrow: { fr: 'À propos', en: 'About me' },
+  title: { fr: 'Mon parcours & ma stack', en: 'Background & stack' },
+  experienceLabel: { fr: 'Parcours', en: 'Experience' },
+  techLabel: { fr: 'Stack technique', en: 'Tech stack' },
 };
 
 export const contact = {

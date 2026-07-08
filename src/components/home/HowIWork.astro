@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { howIWork } from '../../lib/home';
+import { howIWork, methodology } from '../../lib/home';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -34,5 +34,35 @@ const { locale } = Astro.props;
         ))
       }
     </dl>
+  </div>
+
+  <div class="mt-16 border-t border-line pt-12">
+    <h3 class="reveal subheading">
+      {methodology.title[locale]}
+    </h3>
+    <p class="reveal mt-3 max-w-2xl text-lg leading-relaxed text-muted">
+      {methodology.lead[locale]}
+    </p>
+
+    <ol class="mt-10 ml-4 list-none border-l-2 border-line p-0">
+      {
+        methodology.phases.map((phase, i) => (
+          <li class="reveal relative pb-10 pl-10 last:pb-0">
+            <span
+              class="absolute left-0 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-surface-sunken font-mono text-sm font-medium text-accent-ink ring-2 ring-accent"
+              aria-hidden="true"
+            >
+              {i + 1}
+            </span>
+            <h4 class="font-display text-lg font-semibold text-ink-strong">
+              {phase.label[locale]}
+            </h4>
+            <p class="mt-1.5 max-w-xl leading-relaxed text-muted">
+              {phase.desc[locale]}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
   </div>
 </Section>

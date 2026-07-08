@@ -1,0 +1,96 @@
+---
+/**
+ * A menu dropdown: a trigger button and a popover panel. Fill the `trigger`
+ * slot with the button content and the default slot with `role="menuitem"`
+ * rows (see `.menu-item`). Open/close for every dropdown on the page is wired
+ * once by the co-located script below.
+ */
+interface Props {
+  /** Accessible label + tooltip for the trigger button. */
+  label: string;
+}
+
+const { label } = Astro.props;
+
+const triggerClass =
+  'inline-flex h-9 items-center gap-1.5 rounded-md border border-line px-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong';
+const menuClass =
+  'absolute left-0 top-full z-30 mt-2 hidden min-w-[9rem] rounded-lg border border-line bg-surface p-1 shadow-lg shadow-black/5';
+---
+
+<div class="relative" data-dropdown>
+  <button
+    type="button"
+    data-dropdown-trigger
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-label={label}
+    title={label}
+    class={triggerClass}
+  >
+    <slot name="trigger" />
+  </button>
+  <div data-dropdown-menu role="menu" class={menuClass}>
+    <slot />
+  </div>
+</div>
+
+<script>
+  // Open/close for every [data-dropdown] on the page. Astro emits this script
+  // once no matter how many Dropdowns render, so it wires them all up together.
+  const dropdowns = [
+    ...document.querySelectorAll<HTMLElement>('[data-dropdown]'),
+  ];
+
+  const closeAll = (except?: HTMLElement | null): void => {
+    for (const dropdown of dropdowns) {
+      if (dropdown === except) continue;
+      dropdown
+        .querySelector<HTMLElement>('[data-dropdown-menu]')
+        ?.classList.add('hidden');
+      dropdown
+        .querySelector<HTMLElement>('[data-dropdown-trigger]')
+        ?.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  for (const dropdown of dropdowns) {
+    const trigger = dropdown.querySelector<HTMLElement>(
+      '[data-dropdown-trigger]',
+    );
+    const menu = dropdown.querySelector<HTMLElement>('[data-dropdown-menu]');
+    if (!trigger || !menu) continue;
+
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const willOpen = menu.classList.contains('hidden');
+      closeAll(dropdown);
+      if (willOpen) {
+        // Align under the trigger's left edge; flip right if it would overflow.
+        menu.classList.remove('right-0');
+        menu.classList.add('left-0');
+        menu.classList.remove('hidden');
+        if (
+          menu.getBoundingClientRect().right >
+          document.documentElement.clientWidth
+        ) {
+          menu.classList.remove('left-0');
+          menu.classList.add('right-0');
+        }
+      } else {
+        menu.classList.add('hidden');
+      }
+      trigger.setAttribute('aria-expanded', String(willOpen));
+    });
+    // Choosing an item closes the menu.
+    menu.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  document.addEventListener('click', () => closeAll(null));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeAll(null);
+  });
+</script>

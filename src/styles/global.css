@@ -66,6 +66,19 @@
     }
   }
 
+  --animate-glow: glow 3.6s ease-in-out infinite;
+  @keyframes glow {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: scale(1.05);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.25);
+    }
+  }
+
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-sunken: var(--surface-sunken);
@@ -81,31 +94,94 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;
+    isolation: isolate;
+  }
+
+  /*
+   * The button surface (fill / border) lives on ::after so it can sit ABOVE the
+   * glow but below the label — this is what keeps the glow off the button's own
+   * fill.
+   */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transition:
+      filter 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  /*
+   * Amber glow behind the button (z-index -2, under the surface). It's blurred
+   * so it bleeds onto the page around the button and tracks the pointer via
+   * --glow-x / --glow-y (set in BaseLayout). Same accent as the hero memoji
+   * glow. Because it's behind the opaque surface it haloes the button rather
+   * than tinting the fill.
+   */
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: radial-gradient(
+      7rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      color-mix(in srgb, var(--accent) 65%, transparent),
+      transparent 70%
+    );
+    opacity: 0;
+    filter: blur(16px);
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  /* Match the site's motion policy: the hover glow only appears (and fades)
+   * when motion is allowed. BaseLayout's pointer script is gated the same way. */
+  @media (prefers-reduced-motion: no-preference) {
+    .btn:hover::before {
+      opacity: 1;
+    }
   }
 
   .btn-primary {
-    background: var(--btn-bg);
     color: var(--accent-contrast);
   }
 
-  .btn-primary:hover {
+  .btn-primary::after {
+    background: var(--btn-bg);
+  }
+
+  .btn-primary:hover::after {
     filter: brightness(1.06);
   }
 
   .btn-secondary {
-    @apply border;
-    border-color: var(--line);
     color: var(--ink-strong);
   }
 
-  .btn-secondary:hover {
+  .btn-secondary::after {
+    border: 1px solid var(--line);
+  }
+
+  .btn-secondary:hover::after {
     background: var(--surface-sunken);
   }
 
   /* Shared page/section headline treatment. */
   .page-title {
     @apply font-display text-3xl font-bold tracking-tight text-ink-strong sm:text-4xl;
+  }
+
+  /* Sub-heading inside a section, below the SectionHeader h2. */
+  .subheading {
+    @apply font-display text-xl font-semibold text-ink-strong sm:text-2xl;
+  }
+
+  /* A row inside a dropdown menu ([data-dropdown-menu]). */
+  .menu-item {
+    @apply flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-sm text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong;
   }
 
   /* Monospace section label with an amber tick. */
@@ -153,21 +229,52 @@
 /*
  * Scroll-reveal. Elements start hidden only when JS is available and the user
  * has not asked to reduce motion, so no-JS and reduced-motion visitors always
- * see fully-rendered content. The IntersectionObserver in BaseLayout adds
- * `is-visible`.
+ * see fully-rendered content. BaseLayout adds `is-visible` and staggers via
+ * `--reveal-delay` (on scroll-rest for the snap landing, on intersection else).
  */
 @media (prefers-reduced-motion: no-preference) {
   html.js .reveal {
     opacity: 0;
-    transform: translateY(1.25rem);
+    transform: translateY(1rem);
     transition:
-      opacity 0.6s ease,
-      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.45s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
   }
 
   html.js .reveal.is-visible {
     opacity: 1;
     transform: none;
+  }
+}
+
+/*
+ * Full-height scroll-snap for the home landing (`snap-home` on <html>, set by
+ * BaseLayout's `snap` prop). Every direct section of <main> becomes a
+ * viewport-tall slide and the root scroller snaps one slide per scroll — the
+ * slide contract lives here, so Section and Hero only own their inner layout.
+ * The short footer gets `snap-align: end` (a reachable snap point at the very
+ * bottom, else mandatory snapping traps the last section) and `margin-top: 0`
+ * (drops the paper band under the sunken About slide). Snapping is disabled
+ * under reduced-motion; the full-height layout is not.
+ */
+html.snap-home main > section {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-top: 4rem;
+}
+
+html.snap-home footer {
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.snap-home {
+    scroll-snap-type: y mandatory;
+  }
+
+  html.snap-home footer {
+    scroll-snap-align: end;
   }
 }

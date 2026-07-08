@@ -1,11 +1,10 @@
 import type { Locale } from '../config';
+import { hero, howIWork, whatIDo } from '../lib/home';
 
 const dictionaries = {
   fr: {
     'nav.blog': 'Blog',
     'nav.projects': 'Projets',
-    'nav.services': 'Services',
-    'nav.contact': 'Contact',
     'nav.menu': 'Menu',
     'nav.skipToContent': 'Aller au contenu',
     'home.contact.github': 'GitHub',
@@ -38,10 +37,10 @@ const dictionaries = {
     'projects.context.side': 'Projet perso',
     'projects.context.oss': 'Open source',
     'theme.toggle': 'Changer le thème',
-    'theme.light': 'Thème clair',
-    'theme.dark': 'Thème sombre',
-    'theme.system': 'Thème système',
-    'lang.switch': 'Switch to English',
+    'theme.light': 'Clair',
+    'theme.dark': 'Sombre',
+    'theme.system': 'Système',
+    'lang.menu': 'Changer de langue',
     'footer.builtWith': 'Construit avec Astro, déployé sur Vercel.',
     'footer.rss': 'Flux RSS',
     'footer.nav': 'Navigation',
@@ -58,8 +57,6 @@ const dictionaries = {
   en: {
     'nav.blog': 'Blog',
     'nav.projects': 'Projects',
-    'nav.services': 'Services',
-    'nav.contact': 'Contact',
     'nav.menu': 'Menu',
     'nav.skipToContent': 'Skip to content',
     'home.contact.github': 'GitHub',
@@ -91,10 +88,10 @@ const dictionaries = {
     'projects.context.side': 'Side project',
     'projects.context.oss': 'Open source',
     'theme.toggle': 'Toggle theme',
-    'theme.light': 'Light theme',
-    'theme.dark': 'Dark theme',
-    'theme.system': 'System theme',
-    'lang.switch': 'Passer en français',
+    'theme.light': 'Light',
+    'theme.dark': 'Dark',
+    'theme.system': 'System',
+    'lang.menu': 'Change language',
     'footer.builtWith': 'Built with Astro, deployed on Vercel.',
     'footer.rss': 'RSS feed',
     'footer.nav': 'Navigation',
@@ -146,18 +143,25 @@ export const projectPath = (locale: Locale, slug: string): string =>
 export interface NavItem {
   href: string;
   label: string;
+  /** Rendered as a prominent button rather than a plain link. */
+  cta?: boolean;
 }
 
-/** Primary navigation, shared by Header and Footer. */
+/**
+ * Primary navigation, shared by Header and Footer. Section quick-links and the
+ * contact CTA reuse the section copy (whatIDo/howIWork eyebrows, hero CTA) so
+ * the nav stays in sync with the landing page automatically.
+ */
 export const navItems = (locale: Locale): NavItem[] => {
   const home = localizedPath(locale, '/');
   return [
-    { href: `${home}#services`, label: t(locale, 'nav.services') },
+    { href: `${home}#services`, label: whatIDo.eyebrow[locale] },
+    { href: `${home}#how-i-work`, label: howIWork.eyebrow[locale] },
     {
       href: localizedPath(locale, '/projects'),
       label: t(locale, 'nav.projects'),
     },
     { href: localizedPath(locale, '/blog'), label: t(locale, 'nav.blog') },
-    { href: `${home}#contact`, label: t(locale, 'nav.contact') },
+    { href: `${home}#contact`, label: hero.ctaPrimary[locale], cta: true },
   ];
 };

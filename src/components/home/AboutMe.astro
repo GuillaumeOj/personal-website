@@ -1,0 +1,97 @@
+---
+import type { Locale } from '../../config';
+import { getExperience } from '../../lib/experience';
+import { about, tech } from '../../lib/home';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const entries = getExperience();
+
+const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
+---
+
+<Section id="about" class="bg-surface-sunken">
+  <SectionHeader
+    locale={locale}
+    eyebrow={about.eyebrow}
+    title={about.title}
+  />
+
+  <div class="mt-12 grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+    <div class="reveal">
+      <h3 class={colHeading}>
+        {about.experienceLabel[locale]}
+      </h3>
+      <ul class="mt-6 space-y-4 list-none p-0">
+        {
+          entries.map((entry) => (
+            <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
+              <img
+                src={entry.logo}
+                alt={entry.alt}
+                width="48"
+                height="48"
+                loading="lazy"
+                class:list={[
+                  'mt-0.5 h-12 w-12 shrink-0 rounded-lg object-contain',
+                  entry.logoPlate && 'bg-white p-1.5',
+                ]}
+              />
+              <div class="space-y-1">
+                <p class="flex flex-wrap items-baseline gap-x-2">
+                  <strong class="font-display font-semibold text-ink-strong">
+                    {entry.role[locale]}
+                  </strong>
+                  <span class="text-sm text-muted">
+                    —{' '}
+                    <a
+                      href={entry.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-accent-ink no-underline hover:underline"
+                    >
+                      {entry.org}
+                    </a>{' '}
+                    · {entry.period[locale]}
+                  </span>
+                </p>
+                <p class="leading-relaxed text-muted">
+                  {entry.description[locale]}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="reveal lg:sticky lg:top-24 lg:self-start">
+      <h3 class={colHeading}>
+        {about.techLabel[locale]}
+      </h3>
+      <dl class="mt-6 space-y-6">
+        {
+          tech.groups.map((group) => (
+            <div>
+              <dt class="font-mono text-xs uppercase tracking-[0.16em] text-accent-ink">
+                {group.label[locale]}
+              </dt>
+              <dd class="mt-3 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <span class="rounded-lg border border-line bg-surface px-3 py-1.5 font-mono text-sm text-ink">
+                    {item}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</Section>

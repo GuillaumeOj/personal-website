@@ -13,9 +13,18 @@ interface Props {
   /** `prose` keeps the readable max-w-3xl column (blog, project detail).
    *  `full` lets the page own its section widths (the home landing). */
   container?: 'prose' | 'full';
+  /** Enables full-height scroll-snap between sections (the home landing). */
+  snap?: boolean;
 }
 
-const { locale, title, description, ogImage, container = 'prose' } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  ogImage,
+  container = 'prose',
+  snap = false,
+} = Astro.props;
 const mainClass =
   container === 'full'
     ? 'flex-1'
@@ -26,7 +35,7 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} class:list={[{ 'snap-home': snap }]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,8 +97,34 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
     <Footer locale={locale} />
 
     <script is:inline>
+      // Point a button's amber glow at the cursor (CSS handles the rest).
+      // Skipped without a real hover pointer or under reduced-motion.
       (() => {
-        const els = document.querySelectorAll('.reveal');
+        if (
+          !window.matchMedia('(hover: hover)').matches ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          return;
+        }
+        document.addEventListener(
+          'pointermove',
+          (event) => {
+            const target = event.target;
+            const btn =
+              target instanceof Element ? target.closest('.btn') : null;
+            if (!btn) return;
+            const rect = btn.getBoundingClientRect();
+            btn.style.setProperty('--glow-x', `${event.clientX - rect.left}px`);
+            btn.style.setProperty('--glow-y', `${event.clientY - rect.top}px`);
+          },
+          { passive: true },
+        );
+      })();
+    </script>
+
+    <script is:inline>
+      (() => {
+        const els = [...document.querySelectorAll('.reveal')];
         if (
           !els.length ||
           !('IntersectionObserver' in window) ||
@@ -98,6 +133,55 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
           els.forEach((el) => el.classList.add('is-visible'));
           return;
         }
+
+        // Snap landing: full-height sections slide ~100vh at once. Reveal each
+        // element the moment it scrolls into view (leading-edge, rAF-throttled)
+        // so content is already fading in as the section arrives instead of
+        // popping in only after the snap settles. `scrollend` is a safety net
+        // for anything still hidden once motion stops.
+        if (document.documentElement.classList.contains('snap-home')) {
+          const inView = (el) => {
+            const r = el.getBoundingClientRect();
+            return r.top < window.innerHeight * 0.95 && r.bottom > window.innerHeight * 0.05;
+          };
+          let ticking = false;
+          const onScroll = () => {
+            // Fire on the leading edge (via rAF) so reveals start mid-slide
+            // rather than 50ms after the snap has come to rest.
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+              ticking = false;
+              reveal();
+            });
+          };
+          const reveal = () => {
+            // Read every candidate before writing so no measurement flushes a
+            // pending style change; stagger through the shared --reveal-delay.
+            const pending = els.filter(
+              (el) => !el.classList.contains('is-visible') && inView(el),
+            );
+            pending.forEach((el, i) => {
+              // Small lead-in delay, then a capped stagger so a section full of
+              // reveals doesn't leave the last few elements hidden long after
+              // the snap has settled.
+              el.style.setProperty('--reveal-delay', `${120 + Math.min(i, 6) * 55}ms`);
+              el.classList.add('is-visible');
+            });
+            // Nothing left to animate — stop listening so the closures release.
+            if (els.every((el) => el.classList.contains('is-visible'))) {
+              window.removeEventListener('scroll', onScroll);
+              window.removeEventListener('scrollend', reveal);
+            }
+          };
+          reveal();
+          window.addEventListener('scroll', onScroll, { passive: true });
+          if ('onscrollend' in window) {
+            window.addEventListener('scrollend', reveal);
+          }
+          return;
+        }
+
         const io = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {

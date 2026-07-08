@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { whatIDo } from '../../lib/home';
+import { services, whatIDo } from '../../lib/home';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -11,7 +11,7 @@ interface Props {
 const { locale } = Astro.props;
 ---
 
-<Section id="what-i-do">
+<Section id="services">
   <SectionHeader
     locale={locale}
     eyebrow={whatIDo.eyebrow}
@@ -19,7 +19,7 @@ const { locale } = Astro.props;
     lead={whatIDo.lead}
   />
 
-  <ol class="reveal mt-12 grid list-none gap-4 p-0 sm:grid-cols-3">
+  <ol class="reveal mt-10 grid list-none gap-4 p-0 sm:grid-cols-3">
     {
       whatIDo.pillars.map((pillar, i) => (
         <li class="rounded-2xl border border-line bg-surface p-6">
@@ -38,4 +38,42 @@ const { locale } = Astro.props;
       ))
     }
   </ol>
+
+  <h3 class="reveal subheading mt-14">
+    {services.title[locale]}
+  </h3>
+
+  <div class="reveal mt-6 grid gap-6 md:grid-cols-2">
+    {
+      services.items.map((service) => (
+        <div class="flex flex-col rounded-2xl border border-line bg-surface p-7">
+          <h4 class="font-display text-lg font-semibold text-ink-strong">
+            {service.label[locale]}
+          </h4>
+          <p class="mt-2 text-muted">{service.desc[locale]}</p>
+          <ul class="mt-6 space-y-3 border-t border-line pt-6 text-sm text-ink list-none p-0">
+            {service.features.map((feature) => (
+              <li class="flex items-start gap-3">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="mt-0.5 h-4 w-4 shrink-0 text-accent"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="m5 10.5 3.2 3.2L15 6.5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>{feature[locale]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
 </Section>

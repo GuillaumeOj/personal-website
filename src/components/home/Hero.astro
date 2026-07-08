@@ -13,8 +13,10 @@ const { locale } = Astro.props;
 const projectsHref = localizedPath(locale, '/projects');
 ---
 
-<section class="relative overflow-x-clip px-6 pt-16 pb-8 sm:pt-24 sm:pb-16">
-  <div class="mx-auto max-w-6xl">
+<section
+  class="relative flex items-center overflow-x-clip px-6 py-24"
+>
+  <div class="mx-auto w-full max-w-6xl">
     <div class="grid items-center gap-10 lg:grid-cols-[1.5fr_1fr]">
       <div class="reveal space-y-7">
         <p class="eyebrow">{hero.eyebrow[locale]}</p>
@@ -38,7 +40,7 @@ const projectsHref = localizedPath(locale, '/projects');
       <div class="reveal justify-self-center lg:justify-self-end">
         <div class="relative">
           <div
-            class="absolute inset-0 -z-10 scale-110 rounded-full bg-accent/20 blur-2xl"
+            class="absolute inset-0 -z-10 scale-110 rounded-full bg-accent/25 blur-2xl motion-safe:animate-glow"
             aria-hidden="true"
           >
           </div>

@@ -1,12 +1,9 @@
 ---
+import AboutMe from '../components/home/AboutMe.astro';
 import Contact from '../components/home/Contact.astro';
 import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import Hero from '../components/home/Hero.astro';
 import HowIWork from '../components/home/HowIWork.astro';
-import Methodology from '../components/home/Methodology.astro';
-import Parcours from '../components/home/Parcours.astro';
-import Services from '../components/home/Services.astro';
-import TechStack from '../components/home/TechStack.astro';
 import WhatIDo from '../components/home/WhatIDo.astro';
 import { SITE } from '../config';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -19,14 +16,12 @@ const locale = 'fr' as const;
   title={SITE.name}
   description="Guillaume Ojardias, développeur fullstack freelance — applications web et mobiles, du frontend au backend jusqu’au déploiement. Python/Django, React Native, Next.js, PostgreSQL."
   container="full"
+  snap
 >
   <Hero locale={locale} />
   <WhatIDo locale={locale} />
-  <TechStack locale={locale} />
-  <Services locale={locale} />
   <HowIWork locale={locale} />
-  <Methodology locale={locale} />
   <FeaturedProjects locale={locale} />
-  <Parcours locale={locale} />
   <Contact locale={locale} />
+  <AboutMe locale={locale} />
 </BaseLayout>

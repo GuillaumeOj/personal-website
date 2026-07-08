@@ -24,7 +24,19 @@ const { author } = post.data;
   ogImage={post.data.cover}
 >
   <TableOfContents locale={locale} headings={headings} />
+  <a
+    href={localizedPath(locale, '/blog')}
+    class="fixed top-24 z-10 hidden w-52 text-sm text-accent-ink no-underline hover:underline xl:block left-[max(1.5rem,calc(50%-39rem))]"
+  >
+    {t(locale, 'blog.backToList')}
+  </a>
   <article class="space-y-6">
+    <a
+      href={localizedPath(locale, '/blog')}
+      class="inline-block text-sm text-accent-ink no-underline hover:underline xl:hidden"
+    >
+      {t(locale, 'blog.backToList')}
+    </a>
     {
       post.data.cover && (
         <Image
@@ -72,14 +84,5 @@ const { author } = post.data;
     >
       <slot />
     </div>
-
-    <footer class="border-t border-line pt-6">
-      <a
-        href={localizedPath(locale, '/blog')}
-        class="text-sm text-accent-ink no-underline hover:underline"
-      >
-        {t(locale, 'blog.backToList')}
-      </a>
-    </footer>
   </article>
 </BaseLayout>

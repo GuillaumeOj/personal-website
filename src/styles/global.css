@@ -94,25 +94,78 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;
+    isolation: isolate;
+  }
+
+  /*
+   * The button surface (fill / border) lives on ::after so it can sit ABOVE the
+   * glow but below the label — this is what keeps the glow off the button's own
+   * fill.
+   */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transition:
+      filter 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  /*
+   * Amber glow behind the button (z-index -2, under the surface). It's blurred
+   * so it bleeds onto the page around the button and tracks the pointer via
+   * --glow-x / --glow-y (set in BaseLayout). Same accent as the hero memoji
+   * glow. Because it's behind the opaque surface it haloes the button rather
+   * than tinting the fill.
+   */
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: radial-gradient(
+      7rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      color-mix(in srgb, var(--accent) 65%, transparent),
+      transparent 70%
+    );
+    opacity: 0;
+    filter: blur(16px);
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  /* Match the site's motion policy: the hover glow only appears (and fades)
+   * when motion is allowed. BaseLayout's pointer script is gated the same way. */
+  @media (prefers-reduced-motion: no-preference) {
+    .btn:hover::before {
+      opacity: 1;
+    }
   }
 
   .btn-primary {
-    background: var(--btn-bg);
     color: var(--accent-contrast);
   }
 
-  .btn-primary:hover {
+  .btn-primary::after {
+    background: var(--btn-bg);
+  }
+
+  .btn-primary:hover::after {
     filter: brightness(1.06);
   }
 
   .btn-secondary {
-    @apply border;
-    border-color: var(--line);
     color: var(--ink-strong);
   }
 
-  .btn-secondary:hover {
+  .btn-secondary::after {
+    border: 1px solid var(--line);
+  }
+
+  .btn-secondary:hover::after {
     background: var(--surface-sunken);
   }
 

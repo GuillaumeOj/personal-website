@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../config';
 import { articlePath, localizedPath, t } from '../i18n/ui';
-import { findSibling } from '../lib/posts';
+import { findBySlug, findSibling } from '../lib/posts';
 import Dropdown from './Dropdown.astro';
 import Icon from './Icon.astro';
 
@@ -12,17 +12,17 @@ interface Props {
 const { locale } = Astro.props;
 
 const currentPath = Astro.url.pathname;
-const articleMatch = currentPath.match(
-  /^(?:\/en)?\/blog\/([^/]+)\/([^/]+)\/?$/,
-);
+const articleMatch = currentPath.match(/^(?:\/en)?\/blog\/([^/]+)\/?$/);
 
 /** The equivalent of the current page in `target`, preserving blog siblings. */
 const pathFor = async (target: Locale): Promise<string> => {
   if (articleMatch) {
-    const [, translationKey] = articleMatch;
-    const sibling = await findSibling(translationKey, target);
+    const [, slug] = articleMatch;
+    const current = await findBySlug(slug, locale);
+    const sibling =
+      current && (await findSibling(current.data.translationKey, target));
     return sibling
-      ? articlePath(target, translationKey, sibling.data.slug)
+      ? articlePath(target, sibling.data.slug)
       : `${localizedPath(target, '/blog')}/`;
   }
   const stripped =

@@ -30,3 +30,11 @@ export async function findSibling(
       !p.data.draft,
   );
 }
+
+export async function findBySlug(
+  slug: string,
+  locale: Locale,
+): Promise<CollectionEntry<'blog'> | undefined> {
+  const posts = await getPostsForLocale(locale);
+  return posts.find((p) => p.data.slug === slug);
+}

@@ -131,11 +131,8 @@ export const localizedPath = (locale: Locale, path: string): string => {
   return `/en${cleaned === '/' ? '' : cleaned}`;
 };
 
-export const articlePath = (
-  locale: Locale,
-  translationKey: string,
-  slug: string,
-): string => `${localizedPath(locale, `/blog/${translationKey}/${slug}`)}/`;
+export const articlePath = (locale: Locale, slug: string): string =>
+  `${localizedPath(locale, `/blog/${slug}`)}/`;
 
 export const projectPath = (locale: Locale, slug: string): string =>
   `${localizedPath(locale, `/projects/${slug}`)}/`;

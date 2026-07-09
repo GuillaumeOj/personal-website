@@ -1,16 +1,25 @@
 ---
-import { articlePath } from '../../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
+import { renderPostBody } from '../../lib/notion';
 import { getPostsForLocale } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getPostsForLocale('fr');
   return posts.map((post) => ({
     params: { slug: post.data.slug },
-    props: {
-      target: articlePath('fr', post.data.translationKey, post.data.slug),
-    },
+    props: { post },
   }));
 }
 
-return Astro.redirect((Astro.props as { target: string }).target, 301);
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { html, headings } = await renderPostBody(post);
 ---
+
+<BlogPostLayout locale="fr" post={post} headings={headings}>
+  <Fragment set:html={html} />
+</BlogPostLayout>

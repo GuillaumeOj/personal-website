@@ -1,11 +1,36 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
-import type { Locale } from '../config';
+import { type Locale, SITE } from '../config';
 import { mockPosts, useMocks } from './mock-posts';
 
 async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const real = await getCollection('blog');
-  if (useMocks) return [...real, ...mockPosts];
-  return real;
+  const posts = useMocks ? [...real, ...mockPosts] : real;
+  return withPrimaryLocaleCovers(posts);
+}
+
+/**
+ * Covers are only set on the primary-locale (`SITE.defaultLocale`) version of
+ * each article. Give every translation the cover of its primary-locale sibling
+ * (matched on `translationKey`) so it shares the same image without needing its
+ * own cover in Notion. Posts with no primary-locale cover are left untouched.
+ */
+function withPrimaryLocaleCovers(
+  posts: CollectionEntry<'blog'>[],
+): CollectionEntry<'blog'>[] {
+  const coverByKey = new Map<string, string>();
+  for (const post of posts) {
+    if (
+      post.data.lang === SITE.defaultLocale &&
+      post.data.translationKey &&
+      post.data.cover
+    ) {
+      coverByKey.set(post.data.translationKey, post.data.cover);
+    }
+  }
+  return posts.map((post) => {
+    const cover = coverByKey.get(post.data.translationKey);
+    return cover ? { ...post, data: { ...post.data, cover } } : post;
+  });
 }
 
 export async function getPostsForLocale(

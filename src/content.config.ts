@@ -6,6 +6,7 @@ import {
 } from '@astro-notion/loader/schemas';
 import type { Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { SITE } from './config';
 import {
   uploadAvatarIfMissing,
   uploadNotionFileIfMissing,
@@ -109,8 +110,11 @@ const blog = defineCollection({
       );
     }
     const pubDate = page.properties.pubDate?.start ?? new Date();
+    // Covers live only on the primary-locale version of each article; other
+    // languages inherit it at query time (see `withPrimaryLocaleCovers` in
+    // `lib/posts.ts`). Skip resolving/uploading covers for other locales.
     let cover: string | undefined;
-    if (page.cover) {
+    if (lang === SITE.defaultLocale && page.cover) {
       cover =
         page.cover.type === 'external'
           ? page.cover.external.url

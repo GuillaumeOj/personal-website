@@ -23,7 +23,7 @@ export function verifySignature(
   signatureHeader: string | null,
   secret: string,
 ): boolean {
-  if (!signatureHeader || !signatureHeader.startsWith(SIGNATURE_PREFIX)) {
+  if (!signatureHeader?.startsWith(SIGNATURE_PREFIX)) {
     return false;
   }
   const provided = signatureHeader.slice(SIGNATURE_PREFIX.length);

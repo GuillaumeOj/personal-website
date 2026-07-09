@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { post, locale, priority = false } = Astro.props;
-const href = articlePath(locale, post.data.translationKey, post.data.slug);
+const href = articlePath(locale, post.data.slug);
 const { author } = post.data;
 ---
 

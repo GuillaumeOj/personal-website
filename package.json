@@ -29,7 +29,7 @@
     "@notion-render/client": "0.0.2",
     "@notion-render/hljs-plugin": "0.0.2",
     "@notionhq/client": "5.20.0",
-    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/typography": "0.5.20",
     "@tailwindcss/vite": "4.2.4",
     "@vercel/blob": "2.3.3",
     "astro": "6.2.2",

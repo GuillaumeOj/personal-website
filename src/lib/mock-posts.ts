@@ -132,8 +132,8 @@ const entries = [
       translationKey: 'why-astro',
       tags: ['astro', 'notion'],
       draft: false,
-      cover:
-        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop',
+      // No cover: inherited from the FR sibling via `withPrimaryLocaleCovers`.
+      cover: undefined,
       author: guillaume,
     },
     EN_BODY,
@@ -150,8 +150,8 @@ const entries = [
       translationKey: 'i18n-astro',
       tags: ['astro', 'i18n'],
       draft: false,
-      cover:
-        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop',
+      // No cover: inherited from the FR sibling via `withPrimaryLocaleCovers`.
+      cover: undefined,
       author: guest,
     },
     EN_BODY,

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import TableOfContents from '../components/TableOfContents.astro';
-import type { Locale } from '../config';
+import { SITE, type Locale } from '../config';
 import { formatDate, localizedPath, t } from '../i18n/ui';
 import type { TocHeading } from '../lib/notion';
 import BaseLayout from './BaseLayout.astro';
@@ -21,7 +21,9 @@ const { author } = post.data;
   locale={locale}
   title={post.data.title}
   description={post.data.description}
-  ogImage={post.data.cover}
+  ogImage={post.data.cover ?? '/memoji.png'}
+  ogImageAlt={SITE.name}
+  brandedSocialTitle={false}
 >
   <TableOfContents locale={locale} headings={headings} />
   <a

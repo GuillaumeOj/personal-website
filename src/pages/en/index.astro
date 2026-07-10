@@ -1,6 +1,4 @@
 ---
-import { getImage } from 'astro:assets';
-import portrait from '../../assets/portrait.jpg';
 import AboutTeaser from '../../components/home/AboutTeaser.astro';
 import Contact from '../../components/home/Contact.astro';
 import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
@@ -9,24 +7,14 @@ import HowIWork from '../../components/home/HowIWork.astro';
 import WhatIDo from '../../components/home/WhatIDo.astro';
 import { SITE } from '../../config';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { portraitAlt } from '../../lib/about';
 
 const locale = 'en' as const;
-
-// A JPEG rendition of the portrait for social sharing (JPEG for broad
-// compatibility, e.g. LinkedIn), same as the about page.
-const ogImage = new URL(
-  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
-  SITE.url,
-).toString();
 ---
 
 <BaseLayout
   locale={locale}
   title={SITE.name}
   description="Guillaume Ojardias, freelance fullstack developer — web and mobile applications, from frontend to backend through deployment. Python/Django, React Native, Next.js, PostgreSQL."
-  ogImage={ogImage}
-  ogImageAlt={portraitAlt[locale]}
   container="full"
   snap
 >

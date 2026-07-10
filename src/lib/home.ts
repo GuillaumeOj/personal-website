@@ -16,6 +16,31 @@ export const hero = {
     en: "Let’s talk about your project",
   },
   ctaSecondary: { fr: "Voir des réalisations", en: "See recent work" },
+  // Kinetic closing line: "<lead> <rotating word>". The rotating word types
+  // in, holds, deletes and swaps on a calm loop (see Hero.astro). Index 0 is
+  // the serious, safe default — server-rendered so the sentence reads with JS
+  // off — and stays first for reduced-motion visitors. Keep phrases short
+  // (≤ ~28 chars) so the reserved line height and mobile wrapping stay stable.
+  closingLead: {
+    fr: "Pendant ce temps, vous restez",
+    en: "Meanwhile, you stay",
+  },
+  closingRotating: {
+    fr: [
+      "concentré sur votre métier",
+      "focus sur vos clients",
+      "serein",
+      "maître de votre temps",
+      "propriétaire de votre produit",
+    ],
+    en: [
+      "focused on your business",
+      "focused on your customers",
+      "at ease",
+      "in control of your time",
+      "the owner of your product",
+    ],
+  },
 };
 
 export const whatIDo = {

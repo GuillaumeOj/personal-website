@@ -1,10 +1,10 @@
-import type { CollectionEntry } from 'astro:content';
-import bookmarkPlugin from '@notion-render/bookmark-plugin';
-import { NotionRenderer } from '@notion-render/client';
-import hljsPlugin from '@notion-render/hljs-plugin';
-import { Client } from '@notionhq/client';
-import { uploadNotionFileIfMissing } from './blob-images';
-import { getMockHtml } from './mock-posts';
+import type { CollectionEntry } from "astro:content";
+import bookmarkPlugin from "@notion-render/bookmark-plugin";
+import { NotionRenderer } from "@notion-render/client";
+import hljsPlugin from "@notion-render/hljs-plugin";
+import { Client } from "@notionhq/client";
+import { uploadNotionFileIfMissing } from "./blob-images";
+import { getMockHtml } from "./mock-posts";
 
 export interface TocHeading {
   id: string;
@@ -19,12 +19,12 @@ export interface RenderedPost {
 const slugify = (text: string): string =>
   text
     .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
     .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 
 export function processHeadings(html: string): RenderedPost {
   const headings: TocHeading[] = [];
@@ -32,12 +32,12 @@ export function processHeadings(html: string): RenderedPost {
 
   const processed = html.replace(
     /<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g,
-    (_match, attrs = '', inner) => {
+    (_match, attrs = "", inner) => {
       const text = inner
-        .replace(/<[^>]+>/g, '')
-        .replace(/\s+/g, ' ')
+        .replace(/<[^>]+>/g, "")
+        .replace(/\s+/g, " ")
         .trim();
-      const base = slugify(text) || 'section';
+      const base = slugify(text) || "section";
       const count = seen.get(base) ?? 0;
       seen.set(base, count + 1);
       const id = count === 0 ? base : `${base}-${count}`;
@@ -76,7 +76,7 @@ export async function renderNotionPage(pageId: string): Promise<string> {
 async function rewriteImageBlocks(blocks: any[]): Promise<any[]> {
   return Promise.all(
     blocks.map(async (block) => {
-      if (block?.type !== 'image' || block.image?.type !== 'file') return block;
+      if (block?.type !== "image" || block.image?.type !== "file") return block;
       const newUrl = await uploadNotionFileIfMissing(block.image.file.url);
       return {
         ...block,
@@ -90,7 +90,7 @@ async function rewriteImageBlocks(blocks: any[]): Promise<any[]> {
 }
 
 export async function renderPostBody(
-  post: CollectionEntry<'blog'>,
+  post: CollectionEntry<"blog">,
 ): Promise<RenderedPost> {
   const mockHtml = getMockHtml(post);
   const raw =

@@ -1,10 +1,10 @@
-import { json } from '../src/lib/http.js';
+import { json } from "../src/lib/http.js";
 import {
   classifyPayload,
   isPageEvent,
   type NotionPayload,
   verifySignature,
-} from '../src/lib/notion-webhook.js';
+} from "../src/lib/notion-webhook.js";
 
 export async function POST(req: Request): Promise<Response> {
   const rawBody = await req.text();
@@ -13,10 +13,10 @@ export async function POST(req: Request): Promise<Response> {
   try {
     payload = classifyPayload(rawBody);
   } catch {
-    return json(400, { ok: false, error: 'invalid json' });
+    return json(400, { ok: false, error: "invalid json" });
   }
 
-  if (payload.kind === 'verification') {
+  if (payload.kind === "verification") {
     // Deliberately log the secret: Notion's verification handshake delivers the
     // token via this endpoint, and we have no UI to surface it. Operator copies
     // it from Vercel function logs, pastes into Notion's UI, and stores it as
@@ -25,23 +25,23 @@ export async function POST(req: Request): Promise<Response> {
     return json(200, { ok: true, verification: true });
   }
 
-  if (payload.kind === 'unknown') {
-    return json(400, { ok: false, error: 'unknown payload' });
+  if (payload.kind === "unknown") {
+    return json(400, { ok: false, error: "unknown payload" });
   }
 
   const secret = process.env.NOTION_WEBHOOK_SECRET;
   const deployHookUrl = process.env.VERCEL_DEPLOY_HOOK_URL;
   if (!secret || !deployHookUrl) {
     console.error(
-      'Missing NOTION_WEBHOOK_SECRET or VERCEL_DEPLOY_HOOK_URL env var',
+      "Missing NOTION_WEBHOOK_SECRET or VERCEL_DEPLOY_HOOK_URL env var",
     );
-    return json(500, { ok: false, error: 'server misconfigured' });
+    return json(500, { ok: false, error: "server misconfigured" });
   }
 
   if (
-    !verifySignature(rawBody, req.headers.get('x-notion-signature'), secret)
+    !verifySignature(rawBody, req.headers.get("x-notion-signature"), secret)
   ) {
-    return json(401, { ok: false, error: 'invalid signature' });
+    return json(401, { ok: false, error: "invalid signature" });
   }
 
   if (!isPageEvent(payload.type)) {
@@ -50,12 +50,12 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const res = await fetch(deployHookUrl, {
-    method: 'POST',
+    method: "POST",
     signal: AbortSignal.timeout(3000),
   });
   if (!res.ok) {
     console.error(`Deploy hook returned ${res.status}`);
-    return json(502, { ok: false, error: 'deploy hook failed' });
+    return json(502, { ok: false, error: "deploy hook failed" });
   }
 
   console.log(`Triggered Vercel rebuild for event: ${payload.type}`);

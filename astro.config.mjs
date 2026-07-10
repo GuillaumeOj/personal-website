@@ -1,8 +1,8 @@
 // @ts-check
-import sitemap from '@astrojs/sitemap';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'astro/config';
-import { SITE } from './src/config.ts';
+import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "astro/config";
+import { SITE } from "./src/config.ts";
 
 export default defineConfig({
   site: SITE.url,
@@ -20,14 +20,14 @@ export default defineConfig({
       // per-locale slugs (blog/project details) simply get no alternate.
       i18n: {
         defaultLocale: SITE.defaultLocale,
-        locales: { fr: 'fr-FR', en: 'en-US' },
+        locales: { fr: "fr-FR", en: "en-US" },
       },
     }),
   ],
   image: {
     remotePatterns: [
-      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
-      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
   vite: {

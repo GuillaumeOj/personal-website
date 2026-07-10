@@ -1,15 +1,15 @@
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
-type BlogData = CollectionEntry<'blog'>['data'];
+type BlogData = CollectionEntry<"blog">["data"];
 
 const guillaume = {
-  name: 'Guillaume Ojardias',
+  name: "Guillaume Ojardias",
   avatarUrl:
-    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop',
+    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop",
 };
 
 const guest = {
-  name: 'Alice Martin',
+  name: "Alice Martin",
   avatarUrl: null,
 };
 
@@ -44,58 +44,58 @@ const EN_BODY = `
 `;
 
 const mock = (id: string, data: BlogData, html: string) => ({
-  post: { id, collection: 'blog', data } as unknown as CollectionEntry<'blog'>,
+  post: { id, collection: "blog", data } as unknown as CollectionEntry<"blog">,
   html,
 });
 
 const entries = [
   mock(
-    'mock-fr-astro',
+    "mock-fr-astro",
     {
-      title: 'Pourquoi Astro pour ce blog',
+      title: "Pourquoi Astro pour ce blog",
       description:
-        'Retour d’expérience sur le choix d’Astro pour un site statique multilingue connecté à Notion.',
-      pubDate: new Date('2026-04-15'),
-      lang: 'fr',
-      slug: 'pourquoi-astro',
-      translationKey: 'why-astro',
-      tags: ['astro', 'notion'],
+        "Retour d’expérience sur le choix d’Astro pour un site statique multilingue connecté à Notion.",
+      pubDate: new Date("2026-04-15"),
+      lang: "fr",
+      slug: "pourquoi-astro",
+      translationKey: "why-astro",
+      tags: ["astro", "notion"],
       draft: false,
       cover:
-        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop',
+        "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop",
       author: guillaume,
     },
     FR_BODY,
   ),
   mock(
-    'mock-fr-i18n',
+    "mock-fr-i18n",
     {
-      title: 'Astro et l’internationalisation',
+      title: "Astro et l’internationalisation",
       description:
-        'Comment configurer i18n avec Astro 6, et comment relier des paires d’articles en deux langues.',
-      pubDate: new Date('2026-03-20'),
-      lang: 'fr',
-      slug: 'i18n-avec-astro',
-      translationKey: 'i18n-astro',
-      tags: ['astro', 'i18n'],
+        "Comment configurer i18n avec Astro 6, et comment relier des paires d’articles en deux langues.",
+      pubDate: new Date("2026-03-20"),
+      lang: "fr",
+      slug: "i18n-avec-astro",
+      translationKey: "i18n-astro",
+      tags: ["astro", "i18n"],
       draft: false,
       cover:
-        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop',
+        "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop",
       author: guest,
     },
     FR_BODY,
   ),
   mock(
-    'mock-fr-tailwind',
+    "mock-fr-tailwind",
     {
-      title: 'Tailwind CSS sans cover',
+      title: "Tailwind CSS sans cover",
       description:
-        'Cas de test sans image de couverture — vérifie le dégradé par défaut de la carte.',
-      pubDate: new Date('2026-02-10'),
-      lang: 'fr',
-      slug: 'tailwind-sans-cover',
-      translationKey: 'tailwind-no-cover',
-      tags: ['tailwind'],
+        "Cas de test sans image de couverture — vérifie le dégradé par défaut de la carte.",
+      pubDate: new Date("2026-02-10"),
+      lang: "fr",
+      slug: "tailwind-sans-cover",
+      translationKey: "tailwind-no-cover",
+      tags: ["tailwind"],
       draft: false,
       cover: undefined,
       author: guillaume,
@@ -103,34 +103,34 @@ const entries = [
     FR_BODY,
   ),
   mock(
-    'mock-fr-orphan',
+    "mock-fr-orphan",
     {
-      title: 'Article sans auteur',
+      title: "Article sans auteur",
       description:
-        'Cas de test sans auteur — vérifie le rendu lorsque la propriété author est absente.',
-      pubDate: new Date('2026-01-05'),
-      lang: 'fr',
-      slug: 'sans-auteur',
-      translationKey: 'orphan',
+        "Cas de test sans auteur — vérifie le rendu lorsque la propriété author est absente.",
+      pubDate: new Date("2026-01-05"),
+      lang: "fr",
+      slug: "sans-auteur",
+      translationKey: "orphan",
       tags: [],
       draft: false,
       cover:
-        'https://images.unsplash.com/photo-1506765515384-028b60a970df?w=1200&h=675&fit=crop',
+        "https://images.unsplash.com/photo-1506765515384-028b60a970df?w=1200&h=675&fit=crop",
       author: undefined,
     },
     FR_BODY,
   ),
   mock(
-    'mock-en-astro',
+    "mock-en-astro",
     {
-      title: 'Why Astro for this blog',
+      title: "Why Astro for this blog",
       description:
-        'A short retrospective on picking Astro for a multilingual static site backed by Notion.',
-      pubDate: new Date('2026-04-15'),
-      lang: 'en',
-      slug: 'why-astro',
-      translationKey: 'why-astro',
-      tags: ['astro', 'notion'],
+        "A short retrospective on picking Astro for a multilingual static site backed by Notion.",
+      pubDate: new Date("2026-04-15"),
+      lang: "en",
+      slug: "why-astro",
+      translationKey: "why-astro",
+      tags: ["astro", "notion"],
       draft: false,
       // No cover: inherited from the FR sibling via `withPrimaryLocaleCovers`.
       cover: undefined,
@@ -139,16 +139,16 @@ const entries = [
     EN_BODY,
   ),
   mock(
-    'mock-en-i18n',
+    "mock-en-i18n",
     {
-      title: 'Astro and internationalisation',
+      title: "Astro and internationalisation",
       description:
-        'Setting up i18n in Astro 6 and linking translation pairs together.',
-      pubDate: new Date('2026-03-20'),
-      lang: 'en',
-      slug: 'i18n-with-astro',
-      translationKey: 'i18n-astro',
-      tags: ['astro', 'i18n'],
+        "Setting up i18n in Astro 6 and linking translation pairs together.",
+      pubDate: new Date("2026-03-20"),
+      lang: "en",
+      slug: "i18n-with-astro",
+      translationKey: "i18n-astro",
+      tags: ["astro", "i18n"],
       draft: false,
       // No cover: inherited from the FR sibling via `withPrimaryLocaleCovers`.
       cover: undefined,
@@ -158,11 +158,11 @@ const entries = [
   ),
 ];
 
-export const mockPosts: CollectionEntry<'blog'>[] = entries.map((e) => e.post);
+export const mockPosts: CollectionEntry<"blog">[] = entries.map((e) => e.post);
 
 const mockHtmlById = new Map(entries.map((e) => [e.post.id, e.html]));
 
-export function getMockHtml(post: CollectionEntry<'blog'>): string | undefined {
+export function getMockHtml(post: CollectionEntry<"blog">): string | undefined {
   return mockHtmlById.get(post.id);
 }
 

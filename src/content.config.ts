@@ -1,16 +1,16 @@
-import { defineCollection } from 'astro:content';
-import { notionLoader, notionPageSchema } from '@astro-notion/loader';
+import { defineCollection } from "astro:content";
+import { notionLoader, notionPageSchema } from "@astro-notion/loader";
 import {
   propertySchema,
   transformedPropertySchema,
-} from '@astro-notion/loader/schemas';
-import type { Loader } from 'astro/loaders';
-import { z } from 'astro/zod';
-import { SITE } from './config';
+} from "@astro-notion/loader/schemas";
+import type { Loader } from "astro/loaders";
+import { z } from "astro/zod";
+import { SITE } from "./config";
 import {
   uploadAvatarIfMissing,
   uploadNotionFileIfMissing,
-} from './lib/blob-images';
+} from "./lib/blob-images";
 
 type RawPeopleProperty = z.infer<typeof propertySchema.people>;
 type RawNotionUser = {
@@ -35,15 +35,15 @@ function buildBlogLoader(): Loader {
   const database_id = import.meta.env.NOTION_DATABASE_ID;
   if (!auth || !database_id) {
     return {
-      name: 'notion-loader-stub',
+      name: "notion-loader-stub",
       load: async () => {},
     };
   }
   const loader = notionLoader({
     auth,
     database_id,
-    filter: { property: 'draft', checkbox: { equals: false } },
-    sorts: [{ property: 'pubDate', direction: 'descending' }],
+    filter: { property: "draft", checkbox: { equals: false } },
+    sorts: [{ property: "pubDate", direction: "descending" }],
   });
   delete (loader as { schema?: unknown }).schema;
 
@@ -59,7 +59,7 @@ function buildBlogLoader(): Loader {
   loader.load = (ctx) => {
     const patchedStore = new Proxy(ctx.store, {
       get(target, prop, receiver) {
-        if (prop === 'set') {
+        if (prop === "set") {
           return (entry: Parameters<typeof target.set>[0]) =>
             target.set({
               ...entry,
@@ -68,7 +68,7 @@ function buildBlogLoader(): Loader {
             });
         }
         const value = Reflect.get(target, prop, receiver);
-        return typeof value === 'function' ? value.bind(target) : value;
+        return typeof value === "function" ? value.bind(target) : value;
       },
     });
     return originalLoad({ ...ctx, store: patchedStore });
@@ -97,7 +97,7 @@ const blog = defineCollection({
   loader: buildBlogLoader(),
   schema: pageSchema.transform(async (page: NotionPage) => {
     const lang = page.properties.lang;
-    if (lang !== 'fr' && lang !== 'en') {
+    if (lang !== "fr" && lang !== "en") {
       throw new Error(
         `Notion page has invalid lang "${lang}" (expected fr|en)`,
       );
@@ -116,7 +116,7 @@ const blog = defineCollection({
     let cover: string | undefined;
     if (lang === SITE.defaultLocale && page.cover) {
       cover =
-        page.cover.type === 'external'
+        page.cover.type === "external"
           ? page.cover.external.url
           : await uploadNotionFileIfMissing(page.cover.file.url);
     }

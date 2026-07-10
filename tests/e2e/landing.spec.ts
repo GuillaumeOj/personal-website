@@ -9,7 +9,7 @@ test("FR landing renders main sections", async ({ page }) => {
   );
   await expect(
     page.getByRole("heading", {
-      name: "Web ou mobile : le produit adapté à votre besoin.",
+      name: "Un produit web ou mobile complet, prêt pour vos utilisateurs.",
     }),
   ).toBeVisible();
   await expect(
@@ -25,6 +25,28 @@ test("EN landing renders main sections", async ({ page }) => {
   );
   await expect(
     page.getByRole("heading", { name: "Let’s talk about your project" }),
+  ).toBeVisible();
+});
+
+test("FR services page renders", async ({ page }) => {
+  await page.goto("/services/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "conçue et livrée par un seul interlocuteur",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Questions fréquentes" }),
+  ).toBeVisible();
+});
+
+test("EN services page renders", async ({ page }) => {
+  await page.goto("/en/services/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "designed and delivered by a single point of contact",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Frequently asked questions" }),
   ).toBeVisible();
 });
 

@@ -2,8 +2,6 @@
 import { SITE, type Locale } from '../config';
 import { localizedPath, navItems, t } from '../i18n/ui';
 import Icon from './Icon.astro';
-import LangSwitcher from './LangSwitcher.astro';
-import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
   locale: Locale;
@@ -38,9 +36,6 @@ const linkClass =
       {cta && (
         <a href={cta.href} class="btn btn-primary px-4 py-2">{cta.label}</a>
       )}
-      <span class="mx-1 h-5 w-px bg-line" aria-hidden="true"></span>
-      <LangSwitcher locale={locale} />
-      <ThemeToggle locale={locale} />
     </nav>
 
     {/* Mobile burger */}
@@ -70,10 +65,6 @@ const linkClass =
       {cta && (
         <a href={cta.href} class="btn btn-primary mt-3 w-full">{cta.label}</a>
       )}
-      <div class="mt-3 flex items-center gap-2 border-t border-line pt-4">
-        <LangSwitcher locale={locale} />
-        <ThemeToggle locale={locale} />
-      </div>
     </nav>
   </div>
 </header>

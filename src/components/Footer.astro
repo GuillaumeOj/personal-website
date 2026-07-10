@@ -1,7 +1,9 @@
 ---
 import { SITE, type Locale } from '../config';
 import { localizedPath, navItems, t } from '../i18n/ui';
+import LangSwitcher from './LangSwitcher.astro';
 import SocialLinks from './SocialLinks.astro';
+import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
   locale: Locale;
@@ -10,9 +12,7 @@ interface Props {
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const rssHref = localizedPath(locale, '/rss.xml');
-const links = navItems(locale);
-const navLinks = links.filter((link) => !link.cta);
-const cta = links.find((link) => link.cta);
+const navLinks = navItems(locale).filter((link) => !link.cta);
 
 const legalLinks = [
   { href: localizedPath(locale, '/legal-notice'), label: t(locale, 'footer.legalNotice') },
@@ -43,9 +43,6 @@ const colLink =
             </li>
           ))}
         </ul>
-        {cta && (
-          <a href={cta.href} class="btn btn-primary mt-2">{cta.label}</a>
-        )}
       </nav>
 
       <nav class="space-y-3" aria-label={t(locale, 'footer.legal')}>
@@ -66,10 +63,16 @@ const colLink =
     </div>
 
     <div
-      class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
+      class="mt-10 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
     >
-      <p>© {year} {SITE.name}</p>
-      <p>{t(locale, 'footer.builtWith')}</p>
+      <div class="flex items-center gap-2">
+        <LangSwitcher locale={locale} />
+        <ThemeToggle locale={locale} />
+      </div>
+      <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+        <p>© {year} {SITE.name}</p>
+        <p>{t(locale, 'footer.builtWith')}</p>
+      </div>
     </div>
   </div>
 </footer>

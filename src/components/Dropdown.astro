@@ -66,16 +66,19 @@ const menuClass =
       const willOpen = menu.classList.contains('hidden');
       closeAll(dropdown);
       if (willOpen) {
-        // Align under the trigger's left edge; flip right if it would overflow.
-        menu.classList.remove('right-0');
-        menu.classList.add('left-0');
+        // Reset to the default placement (below, left-aligned), then flip on
+        // either edge if the menu would overflow the viewport.
+        menu.classList.remove('right-0', 'bottom-full', 'mb-2');
+        menu.classList.add('left-0', 'top-full', 'mt-2');
         menu.classList.remove('hidden');
-        if (
-          menu.getBoundingClientRect().right >
-          document.documentElement.clientWidth
-        ) {
+        const rect = menu.getBoundingClientRect();
+        if (rect.right > document.documentElement.clientWidth) {
           menu.classList.remove('left-0');
           menu.classList.add('right-0');
+        }
+        if (rect.bottom > document.documentElement.clientHeight) {
+          menu.classList.remove('top-full', 'mt-2');
+          menu.classList.add('bottom-full', 'mb-2');
         }
       } else {
         menu.classList.add('hidden');

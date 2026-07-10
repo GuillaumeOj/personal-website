@@ -2,14 +2,21 @@
 interface Props {
   id?: string;
   class?: string;
+  /**
+   * Vertical alignment of the slide content. Defaults to `center`; use `start`
+   * for sections whose height can grow at runtime (e.g. expandable content), so
+   * growth pushes downward instead of shifting the top of the section up.
+   */
+  align?: 'center' | 'start';
 }
 
-const { id, class: className = '' } = Astro.props;
+const { id, class: className = '', align = 'center' } = Astro.props;
+const justify = align === 'start' ? 'justify-start' : 'justify-center';
 ---
 
 <section
   id={id}
-  class:list={['flex flex-col justify-center px-6 py-24', className]}
+  class:list={['flex flex-col px-6 py-24', justify, className]}
 >
   <div class="mx-auto w-full max-w-6xl">
     <slot />

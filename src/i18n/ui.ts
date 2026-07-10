@@ -5,6 +5,7 @@ const dictionaries = {
   fr: {
     'nav.blog': 'Blog',
     'nav.projects': 'Projets',
+    'nav.about': 'À propos',
     'nav.menu': 'Menu',
     'nav.skipToContent': 'Aller au contenu',
     'home.contact.github': 'GitHub',
@@ -57,6 +58,7 @@ const dictionaries = {
   en: {
     'nav.blog': 'Blog',
     'nav.projects': 'Projects',
+    'nav.about': 'About',
     'nav.menu': 'Menu',
     'nav.skipToContent': 'Skip to content',
     'home.contact.github': 'GitHub',
@@ -154,6 +156,7 @@ export const navItems = (locale: Locale): NavItem[] => {
   return [
     { href: `${home}#services`, label: whatIDo.eyebrow[locale] },
     { href: `${home}#how-i-work`, label: howIWork.eyebrow[locale] },
+    { href: localizedPath(locale, '/about'), label: t(locale, 'nav.about') },
     {
       href: localizedPath(locale, '/projects'),
       label: t(locale, 'nav.projects'),

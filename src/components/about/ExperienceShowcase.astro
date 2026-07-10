@@ -1,10 +1,8 @@
 ---
 import type { Locale } from '../../config';
+import { experienceSection } from '../../lib/about';
 import { getExperience } from '../../lib/experience';
-import { about, tech } from '../../lib/home';
 import Icon from '../Icon.astro';
-import Section from './Section.astro';
-import SectionHeader from './SectionHeader.astro';
 
 interface Props {
   locale: Locale;
@@ -12,26 +10,21 @@ interface Props {
 
 const { locale } = Astro.props;
 const entries = getExperience();
-
-const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
 ---
 
-<Section id="about" align="start" class="bg-surface-sunken">
-  <SectionHeader
-    locale={locale}
-    eyebrow={about.eyebrow}
-    title={about.title}
-  />
+<section class="bg-surface-sunken px-6 py-16">
+  <div class="reveal mx-auto max-w-6xl space-y-6">
+    <div class="space-y-3">
+      <p class="eyebrow">{experienceSection.eyebrow[locale]}</p>
+      <h2 class="font-display text-2xl font-semibold text-ink-strong sm:text-3xl">
+        {experienceSection.title[locale]}
+      </h2>
+    </div>
 
-  <div class="mt-12 grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
-    <div class="reveal">
-      <h3 class={colHeading}>
-        {about.experienceLabel[locale]}
-      </h3>
-      <ul class="mt-6 space-y-4 list-none p-0">
-        {
-          entries.map((entry, index) => (
-            <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
+    <ul class="list-none space-y-4 p-0">
+      {
+        entries.map((entry, index) => (
+          <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
               <img
                 src={entry.logo}
                 alt={entry.alt}
@@ -89,8 +82,8 @@ const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
                       aria-expanded="true"
                       aria-controls={`exp-panel-${index}`}
                     >
-                      <span class="exp-more">{about.seeMore[locale]}</span>
-                      <span class="exp-less">{about.seeLess[locale]}</span>
+                      <span class="exp-more">{experienceSection.seeMore[locale]}</span>
+                      <span class="exp-less">{experienceSection.seeLess[locale]}</span>
                       <Icon name="chevron-down" size={14} class="exp-chevron" />
                     </button>
                   </div>
@@ -98,35 +91,10 @@ const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
               </div>
             </li>
           ))
-        }
-      </ul>
-    </div>
-
-    <div class="reveal lg:sticky lg:top-24 lg:self-start">
-      <h3 class={colHeading}>
-        {about.techLabel[locale]}
-      </h3>
-      <dl class="mt-6 space-y-6">
-        {
-          tech.groups.map((group) => (
-            <div>
-              <dt class="font-mono text-xs uppercase tracking-[0.16em] text-accent-ink">
-                {group.label[locale]}
-              </dt>
-              <dd class="mt-3 flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <span class="rounded-lg border border-line bg-surface px-3 py-1.5 font-mono text-sm text-ink">
-                    {item}
-                  </span>
-                ))}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-    </div>
+      }
+    </ul>
   </div>
-</Section>
+</section>
 
 <style>
   /* The toggle always sits at the bottom; the collapsible panel grows above it.

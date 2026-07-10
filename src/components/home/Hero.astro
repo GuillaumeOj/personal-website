@@ -4,6 +4,7 @@ import memoji from '../../assets/memoji.png';
 import type { Locale } from '../../config';
 import { hero } from '../../lib/home';
 import { localizedPath } from '../../i18n/ui';
+import Icon from '../Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -32,7 +33,7 @@ const projectsHref = localizedPath(locale, '/projects');
           <a href="#contact" class="btn btn-primary">{hero.ctaPrimary[locale]}</a>
           <a href={projectsHref} class="btn btn-secondary">
             {hero.ctaSecondary[locale]}
-            <span aria-hidden="true">→</span>
+      <Icon name="arrow-right" size={15} />
           </a>
         </div>
       </div>

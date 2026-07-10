@@ -13,7 +13,17 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both
+      // locales under the same slug (home, /about, listings, legal). Pages with
+      // per-locale slugs (blog/project details) simply get no alternate.
+      i18n: {
+        defaultLocale: SITE.defaultLocale,
+        locales: { fr: 'fr-FR', en: 'en-US' },
+      },
+    }),
+  ],
   image: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },

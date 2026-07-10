@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../assets/portrait.jpg';
+import type { Locale } from '../../config';
+import { portraitAlt } from '../../lib/about';
+
+interface Props {
+  locale: Locale;
+  /** Square sizing classes for the image, e.g. `h-40 w-40`. */
+  class?: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const {
+  locale,
+  class: sizeClass = 'h-40 w-40 sm:h-48 sm:w-48',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<Image
+  src={portrait}
+  alt={portraitAlt[locale]}
+  width={448}
+  height={597}
+  loading={loading}
+  fetchpriority={loading === 'eager' ? 'high' : undefined}
+  class:list={['rounded-full bg-surface object-cover ring-1 ring-line', sizeClass]}
+/>

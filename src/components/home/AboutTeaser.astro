@@ -1,0 +1,36 @@
+---
+import type { Locale } from '../../config';
+import { localizedPath } from '../../i18n/ui';
+import { about } from '../../lib/home';
+import Portrait from '../about/Portrait.astro';
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const aboutHref = localizedPath(locale, '/about');
+---
+
+{/* `id="about"` preserves the old /#about anchor now that the long section
+    moved to its own page. */}
+<Section id="about" class="bg-surface-sunken">
+  <SectionHeader locale={locale} eyebrow={about.eyebrow} title={about.title} />
+
+  <div class="reveal mt-8 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
+    <Portrait locale={locale} class="h-28 w-28 shrink-0 sm:h-32 sm:w-32" />
+    <div class="max-w-2xl space-y-6">
+      <p class="text-lg leading-relaxed text-muted">{about.teaser[locale]}</p>
+      <a
+        href={aboutHref}
+        class="btn btn-secondary"
+      >
+        {about.teaserCta[locale]}
+      <Icon name="arrow-right" size={15} />
+      </a>
+    </div>
+  </div>
+</Section>

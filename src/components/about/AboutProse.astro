@@ -1,0 +1,43 @@
+---
+import type { AboutDoc } from '../../lib/about';
+import Run from './Run.astro';
+
+interface Props {
+  doc: AboutDoc;
+}
+
+const { doc } = Astro.props;
+---
+
+{/* The eyebrow, H1 and intro live in the page hero (with the portrait); this
+    renders the narrative H2 sections only. */}
+<div class="space-y-12">
+  {
+    doc.sections.map((section) => (
+      <section class="reveal space-y-3">
+        <h2 class="font-display text-xl font-semibold text-ink-strong sm:text-2xl">
+          {section.h}
+        </h2>
+        {section.blocks.map((block) =>
+          block.t === 'list' ? (
+            <ul class="list-disc space-y-1 pl-5 leading-relaxed text-muted marker:text-accent-ink">
+              {block.items.map((item) => (
+                <li>
+                  {item.map((run) => (
+                    <Run run={run} />
+                  ))}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="leading-relaxed text-muted">
+              {block.runs.map((run) => (
+                <Run run={run} />
+              ))}
+            </p>
+          ),
+        )}
+      </section>
+    ))
+  }
+</div>

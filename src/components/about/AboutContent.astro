@@ -1,0 +1,47 @@
+---
+import type { Locale } from '../../config';
+import { about } from '../../lib/about';
+import AboutProse from './AboutProse.astro';
+import ExperienceShowcase from './ExperienceShowcase.astro';
+import Portrait from './Portrait.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const doc = about[locale];
+---
+
+<div class="mx-auto max-w-6xl space-y-12 px-6 py-16">
+  <section class="reveal">
+    <p class="eyebrow">{doc.eyebrow}</p>
+    <h1 class="page-title mt-4">{doc.title}</h1>
+    <div class="mt-12 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-12">
+      <Portrait
+        locale={locale}
+        loading="eager"
+        class="h-44 w-44 shrink-0 sm:h-56 sm:w-56"
+      />
+      <div class="space-y-4">
+        {
+          doc.intro.map((para) => (
+            <p class="text-lg leading-relaxed text-muted">{para}</p>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <AboutProse doc={doc} />
+
+  <section class="reveal space-y-4">
+    <h2 class="font-display text-2xl font-semibold text-ink-strong sm:text-3xl">
+      {doc.cta.h}
+    </h2>
+    <p class="text-lg leading-relaxed text-muted">{doc.cta.lead}</p>
+    <a href={doc.cta.href} class="btn btn-primary">{doc.cta.linkLabel}</a>
+  </section>
+</div>
+
+<ExperienceShowcase locale={locale} />

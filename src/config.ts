@@ -1,13 +1,13 @@
 export const SITE = {
-  name: 'Guillaume Ojardias',
-  url: 'https://guillaume.ojardias.info',
-  defaultLocale: 'fr' as const,
-  locales: ['fr', 'en'] as const,
+  name: "Guillaume Ojardias",
+  url: "https://guillaume.ojardias.info",
+  defaultLocale: "fr" as const,
+  locales: ["fr", "en"] as const,
   social: {
-    github: 'https://github.com/GuillaumeOj',
-    linkedin: 'https://www.linkedin.com/in/guillaume-o/',
-    malt: 'https://www.malt.fr/profile/guillaumeojardias',
-    fiverr: 'https://www.fiverr.com/sellers/guillaume_oj/',
+    github: "https://github.com/GuillaumeOj",
+    linkedin: "https://www.linkedin.com/in/guillaume-o/",
+    malt: "https://www.malt.fr/profile/guillaumeojardias",
+    fiverr: "https://www.fiverr.com/sellers/guillaume_oj/",
   },
 };
 

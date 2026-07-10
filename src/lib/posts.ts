@@ -1,9 +1,9 @@
-import { type CollectionEntry, getCollection } from 'astro:content';
-import { type Locale, SITE } from '../config';
-import { mockPosts, useMocks } from './mock-posts';
+import { type CollectionEntry, getCollection } from "astro:content";
+import { type Locale, SITE } from "../config";
+import { mockPosts, useMocks } from "./mock-posts";
 
-async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
-  const real = await getCollection('blog');
+async function getAllPosts(): Promise<CollectionEntry<"blog">[]> {
+  const real = await getCollection("blog");
   const posts = useMocks ? [...real, ...mockPosts] : real;
   return withPrimaryLocaleCovers(posts);
 }
@@ -15,8 +15,8 @@ async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
  * own cover in Notion. Posts with no primary-locale cover are left untouched.
  */
 function withPrimaryLocaleCovers(
-  posts: CollectionEntry<'blog'>[],
-): CollectionEntry<'blog'>[] {
+  posts: CollectionEntry<"blog">[],
+): CollectionEntry<"blog">[] {
   const coverByKey = new Map<string, string>();
   for (const post of posts) {
     if (
@@ -36,7 +36,7 @@ function withPrimaryLocaleCovers(
 export async function getPostsForLocale(
   locale: Locale,
   limit?: number,
-): Promise<CollectionEntry<'blog'>[]> {
+): Promise<CollectionEntry<"blog">[]> {
   const posts = (await getAllPosts())
     .filter((post) => post.data.lang === locale && !post.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -46,7 +46,7 @@ export async function getPostsForLocale(
 export async function findSibling(
   translationKey: string,
   locale: Locale,
-): Promise<CollectionEntry<'blog'> | undefined> {
+): Promise<CollectionEntry<"blog"> | undefined> {
   const posts = await getAllPosts();
   return posts.find(
     (p) =>
@@ -59,7 +59,7 @@ export async function findSibling(
 export async function findBySlug(
   slug: string,
   locale: Locale,
-): Promise<CollectionEntry<'blog'> | undefined> {
+): Promise<CollectionEntry<"blog"> | undefined> {
   const posts = await getPostsForLocale(locale);
   return posts.find((p) => p.data.slug === slug);
 }

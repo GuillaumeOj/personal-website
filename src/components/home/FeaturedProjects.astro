@@ -6,6 +6,7 @@ import { getProjects } from '../../lib/projects';
 import ProjectCard from '../ProjectCard.astro';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
+import Icon from '../Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -26,7 +27,7 @@ const allHref = localizedPath(locale, '/projects');
     />
     <a href={allHref} class="btn btn-secondary">
       {featured.cta[locale]}
-      <span aria-hidden="true">→</span>
+      <Icon name="arrow-right" size={15} />
     </a>
   </div>
 

@@ -1,0 +1,25 @@
+---
+import type { Run } from '../../lib/about';
+
+interface Props {
+  run: Run;
+}
+
+const { run } = Astro.props;
+---
+
+{
+  run.t === 'strong' ? (
+    <strong class="font-display font-semibold text-ink-strong">{run.v}</strong>
+  ) : run.t === 'link' ? (
+    <a href={run.href} class="text-accent-ink no-underline hover:underline">
+      {run.strong ? (
+        <strong class="font-display font-semibold">{run.v}</strong>
+      ) : (
+        run.v
+      )}
+    </a>
+  ) : (
+    run.v
+  )
+}

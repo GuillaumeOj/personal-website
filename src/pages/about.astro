@@ -1,0 +1,31 @@
+---
+import { getImage } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+import AboutContent from '../components/about/AboutContent.astro';
+import { SITE } from '../config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { about, aboutJsonLd, portraitAlt } from '../lib/about';
+
+const locale = 'fr' as const;
+const doc = about[locale];
+
+// A JPEG rendition of the portrait for social sharing (JPEG for broad
+// compatibility, e.g. LinkedIn). Reused for og:image and the JSON-LD image.
+const ogImage = new URL(
+  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
+  SITE.url,
+).toString();
+---
+
+<BaseLayout
+  locale={locale}
+  title={doc.metaTitle}
+  description={doc.metaDescription}
+  ogImage={ogImage}
+  ogImageAlt={portraitAlt[locale]}
+  jsonLd={aboutJsonLd(locale, ogImage)}
+  container="full"
+  hreflang
+>
+  <AboutContent locale={locale} />
+</BaseLayout>

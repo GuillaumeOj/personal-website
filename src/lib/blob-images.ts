@@ -1,16 +1,16 @@
-import { createHash } from 'node:crypto';
-import { BlobNotFoundError, head, put } from '@vercel/blob';
+import { createHash } from "node:crypto";
+import { BlobNotFoundError, head, put } from "@vercel/blob";
 
-const BLOB_PREFIX = 'notion/';
-const AVATAR_PREFIX = 'notion/avatars/';
+const BLOB_PREFIX = "notion/";
+const AVATAR_PREFIX = "notion/avatars/";
 
 function parseNotionFileKey(url: string): string | null {
   try {
     const { hostname, pathname } = new URL(url);
-    if (!hostname.endsWith('.amazonaws.com')) return null;
-    const [parentId, objId, fileName] = pathname.split('/').filter(Boolean);
+    if (!hostname.endsWith(".amazonaws.com")) return null;
+    const [parentId, objId, fileName] = pathname.split("/").filter(Boolean);
     if (!parentId || !objId || !fileName) return null;
-    const ext = fileName.split('.').pop() ?? 'bin';
+    const ext = fileName.split(".").pop() ?? "bin";
     return `${BLOB_PREFIX}${parentId}/${objId}.${ext}`;
   } catch {
     return null;
@@ -20,11 +20,11 @@ function parseNotionFileKey(url: string): string | null {
 function parseAvatarKey(url: string): string | null {
   try {
     const parsed = new URL(url);
-    if (parsed.hostname.endsWith('.public.blob.vercel-storage.com')) {
+    if (parsed.hostname.endsWith(".public.blob.vercel-storage.com")) {
       return null;
     }
     const stable = `${parsed.origin}${parsed.pathname}`;
-    const hash = createHash('sha256').update(stable).digest('hex').slice(0, 24);
+    const hash = createHash("sha256").update(stable).digest("hex").slice(0, 24);
     return `${AVATAR_PREFIX}${hash}`;
   } catch {
     return null;
@@ -46,10 +46,10 @@ async function uploadIfMissing(url: string, key: string): Promise<string> {
   if (!res.ok) return url;
   const body = await res.arrayBuffer();
   const { url: publicUrl } = await put(key, body, {
-    access: 'public',
+    access: "public",
     token,
     addRandomSuffix: false,
-    contentType: res.headers.get('content-type') ?? undefined,
+    contentType: res.headers.get("content-type") ?? undefined,
   });
   return publicUrl;
 }

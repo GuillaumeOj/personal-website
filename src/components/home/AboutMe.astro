@@ -2,6 +2,7 @@
 import type { Locale } from '../../config';
 import { getExperience } from '../../lib/experience';
 import { about, tech } from '../../lib/home';
+import Icon from '../Icon.astro';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -15,7 +16,7 @@ const entries = getExperience();
 const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
 ---
 
-<Section id="about" class="bg-surface-sunken">
+<Section id="about" align="start" class="bg-surface-sunken">
   <SectionHeader
     locale={locale}
     eyebrow={about.eyebrow}
@@ -29,7 +30,7 @@ const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
       </h3>
       <ul class="mt-6 space-y-4 list-none p-0">
         {
-          entries.map((entry) => (
+          entries.map((entry, index) => (
             <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
               <img
                 src={entry.logo}
@@ -63,6 +64,37 @@ const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
                 <p class="leading-relaxed text-muted">
                   {entry.description[locale]}
                 </p>
+                {(entry.highlights || entry.note) && (
+                  <div class="exp" data-exp>
+                    <div id={`exp-panel-${index}`} class="exp-collapsible">
+                      <div class="exp-collapsible-inner space-y-1">
+                        {entry.highlights && (
+                          <ul class="list-disc space-y-1 pl-5 leading-relaxed text-muted marker:text-accent-ink">
+                            {entry.highlights[locale].map((item) => (
+                              <li>{item}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {entry.note && (
+                          <p class="leading-relaxed text-muted">
+                            {entry.note[locale]}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="exp-summary font-mono text-xs uppercase tracking-[0.16em] text-accent-ink"
+                      data-exp-toggle
+                      aria-expanded="true"
+                      aria-controls={`exp-panel-${index}`}
+                    >
+                      <span class="exp-more">{about.seeMore[locale]}</span>
+                      <span class="exp-less">{about.seeLess[locale]}</span>
+                      <Icon name="chevron-down" size={14} class="exp-chevron" />
+                    </button>
+                  </div>
+                )}
               </div>
             </li>
           ))
@@ -95,3 +127,98 @@ const colHeading = 'font-mono text-xs uppercase tracking-[0.16em] text-muted';
     </div>
   </div>
 </Section>
+
+<style>
+  /* The toggle always sits at the bottom; the collapsible panel grows above it.
+     No-JS default: expanded and fully visible. JS then collapses & wires it. */
+  .exp-collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+
+  .exp-collapsible-inner {
+    overflow: hidden;
+    min-height: 0;
+    padding-top: 0.5rem;
+  }
+
+  .exp-collapsible.is-collapsed {
+    grid-template-rows: 0fr;
+  }
+
+  .exp-collapsible.is-collapsed .exp-collapsible-inner {
+    padding-top: 0;
+  }
+
+  /* Transitions turn on only after JS sets the initial collapsed state,
+     so there's no collapse/rotate flash on page load. */
+  .exp.is-ready .exp-collapsible {
+    transition: grid-template-rows 0.3s ease;
+  }
+
+  .exp.is-ready .exp-chevron {
+    transition: transform 0.3s ease;
+  }
+
+  .exp-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    user-select: none;
+    color: inherit;
+  }
+
+  .exp-summary:hover {
+    text-decoration: underline;
+  }
+
+  .exp-chevron {
+    flex-shrink: 0;
+  }
+
+  /* Expanded → chevron points up ("see less"); collapsed → down ("see more"). */
+  .exp-summary[aria-expanded='true'] .exp-chevron {
+    transform: rotate(180deg);
+  }
+
+  .exp-summary[aria-expanded='true'] .exp-more,
+  .exp-summary[aria-expanded='false'] .exp-less {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exp.is-ready .exp-collapsible,
+    .exp.is-ready .exp-chevron {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const init = () => {
+    const groups = document.querySelectorAll<HTMLElement>('[data-exp]');
+    for (const group of groups) {
+      const panel = group.querySelector<HTMLElement>('.exp-collapsible');
+      const toggle = group.querySelector<HTMLButtonElement>('[data-exp-toggle]');
+      if (!panel || !toggle) continue;
+
+      // Collapse the initial state before transitions are enabled.
+      panel.classList.add('is-collapsed');
+      toggle.setAttribute('aria-expanded', 'false');
+      requestAnimationFrame(() => group.classList.add('is-ready'));
+
+      toggle.addEventListener('click', () => {
+        const collapsed = panel.classList.toggle('is-collapsed');
+        toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      });
+    }
+  };
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>

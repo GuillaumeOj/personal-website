@@ -1,7 +1,7 @@
 export const hero = {
   eyebrow: {
-    fr: 'Développeur fullstack · freelance',
-    en: 'Fullstack developer · freelance',
+    fr: 'Développeur Full-Stack Web & Mobile · freelance',
+    en: 'Full-Stack Web & Mobile Developer · freelance',
   },
   title: {
     fr: 'Votre application web ou mobile, de l’idée à la mise en ligne.',
@@ -217,6 +217,8 @@ export const about = {
   },
   experienceLabel: { fr: 'Parcours', en: 'Experience' },
   techLabel: { fr: 'Stack technique', en: 'Tech stack' },
+  seeMore: { fr: 'Voir plus', en: 'See more' },
+  seeLess: { fr: 'Voir moins', en: 'See less' },
 };
 
 export const contact = {

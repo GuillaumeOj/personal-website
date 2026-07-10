@@ -1,1 +1,2 @@
 src/assets/projects/*.png filter=lfs diff=lfs merge=lfs -text
+public/logos/*.png filter=lfs diff=lfs merge=lfs -text

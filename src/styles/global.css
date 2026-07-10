@@ -278,9 +278,15 @@ html.snap-home footer {
    * candidate — Lighthouse's trace engine then finds no LCP and throws NO_LCP.
    * Deferring to first interaction keeps snapping for real users while leaving
    * automated audits (which never scroll) free to record an LCP.
+   *
+   * Mandatory snapping is also limited to >= md (768px): on phones the taller,
+   * content-dense sections fight the snap, so mobile keeps the full-height
+   * layout (min-height: 100svh) with ordinary scrolling.
    */
-  html.snap-home.snap-armed {
-    scroll-snap-type: y mandatory;
+  @media (min-width: 768px) {
+    html.snap-home.snap-armed {
+      scroll-snap-type: y mandatory;
+    }
   }
 
   html.snap-home footer {

@@ -3,7 +3,8 @@ import type { Locale } from '../../config';
 
 interface Props {
   locale: Locale;
-  eyebrow: Record<Locale, string>;
+  /** Monospace kicker above the title; omitted when not provided. */
+  eyebrow?: Record<Locale, string>;
   title: Record<Locale, string>;
   lead?: Record<Locale, string>;
   /** Wrapper classes; defaults to the standard revealed, measured column. */
@@ -20,7 +21,7 @@ const {
 ---
 
 <div class={className}>
-  <p class="eyebrow">{eyebrow[locale]}</p>
+  {eyebrow && <p class="eyebrow">{eyebrow[locale]}</p>}
   <h2 class="font-display text-3xl font-semibold tracking-tight text-ink-strong sm:text-4xl">
     {title[locale]}
   </h2>

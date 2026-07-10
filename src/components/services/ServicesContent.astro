@@ -1,0 +1,201 @@
+---
+import type { Locale } from '../../config';
+import { projectPath } from '../../i18n/ui';
+import {
+  contactNote,
+  cost,
+  faq,
+  hero,
+  included,
+  mobile,
+  projectFlow,
+  web,
+} from '../../lib/services';
+import Contact from '../home/Contact.astro';
+import Section from '../home/Section.astro';
+import SectionHeader from '../home/SectionHeader.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+/** The two proof-with-a-link blocks share the same offering shape. */
+const offerings = [
+  { id: 'mobile', data: mobile, sunken: false },
+  { id: 'web', data: web, sunken: true },
+];
+
+const linkClass =
+  'font-display font-medium text-accent-ink no-underline hover:underline';
+---
+
+<section class="flex min-h-svh items-center bg-surface-sunken px-6 py-24">
+  <div class="mx-auto w-full max-w-6xl">
+    <div class="reveal max-w-3xl space-y-7">
+      <h1
+        class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink-strong sm:text-5xl"
+      >
+        {hero.title[locale]}
+      </h1>
+      <p class="text-lg leading-relaxed text-muted">{hero.subtitle[locale]}</p>
+      <div class="flex flex-wrap gap-3 pt-1">
+        <a href="#contact" class="btn btn-primary">{hero.cta[locale]}</a>
+        <a href="#mobile" class="btn btn-secondary">
+          {hero.anchorMobile[locale]}
+          <Icon name="arrow-right" size={15} />
+        </a>
+        <a href="#web" class="btn btn-secondary">
+          {hero.anchorWeb[locale]}
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+      <p class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+        {hero.reassurance[locale]}
+      </p>
+      <p class="border-t border-line pt-5 text-sm leading-relaxed text-muted">
+        {hero.credibility[locale]}
+      </p>
+    </div>
+  </div>
+</section>
+
+{
+  offerings.map(({ id, data, sunken }) => (
+    <Section id={id} class={sunken ? 'bg-surface-sunken' : ''}>
+      <SectionHeader locale={locale} title={data.title} lead={data.intro} />
+
+      <div class="reveal mt-8 rounded-2xl border border-line bg-surface p-7">
+        <p class="font-display font-semibold text-ink-strong">
+          {data.leadIn[locale]}
+        </p>
+        <ul class="mt-6 space-y-3 border-t border-line pt-6 text-ink list-none p-0">
+          {data.list.map((item) => (
+            <li class="flex items-start gap-3">
+              <Icon
+                name="check"
+                size={16}
+                class="mt-1 shrink-0 text-accent"
+              />
+              <span>{item[locale]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <p class="reveal mt-6 max-w-2xl leading-relaxed text-muted">
+        {data.proof.map((run) =>
+          run.t === 'link' ? (
+            <a href={projectPath(locale, run.slug)} class={linkClass}>
+              {run.v[locale]}
+            </a>
+          ) : (
+            run.v[locale]
+          ),
+        )}
+      </p>
+    </Section>
+  ))
+}
+
+<Section id="included">
+  <SectionHeader locale={locale} title={included.title} lead={included.intro} />
+
+  <ol class="reveal mt-10 grid list-none gap-4 p-0 sm:grid-cols-3">
+    {
+      included.items.map((item, i) => (
+        <li class="rounded-2xl border border-line bg-surface p-6">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-sm text-accent-ink">0{i + 1}</span>
+            <h3 class="font-display text-lg font-semibold text-ink-strong">
+              {item.label[locale]}
+            </h3>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-muted">
+            {item.desc[locale]}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</Section>
+
+<Section id="process" class="bg-surface-sunken">
+  <SectionHeader
+    locale={locale}
+    title={projectFlow.title}
+    lead={projectFlow.intro}
+  />
+
+  <ol class="reveal mt-10 ml-4 list-none border-l-2 border-line p-0">
+    {
+      projectFlow.steps.map((step, i) => (
+        <li class="reveal relative pb-10 pl-10 last:pb-0">
+          <span
+            class="absolute left-0 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-surface-sunken font-mono text-sm font-medium text-accent-ink ring-2 ring-accent"
+            aria-hidden="true"
+          >
+            {i + 1}
+          </span>
+          <h3 class="font-display text-lg font-semibold text-ink-strong">
+            {step.label[locale]}
+          </h3>
+          <p class="mt-1.5 max-w-xl leading-relaxed text-muted">
+            {step.desc[locale]}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="reveal mt-2 max-w-2xl leading-relaxed text-muted">
+    {projectFlow.reassurance[locale]}
+  </p>
+</Section>
+
+<Section id="cost">
+  <SectionHeader locale={locale} title={cost.title} lead={cost.intro} />
+
+  <ul class="reveal mt-8 space-y-3 text-ink list-none p-0">
+    {
+      cost.list.map((item) => (
+        <li class="flex items-start gap-3">
+          <Icon name="check" size={16} class="mt-1 shrink-0 text-accent" />
+          <span>{item[locale]}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="reveal mt-6 max-w-2xl leading-relaxed text-muted">
+    {cost.closing[locale]}
+  </p>
+
+  <p class="reveal mt-6">
+    <a href="#contact" class="btn btn-secondary">
+      {cost.cta[locale]}
+      <Icon name="arrow-right" size={15} />
+    </a>
+  </p>
+</Section>
+
+<Section id="faq" class="bg-surface-sunken">
+  <SectionHeader locale={locale} title={faq.title} />
+
+  <div class="reveal mt-10 divide-y divide-line rounded-2xl border border-line bg-surface">
+    {
+      faq.items.map((item) => (
+        <div class="p-6">
+          <h3 class="font-display text-lg font-semibold text-ink-strong">
+            {item.q[locale]}
+          </h3>
+          <p class="mt-2 leading-relaxed text-muted">{item.a[locale]}</p>
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<Contact locale={locale} note={contactNote[locale]} />

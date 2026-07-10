@@ -1,6 +1,8 @@
 ---
 import type { Locale } from '../../config';
-import { howIWork, methodology } from '../../lib/home';
+import { howIWork, methodology, processMore } from '../../lib/home';
+import { localizedPath } from '../../i18n/ui';
+import Icon from '../Icon.astro';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -9,6 +11,7 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+const processHref = `${localizedPath(locale, '/services')}#process`;
 ---
 
 <Section id="how-i-work" class="bg-surface-sunken">
@@ -57,12 +60,16 @@ const { locale } = Astro.props;
             <h4 class="font-display text-lg font-semibold text-ink-strong">
               {phase.label[locale]}
             </h4>
-            <p class="mt-1.5 max-w-xl leading-relaxed text-muted">
-              {phase.desc[locale]}
-            </p>
           </li>
         ))
       }
     </ol>
+
+    <p class="reveal mt-10">
+      <a href={processHref} class="btn btn-secondary">
+        {processMore[locale]}
+        <Icon name="arrow-right" size={15} />
+      </a>
+    </p>
   </div>
 </Section>

@@ -1,10 +1,12 @@
 import type { Locale } from "../config";
-import { hero, howIWork, whatIDo } from "../lib/home";
+import { hero } from "../lib/home";
 
 const dictionaries = {
   fr: {
+    "nav.home": "Accueil",
     "nav.blog": "Blog",
     "nav.projects": "Projets",
+    "nav.services": "Prestations",
     "nav.about": "À propos",
     "nav.menu": "Menu",
     "nav.skipToContent": "Aller au contenu",
@@ -56,8 +58,10 @@ const dictionaries = {
     "error.backHome": "Retour à l’accueil",
   },
   en: {
+    "nav.home": "Home",
     "nav.blog": "Blog",
     "nav.projects": "Projects",
+    "nav.services": "Services",
     "nav.about": "About",
     "nav.menu": "Menu",
     "nav.skipToContent": "Skip to content",
@@ -147,15 +151,17 @@ export interface NavItem {
 }
 
 /**
- * Primary navigation, shared by Header and Footer. Section quick-links and the
- * contact CTA reuse the section copy (whatIDo/howIWork eyebrows, hero CTA) so
- * the nav stays in sync with the landing page automatically.
+ * Primary navigation, shared by Header and Footer. Top-level pages plus a
+ * contact CTA (reusing the hero CTA copy so the nav stays in sync).
  */
 export const navItems = (locale: Locale): NavItem[] => {
   const home = localizedPath(locale, "/");
   return [
-    { href: `${home}#services`, label: whatIDo.eyebrow[locale] },
-    { href: `${home}#how-i-work`, label: howIWork.eyebrow[locale] },
+    { href: home, label: t(locale, "nav.home") },
+    {
+      href: localizedPath(locale, "/services"),
+      label: t(locale, "nav.services"),
+    },
     {
       href: localizedPath(locale, "/projects"),
       label: t(locale, "nav.projects"),

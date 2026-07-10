@@ -77,48 +77,19 @@ export const tech = {
   ],
 };
 
-export const services = {
-  title: {
-    fr: "Web ou mobile : le produit adapté à votre besoin.",
-    en: "Web or mobile: the product that fits your need.",
-  },
-  items: [
-    {
-      key: "web",
-      label: { fr: "Développement web", en: "Web development" },
-      desc: {
-        fr: "Des sites et applications rapides, sur mesure, du site vitrine au produit complet.",
-        en: "Fast, tailored sites and applications — from a landing page to a full product.",
-      },
-      features: [
-        {
-          fr: "Sites vitrines & corporate",
-          en: "Landing & corporate sites",
-        },
-        { fr: "SaaS et applications métier", en: "SaaS & business apps" },
-        { fr: "Dashboards & back-offices", en: "Dashboards & back-offices" },
-        { fr: "Progressive Web Apps (PWA)", en: "Progressive Web Apps (PWA)" },
-      ],
-    },
-    {
-      key: "mobile",
-      label: { fr: "Applications mobiles", en: "Mobile applications" },
-      desc: {
-        fr: "Des apps iOS et Android natives dans le ressenti, connectées à votre backend.",
-        en: "iOS and Android apps that feel native, wired to your backend.",
-      },
-      features: [
-        {
-          fr: "iOS & Android (React Native / Expo)",
-          en: "iOS & Android (React Native / Expo)",
-        },
-        { fr: "Notifications push", en: "Push notifications" },
-        { fr: "Optimisation des performances", en: "Performance optimization" },
-        { fr: "Publication sur les stores", en: "Store publishing" },
-        { fr: "Back-office de gestion", en: "Management back-office" },
-      ],
-    },
-  ],
+/**
+ * Home "What you get" → services page link. The detailed web/mobile lists that
+ * used to live here now have their canonical home on `/services`.
+ */
+export const whatIDoMore = {
+  fr: "Voir le détail des prestations",
+  en: "See all services",
+};
+
+/** Home "Working together" process → full step descriptions on `/services`. */
+export const processMore = {
+  fr: "Comment se déroule un projet",
+  en: "How a project unfolds",
 };
 
 export const howIWork = {

@@ -25,6 +25,11 @@ interface Props {
    * blog/project detail pages, whose slugs differ between languages.
    */
   hreflang?: boolean;
+  /**
+   * Use `title` verbatim as the `<title>` instead of appending ` — {SITE.name}`.
+   * For pages whose SEO title is already a complete, length-tuned headline.
+   */
+  rawTitle?: boolean;
 }
 
 const {
@@ -37,6 +42,7 @@ const {
   container = 'prose',
   snap = false,
   hreflang = false,
+  rawTitle = false,
 } = Astro.props;
 const path = Astro.url.pathname;
 const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
@@ -47,7 +53,8 @@ const mainClass =
   container === 'full'
     ? 'flex-1'
     : 'mx-auto w-full max-w-3xl flex-1 px-6 py-12';
-const fullTitle = title === SITE.name ? title : `${title} — ${SITE.name}`;
+const fullTitle =
+  rawTitle || title === SITE.name ? title : `${title} — ${SITE.name}`;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
 const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 ---

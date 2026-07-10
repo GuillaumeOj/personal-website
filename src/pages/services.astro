@@ -1,0 +1,19 @@
+---
+import ServicesContent from '../components/services/ServicesContent.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { servicesJsonLd, servicesMeta } from '../lib/services';
+
+const locale = 'fr' as const;
+---
+
+<BaseLayout
+  locale={locale}
+  title={servicesMeta.title[locale]}
+  description={servicesMeta.description[locale]}
+  jsonLd={servicesJsonLd(locale)}
+  container="full"
+  hreflang
+  rawTitle
+>
+  <ServicesContent locale={locale} />
+</BaseLayout>

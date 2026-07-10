@@ -31,22 +31,19 @@ const linkClass =
     </a>
 
     {/* Desktop nav */}
-    <nav class="hidden items-center gap-2 text-sm md:flex">
+    <nav class="hidden items-center gap-2 text-sm min-[1120px]:flex">
       {navLinks.map((link) => (
         <a href={link.href} class={linkClass}>{link.label}</a>
       ))}
       {cta && (
         <a href={cta.href} class="btn btn-primary px-4 py-2">{cta.label}</a>
       )}
-      <span class="mx-1 h-5 w-px bg-line" aria-hidden="true"></span>
-      <LangSwitcher locale={locale} />
-      <ThemeToggle locale={locale} />
     </nav>
 
     {/* Mobile burger */}
     <button
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong md:hidden"
+      class="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong min-[1120px]:hidden"
       data-menu-toggle
       aria-expanded="false"
       aria-controls="mobile-menu"
@@ -57,10 +54,16 @@ const linkClass =
     </button>
   </div>
 
+  {/* Language + theme switchers, pinned to the right edge of the viewport */}
+  <div class="absolute inset-y-0 right-6 hidden items-center gap-2 min-[1120px]:flex">
+    <LangSwitcher locale={locale} />
+    <ThemeToggle locale={locale} />
+  </div>
+
   {/* Mobile menu panel */}
   <div
     id="mobile-menu"
-    class="hidden border-t border-line md:hidden"
+    class="hidden border-t border-line min-[1120px]:hidden"
     data-menu-panel
   >
     <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4">

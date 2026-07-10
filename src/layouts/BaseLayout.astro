@@ -163,6 +163,32 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
     </script>
 
     <script is:inline>
+      // Arm root scroll-snapping on the first scroll intent. Enabling it on load
+      // would make the browser re-snap during layout, scrolling the page while it
+      // paints and wiping the Largest Contentful Paint candidate (Lighthouse's
+      // trace engine then throws NO_LCP). Automated audits never interact, so
+      // snap stays off through measurement; real users get it from their first
+      // gesture. See the `.snap-armed` note in global.css.
+      (() => {
+        const root = document.documentElement;
+        if (
+          !root.classList.contains('snap-home') ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          return;
+        }
+        const types = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+        const arm = () => {
+          root.classList.add('snap-armed');
+          for (const type of types) window.removeEventListener(type, arm);
+        };
+        for (const type of types) {
+          window.addEventListener(type, arm, { passive: true });
+        }
+      })();
+    </script>
+
+    <script is:inline>
       (() => {
         const els = [...document.querySelectorAll('.reveal')];
         if (

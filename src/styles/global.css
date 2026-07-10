@@ -270,7 +270,16 @@ html.snap-home footer {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.snap-home {
+  /*
+   * `scroll-snap-type` is *armed* (via `.snap-armed`, added by BaseLayout on the
+   * first user scroll intent) rather than set on load. Mandatory snapping on the
+   * root scroller makes the browser re-snap as sections lay out, which scrolls
+   * the page during load and repeatedly invalidates the Largest Contentful Paint
+   * candidate — Lighthouse's trace engine then finds no LCP and throws NO_LCP.
+   * Deferring to first interaction keeps snapping for real users while leaving
+   * automated audits (which never scroll) free to record an LCP.
+   */
+  html.snap-home.snap-armed {
     scroll-snap-type: y mandatory;
   }
 

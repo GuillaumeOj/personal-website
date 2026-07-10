@@ -1,9 +1,12 @@
 ---
 import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
 import { SITE, type Locale } from '../config';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { localizedPath, t } from '../i18n/ui';
+import { portraitAlt } from '../lib/about';
 
 interface Props {
   locale: Locale;
@@ -30,6 +33,13 @@ interface Props {
    * For pages whose SEO title is already a complete, length-tuned headline.
    */
   rawTitle?: boolean;
+  /**
+   * Social card title (og/twitter). Pages default to one consistent branded
+   * title ("{SITE.name} — {tagline}") so every shared link shows the same card;
+   * the `<title>` tag stays per-page for SEO. Blog pages opt out (`false`) to
+   * keep their article/section title on the card.
+   */
+  brandedSocialTitle?: boolean;
 }
 
 const {
@@ -37,12 +47,13 @@ const {
   title,
   description,
   ogImage,
-  ogImageAlt = SITE.name,
+  ogImageAlt,
   jsonLd,
   container = 'prose',
   snap = false,
   hreflang = false,
   rawTitle = false,
+  brandedSocialTitle = true,
 } = Astro.props;
 const path = Astro.url.pathname;
 const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
@@ -55,8 +66,22 @@ const mainClass =
     : 'mx-auto w-full max-w-3xl flex-1 px-6 py-12';
 const fullTitle =
   rawTitle || title === SITE.name ? title : `${title} — ${SITE.name}`;
+// The social card title: one consistent branded string unless a page opts out
+// (blog), keeping the `<title>` above per-page for SEO.
+const socialTitle = brandedSocialTitle
+  ? `${SITE.name} — ${t(locale, 'meta.socialTagline')}`
+  : fullTitle;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
-const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
+// Social preview: pages default to the portrait (same card as /about) unless
+// they pass their own image — blog posts (their cover) and the blog list opt
+// out explicitly. A JPEG rendition is used for broad compatibility (LinkedIn).
+const ogImageUrl = ogImage
+  ? new URL(ogImage, SITE.url).toString()
+  : new URL(
+      (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
+      SITE.url,
+    ).toString();
+const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
 ---
 
 <!doctype html>
@@ -66,7 +91,7 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/png" sizes="any" href="/memoji.png" />
-    <link rel="apple-touch-icon" href="/memoji.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link
       rel="alternate"
@@ -91,18 +116,18 @@ const ogImageUrl = new URL(ogImage ?? '/memoji.png', SITE.url).toString();
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:title" content={fullTitle} />
+    <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:alt" content={socialImageAlt} />
     <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content={ogImageAlt} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
 
     {
       jsonLd && (

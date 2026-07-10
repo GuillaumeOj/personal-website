@@ -13,6 +13,10 @@ const posts = await getPostsForLocale(locale);
   locale={locale}
   title={`${t(locale, 'blog.title')} — ${SITE.name}`}
   description={t(locale, 'blog.subtitle')}
+  rawTitle
+  ogImage="/memoji.png"
+  ogImageAlt={SITE.name}
+  brandedSocialTitle={false}
   container="full"
 >
   <div class="mx-auto max-w-6xl px-6 py-12 sm:py-16">

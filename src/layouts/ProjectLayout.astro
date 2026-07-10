@@ -1,6 +1,7 @@
 ---
+import { getImage } from 'astro:assets';
 import ProjectImage from '../components/ProjectImage.astro';
-import type { Locale } from '../config';
+import { SITE, type Locale } from '../config';
 import { localizedPath, t } from '../i18n/ui';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
 import BaseLayout from './BaseLayout.astro';
@@ -15,9 +16,24 @@ const { description, aim, longDescription } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
+
+// Social card: the project's own screenshot + name, so a shared project link
+// previews that project rather than the generic site card. Light variant as a
+// JPEG for broad scraper compatibility (they don't honour dark mode).
+const ogImage = new URL(
+  (await getImage({ src: screenshot.light, format: 'jpeg', quality: 80 })).src,
+  SITE.url,
+).toString();
 ---
 
-<BaseLayout locale={locale} title={name} description={description}>
+<BaseLayout
+  locale={locale}
+  title={name}
+  description={description}
+  ogImage={ogImage}
+  ogImageAlt={name}
+  brandedSocialTitle={false}
+>
   <article class="space-y-8">
     <a
       href={localizedPath(locale, '/projects')}

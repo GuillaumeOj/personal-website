@@ -5,6 +5,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
 import { formatDate, localizedPath, t } from '../i18n/ui';
 import type { TocHeading } from '../lib/notion';
+import { portraitAlt } from '../lib/about';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -21,8 +22,8 @@ const { author } = post.data;
   locale={locale}
   title={post.data.title}
   description={post.data.description}
-  ogImage={post.data.cover ?? '/memoji.png'}
-  ogImageAlt={SITE.name}
+  ogImage={post.data.cover}
+  ogImageAlt={post.data.cover ? SITE.name : portraitAlt[locale]}
   brandedSocialTitle={false}
 >
   <TableOfContents locale={locale} headings={headings} />

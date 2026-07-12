@@ -62,13 +62,12 @@ test("project detail: previews its own screenshot + name", async ({ page }) => {
   expect(await ogImageAlt(page)).toBe("Fusily");
 });
 
-test("blog is excluded: list keeps the memoji + its own title", async ({
+test("blog list: inherits the portrait card, keeps its own title", async ({
   page,
 }) => {
   await page.goto("/blog/");
-  const img = await ogImage(page);
-  expect(img).toBe(`${ORIGIN}/memoji.png`);
-  expect(img).not.toContain("/portrait");
+  const img = await checkImage(page, "/portrait");
+  expect(img).not.toContain("memoji");
   // Blog opts out of the branded card title, and <title> is not doubled.
   expect(await ogTitle(page)).toBe("Blog — Guillaume Ojardias");
   await expect(page).toHaveTitle("Blog — Guillaume Ojardias");

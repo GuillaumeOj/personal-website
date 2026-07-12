@@ -3,9 +3,10 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { formatDate, localizedPath, t } from '../i18n/ui';
-import type { TocHeading } from '../lib/notion';
+import { articlePath, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
 import { portraitAlt } from '../lib/about';
+import type { TocHeading } from '../lib/notion';
+import { findSibling } from '../lib/posts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -16,6 +17,20 @@ interface Props {
 
 const { locale, post, headings = [] } = Astro.props;
 const { author } = post.data;
+
+// hreflang: blog slugs differ across locales, so pair this post with its
+// translated sibling (shared `translationKey`) and hand BaseLayout explicit
+// alternate URLs. A post with no published sibling gets none (canonical only).
+const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
+const hasAlternate = Boolean(sibling);
+const frSlug = locale === 'fr' ? post.data.slug : sibling?.data.slug;
+const enSlug = locale === 'en' ? post.data.slug : sibling?.data.slug;
+const altFrUrl = frSlug
+  ? new URL(articlePath('fr', frSlug), SITE.url).toString()
+  : undefined;
+const altEnUrl = enSlug
+  ? new URL(articlePath('en', enSlug), SITE.url).toString()
+  : undefined;
 ---
 
 <BaseLayout
@@ -24,7 +39,9 @@ const { author } = post.data;
   description={post.data.description}
   ogImage={post.data.cover}
   ogImageAlt={post.data.cover ? SITE.name : portraitAlt[locale]}
-  brandedSocialTitle={false}
+  hreflang={hasAlternate}
+  altFrUrl={altFrUrl}
+  altEnUrl={altEnUrl}
 >
   <TableOfContents locale={locale} headings={headings} />
   <a

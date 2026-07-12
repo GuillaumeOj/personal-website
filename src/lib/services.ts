@@ -20,11 +20,15 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
   slug,
 });
 
-/** `<title>` (used verbatim — no site name appended) and meta description. */
+/**
+ * `<title>` segment (the layout appends ` — {SITE.name}`) and meta description.
+ * Services owns the offer/"prestations" query cluster — deliberately distinct
+ * from Home's "développeur … à Lyon" head term to avoid cannibalization.
+ */
 export const servicesMeta: { title: L; description: L } = {
   title: {
-    fr: "Développeur web & mobile freelance à Lyon",
-    en: "Freelance web & mobile developer — from idea to launch",
+    fr: "Prestations de développement web & mobile",
+    en: "Custom Web & Mobile Development Services",
   },
   description: {
     fr: "Applications web, mobiles et SaaS sur mesure par un développeur freelance à Lyon. Un seul interlocuteur, du design au déploiement. Réponse sous 24 h.",

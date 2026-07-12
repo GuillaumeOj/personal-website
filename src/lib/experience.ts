@@ -31,7 +31,7 @@ const experience: ExperienceEntry[] = [
     alt: "Logo Fusily",
     role: {
       fr: "Fondateur & Développeur Full-Stack",
-      en: "Founder & Full-Stack Developper",
+      en: "Founder & Full-Stack Developer",
     },
     org: "Fusily",
     url: "https://fusily.com",

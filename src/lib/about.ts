@@ -52,9 +52,12 @@ const ul = (...items: Run[][]): Block => ({ t: "list", items });
 const frDoc = (): AboutDoc => {
   const home = localizedPath("fr", "/");
   return {
-    metaTitle: "Développeur web & mobile freelance à Lyon",
+    // Brand-*forward*: the About page's subject is the person, so it owns the
+    // "who is Guillaume Ojardias" query. Rendered verbatim (page sets `rawTitle`)
+    // — do not append the brand again.
+    metaTitle: "Guillaume Ojardias — Développeur full-stack freelance à Lyon",
     metaDescription:
-      "Développeur web et mobile freelance à Lyon, j’accompagne PME et associations de l’idée à la mise en ligne : sites, applications métier et mobiles. Discutons de votre projet.",
+      "Développeur web et mobile freelance à Lyon, j’accompagne PME et associations de l’idée à la mise en ligne. Discutons de votre projet.",
     eyebrow: "Présentation",
     title: "À propos de Guillaume Ojardias, développeur web & mobile à Lyon",
     intro: [
@@ -186,9 +189,9 @@ const frDoc = (): AboutDoc => {
 const enDoc = (): AboutDoc => {
   const home = localizedPath("en", "/");
   return {
-    metaTitle: "Freelance Web & Mobile Developer in Lyon",
+    metaTitle: "Guillaume Ojardias — Freelance Full-Stack Developer in Lyon",
     metaDescription:
-      "Freelance web and mobile developer in Lyon. I help SMEs and non-profits go from idea to launch: websites, business apps and mobile apps. Let’s talk about your project.",
+      "Freelance web and mobile developer in Lyon, helping SMEs and non-profits go from idea to launch. Let’s talk about your project.",
     eyebrow: "Introduction",
     title: "About Guillaume Ojardias, web & mobile developer in Lyon",
     intro: [
@@ -382,7 +385,9 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     "@type": "AboutPage",
     "@id": aboutUrl,
     url: aboutUrl,
-    name: `${doc.metaTitle} — ${SITE.name}`,
+    // `metaTitle` is already the complete brand-forward page title — mirrors the
+    // `<title>` verbatim; appending the brand again would duplicate it.
+    name: doc.metaTitle,
     description: doc.metaDescription,
     inLanguage: locale === "fr" ? "fr-FR" : "en-US",
     isPartOf: {

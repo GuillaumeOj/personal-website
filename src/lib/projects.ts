@@ -56,6 +56,12 @@ export interface Project {
   slug: string;
   /** Display name: a shared string, or one per locale when it needs translating */
   name: string | Record<Locale, string>;
+  /**
+   * Short (2–4 word) descriptor appended to the SEO `<title>` as
+   * `{name} — {descriptor} — {SITE.name}`, so the project isn't a bare name in
+   * search results. Keep it terse — the three-part title must survive ~60 chars.
+   */
+  titleDescriptor?: Record<Locale, string>;
   /** Live project URL */
   url?: string;
   /** Optional source/repository link */
@@ -86,6 +92,10 @@ export const projects: Project[] = [
   {
     slug: "fusily",
     name: "Fusily",
+    titleDescriptor: {
+      fr: "Application mobile de repas",
+      en: "Meal-planning mobile app",
+    },
     url: "https://fusily.com",
     context: "personal",
     platform: ["mobile"],
@@ -115,6 +125,12 @@ export const projects: Project[] = [
   {
     slug: "personal-website",
     name: { fr: "Site personnel", en: "Personal website" },
+    // Steer clear of "blog" here — the blog list and articles already own that
+    // query; naming the stack keeps this a build/case-study, not a competitor.
+    titleDescriptor: {
+      fr: "Astro, i18n & Notion",
+      en: "Astro, i18n & Notion",
+    },
     url: "https://guillaume.ojardias.info",
     repoUrl: "https://github.com/GuillaumeOj/personal-website",
     context: "side",
@@ -145,6 +161,10 @@ export const projects: Project[] = [
   {
     slug: "dotcraft",
     name: "dotcraft",
+    titleDescriptor: {
+      fr: "Générateur de QR codes",
+      en: "QR code generator",
+    },
     url: "https://dotcraft.fr",
     repoUrl: "https://github.com/GuillaumeOj/dotcraft",
     context: "side",
@@ -172,6 +192,12 @@ export const projects: Project[] = [
   {
     slug: "eva-biezunski-avocate",
     name: "Eva Biezunski Avocate",
+    // Short descriptor: the name already carries "Avocate", and the full
+    // three-part title must clear ~60 chars without clipping.
+    titleDescriptor: {
+      fr: "Site vitrine",
+      en: "Business website",
+    },
     url: "https://biezunski-avocat.fr",
     repoUrl: "https://github.com/EB-Avocat/eb-avocat",
     context: "client",

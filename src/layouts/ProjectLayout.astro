@@ -16,6 +16,11 @@ const { description, aim, longDescription } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
+// `<title>` = `{name} — {descriptor} — Brand`, so a bare project name isn't
+// stranded in search results. The descriptor is a short (2–4 word) stored
+// field; without one, the title falls back to just the name.
+const titleDescriptor = project.titleDescriptor?.[locale];
+const metaTitle = titleDescriptor ? `${name} — ${titleDescriptor}` : name;
 
 // Social card: the project's own screenshot + name, so a shared project link
 // previews that project rather than the generic site card. Light variant as a
@@ -28,11 +33,11 @@ const ogImage = new URL(
 
 <BaseLayout
   locale={locale}
-  title={name}
+  title={metaTitle}
   description={description}
   ogImage={ogImage}
   ogImageAlt={name}
-  brandedSocialTitle={false}
+  hreflang
 >
   <article class="space-y-8">
     <a

@@ -5,7 +5,7 @@ import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
 import Hero from '../../components/home/Hero.astro';
 import HowIWork from '../../components/home/HowIWork.astro';
 import WhatIDo from '../../components/home/WhatIDo.astro';
-import { SITE } from '../../config';
+import { t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const locale = 'en' as const;
@@ -13,10 +13,11 @@ const locale = 'en' as const;
 
 <BaseLayout
   locale={locale}
-  title={SITE.name}
-  description="Guillaume Ojardias, freelance fullstack developer — web and mobile applications, from frontend to backend through deployment. Python/Django, React Native, Next.js, PostgreSQL."
+  title={t(locale, 'meta.homeTitle')}
+  description="Freelance full-stack developer in Lyon: web and mobile apps, from frontend to deployment. Python/Django, React Native, Next.js, PostgreSQL."
   container="full"
   snap
+  hreflang
 >
   <Hero locale={locale} />
   <WhatIDo locale={locale} />

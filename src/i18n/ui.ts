@@ -10,7 +10,19 @@ const dictionaries = {
     "nav.about": "À propos",
     "nav.menu": "Menu",
     "nav.skipToContent": "Aller au contenu",
-    "meta.socialTagline": "Développeur web & mobile freelance",
+    // SEO `<title>` for static pages. Each is the page-specific segment; the
+    // layout appends ` — Guillaume Ojardias`. One page owns one query cluster:
+    // Home owns the "développeur … à Lyon" head term (About leads with the name,
+    // Services with "prestations") so no two titles share a leading phrase.
+    "meta.homeTitle": "Développeur web & mobile freelance à Lyon",
+    "meta.projectsTitle": "Projets & réalisations web",
+    "meta.blogTitle": "Blog — Développement web & mobile",
+    // SEO meta descriptions for hub pages — richer than the on-page subtitle
+    // (`projects.subtitle` / `blog.subtitle`), which stays as the visible lead.
+    "meta.projectsDescription":
+      "Une sélection de projets web et mobiles réalisés en freelance : l’application mobile Fusily, un site vitrine d’avocate, le générateur de QR codes dotcraft…",
+    "meta.blogDescription":
+      "Notes et retours d’expérience sur le développement web et mobile : Astro, React Native, Django, i18n et déploiement.",
     "home.contact.github": "GitHub",
     "home.contact.linkedin": "LinkedIn",
     "home.contact.malt": "Malt",
@@ -66,7 +78,13 @@ const dictionaries = {
     "nav.about": "About",
     "nav.menu": "Menu",
     "nav.skipToContent": "Skip to content",
-    "meta.socialTagline": "Freelance web & mobile developer",
+    "meta.homeTitle": "Freelance Web & Mobile Developer in Lyon",
+    "meta.projectsTitle": "Web & Mobile Development Projects",
+    "meta.blogTitle": "Blog — Web & Mobile Development",
+    "meta.projectsDescription":
+      "A selection of freelance web and mobile projects: the Fusily mobile app, a lawyer’s business website, the dotcraft QR code generator and more.",
+    "meta.blogDescription":
+      "Notes and lessons learned on web and mobile development: Astro, React Native, Django, i18n and deployment.",
     "home.contact.github": "GitHub",
     "home.contact.linkedin": "LinkedIn",
     "home.contact.malt": "Malt",
@@ -138,6 +156,10 @@ export const localizedPath = (locale: Locale, path: string): string => {
   if (locale === "fr") return cleaned;
   return `/en${cleaned === "/" ? "" : cleaned}`;
 };
+
+/** Append a trailing slash unless present — the site's canonical URL form. */
+export const ensureTrailingSlash = (path: string): string =>
+  path.endsWith("/") ? path : `${path}/`;
 
 export const articlePath = (locale: Locale, slug: string): string =>
   `${localizedPath(locale, `/blog/${slug}`)}/`;

@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../config';
-import { articlePath, localizedPath, t } from '../i18n/ui';
+import { articlePath, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
 import { findBySlug, findSibling } from '../lib/posts';
 import Dropdown from './Dropdown.astro';
 import Icon from './Icon.astro';
@@ -29,7 +29,7 @@ const pathFor = async (target: Locale): Promise<string> => {
     locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
   const targetPath =
     target === 'fr' ? stripped : `/en${stripped === '/' ? '' : stripped}`;
-  return targetPath.endsWith('/') ? targetPath : `${targetPath}/`;
+  return ensureTrailingSlash(targetPath);
 };
 
 const LOCALES: { code: Locale; label: string }[] = [

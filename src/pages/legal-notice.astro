@@ -10,7 +10,8 @@ const locale = 'fr' as const;
 <BaseLayout
   locale={locale}
   title={t(locale, 'footer.legalNotice')}
-  description={t(locale, 'footer.legalNotice')}
+  description={legalNotice[locale].metaDescription}
+  noindex
 >
   <LegalDocument doc={legalNotice[locale]} />
 </BaseLayout>

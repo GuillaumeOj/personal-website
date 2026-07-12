@@ -9,12 +9,12 @@ const PROJECT_TYPES: ProjectType[] = ["web", "saas", "mobile", "other"];
 
 /** Recipient of the notification email. */
 const CONTACT_TO = {
-  email: "guillaume@ojardias.me",
+  email: "contact@ojardias.me",
   name: "Guillaume Ojardias",
 };
 /** Sender — MUST be a verified sender/domain in the Brevo account. */
 const CONTACT_FROM = {
-  email: "guillaume@ojardias.me",
+  email: "contact@ojardias.me",
   name: "Site guillaume.ojardias.info",
 };
 

@@ -4,6 +4,7 @@ import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
 import { localizedPath, t } from '../i18n/ui';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
+import { projectJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -29,6 +30,26 @@ const ogImage = new URL(
   (await getImage({ src: screenshot.light, format: 'jpeg', quality: 80 })).src,
   SITE.url,
 ).toString();
+
+const canonical = new URL(
+  `${localizedPath(locale, `/projects/${project.slug}`)}/`,
+  SITE.url,
+).toString();
+// CreativeWork + breadcrumb (Home › Projects › {name}); the live URL, when
+// public, is linked as `sameAs`.
+const jsonLd = projectJsonLd(locale, {
+  url: canonical,
+  name,
+  description,
+  image: ogImage,
+  sameAs: project.url,
+  keywords: project.stack,
+  breadcrumbs: [
+    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
+    { name: t(locale, 'nav.projects'), url: new URL(localizedPath(locale, '/projects'), SITE.url).toString() },
+    { name, url: canonical },
+  ],
+});
 ---
 
 <BaseLayout
@@ -37,6 +58,9 @@ const ogImage = new URL(
   description={description}
   ogImage={ogImage}
   ogImageAlt={name}
+  ogImageWidth={screenshot.light.width}
+  ogImageHeight={screenshot.light.height}
+  jsonLd={jsonLd}
   hreflang
 >
   <article class="space-y-8">

@@ -5,16 +5,28 @@ import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
 import Hero from '../../components/home/Hero.astro';
 import HowIWork from '../../components/home/HowIWork.astro';
 import WhatIDo from '../../components/home/WhatIDo.astro';
+import { getImage } from 'astro:assets';
+import portrait from '../../assets/portrait.jpg';
+import { SITE } from '../../config';
 import { t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { homeJsonLd } from '../../lib/schema';
 
 const locale = 'en' as const;
+
+// The portrait (same JPEG rendition BaseLayout uses for the default card) feeds
+// the Person node's `image`, so the home graph matches the social preview.
+const ogImage = new URL(
+  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
+  SITE.url,
+).toString();
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'meta.homeTitle')}
   description="Freelance full-stack developer in Lyon: web and mobile apps, from frontend to deployment. Python/Django, React Native, Next.js, PostgreSQL."
+  jsonLd={homeJsonLd(locale, ogImage)}
   container="full"
   snap
   hreflang

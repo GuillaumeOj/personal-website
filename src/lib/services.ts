@@ -1,6 +1,7 @@
 import { type Locale, SITE } from "../config";
 import { localizedPath } from "../i18n/ui";
 import { methodology } from "./home";
+import { PERSON_ID } from "./schema";
 
 /** A localized string. */
 type L = Record<Locale, string>;
@@ -348,7 +349,7 @@ export const servicesJsonLd = (locale: Locale) => {
     ],
     provider: {
       "@type": "Person",
-      "@id": `${SITE.url}/#person`,
+      "@id": PERSON_ID,
       name: SITE.name,
     },
   };

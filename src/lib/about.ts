@@ -1,6 +1,15 @@
 import { type Locale, SITE } from "../config";
 import { localizedPath, projectPath } from "../i18n/ui";
-import { tech } from "./home";
+import {
+  BUSINESS_ID,
+  inLanguage,
+  jobTitle,
+  knowsAbout,
+  LYON_ADDRESS,
+  PERSON_ID,
+  personNode,
+  WEBSITE_ID,
+} from "./schema";
 
 /** A run of inline content inside an About paragraph or list item. */
 export type Run =
@@ -327,15 +336,11 @@ export const experienceSection = {
   seeLess: { fr: "Voir moins", en: "See less" },
 };
 
-const jobTitle: Record<Locale, string> = {
-  fr: "Développeur web & mobile freelance",
-  en: "Freelance web & mobile developer",
-};
-
 /**
- * schema.org JSON-LD for the About page: a Person (with sameAs social profiles
- * and knowsAbout tech) who provides a ProfessionalService serving Lyon/France,
- * plus the AboutPage node. Feeds local-intent queries ("développeur Lyon").
+ * schema.org JSON-LD for the About page: the shared Person (with sameAs social
+ * profiles and knowsAbout tech) who provides a ProfessionalService serving
+ * Lyon/France, plus the AboutPage node. The Person/WebSite are referenced by the
+ * same `@id`s the home page defines. Feeds local-intent queries ("dev Lyon").
  */
 export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
@@ -344,40 +349,22 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     localizedPath(locale, "/about"),
     SITE.url,
   ).toString();
-  const knowsAbout = tech.groups.flatMap((group) => group.items);
-  const address = {
-    "@type": "PostalAddress",
-    addressLocality: "Lyon",
-    addressRegion: "Auvergne-Rhône-Alpes",
-    addressCountry: "FR",
-  };
-  const personId = `${SITE.url}/#person`;
 
-  const person = {
-    "@type": "Person",
-    "@id": personId,
-    name: SITE.name,
-    jobTitle: jobTitle[locale],
-    url: homeUrl,
-    image,
-    address,
-    sameAs: Object.values(SITE.social),
-    knowsAbout,
-  };
+  const person = personNode(locale, image);
   const business = {
     "@type": "ProfessionalService",
-    "@id": `${SITE.url}/#business`,
+    "@id": BUSINESS_ID,
     name: SITE.name,
     description: doc.metaDescription,
     url: homeUrl,
     image,
-    founder: { "@id": personId },
-    provider: { "@id": personId },
+    founder: { "@id": PERSON_ID },
+    provider: { "@id": PERSON_ID },
     areaServed: [
       { "@type": "City", name: "Lyon" },
       { "@type": "Country", name: "France" },
     ],
-    address,
+    address: LYON_ADDRESS,
     knowsAbout,
     serviceType: jobTitle[locale],
   };
@@ -389,14 +376,9 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     // `<title>` verbatim; appending the brand again would duplicate it.
     name: doc.metaTitle,
     description: doc.metaDescription,
-    inLanguage: locale === "fr" ? "fr-FR" : "en-US",
-    isPartOf: {
-      "@type": "WebSite",
-      "@id": `${SITE.url}/#website`,
-      url: SITE.url,
-      name: SITE.name,
-    },
-    about: { "@id": personId },
+    inLanguage: inLanguage(locale),
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": PERSON_ID },
     primaryImageOfPage: image,
   };
 

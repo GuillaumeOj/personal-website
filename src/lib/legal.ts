@@ -7,6 +7,8 @@ export interface LegalSection {
 
 export interface LegalDoc {
   title: string;
+  /** One-sentence `<meta name="description">` (the pages are also `noindex`). */
+  metaDescription: string;
   updated: string;
   sections: LegalSection[];
 }
@@ -14,6 +16,8 @@ export interface LegalDoc {
 export const legalNotice: Record<Locale, LegalDoc> = {
   fr: {
     title: "Mentions légales",
+    metaDescription:
+      "Mentions légales du site de Guillaume Ojardias : éditeur, directeur de la publication, hébergement et propriété intellectuelle.",
     updated: "Dernière mise à jour : 7 juillet 2026",
     sections: [
       {
@@ -42,6 +46,8 @@ export const legalNotice: Record<Locale, LegalDoc> = {
   },
   en: {
     title: "Legal notice",
+    metaDescription:
+      "Legal notice for Guillaume Ojardias's website: publisher, publication director, hosting and intellectual property.",
     updated: "Last updated: July 7, 2026",
     sections: [
       {
@@ -73,6 +79,8 @@ export const legalNotice: Record<Locale, LegalDoc> = {
 export const privacyPolicy: Record<Locale, LegalDoc> = {
   fr: {
     title: "Politique de confidentialité",
+    metaDescription:
+      "Politique de confidentialité du site de Guillaume Ojardias : quelles données le formulaire de contact collecte, leur usage, leur conservation et vos droits RGPD.",
     updated: "Dernière mise à jour : 7 juillet 2026",
     sections: [
       {
@@ -115,6 +123,8 @@ export const privacyPolicy: Record<Locale, LegalDoc> = {
   },
   en: {
     title: "Privacy policy",
+    metaDescription:
+      "Privacy policy for Guillaume Ojardias's website: what data the contact form collects, how it is used and retained, and your GDPR rights.",
     updated: "Last updated: July 7, 2026",
     sections: [
       {

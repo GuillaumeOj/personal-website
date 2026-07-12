@@ -15,6 +15,27 @@ interface Props {
   ogImage?: string;
   /** Alt text describing the OG/Twitter image. */
   ogImageAlt?: string;
+  /** Intrinsic dimensions of a page-supplied `ogImage`, so scrapers can render
+   *  the card without a fetch round-trip. The default portrait card sets its
+   *  own; omit unless you pass `ogImage`. */
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  /** `og:type`. Content pages (blog posts) set `article`; everything else is a
+   *  `website`. */
+  ogType?: 'website' | 'article';
+  /** Emitted as `article:*` meta when `ogType` is `article` (blog posts). */
+  articleMeta?: {
+    /** ISO 8601 publication date. */
+    publishedTime: string;
+    /** ISO 8601 last-modified date, when known. */
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+  /** Emit `<meta name="robots" content="noindex, follow">` — thin, low-value
+   *  pages (legal notice, privacy policy) that shouldn't rank but whose links
+   *  should still be followed. */
+  noindex?: boolean;
   /** schema.org structured data rendered as a JSON-LD script. */
   jsonLd?: unknown;
   /** `prose` keeps the readable max-w-3xl column (blog, project detail).
@@ -50,6 +71,11 @@ const {
   description,
   ogImage,
   ogImageAlt,
+  ogImageWidth,
+  ogImageHeight,
+  ogType = 'website',
+  articleMeta,
+  noindex = false,
   jsonLd,
   container = 'prose',
   snap = false,
@@ -87,12 +113,20 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
 // Social preview: pages default to the portrait (same card as /about) unless
 // they pass their own image — blog posts (their cover) and the blog list opt
 // out explicitly. A JPEG rendition is used for broad compatibility (LinkedIn).
-const ogImageUrl = ogImage
-  ? new URL(ogImage, SITE.url).toString()
-  : new URL(
-      (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
-      SITE.url,
-    ).toString();
+let ogImageUrl: string;
+// Dimensions let scrapers render the card without a fetch round-trip. Known for
+// the default portrait (from its metadata) and for any page that supplies them;
+// unknown for a bare remote `ogImage` (blog covers), where they're omitted.
+let ogWidth: number | undefined = ogImageWidth;
+let ogHeight: number | undefined = ogImageHeight;
+if (ogImage) {
+  ogImageUrl = new URL(ogImage, SITE.url).toString();
+} else {
+  const rendered = await getImage({ src: portrait, format: 'jpeg', quality: 80 });
+  ogImageUrl = new URL(rendered.src, SITE.url).toString();
+  ogWidth = rendered.attributes.width ?? portrait.width;
+  ogHeight = rendered.attributes.height ?? portrait.height;
+}
 const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
 ---
 
@@ -112,6 +146,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
       href={localizedPath(locale, '/rss.xml')}
     />
     <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     {
       hreflang && (
         <>
@@ -126,14 +161,38 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content={socialImageAlt} />
+    {ogWidth && <meta property="og:image:width" content={String(ogWidth)} />}
+    {ogHeight && <meta property="og:image:height" content={String(ogHeight)} />}
     <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
+    {
+      ogType === 'article' && articleMeta && (
+        <>
+          <meta
+            property="article:published_time"
+            content={articleMeta.publishedTime}
+          />
+          {articleMeta.modifiedTime && (
+            <meta
+              property="article:modified_time"
+              content={articleMeta.modifiedTime}
+            />
+          )}
+          {articleMeta.author && (
+            <meta property="article:author" content={articleMeta.author} />
+          )}
+          {articleMeta.tags?.map((tag) => (
+            <meta property="article:tag" content={tag} />
+          ))}
+        </>
+      )
+    }
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={socialTitle} />

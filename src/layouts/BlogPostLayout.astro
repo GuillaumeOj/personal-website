@@ -7,6 +7,7 @@ import { articlePath, formatDate, localizedPath, otherLocale, t } from '../i18n/
 import { portraitAlt } from '../lib/about';
 import type { TocHeading } from '../lib/notion';
 import { findSibling } from '../lib/posts';
+import { blogPostJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -31,6 +32,23 @@ const altFrUrl = frSlug
 const altEnUrl = enSlug
   ? new URL(articlePath('en', enSlug), SITE.url).toString()
   : undefined;
+
+const canonical = new URL(articlePath(locale, post.data.slug), SITE.url).toString();
+// BlogPosting + breadcrumb (Home › Blog › {title}). Author falls back to the
+// site Person inside the builder when a post has none.
+const jsonLd = blogPostJsonLd(locale, {
+  url: canonical,
+  title: post.data.title,
+  description: post.data.description,
+  image: post.data.cover,
+  datePublished: post.data.pubDate.toISOString(),
+  authorName: author?.name,
+  breadcrumbs: [
+    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
+    { name: t(locale, 'nav.blog'), url: new URL(localizedPath(locale, '/blog'), SITE.url).toString() },
+    { name: post.data.title, url: canonical },
+  ],
+});
 ---
 
 <BaseLayout
@@ -38,7 +56,14 @@ const altEnUrl = enSlug
   title={post.data.title}
   description={post.data.description}
   ogImage={post.data.cover}
-  ogImageAlt={post.data.cover ? SITE.name : portraitAlt[locale]}
+  ogImageAlt={post.data.cover ? post.data.title : portraitAlt[locale]}
+  ogType="article"
+  articleMeta={{
+    publishedTime: post.data.pubDate.toISOString(),
+    author: author?.name,
+    tags: post.data.tags,
+  }}
+  jsonLd={jsonLd}
   hreflang={hasAlternate}
   altFrUrl={altFrUrl}
   altEnUrl={altEnUrl}

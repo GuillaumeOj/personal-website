@@ -10,6 +10,13 @@ interface Props {
 
 const { locale } = Astro.props;
 const entries = getExperience();
+
+// Experience entries expose only a localized display `period` (e.g.
+// "sept. 2024 → aujourd'hui"), with no ISO fields. Derive a best-effort
+// machine datetime from the first 4-digit year so the range still carries a
+// valid `<time datetime>` (year granularity).
+const startYear = (period: string): string | undefined =>
+  period.match(/\d{4}/)?.[0];
 ---
 
 <section class="bg-surface-sunken px-6 py-16">
@@ -37,10 +44,10 @@ const entries = getExperience();
                 ]}
               />
               <div class="space-y-1">
-                <p class="flex flex-wrap items-baseline gap-x-2">
-                  <strong class="font-display font-semibold text-ink-strong">
+                <div class="flex flex-wrap items-baseline gap-x-2">
+                  <h3 class="font-display font-semibold text-ink-strong">
                     {entry.role[locale]}
-                  </strong>
+                  </h3>
                   <span class="text-sm text-muted">
                     —{' '}
                     <a
@@ -51,9 +58,12 @@ const entries = getExperience();
                     >
                       {entry.org}
                     </a>{' '}
-                    · {entry.period[locale]}
+                    ·{' '}
+                    <time datetime={startYear(entry.period[locale])}>
+                      {entry.period[locale]}
+                    </time>
                   </span>
-                </p>
+                </div>
                 <p class="leading-relaxed text-muted">
                   {entry.description[locale]}
                 </p>

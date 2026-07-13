@@ -16,6 +16,8 @@ const { description } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const cover = resolveImage(project.cover, locale);
 const name = localizedName(project, locale);
+const result = project.result?.[locale];
+const resultLabel = t(locale, 'projects.result');
 const tags = project.stack.slice(0, 4);
 ---
 
@@ -27,6 +29,7 @@ const tags = project.stack.slice(0, 4);
   <div class="relative aspect-[16/10] w-full overflow-hidden bg-surface-sunken">
     <ProjectImage
       variants={cover}
+      alt={locale === 'fr' ? `Aperçu du projet ${name}` : `${name} project preview`}
       priority={priority}
       sizes="(min-width: 1024px) 520px, (min-width: 640px) 50vw, 100vw"
       class="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
@@ -43,12 +46,22 @@ const tags = project.stack.slice(0, 4);
   </div>
   <div class="flex flex-1 flex-col gap-2 p-5">
     <div class="flex items-center justify-between gap-2">
-      <h3 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
+      <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
         {name}
-      </h3>
+      </h2>
       <span class="shrink-0 text-xs text-muted">{contextLabel}</span>
     </div>
     <p class="line-clamp-3 text-sm leading-relaxed text-muted">{description}</p>
+    {
+      result && (
+        <p class="text-sm leading-relaxed text-ink">
+          <span class="font-mono text-xs uppercase tracking-wide text-accent-ink">
+            {resultLabel} ·{' '}
+          </span>
+          {result}
+        </p>
+      )
+    }
     {
       tags.length > 0 && (
         <div class="mt-auto flex flex-wrap gap-1.5 pt-3">

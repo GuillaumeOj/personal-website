@@ -1,5 +1,6 @@
 ---
-import type { Locale } from '../../config';
+import { SITE, type Locale } from '../../config';
+import { localizedPath, t } from '../../i18n/ui';
 import { contact } from '../../lib/home';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
@@ -38,6 +39,17 @@ const fieldInput =
       />
       {note && <p class="text-muted leading-relaxed">{note}</p>}
       <SocialLinks locale={locale} />
+      {/* Secondary channel: the form stays primary, but some visitors prefer a
+          plain email — surface the real inbox as a visible mailto link. */}
+      <p class="text-sm text-muted">
+        {t(locale, 'home.contact.emailLabel')}{' '}
+        <a
+          href={`mailto:${SITE.email}`}
+          class="text-accent-ink no-underline hover:underline"
+        >
+          {SITE.email}
+        </a>
+      </p>
     </div>
 
     <form
@@ -105,6 +117,18 @@ const fieldInput =
         <button type="submit" class="btn btn-primary">{f.submit[locale]}</button>
         <p class="text-sm text-muted" data-contact-status role="status" aria-live="polite"></p>
       </div>
+
+      {/* Compliance: a consent line with a link to the privacy policy, right at
+          the point of submission. */}
+      <p class="text-xs leading-relaxed text-muted">
+        {f.consent[locale]}
+        <a
+          href={localizedPath(locale, '/privacy-policy')}
+          class="text-accent-ink no-underline hover:underline"
+        >
+          {f.consentLink[locale]}
+        </a>.
+      </p>
     </form>
   </div>
 </Section>

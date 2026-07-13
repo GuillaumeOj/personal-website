@@ -2,12 +2,26 @@
 import { getImage } from 'astro:assets';
 import portrait from '../../assets/portrait.jpg';
 import AboutContent from '../../components/about/AboutContent.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import { SITE } from '../../config';
+import { ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { about, aboutJsonLd, portraitAlt } from '../../lib/about';
+import { about, aboutJsonLd } from '../../lib/about';
 
 const locale = 'en' as const;
 const doc = about[locale];
+
+// Visible trail (Home › About) mirroring the BreadcrumbList JSON-LD.
+const crumbs = [
+  {
+    name: t(locale, 'nav.home'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+  },
+  {
+    name: t(locale, 'nav.about'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/about')), SITE.url).toString(),
+  },
+];
 
 // A JPEG rendition of the portrait for social sharing (JPEG for broad
 // compatibility, e.g. LinkedIn). Reused for og:image and the JSON-LD image.
@@ -21,12 +35,13 @@ const ogImage = new URL(
   locale={locale}
   title={doc.metaTitle}
   description={doc.metaDescription}
-  ogImage={ogImage}
-  ogImageAlt={portraitAlt[locale]}
   jsonLd={aboutJsonLd(locale, ogImage)}
   container="full"
   hreflang
   rawTitle
 >
+  <div class="mx-auto max-w-6xl px-6 pt-8">
+    <Breadcrumb items={crumbs} />
+  </div>
   <AboutContent locale={locale} />
 </BaseLayout>

@@ -1,12 +1,11 @@
 ---
 import '../styles/global.css';
-import { getImage } from 'astro:assets';
-import portrait from '../assets/portrait.jpg';
 import { SITE, type Locale } from '../config';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
 import { portraitAlt } from '../lib/about';
+import { defaultSocialImage } from '../lib/og';
 
 interface Props {
   locale: Locale;
@@ -16,8 +15,8 @@ interface Props {
   /** Alt text describing the OG/Twitter image. */
   ogImageAlt?: string;
   /** Intrinsic dimensions of a page-supplied `ogImage`, so scrapers can render
-   *  the card without a fetch round-trip. The default portrait card sets its
-   *  own; omit unless you pass `ogImage`. */
+   *  the card without a fetch round-trip. The landscape default card sets its
+   *  own (1200×630); omit unless you pass `ogImage`. */
   ogImageWidth?: number;
   ogImageHeight?: number;
   /** `og:type`. Content pages (blog posts) set `article`; everything else is a
@@ -110,22 +109,24 @@ const socialTitle = fullTitle.endsWith(brandSuffix)
     ? fullTitle.slice(brandPrefix.length)
     : fullTitle;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
-// Social preview: pages default to the portrait (same card as /about) unless
-// they pass their own image — blog posts (their cover) and the blog list opt
-// out explicitly. A JPEG rendition is used for broad compatibility (LinkedIn).
+// Social preview: pages without their own `ogImage` get the locale's landscape
+// 1200×630 card (branded canvas + portrait + tagline), built at build time by
+// the `og-cards` integration into `/og/default-{locale}.png`. Content pages
+// (blog posts, project details) pass their own `ogImage` + dimensions.
 let ogImageUrl: string;
-// Dimensions let scrapers render the card without a fetch round-trip. Known for
-// the default portrait (from its metadata) and for any page that supplies them;
-// unknown for a bare remote `ogImage` (blog covers), where they're omitted.
+// Dimensions let scrapers render the card without a fetch round-trip. Always
+// known for the landscape default (1200×630) and for any page that supplies
+// them; unknown only for a bare remote `ogImage` (blog covers), where they're
+// omitted.
 let ogWidth: number | undefined = ogImageWidth;
 let ogHeight: number | undefined = ogImageHeight;
 if (ogImage) {
   ogImageUrl = new URL(ogImage, SITE.url).toString();
 } else {
-  const rendered = await getImage({ src: portrait, format: 'jpeg', quality: 80 });
-  ogImageUrl = new URL(rendered.src, SITE.url).toString();
-  ogWidth = rendered.attributes.width ?? portrait.width;
-  ogHeight = rendered.attributes.height ?? portrait.height;
+  const card = defaultSocialImage(locale);
+  ogImageUrl = new URL(card.url, SITE.url).toString();
+  ogWidth = card.width;
+  ogHeight = card.height;
 }
 const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
 ---
@@ -138,7 +139,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/png" sizes="any" href="/memoji.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -171,6 +172,14 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     {ogWidth && <meta property="og:image:width" content={String(ogWidth)} />}
     {ogHeight && <meta property="og:image:height" content={String(ogHeight)} />}
     <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
+    {
+      hreflang && (
+        <meta
+          property="og:locale:alternate"
+          content={locale === 'fr' ? 'en_US' : 'fr_FR'}
+        />
+      )
+    }
     {
       ogType === 'article' && articleMeta && (
         <>

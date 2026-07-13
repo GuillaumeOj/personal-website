@@ -13,6 +13,34 @@ describe("t", () => {
   });
 });
 
+// T3 — the end-of-article blog CTA strings exist and are non-empty in both
+// locales (the layout renders them under every post).
+describe("blog CTA translations", () => {
+  const keys = [
+    "blog.cta.bio",
+    "blog.cta.heading",
+    "blog.cta.lead",
+    "blog.cta.primary",
+    "blog.cta.secondary",
+  ] as const;
+
+  for (const key of keys) {
+    it(`${key} is non-empty in fr and en`, () => {
+      expect(t("fr", key).trim().length).toBeGreaterThan(0);
+      expect(t("en", key).trim().length).toBeGreaterThan(0);
+    });
+  }
+
+  it("the author bio carries the local positioning once, in each language", () => {
+    expect(t("fr", "blog.cta.bio")).toContain(
+      "développeur web & mobile freelance à Lyon",
+    );
+    expect(t("en", "blog.cta.bio")).toContain(
+      "freelance web & mobile developer in Lyon",
+    );
+  });
+});
+
 describe("otherLocale", () => {
   it("flips fr to en and vice versa", () => {
     expect(otherLocale("fr")).toBe("en");

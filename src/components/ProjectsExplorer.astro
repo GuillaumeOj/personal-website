@@ -52,7 +52,12 @@ const filters = ['all', ...platforms] as const;
         ))}
       </div>
 
-      <p class="mt-6 hidden text-muted" data-projects-empty>
+      <p
+        class="mt-6 hidden text-muted"
+        data-projects-empty
+        role="status"
+        aria-live="polite"
+      >
         {t(locale, 'projects.filter.none')}
       </p>
     </div>

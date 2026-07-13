@@ -1,0 +1,46 @@
+---
+/**
+ * A visible breadcrumb trail mirroring the page's `BreadcrumbList` JSON-LD.
+ * Root first, current page last: the last crumb is marked `aria-current="page"`
+ * and rendered as plain text (not a link), the rest as muted links.
+ */
+interface Item {
+  name: string;
+  href: string;
+}
+
+interface Props {
+  items: Item[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class:list={['text-sm text-muted', className]}>
+  <ol class="flex flex-wrap items-center gap-1.5">
+    {
+      items.map((item, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li class="flex items-center gap-1.5">
+            {i > 0 && (
+              <span aria-hidden="true" class="select-none text-line">
+                /
+              </span>
+            )}
+            {isLast ? (
+              <span aria-current="page" class="text-ink">
+                {item.name}
+              </span>
+            ) : (
+              <a href={item.href} class="no-underline hover:text-ink-strong">
+                {item.name}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

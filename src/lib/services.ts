@@ -1,7 +1,14 @@
 import { type Locale, SITE } from "../config";
-import { localizedPath } from "../i18n/ui";
-import { methodology } from "./home";
-import { PERSON_ID } from "./schema";
+import { ensureTrailingSlash, localizedPath } from "../i18n/ui";
+import { heroCredibility, methodology } from "./home";
+import {
+  BUSINESS_ID,
+  inLanguage,
+  LYON_ADDRESS,
+  PERSON_ID,
+  SERVICE_TYPES,
+  WEBSITE_ID,
+} from "./schema";
 
 /** A localized string. */
 type L = Record<Locale, string>;
@@ -51,11 +58,9 @@ export const hero = {
     fr: "Réponse sous 24 h · Devis gratuit",
     en: "Reply within 24 h · Free quote",
   },
-  /** One-line proof strip shown under the hero, above the fold. */
-  credibility: {
-    fr: "Ex-développeur backend chez Sketchfab (Epic Games) · une app publiée sur l’App Store et Google Play · basé à Lyon",
-    en: "Former backend developer at Sketchfab (Epic Games) · an app published on the App Store and Google Play · based in Lyon",
-  },
+  /** One-line proof strip shown under the hero, above the fold. Shared verbatim
+   *  with the home hero via `heroCredibility` (single source of truth). */
+  credibility: heroCredibility,
   anchorMobile: { fr: "Applications mobiles", en: "Mobile apps" },
   anchorWeb: { fr: "Web & SaaS", en: "Web & SaaS" },
 };
@@ -319,43 +324,44 @@ export const contactNote = {
   en: "Tell me about your idea in a few words — reply within 24 h, free quote, no commitment.",
 };
 
-const serviceName: L = {
-  fr: "Guillaume Ojardias — Développeur web & mobile freelance",
-  en: "Guillaume Ojardias — Freelance web & mobile developer",
-};
-
 /**
- * schema.org JSON-LD for the services page: a ProfessionalService node (tied to
- * the site-wide Person entity) plus a FAQPage built from the visible FAQ.
+ * schema.org JSON-LD for the services page: the canonical `#business`
+ * ProfessionalService node (the *same* entity defined on About — same `@id`,
+ * name, address and `WebSite`) enriched here with the offer's `serviceType`s and
+ * `areaServed`, plus a FAQPage built from the visible FAQ. Sharing the `@id`
+ * (rather than minting a second businessless node) lets Google merge both pages
+ * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const url = new URL(
-    `${localizedPath(locale, "/services")}/`,
+  const homeUrl = new URL(
+    ensureTrailingSlash(localizedPath(locale, "/")),
     SITE.url,
   ).toString();
 
   const service = {
     "@type": "ProfessionalService",
-    name: serviceName[locale],
-    url,
+    "@id": BUSINESS_ID,
+    name: SITE.name,
+    url: homeUrl,
+    email: SITE.email,
+    inLanguage: inLanguage(locale),
+    isPartOf: { "@id": WEBSITE_ID },
+    address: LYON_ADDRESS,
+    // Same coarse band as the About #business node so the merged entity reads
+    // consistently from either page.
+    priceRange: "€€",
     areaServed: [
       { "@type": "City", name: "Lyon" },
       { "@type": "Country", name: "France" },
     ],
-    serviceType: [
-      "Mobile app development",
-      "Web development",
-      "SaaS development",
-    ],
-    provider: {
-      "@type": "Person",
-      "@id": PERSON_ID,
-      name: SITE.name,
-    },
+    serviceType: SERVICE_TYPES,
+    provider: { "@id": PERSON_ID },
   };
 
   const faqPage = {
     "@type": "FAQPage",
+    inLanguage: inLanguage(locale),
+    isPartOf: { "@id": WEBSITE_ID },
     mainEntity: faq.items.map((item) => ({
       "@type": "Question",
       name: item.q[locale],

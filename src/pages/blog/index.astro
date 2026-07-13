@@ -1,17 +1,34 @@
 ---
 import PostList from '../../components/PostList.astro';
-import { t } from '../../i18n/ui';
+import { SITE } from '../../config';
+import { ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPostsForLocale } from '../../lib/posts';
+import { collectionPageJsonLd } from '../../lib/schema';
 
 const locale = 'fr' as const;
 const posts = await getPostsForLocale(locale);
+
+const canonical = new URL(
+  ensureTrailingSlash(localizedPath(locale, '/blog')),
+  SITE.url,
+).toString();
+const jsonLd = collectionPageJsonLd(locale, {
+  url: canonical,
+  name: t(locale, 'meta.blogTitle'),
+  description: t(locale, 'meta.blogDescription'),
+  breadcrumbs: [
+    { name: t(locale, 'nav.home'), url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString() },
+    { name: t(locale, 'nav.blog'), url: canonical },
+  ],
+});
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'meta.blogTitle')}
   description={t(locale, 'meta.blogDescription')}
+  jsonLd={jsonLd}
   container="full"
   hreflang
 >

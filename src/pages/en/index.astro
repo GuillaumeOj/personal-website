@@ -25,7 +25,7 @@ const ogImage = new URL(
 <BaseLayout
   locale={locale}
   title={t(locale, 'meta.homeTitle')}
-  description="Freelance full-stack developer in Lyon: web and mobile apps, from frontend to deployment. Python/Django, React Native, Next.js, PostgreSQL."
+  description={t(locale, 'meta.homeDescription')}
   jsonLd={homeJsonLd(locale, ogImage)}
   container="full"
   snap
@@ -35,6 +35,6 @@ const ogImage = new URL(
   <WhatIDo locale={locale} />
   <HowIWork locale={locale} />
   <FeaturedProjects locale={locale} />
-  <Contact locale={locale} />
   <AboutTeaser locale={locale} />
+  <Contact locale={locale} />
 </BaseLayout>

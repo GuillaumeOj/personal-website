@@ -1,6 +1,6 @@
 ---
 import { SITE, type Locale } from '../config';
-import { localizedPath, navItems, t } from '../i18n/ui';
+import { ensureTrailingSlash, localizedPath, navItems, t } from '../i18n/ui';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -10,8 +10,16 @@ interface Props {
 const { locale } = Astro.props;
 const home = localizedPath(locale, '/');
 const links = navItems(locale);
-const navLinks = links.filter((link) => !link.cta);
+// Normalize page links to the site's canonical trailing-slash form. The CTA is
+// left untouched because it carries a `#contact` fragment.
+const navLinks = links
+  .filter((link) => !link.cta)
+  .map((link) => ({ ...link, href: ensureTrailingSlash(link.href) }));
 const cta = links.find((link) => link.cta);
+// No dedicated i18n key exists for the header nav landmark (footer owns
+// `footer.nav`), so label it from the locale directly.
+const primaryNavLabel =
+  locale === 'fr' ? 'Navigation principale' : 'Main navigation';
 const linkClass =
   'rounded-md px-2.5 py-1 text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong';
 ---
@@ -29,7 +37,10 @@ const linkClass =
     </a>
 
     {/* Desktop nav */}
-    <nav class="hidden items-center gap-2 text-sm md:flex">
+    <nav
+      class="hidden items-center gap-2 text-sm md:flex"
+      aria-label={primaryNavLabel}
+    >
       {navLinks.map((link) => (
         <a href={link.href} class={linkClass}>{link.label}</a>
       ))}
@@ -58,7 +69,10 @@ const linkClass =
     class="hidden border-t border-line md:hidden"
     data-menu-panel
   >
-    <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4">
+    <nav
+      class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4"
+      aria-label={primaryNavLabel}
+    >
       {navLinks.map((link) => (
         <a href={link.href} class:list={[linkClass, 'py-2']}>{link.label}</a>
       ))}

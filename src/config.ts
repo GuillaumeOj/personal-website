@@ -1,6 +1,9 @@
 export const SITE = {
   name: "Guillaume Ojardias",
   url: "https://guillaume.ojardias.info",
+  // Public inbox surfaced as a secondary contact channel — the same address the
+  // contact form delivers to (see `CONTACT_TO` in `lib/contact.ts`).
+  email: "contact@ojardias.me",
   defaultLocale: "fr" as const,
   locales: ["fr", "en"] as const,
   social: {

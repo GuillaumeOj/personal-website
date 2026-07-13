@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { hero } from '../../lib/home';
+import { hero, heroCredibility } from '../../lib/home';
 import { localizedPath } from '../../i18n/ui';
 import Icon from '../Icon.astro';
 
@@ -42,6 +42,12 @@ const defaultSentence = `${lead} ${phrases[0]}`;
           >
         </span>
       </p>
+
+      <p class="text-sm text-muted" data-hero-audience>{hero.audience[locale]}</p>
+
+      {/* Above-the-fold credibility: the same one-line proof strip the /services
+          hero shows, so trust doesn't wait for a full scroll to AboutTeaser. */}
+      <p class="text-sm text-muted" data-hero-credibility>{heroCredibility[locale]}</p>
 
       <div class="flex flex-wrap gap-3 pt-1">
         <a href="#contact" class="btn btn-primary">{hero.ctaPrimary[locale]}</a>

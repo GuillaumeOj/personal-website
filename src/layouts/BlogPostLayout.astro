@@ -1,11 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import Portrait from '../components/about/Portrait.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
 import { portraitAlt } from '../lib/about';
 import type { TocHeading } from '../lib/notion';
+import { articleSocialImage } from '../lib/og';
 import { findSibling } from '../lib/posts';
 import { blogPostJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
@@ -34,20 +37,33 @@ const altEnUrl = enSlug
   : undefined;
 
 const canonical = new URL(articlePath(locale, post.data.slug), SITE.url).toString();
+// Resolve the social card once: covered posts preview their cover, cover-less
+// posts a landscape fallback — so every BlogPosting carries an `image` (feeding
+// BOTH og:image and the JSON-LD) instead of the cover-less path dropping it.
+const og = articleSocialImage({ cover: post.data.cover, locale });
+// Breadcrumb trail (Home › Blog › {title}), shared by the visible <nav> and the
+// BreadcrumbList JSON-LD so both stay in lockstep.
+const crumbs = [
+  {
+    name: t(locale, 'nav.home'),
+    url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+  },
+  {
+    name: t(locale, 'nav.blog'),
+    url: new URL(ensureTrailingSlash(localizedPath(locale, '/blog')), SITE.url).toString(),
+  },
+  { name: post.data.title, url: canonical },
+];
 // BlogPosting + breadcrumb (Home › Blog › {title}). Author falls back to the
 // site Person inside the builder when a post has none.
 const jsonLd = blogPostJsonLd(locale, {
   url: canonical,
   title: post.data.title,
   description: post.data.description,
-  image: post.data.cover,
+  image: new URL(og.url, SITE.url).toString(),
   datePublished: post.data.pubDate.toISOString(),
   authorName: author?.name,
-  breadcrumbs: [
-    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
-    { name: t(locale, 'nav.blog'), url: new URL(localizedPath(locale, '/blog'), SITE.url).toString() },
-    { name: post.data.title, url: canonical },
-  ],
+  breadcrumbs: crumbs,
 });
 ---
 
@@ -55,7 +71,9 @@ const jsonLd = blogPostJsonLd(locale, {
   locale={locale}
   title={post.data.title}
   description={post.data.description}
-  ogImage={post.data.cover}
+  ogImage={og.url}
+  ogImageWidth={og.width}
+  ogImageHeight={og.height}
   ogImageAlt={post.data.cover ? post.data.title : portraitAlt[locale]}
   ogType="article"
   articleMeta={{
@@ -76,18 +94,13 @@ const jsonLd = blogPostJsonLd(locale, {
     {t(locale, 'blog.backToList')}
   </a>
   <article class="space-y-6">
-    <a
-      href={localizedPath(locale, '/blog')}
-      class="inline-block text-sm text-accent-ink no-underline hover:underline xl:hidden"
-    >
-      {t(locale, 'blog.backToList')}
-    </a>
+    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
     {
       post.data.cover && (
         <Image
           src={post.data.cover}
           inferSize
-          alt=""
+          alt={post.data.title}
           loading="eager"
           fetchpriority="high"
           class="aspect-[3/1] w-full rounded-2xl object-cover"
@@ -129,5 +142,31 @@ const jsonLd = blogPostJsonLd(locale, {
     >
       <slot />
     </div>
+
+    {/* End-of-article conversion block: an author card (the visible human behind
+        the BlogPosting author Person) plus CTAs, so a post isn't a dead-end. */}
+    <footer class="not-prose mt-14 space-y-6 rounded-2xl border border-line bg-surface p-6 sm:p-8">
+      <div class="flex items-start gap-4">
+        <Portrait locale={locale} class="h-14 w-14 shrink-0" loading="lazy" />
+        <div class="space-y-1">
+          <p class="font-display font-semibold text-ink-strong">{SITE.name}</p>
+          <p class="text-sm leading-relaxed text-muted">{t(locale, 'blog.cta.bio')}</p>
+        </div>
+      </div>
+      <div class="space-y-3 border-t border-line pt-6">
+        <p class="font-display text-lg font-semibold tracking-tight text-ink-strong">
+          {t(locale, 'blog.cta.heading')}
+        </p>
+        <p class="leading-relaxed text-muted">{t(locale, 'blog.cta.lead')}</p>
+        <div class="flex flex-wrap gap-3 pt-1">
+          <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary">
+            {t(locale, 'blog.cta.primary')}
+          </a>
+          <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
+            {t(locale, 'blog.cta.secondary')}
+          </a>
+        </div>
+      </div>
+    </footer>
   </article>
 </BaseLayout>

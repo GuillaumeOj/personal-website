@@ -1,17 +1,34 @@
 ---
 import ProjectsExplorer from '../../components/ProjectsExplorer.astro';
-import { t } from '../../i18n/ui';
+import { SITE } from '../../config';
+import { ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getProjects } from '../../lib/projects';
+import { collectionPageJsonLd } from '../../lib/schema';
 
 const locale = 'fr' as const;
 const projects = getProjects();
+
+const canonical = new URL(
+  ensureTrailingSlash(localizedPath(locale, '/projects')),
+  SITE.url,
+).toString();
+const jsonLd = collectionPageJsonLd(locale, {
+  url: canonical,
+  name: t(locale, 'meta.projectsTitle'),
+  description: t(locale, 'meta.projectsDescription'),
+  breadcrumbs: [
+    { name: t(locale, 'nav.home'), url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString() },
+    { name: t(locale, 'nav.projects'), url: canonical },
+  ],
+});
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'meta.projectsTitle')}
   description={t(locale, 'meta.projectsDescription')}
+  jsonLd={jsonLd}
   container="full"
   hreflang
 >
@@ -24,5 +41,12 @@ const projects = getProjects();
     <div class="mt-10">
       <ProjectsExplorer projects={projects} locale={locale} />
     </div>
+
+    <section class="mt-16 border-t border-line pt-10 text-center">
+      <p class="text-lg text-ink-strong">{t(locale, 'projects.listCta.title')}</p>
+      <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary mt-5">
+        {t(locale, 'projects.listCta.link')}
+      </a>
+    </section>
   </div>
 </BaseLayout>

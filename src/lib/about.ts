@@ -1,13 +1,11 @@
 import { type Locale, SITE } from "../config";
-import { localizedPath, projectPath } from "../i18n/ui";
+import { ensureTrailingSlash, localizedPath, projectPath, t } from "../i18n/ui";
 import {
-  BUSINESS_ID,
+  breadcrumbList,
   inLanguage,
-  jobTitle,
-  knowsAbout,
-  LYON_ADDRESS,
   PERSON_ID,
   personNode,
+  professionalServiceNode,
   WEBSITE_ID,
 } from "./schema";
 
@@ -344,29 +342,32 @@ export const experienceSection = {
  */
 export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
-  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
+  // Canonical trailing-slash form so these JSON-LD URLs match the page
+  // canonicals and the `@id`-based entity consolidation can't silently miss.
+  const homeUrl = new URL(
+    ensureTrailingSlash(localizedPath(locale, "/")),
+    SITE.url,
+  ).toString();
   const aboutUrl = new URL(
-    localizedPath(locale, "/about"),
+    ensureTrailingSlash(localizedPath(locale, "/about")),
     SITE.url,
   ).toString();
 
   const person = personNode(locale, image);
+  // The shared `#business` node (single source of truth in schema.ts), enriched
+  // with the About-specific descriptive fields. `knowsAbout` is intentionally
+  // NOT set here — it's a Person property and the `@id` reference carries it,
+  // so duplicating it on the service is dropped.
   const business = {
-    "@type": "ProfessionalService",
-    "@id": BUSINESS_ID,
-    name: SITE.name,
+    ...professionalServiceNode(),
     description: doc.metaDescription,
-    url: homeUrl,
+    email: SITE.email,
     image,
     founder: { "@id": PERSON_ID },
-    provider: { "@id": PERSON_ID },
-    areaServed: [
-      { "@type": "City", name: "Lyon" },
-      { "@type": "Country", name: "France" },
-    ],
-    address: LYON_ADDRESS,
-    knowsAbout,
-    serviceType: jobTitle[locale],
+    // Coarse, machine-readable schema.org band — signals a professional (not
+    // budget) tier to local-business consumers without committing to a public
+    // numeric figure.
+    priceRange: "€€",
   };
   const webPage = {
     "@type": "AboutPage",
@@ -381,9 +382,14 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     about: { "@id": PERSON_ID },
     primaryImageOfPage: image,
   };
+  // Home › About trail — the last major content page that was missing one.
+  const breadcrumbs = breadcrumbList([
+    { name: t(locale, "nav.home"), url: homeUrl },
+    { name: t(locale, "nav.about"), url: aboutUrl },
+  ]);
 
   return {
     "@context": "https://schema.org",
-    "@graph": [person, business, webPage],
+    "@graph": [person, business, webPage, breadcrumbs],
   };
 };

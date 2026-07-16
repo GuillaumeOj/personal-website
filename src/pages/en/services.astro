@@ -1,9 +1,24 @@
 ---
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import ServicesContent from '../../components/services/ServicesContent.astro';
+import { SITE } from '../../config';
+import { ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { servicesJsonLd, servicesMeta } from '../../lib/services';
 
 const locale = 'en' as const;
+
+// Visible trail (Home › Services) mirroring the BreadcrumbList JSON-LD.
+const crumbs = [
+  {
+    name: t(locale, 'nav.home'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+  },
+  {
+    name: t(locale, 'nav.services'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/services')), SITE.url).toString(),
+  },
+];
 ---
 
 <BaseLayout
@@ -14,5 +29,8 @@ const locale = 'en' as const;
   container="full"
   hreflang
 >
+  <div class="mx-auto max-w-6xl px-6 pt-8">
+    <Breadcrumb items={crumbs} />
+  </div>
   <ServicesContent locale={locale} />
 </BaseLayout>

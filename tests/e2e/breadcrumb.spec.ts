@@ -62,3 +62,19 @@ test("about (en): Home › About", async ({ page }) => {
   await page.goto("/en/about/");
   await expectTrail(page, ["Home", "About"]);
 });
+
+// Hub / list pages carry a 2-crumb trail (Home › {Hub}) too.
+const hubs = [
+  { path: "/services/", trail: ["Accueil", "Prestations"] },
+  { path: "/en/services/", trail: ["Home", "Services"] },
+  { path: "/projects/", trail: ["Accueil", "Projets"] },
+  { path: "/en/projects/", trail: ["Home", "Projects"] },
+  { path: "/blog/", trail: ["Accueil", "Blog"] },
+  { path: "/en/blog/", trail: ["Home", "Blog"] },
+];
+for (const { path, trail } of hubs) {
+  test(`hub ${path}: ${trail.join(" › ")}`, async ({ page }) => {
+    await page.goto(path);
+    await expectTrail(page, trail);
+  });
+}

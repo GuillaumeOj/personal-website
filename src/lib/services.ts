@@ -1,8 +1,9 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash, localizedPath } from "../i18n/ui";
+import { ensureTrailingSlash, localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
   BUSINESS_ID,
+  breadcrumbList,
   inLanguage,
   LYON_ADDRESS,
   PERSON_ID,
@@ -369,8 +370,19 @@ export const servicesJsonLd = (locale: Locale) => {
     })),
   };
 
+  const breadcrumbs = breadcrumbList([
+    { name: t(locale, "nav.home"), url: homeUrl },
+    {
+      name: t(locale, "nav.services"),
+      url: new URL(
+        ensureTrailingSlash(localizedPath(locale, "/services")),
+        SITE.url,
+      ).toString(),
+    },
+  ]);
+
   return {
     "@context": "https://schema.org",
-    "@graph": [service, faqPage],
+    "@graph": [service, faqPage, breadcrumbs],
   };
 };

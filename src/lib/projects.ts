@@ -244,10 +244,10 @@ export const projects: Project[] = [
       fr: "Page d’accueil du site vitrine de l’avocate Eva Biezunski",
       en: "Home page of lawyer Eva Biezunski’s business website",
     },
-    year: 2024,
+    year: 2026,
     result: {
-      fr: "Projet client livré clés en main, en ligne depuis 2024.",
-      en: "Turnkey client project, live since 2024.",
+      fr: "Projet client livré clés en main, en ligne depuis juin 2026.",
+      en: "Turnkey client project, live since June 2026.",
     },
     content: {
       fr: {
@@ -255,14 +255,14 @@ export const projects: Project[] = [
           "Site vitrine d’un cabinet d’avocate spécialisé en droit des sociétés.",
         aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), avec un focus sur les professions libérales (avocats, médecins, dentistes…).",
         longDescription:
-          "La cliente, avocate en droit des sociétés, avait besoin d’un site vitrine pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site a été livré clés en main, en ligne depuis 2024, développé avec Next.js, React, TypeScript et Tailwind CSS. Le code et l’hébergement restent la propriété de la cliente.",
+          "La cliente, avocate en droit des sociétés, avait besoin d’un site vitrine pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site a été livré clés en main, en ligne depuis juin 2026, développé avec Next.js, React, TypeScript et Tailwind CSS. Le code et l’hébergement restent la propriété de la cliente.",
       },
       en: {
         description:
           "Business website for a lawyer specialized in companies law.",
         aim: "Present the practice and its areas of expertise — companies law (contracts, company formation, etc.), with a focus on liberal professions (lawyers, doctors, dentists…).",
         longDescription:
-          "The client, a lawyer specialized in companies law, needed a business website to clearly present her practice, build trust and make getting in touch easy. The site was delivered turnkey, live since 2024, built with Next.js, React, TypeScript and Tailwind CSS. The code and hosting remain the client’s property.",
+          "The client, a lawyer specialized in companies law, needed a business website to clearly present her practice, build trust and make getting in touch easy. The site was delivered turnkey, live since June 2026, built with Next.js, React, TypeScript and Tailwind CSS. The code and hosting remain the client’s property.",
       },
     },
   },

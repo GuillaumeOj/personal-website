@@ -131,6 +131,10 @@ for (const path of ["/services/", "/en/services/"]) {
     // Exactly one ProfessionalService — no second, businessless node.
     const services = nodes.filter((n) => n["@type"] === "ProfessionalService");
     expect(services.length).toBe(1);
+    // The page also carries a BreadcrumbList (Home › Services), mirroring the
+    // visible trail.
+    const crumbs = nodeOfType(nodes, "BreadcrumbList");
+    expect((crumbs.itemListElement as unknown[]).length).toBe(2);
   });
 }
 

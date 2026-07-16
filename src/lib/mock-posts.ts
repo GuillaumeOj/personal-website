@@ -166,7 +166,20 @@ export function getMockHtml(post: CollectionEntry<"blog">): string | undefined {
   return mockHtmlById.get(post.id);
 }
 
-export const useMocks = !import.meta.env.NOTION_TOKEN;
+// `process` is only present server-side (where this module runs during build);
+// read it defensively. Consult BOTH env sources: Astro injects custom vars like
+// `NOTION_TOKEN` into `import.meta.env` during the build pipeline, but NOT in the
+// config-loading module runner that evaluates this file when `astro.config`
+// transitively imports it (via `lib/posts.ts`) — there only Vite's built-ins
+// (PROD/MODE) are set, so `import.meta.env.NOTION_TOKEN` reads `undefined` even
+// on a Vercel prod deploy that has the token. `process.env` is populated in both
+// contexts, so a real token there means we are NOT using mocks.
+const processEnv =
+  typeof process !== "undefined" ? process.env : ({} as NodeJS.ProcessEnv);
+
+export const useMocks = !(
+  import.meta.env.NOTION_TOKEN || processEnv.NOTION_TOKEN
+);
 
 /** Env signals the mock guard reasons over — passed in so it stays pure/testable. */
 export interface MockGuardEnv {
@@ -203,11 +216,8 @@ export function assertMocksAllowed(env: MockGuardEnv): void {
   }
 }
 
-// Wire the guard at the point `useMocks` is decided. `process` is only present
-// server-side (where this module runs during build); read it defensively.
-const processEnv =
-  typeof process !== "undefined" ? process.env : ({} as NodeJS.ProcessEnv);
-
+// Wire the guard at the point `useMocks` is decided (`processEnv` is defined
+// alongside `useMocks` above, since both now read `process.env`).
 assertMocksAllowed({
   useMocks,
   isProd: import.meta.env.PROD,

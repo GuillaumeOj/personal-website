@@ -51,7 +51,7 @@ describe("buildBrevoPayload", () => {
       message: "x & y",
     });
     expect(payload.replyTo).toEqual({ email: "a@b.com", name: "A<b>" });
-    expect(payload.to[0].email).toBe("contact@ojardias.me");
+    expect(payload.to[0].email).toBe("guillaume@ojardias.me");
     expect(payload.htmlContent).toContain("A&lt;b&gt;");
     expect(payload.htmlContent).toContain("x &amp; y");
     expect(payload.subject).toContain("Application mobile");

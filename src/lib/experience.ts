@@ -17,6 +17,14 @@ export interface ExperienceEntry {
   org: string;
   url: string;
   period: Localized;
+  /**
+   * Machine-readable ISO 8601 (`YYYY-MM`) bounds for the role, parallel to the
+   * display-only `period`. `end` is omitted for the current, ongoing role.
+   * Consumed by the Person `hasOccupation` JSON-LD (see `occupations()`) and by
+   * the ExperienceShowcase `<time datetime>` markup.
+   */
+  start?: string;
+  end?: string;
   /** Intro paragraph. */
   description: Localized;
   /** Bullet-point highlights. */
@@ -36,6 +44,7 @@ const experience: ExperienceEntry[] = [
     org: "Fusily",
     url: "https://fusily.com",
     period: { fr: "sept. 2024 → aujourd’hui", en: "Sep 2024 → present" },
+    start: "2024-09",
     description: {
       fr: "Fusily est une application mobile (iOS et Android) qui simplifie la création et le partage de recettes ainsi que la planification des repas, tout en réduisant le gaspillage alimentaire. J’ai conçu, développé et publié le produit de bout en bout, seul :",
       en: "Fusily is a mobile app (iOS and Android) that simplifies creating and sharing recipes as well as meal planning, while reducing food waste. I designed, built and shipped the product end-to-end, on my own:",
@@ -68,6 +77,8 @@ const experience: ExperienceEntry[] = [
     org: "Medsmart",
     url: "https://medsmart.eu",
     period: { fr: "juil. 2024 → sept. 2024", en: "Jul 2024 → Sep 2024" },
+    start: "2024-07",
+    end: "2024-09",
     description: {
       fr: "Développement backend (Python / Django) pour le système de télétransmission entre les mutuelles et les praticiens de médecine douce (ostéopathes, hypnothérapeutes, etc.) :",
       en: "Backend development (Python / Django) for the claims-transmission system between health insurers and alternative-medicine practitioners (osteopaths, hypnotherapists, etc.):",
@@ -90,6 +101,8 @@ const experience: ExperienceEntry[] = [
     org: "Epic Games (FAB)",
     url: "https://www.fab.com",
     period: { fr: "juil. 2021 → févr. 2024", en: "Jul 2021 → Feb 2024" },
+    start: "2021-07",
+    end: "2024-02",
     description: {
       fr: "Après le rachat de Sketchfab par Epic Games, contribution à la construction de FAB, la marketplace d’assets unifiée d’Epic Games à destination des créateurs (fusion des catalogues Sketchfab, Unreal Marketplace et Quixel), en amont de son lancement.",
       en: "After Epic Games acquired Sketchfab, contributed to building FAB, Epic Games’ unified asset marketplace for creators (merging the Sketchfab, Unreal Marketplace and Quixel catalogs), ahead of its launch.",
@@ -114,6 +127,8 @@ const experience: ExperienceEntry[] = [
     org: "Sketchfab",
     url: "https://sketchfab.com",
     period: { fr: "mai 2021 → févr. 2024", en: "May 2021 → Feb 2024" },
+    start: "2021-05",
+    end: "2024-02",
     description: {
       fr: "Développement du backend Django / DRF de Sketchfab, la plateforme collaborative de publication et de visualisation de modèles 3D, utilisée par des millions de créateurs.",
       en: "Development of Sketchfab’s Django / DRF backend, the collaborative platform to publish and view 3D models, used by millions of creators.",
@@ -146,6 +161,8 @@ const experience: ExperienceEntry[] = [
     org: "Mergify",
     url: "https://mergify.com",
     period: { fr: "août 2020 → févr. 2021", en: "Aug 2020 → Feb 2021" },
+    start: "2020-08",
+    end: "2021-02",
     description: {
       fr: "Au sein de cette startup spécialisée dans l’automatisation des workflows GitHub, j’ai intégré une équipe réduite composée des deux fondateurs. Ce stage m’a permis de bénéficier d’un mentorat direct et d’une immersion complète dans le développement d’un produit SaaS utilisé par des milliers de développeurs.",
       en: "At this startup specialized in GitHub workflow automation, I joined a small team made up of the two founders. This internship gave me direct mentorship and a full immersion in developing a SaaS product used by thousands of developers.",
@@ -170,3 +187,18 @@ const experience: ExperienceEntry[] = [
 ];
 
 export const getExperience = (): ExperienceEntry[] => experience;
+
+/**
+ * schema.org `Occupation` nodes derived from the experience timeline, for the
+ * Person's `hasOccupation`. `name` is the localized role; `startDate`/`endDate`
+ * carry the ISO (`YYYY-MM`) bounds when known (`endDate` omitted for the current
+ * role). This gives the Person node a structured-data view of the career the
+ * About page shows only as prose.
+ */
+export const occupations = (locale: Locale) =>
+  experience.map((entry) => ({
+    "@type": "Occupation",
+    name: entry.role[locale],
+    ...(entry.start ? { startDate: entry.start } : {}),
+    ...(entry.end ? { endDate: entry.end } : {}),
+  }));

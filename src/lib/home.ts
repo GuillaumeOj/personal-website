@@ -1,3 +1,14 @@
+/**
+ * One-line, above-the-fold proof strip. Single source of truth shared by the
+ * home hero and the services hero (`services.ts` imports it as
+ * `hero.credibility`) so the two can never drift. No new claims — every element
+ * restates an existing fact from the About copy.
+ */
+export const heroCredibility = {
+  fr: "Ex-développeur backend chez Sketchfab (Epic Games) · une app publiée sur l’App Store et Google Play · basé à Lyon",
+  en: "Former backend developer at Sketchfab (Epic Games) · an app published on the App Store and Google Play · based in Lyon",
+};
+
 export const hero = {
   eyebrow: {
     fr: "Développeur Full-Stack Web & Mobile · freelance",
@@ -10,6 +21,13 @@ export const hero = {
   lead: {
     fr: "Confiez tout votre projet à un seul partenaire — design, développement, déploiement et suivi — et restez concentré sur votre activité.",
     en: "Hand your whole project to a single partner — design, development, deployment and follow-up — and stay focused on your business.",
+  },
+  // "Who I work with" cue on the first screen: lets a visitor self-identify as
+  // the intended client, and carries the "Lyon" local keyword naturally on the
+  // highest-authority page.
+  audience: {
+    fr: "Pour les PME, associations et porteurs de projet, à Lyon et partout en France.",
+    en: "For SMEs, non-profits and project owners, in Lyon and across France.",
   },
   ctaPrimary: {
     fr: "Discutons de votre projet",
@@ -202,6 +220,10 @@ export const methodology = {
 export const featured = {
   eyebrow: { fr: "Réalisations", en: "Work" },
   title: { fr: "Des projets déjà en ligne", en: "Products already live" },
+  lead: {
+    fr: "Des applications réelles, en production — la meilleure preuve de ce que je peux livrer pour vous.",
+    en: "Real apps, in production — the best proof of what I can deliver for you.",
+  },
   cta: { fr: "Tous les projets", en: "All projects" },
 };
 
@@ -250,6 +272,17 @@ export const contact = {
       en: "In a few lines: what you want to build, for whom, and by when.",
     },
     submit: { fr: "Envoyer", en: "Send" },
+    // Compliance line under the submit button. The trailing fragment
+    // (`consentLink`) is rendered as an inline link to the privacy policy at the
+    // point of submission — see Contact.astro.
+    consent: {
+      fr: "En envoyant ce formulaire, vous acceptez que vos informations soient utilisées pour répondre à votre demande. Voir la ",
+      en: "By sending this form, you agree that your information may be used to respond to your request. See the ",
+    },
+    consentLink: {
+      fr: "politique de confidentialité",
+      en: "privacy policy",
+    },
     sending: { fr: "Envoi…", en: "Sending…" },
     success: {
       fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",

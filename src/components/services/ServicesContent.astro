@@ -1,6 +1,6 @@
 ---
-import type { Locale } from '../../config';
-import { projectPath } from '../../i18n/ui';
+import { type Locale, SITE } from '../../config';
+import { ensureTrailingSlash, localizedPath, projectPath, t } from '../../i18n/ui';
 import {
   contactNote,
   cost,
@@ -11,6 +11,7 @@ import {
   projectFlow,
   web,
 } from '../../lib/services';
+import Breadcrumb from '../Breadcrumb.astro';
 import Contact from '../home/Contact.astro';
 import Section from '../home/Section.astro';
 import SectionHeader from '../home/SectionHeader.astro';
@@ -22,6 +23,20 @@ interface Props {
 
 const { locale } = Astro.props;
 
+// Visible trail (Home › Services), rendered inside the hero section (top-left,
+// on the sunken background) rather than a separate strip above it. Mirrors the
+// BreadcrumbList JSON-LD emitted by `servicesJsonLd`.
+const crumbs = [
+  {
+    name: t(locale, 'nav.home'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+  },
+  {
+    name: t(locale, 'nav.services'),
+    href: new URL(ensureTrailingSlash(localizedPath(locale, '/services')), SITE.url).toString(),
+  },
+];
+
 /** The two proof-with-a-link blocks share the same offering shape. */
 const offerings = [
   { id: 'mobile', data: mobile, sunken: false },
@@ -32,9 +47,13 @@ const linkClass =
   'font-display font-medium text-accent-ink no-underline hover:underline';
 ---
 
-<section class="flex min-h-svh items-center bg-surface-sunken px-6 py-24">
+<section class="flex min-h-svh flex-col bg-surface-sunken px-6 pb-24 pt-8">
   <div class="mx-auto w-full max-w-6xl">
-    <div class="reveal max-w-3xl space-y-7">
+    <Breadcrumb items={crumbs} />
+  </div>
+  <div class="flex flex-1 items-center">
+    <div class="mx-auto w-full max-w-6xl">
+      <div class="reveal max-w-3xl space-y-7">
       <h1
         class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink-strong sm:text-5xl"
       >
@@ -56,8 +75,9 @@ const linkClass =
         {hero.reassurance[locale]}
       </p>
       <p class="border-t border-line pt-5 text-sm leading-relaxed text-muted">
-        {hero.credibility[locale]}
-      </p>
+          {hero.credibility[locale]}
+        </p>
+      </div>
     </div>
   </div>
 </section>

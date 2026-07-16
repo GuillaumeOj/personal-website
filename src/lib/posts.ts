@@ -1,9 +1,27 @@
-import { type CollectionEntry, getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import { type Locale, SITE } from "../config";
 import { mockPosts, useMocks } from "./mock-posts";
 
+/**
+ * Load the real (Notion-backed) posts. `getCollection` lives in the
+ * `astro:content` virtual module, which only exists inside the Astro runtime, so
+ * it's imported lazily: that lets this module also be pulled into
+ * `astro.config.mjs` (the sitemap `lastmod` precompute) where the virtual module
+ * isn't resolvable. There it throws and we fall back to no real posts — the mock
+ * fixtures (dev/test) still supply dates, and a token-backed prod config phase
+ * simply gets the build date on blog URLs.
+ */
+async function loadRealPosts(): Promise<CollectionEntry<"blog">[]> {
+  try {
+    const { getCollection } = await import("astro:content");
+    return await getCollection("blog");
+  } catch {
+    return [];
+  }
+}
+
 async function getAllPosts(): Promise<CollectionEntry<"blog">[]> {
-  const real = await getCollection("blog");
+  const real = await loadRealPosts();
   const posts = useMocks ? [...real, ...mockPosts] : real;
   return withPrimaryLocaleCovers(posts);
 }

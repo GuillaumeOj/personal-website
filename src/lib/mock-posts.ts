@@ -167,3 +167,50 @@ export function getMockHtml(post: CollectionEntry<"blog">): string | undefined {
 }
 
 export const useMocks = !import.meta.env.NOTION_TOKEN;
+
+/** Env signals the mock guard reasons over — passed in so it stays pure/testable. */
+export interface MockGuardEnv {
+  /** Whether the mock fixtures would be used (i.e. no `NOTION_TOKEN`). */
+  useMocks: boolean;
+  /** `import.meta.env.PROD` — true for any `astro build`, false for `astro dev`. */
+  isProd: boolean;
+  /** `process.env.VERCEL_ENV` — `"production"` only on a Vercel production deploy. */
+  vercelEnv?: string;
+  /** Escape hatch: `process.env.ALLOW_MOCK_POSTS` set — our own test/e2e builds opt in. */
+  allowMockPosts: boolean;
+}
+
+/**
+ * Fail a *genuine production deploy* that would silently ship the QA fixtures.
+ *
+ * The condition is deliberately narrow so it never breaks the builds we rely on:
+ *   - `astro dev`               → `isProd` false                → never throws
+ *   - plain local / CI `astro build` without a token → `vercelEnv !== "production"` → never throws
+ *   - Vercel *production* build without a token → throws (that's the audited bug)
+ *   - any build with `ALLOW_MOCK_POSTS` set → opted in, never throws
+ *
+ * Conservative by design: when the production-deploy signal is absent we do NOT
+ * throw (a false negative that lets a build through is far safer than one that
+ * breaks every deploy).
+ */
+export function assertMocksAllowed(env: MockGuardEnv): void {
+  const productionDeploy = env.isProd && env.vercelEnv === "production";
+  if (env.useMocks && productionDeploy && !env.allowMockPosts) {
+    throw new Error(
+      "Refusing to build production with mock posts — set NOTION_TOKEN " +
+        "(or ALLOW_MOCK_POSTS=1 to override intentionally).",
+    );
+  }
+}
+
+// Wire the guard at the point `useMocks` is decided. `process` is only present
+// server-side (where this module runs during build); read it defensively.
+const processEnv =
+  typeof process !== "undefined" ? process.env : ({} as NodeJS.ProcessEnv);
+
+assertMocksAllowed({
+  useMocks,
+  isProd: import.meta.env.PROD,
+  vercelEnv: processEnv.VERCEL_ENV,
+  allowMockPosts: Boolean(processEnv.ALLOW_MOCK_POSTS),
+});

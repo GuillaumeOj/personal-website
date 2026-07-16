@@ -1,6 +1,13 @@
 import { type Locale, SITE } from "../config";
-import { localizedPath, projectPath } from "../i18n/ui";
-import { tech } from "./home";
+import { ensureTrailingSlash, localizedPath, projectPath, t } from "../i18n/ui";
+import {
+  breadcrumbList,
+  inLanguage,
+  PERSON_ID,
+  personNode,
+  professionalServiceNode,
+  WEBSITE_ID,
+} from "./schema";
 
 /** A run of inline content inside an About paragraph or list item. */
 export type Run =
@@ -327,59 +334,40 @@ export const experienceSection = {
   seeLess: { fr: "Voir moins", en: "See less" },
 };
 
-const jobTitle: Record<Locale, string> = {
-  fr: "Développeur web & mobile freelance",
-  en: "Freelance web & mobile developer",
-};
-
 /**
- * schema.org JSON-LD for the About page: a Person (with sameAs social profiles
- * and knowsAbout tech) who provides a ProfessionalService serving Lyon/France,
- * plus the AboutPage node. Feeds local-intent queries ("développeur Lyon").
+ * schema.org JSON-LD for the About page: the shared Person (with sameAs social
+ * profiles and knowsAbout tech) who provides a ProfessionalService serving
+ * Lyon/France, plus the AboutPage node. The Person/WebSite are referenced by the
+ * same `@id`s the home page defines. Feeds local-intent queries ("dev Lyon").
  */
 export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
-  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
-  const aboutUrl = new URL(
-    localizedPath(locale, "/about"),
+  // Canonical trailing-slash form so these JSON-LD URLs match the page
+  // canonicals and the `@id`-based entity consolidation can't silently miss.
+  const homeUrl = new URL(
+    ensureTrailingSlash(localizedPath(locale, "/")),
     SITE.url,
   ).toString();
-  const knowsAbout = tech.groups.flatMap((group) => group.items);
-  const address = {
-    "@type": "PostalAddress",
-    addressLocality: "Lyon",
-    addressRegion: "Auvergne-Rhône-Alpes",
-    addressCountry: "FR",
-  };
-  const personId = `${SITE.url}/#person`;
+  const aboutUrl = new URL(
+    ensureTrailingSlash(localizedPath(locale, "/about")),
+    SITE.url,
+  ).toString();
 
-  const person = {
-    "@type": "Person",
-    "@id": personId,
-    name: SITE.name,
-    jobTitle: jobTitle[locale],
-    url: homeUrl,
-    image,
-    address,
-    sameAs: Object.values(SITE.social),
-    knowsAbout,
-  };
+  const person = personNode(locale, image);
+  // The shared `#business` node (single source of truth in schema.ts), enriched
+  // with the About-specific descriptive fields. `knowsAbout` is intentionally
+  // NOT set here — it's a Person property and the `@id` reference carries it,
+  // so duplicating it on the service is dropped.
   const business = {
-    "@type": "ProfessionalService",
-    "@id": `${SITE.url}/#business`,
-    name: SITE.name,
+    ...professionalServiceNode(),
     description: doc.metaDescription,
-    url: homeUrl,
+    email: SITE.email,
     image,
-    founder: { "@id": personId },
-    provider: { "@id": personId },
-    areaServed: [
-      { "@type": "City", name: "Lyon" },
-      { "@type": "Country", name: "France" },
-    ],
-    address,
-    knowsAbout,
-    serviceType: jobTitle[locale],
+    founder: { "@id": PERSON_ID },
+    // Coarse, machine-readable schema.org band — signals a professional (not
+    // budget) tier to local-business consumers without committing to a public
+    // numeric figure.
+    priceRange: "€€",
   };
   const webPage = {
     "@type": "AboutPage",
@@ -389,19 +377,19 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     // `<title>` verbatim; appending the brand again would duplicate it.
     name: doc.metaTitle,
     description: doc.metaDescription,
-    inLanguage: locale === "fr" ? "fr-FR" : "en-US",
-    isPartOf: {
-      "@type": "WebSite",
-      "@id": `${SITE.url}/#website`,
-      url: SITE.url,
-      name: SITE.name,
-    },
-    about: { "@id": personId },
+    inLanguage: inLanguage(locale),
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": PERSON_ID },
     primaryImageOfPage: image,
   };
+  // Home › About trail — the last major content page that was missing one.
+  const breadcrumbs = breadcrumbList([
+    { name: t(locale, "nav.home"), url: homeUrl },
+    { name: t(locale, "nav.about"), url: aboutUrl },
+  ]);
 
   return {
     "@context": "https://schema.org",
-    "@graph": [person, business, webPage],
+    "@graph": [person, business, webPage, breadcrumbs],
   };
 };

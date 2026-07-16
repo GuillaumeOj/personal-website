@@ -28,6 +28,52 @@ test("EN hero uses the localized phrase list", async ({ page }) => {
   ).toContain(EN_DEFAULT);
 });
 
+// T8 — the hero names its target audience (PME/associations/porteurs de projet)
+// and carries the "Lyon" local keyword on the first screen.
+test("hero surfaces the audience + Lyon local intent (FR)", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const audience = page.locator("[data-hero-audience]");
+  await expect(audience).toHaveText(
+    "Pour les PME, associations et porteurs de projet, à Lyon et partout en France.",
+  );
+  await expect(audience).toContainText("Lyon");
+});
+
+test("hero surfaces the audience + Lyon local intent (EN)", async ({
+  page,
+}) => {
+  await page.goto("/en/");
+  const audience = page.locator("[data-hero-audience]");
+  await expect(audience).toHaveText(
+    "For SMEs, non-profits and project owners, in Lyon and across France.",
+  );
+  await expect(audience).toContainText("Lyon");
+});
+
+// T1 — the credibility proof strip (shared with the /services hero) shows
+// above the fold on the home hero, before any scroll to AboutTeaser.
+test("hero shows the credibility proof strip above the fold (FR)", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const credibility = page.locator("[data-hero-credibility]");
+  await expect(credibility).toBeVisible();
+  await expect(credibility).toContainText("Sketchfab");
+  await expect(credibility).toContainText("Lyon");
+});
+
+test("hero shows the credibility proof strip above the fold (EN)", async ({
+  page,
+}) => {
+  await page.goto("/en/");
+  const credibility = page.locator("[data-hero-credibility]");
+  await expect(credibility).toBeVisible();
+  await expect(credibility).toContainText("Sketchfab");
+  await expect(credibility).toContainText("Lyon");
+});
+
 test("reduced motion: hero shows the static default phrase, no animation", async ({
   page,
 }) => {

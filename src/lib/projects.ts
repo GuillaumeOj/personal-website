@@ -74,13 +74,25 @@ export interface Project {
   stack: string[];
   /** 16:9 screenshot used on the summary card */
   cover: LocalizedImage;
+  /**
+   * Optional per-locale descriptive `alt` for the screenshot, consumed as
+   * `project.imageAlt?.[locale]` (with a fallback to the generic
+   * "Capture d'écran de {name}"). Describe what the screenshot actually shows —
+   * factual, never invented — to help image search and screen readers.
+   */
+  imageAlt?: Record<Locale, string>;
   /** Wide hero used on the detail view; falls back to `cover` */
   banner?: LocalizedImage;
   year?: number;
   /**
+   * Optional factual outcome/result line, shown on the card (under the
+   * description) and on the detail page (as a `<dl>` entry). Only verifiable
+   * facts already known about the project — never invented metrics.
+   */
+  result?: Record<Locale, string>;
+  /**
    * Per-locale copy: short card `description`, the project's `aim`, and a
    * longer `longDescription` shown on the detail page.
-   * NOTE: longDescription values below are first drafts — Guillaume to refine.
    */
   content: Record<
     Locale,
@@ -104,7 +116,15 @@ export const projects: Project[] = [
       fr: { light: fusilyFrLight, dark: fusilyFrDark },
       en: { light: fusilyEnLight, dark: fusilyEnDark },
     },
+    imageAlt: {
+      fr: "Écran d’accueil de l’application mobile Fusily",
+      en: "Fusily mobile app home screen",
+    },
     year: 2024,
+    result: {
+      fr: "Publiée sur l’App Store et Google Play, en ligne depuis 2024.",
+      en: "Published on the App Store and Google Play, live since 2024.",
+    },
     content: {
       fr: {
         description:
@@ -140,7 +160,15 @@ export const projects: Project[] = [
       fr: { light: personalFrLight, dark: personalFrDark },
       en: { light: personalEnLight, dark: personalEnDark },
     },
+    imageAlt: {
+      fr: "Page d’accueil du site personnel de Guillaume Ojardias",
+      en: "Home page of Guillaume Ojardias’ personal website",
+    },
     year: 2025,
+    result: {
+      fr: "En production sur Vercel, pensé pour la perf, l’accessibilité et le SEO.",
+      en: "In production on Vercel, tuned for performance, accessibility and SEO.",
+    },
     content: {
       fr: {
         description:
@@ -171,7 +199,15 @@ export const projects: Project[] = [
     platform: ["web"],
     stack: ["React", "TypeScript", "Vite"],
     cover: { fr: dotcraftFr, en: dotcraftEn },
+    imageAlt: {
+      fr: "Interface du générateur de QR codes dotcraft",
+      en: "dotcraft QR code generator interface",
+    },
     year: 2025,
+    result: {
+      fr: "En production, 100% côté client, sans compte ni serveur.",
+      en: "In production, fully client-side, no account or server.",
+    },
     content: {
       fr: {
         description:
@@ -204,21 +240,29 @@ export const projects: Project[] = [
     platform: ["web"],
     stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
     cover: ebAvocatCover,
-    year: 2024,
+    imageAlt: {
+      fr: "Page d’accueil du site vitrine de l’avocate Eva Biezunski",
+      en: "Home page of lawyer Eva Biezunski’s business website",
+    },
+    year: 2026,
+    result: {
+      fr: "Projet client livré clés en main, en ligne depuis juin 2026.",
+      en: "Turnkey client project, live since June 2026.",
+    },
     content: {
       fr: {
         description:
           "Site vitrine d’un cabinet d’avocate spécialisé en droit des sociétés.",
         aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), avec un focus sur les professions libérales (avocats, médecins, dentistes…).",
         longDescription:
-          "Site vitrine réalisé pour un cabinet d’avocate en droit des sociétés, développé avec Next.js, React, TypeScript et Tailwind CSS. Objectif : présenter clairement le cabinet et ses domaines d’intervention, inspirer confiance et faciliter la prise de contact. Un projet client livré clés en main — le code et l’hébergement restent la propriété de la cliente.",
+          "La cliente, avocate en droit des sociétés, avait besoin d’un site vitrine pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site a été livré clés en main, en ligne depuis juin 2026, développé avec Next.js, React, TypeScript et Tailwind CSS. Le code et l’hébergement restent la propriété de la cliente.",
       },
       en: {
         description:
           "Business website for a lawyer specialized in companies law.",
         aim: "Present the practice and its areas of expertise — companies law (contracts, company formation, etc.), with a focus on liberal professions (lawyers, doctors, dentists…).",
         longDescription:
-          "A business website built for a lawyer specialized in companies law, developed with Next.js, React, TypeScript and Tailwind CSS. The goal: clearly present the practice and its areas of expertise, build trust and make getting in touch easy. A turnkey client project — the code and hosting remain the client’s property.",
+          "The client, a lawyer specialized in companies law, needed a business website to clearly present her practice, build trust and make getting in touch easy. The site was delivered turnkey, live since June 2026, built with Next.js, React, TypeScript and Tailwind CSS. The code and hosting remain the client’s property.",
       },
     },
   },

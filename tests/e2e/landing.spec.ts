@@ -57,6 +57,32 @@ test("FR blog list page renders", async ({ page }) => {
   ).toBeVisible();
 });
 
+// T2 — the funnel ends on the #contact form, not the soft AboutTeaser: contact
+// is the final snap section and comes after the About block, on both locales.
+for (const path of ["/", "/en/"]) {
+  test(`home (${path}): #contact is the last section, after #about`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const ids = await page
+      .locator("main > section")
+      .evaluateAll((els) => els.map((el) => el.id));
+    expect(ids[ids.length - 1]).toBe("contact");
+    expect(ids).toContain("about");
+    expect(ids.indexOf("about")).toBeLessThan(ids.indexOf("contact"));
+  });
+
+  // T4 — a visible email mailto is surfaced as a secondary channel in #contact.
+  test(`home (${path}): #contact shows a visible mailto link`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const mailto = page.locator('#contact a[href^="mailto:"]');
+    await expect(mailto).toBeVisible();
+    await expect(mailto).toHaveAttribute("href", /^mailto:.+@.+/);
+  });
+}
+
 test("projects can be filtered by platform", async ({ page }) => {
   await page.goto("/projects/");
 

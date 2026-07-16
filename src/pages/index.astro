@@ -5,16 +5,28 @@ import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import Hero from '../components/home/Hero.astro';
 import HowIWork from '../components/home/HowIWork.astro';
 import WhatIDo from '../components/home/WhatIDo.astro';
+import { getImage } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+import { SITE } from '../config';
 import { t } from '../i18n/ui';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { homeJsonLd } from '../lib/schema';
 
 const locale = 'fr' as const;
+
+// The portrait (same JPEG rendition BaseLayout uses for the default card) feeds
+// the Person node's `image`, so the home graph matches the social preview.
+const ogImage = new URL(
+  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
+  SITE.url,
+).toString();
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'meta.homeTitle')}
-  description="Développeur full-stack freelance à Lyon : applications web et mobiles, du frontend au déploiement. Python/Django, React Native, Next.js, PostgreSQL."
+  description={t(locale, 'meta.homeDescription')}
+  jsonLd={homeJsonLd(locale, ogImage)}
   container="full"
   snap
   hreflang
@@ -23,6 +35,6 @@ const locale = 'fr' as const;
   <WhatIDo locale={locale} />
   <HowIWork locale={locale} />
   <FeaturedProjects locale={locale} />
-  <Contact locale={locale} />
   <AboutTeaser locale={locale} />
+  <Contact locale={locale} />
 </BaseLayout>

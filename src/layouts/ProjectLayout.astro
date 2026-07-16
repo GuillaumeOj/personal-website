@@ -1,9 +1,11 @@
 ---
-import { getImage } from 'astro:assets';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { localizedPath, t } from '../i18n/ui';
+import { ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
+import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
+import { projectJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -13,6 +15,7 @@ interface Props {
 
 const { locale, project } = Astro.props;
 const { description, aim, longDescription } = project.content[locale];
+const result = project.result?.[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
@@ -22,34 +25,67 @@ const name = localizedName(project, locale);
 const titleDescriptor = project.titleDescriptor?.[locale];
 const metaTitle = titleDescriptor ? `${name} — ${titleDescriptor}` : name;
 
-// Social card: the project's own screenshot + name, so a shared project link
-// previews that project rather than the generic site card. Light variant as a
-// JPEG for broad scraper compatibility (they don't honour dark mode).
-const ogImage = new URL(
-  (await getImage({ src: screenshot.light, format: 'jpeg', quality: 80 })).src,
+// Social card: a landscape (1.91:1) card composed for this project, so a shared
+// link previews the work rather than a raw portrait phone screenshot.
+const og = projectSocialImage(project.slug, locale);
+
+// Per-project alt when authored, else a generic fallback (kept distinct for the
+// on-page screenshot vs. the social card, matching their prior fallbacks).
+const imageAlt =
+  project.imageAlt?.[locale] ??
+  (locale === 'fr' ? `Capture d’écran de ${name}` : `${name} screenshot`);
+const ogImageAlt = project.imageAlt?.[locale] ?? name;
+
+const canonical = new URL(
+  `${localizedPath(locale, `/projects/${project.slug}`)}/`,
   SITE.url,
 ).toString();
+// Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
+// the BreadcrumbList JSON-LD so both stay in lockstep.
+const crumbs = [
+  {
+    name: t(locale, 'nav.home'),
+    url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+  },
+  {
+    name: t(locale, 'nav.projects'),
+    url: new URL(ensureTrailingSlash(localizedPath(locale, '/projects')), SITE.url).toString(),
+  },
+  { name, url: canonical },
+];
+// CreativeWork (or SoftwareApplication for mobile apps) + breadcrumb; the live
+// URL, when public, is linked as `sameAs`.
+const jsonLd = projectJsonLd(locale, {
+  url: canonical,
+  name,
+  description,
+  image: new URL(og.url, SITE.url).toString(),
+  sameAs: project.url,
+  keywords: project.stack,
+  platform: project.platform,
+  datePublished: project.year ? `${project.year}-01-01` : undefined,
+  breadcrumbs: crumbs,
+});
 ---
 
 <BaseLayout
   locale={locale}
   title={metaTitle}
   description={description}
-  ogImage={ogImage}
-  ogImageAlt={name}
+  ogImage={og.url}
+  ogImageAlt={ogImageAlt}
+  ogImageWidth={og.width}
+  ogImageHeight={og.height}
+  jsonLd={jsonLd}
   hreflang
 >
   <article class="space-y-8">
-    <a
-      href={localizedPath(locale, '/projects')}
-      class="inline-block text-sm text-muted no-underline hover:text-ink-strong"
-    >
-      {t(locale, 'projects.backToList')}
-    </a>
+    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
 
     <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage
         variants={screenshot}
+        alt={imageAlt}
         priority
         class="h-auto max-h-[80vh] w-auto max-w-full object-contain"
       />
@@ -103,6 +139,16 @@ const ogImage = new URL(
         </dt>
         <dd class="text-ink">{aim}</dd>
       </div>
+      {
+        result && (
+          <div class="space-y-1">
+            <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+              {t(locale, 'projects.result')}
+            </dt>
+            <dd class="text-ink">{result}</dd>
+          </div>
+        )
+      }
       <div class="space-y-2">
         <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
           {t(locale, 'projects.stack')}
@@ -122,5 +168,21 @@ const ogImage = new URL(
     <div class="space-y-6 border-t border-line pt-6 leading-relaxed text-ink">
       <p>{longDescription}</p>
     </div>
+
+    <aside
+      class="rounded-2xl border border-line bg-surface-sunken p-6 text-center sm:p-8"
+    >
+      <h2 class="font-display text-xl font-semibold tracking-tight text-ink-strong">
+        {t(locale, 'projects.similarCta.title')}
+      </h2>
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary">
+          {t(locale, 'projects.similarCta.primary')}
+        </a>
+        <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
+          {t(locale, 'projects.similarCta.secondary')}
+        </a>
+      </div>
+    </aside>
   </article>
 </BaseLayout>

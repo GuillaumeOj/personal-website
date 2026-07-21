@@ -6,6 +6,10 @@ import fusilyEnDark from "../assets/projects/fusily-en-dark.png";
 import fusilyEnLight from "../assets/projects/fusily-en-light.png";
 import fusilyFrDark from "../assets/projects/fusily-fr-dark.png";
 import fusilyFrLight from "../assets/projects/fusily-fr-light.png";
+import maGardeSereineEnDark from "../assets/projects/ma-garde-sereine-en-dark.png";
+import maGardeSereineEnLight from "../assets/projects/ma-garde-sereine-en-light.png";
+import maGardeSereineFrDark from "../assets/projects/ma-garde-sereine-fr-dark.png";
+import maGardeSereineFrLight from "../assets/projects/ma-garde-sereine-fr-light.png";
 import personalEnDark from "../assets/projects/personal-website-en-dark.png";
 import personalEnLight from "../assets/projects/personal-website-en-light.png";
 import personalFrDark from "../assets/projects/personal-website-fr-dark.png";
@@ -143,6 +147,47 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "ma-garde-sereine",
+    name: "Ma Garde Sereine",
+    titleDescriptor: {
+      fr: "Garde partagée à domicile",
+      en: "Shared childcare app",
+    },
+    url: "https://ma-garde-sereine.fr",
+    context: "personal",
+    platform: ["web", "saas"],
+    stack: ["Django", "DRF", "PostgreSQL", "React"],
+    cover: {
+      fr: { light: maGardeSereineFrLight, dark: maGardeSereineFrDark },
+      en: { light: maGardeSereineEnLight, dark: maGardeSereineEnDark },
+    },
+    imageAlt: {
+      fr: "Page d’accueil du site de l’application Ma Garde Sereine",
+      en: "Home page of the Ma Garde Sereine app website",
+    },
+    year: 2026,
+    result: {
+      fr: "En bêta, pour la garde partagée d’enfants à domicile.",
+      en: "In beta, for shared in-home childcare.",
+    },
+    content: {
+      fr: {
+        description:
+          "Application web pour gérer la garde partagée à domicile de son enfant.",
+        aim: "Aider les familles à gérer le contrat de leur garde à domicile et à préparer leur déclaration pajemploi chaque mois, y compris en garde partagée entre deux familles.",
+        longDescription:
+          "Ma Garde Sereine est une application web, actuellement en bêta, qui accompagne les familles employant une garde d’enfants à domicile — notamment en garde partagée entre deux familles. Elle permet de cadrer le contrat (taux net, planning hebdomadaire, congés payés, jours fériés) et de préparer sereinement la déclaration pajemploi chaque mois : les heures normales, majorées et les jours fériés sont suivis au fil du mois, puis répartis entre les familles pour que chacune déclare sa part. Conçue pour la garde à domicile relevant de la convention IDCC 3239, elle vise à alléger la charge administrative pour laisser plus de place à la relation avec la personne qui veille sur les enfants.",
+      },
+      en: {
+        description:
+          "Web app to manage shared in-home childcare for your children.",
+        aim: "Help families manage their in-home nanny’s contract and prepare their monthly pajemploi declaration, including shared care between two families.",
+        longDescription:
+          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It frames the contract (net rate, weekly schedule, paid leave, public holidays) and calmly prepares the monthly pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
+      },
+    },
+  },
+  {
     slug: "personal-website",
     name: { fr: "Site personnel", en: "Personal website" },
     // Steer clear of "blog" here — the blog list and articles already own that
@@ -271,6 +316,7 @@ export const projects: Project[] = [
 /** Explicit display order (first → last) for the list and the home teaser. */
 const DISPLAY_ORDER = [
   "fusily",
+  "ma-garde-sereine",
   "eva-biezunski-avocate",
   "dotcraft",
   "personal-website",

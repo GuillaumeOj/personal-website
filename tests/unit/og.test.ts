@@ -41,7 +41,7 @@ describe("composeProjectCard", () => {
 
   it("insets a tall phone screenshot into a 1200x630 PNG", async () => {
     const buf = await composeProjectCard(
-      screenshot("fusily-fr-light.png"),
+      screenshot("fusily-fr-light.webp"),
       "Fusily",
       "fr",
     );

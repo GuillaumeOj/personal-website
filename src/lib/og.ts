@@ -150,7 +150,15 @@ const PROJECT_CARDS: ProjectCard[] = [
   {
     slug: "fusily",
     name: { fr: "Fusily", en: "Fusily" },
-    screenshot: { fr: "fusily-fr-light.png", en: "fusily-en-light.png" },
+    screenshot: { fr: "fusily-fr-light.webp", en: "fusily-en-light.webp" },
+  },
+  {
+    slug: "ma-garde-sereine",
+    name: { fr: "Ma Garde Sereine", en: "Ma Garde Sereine" },
+    screenshot: {
+      fr: "ma-garde-sereine-fr-light.png",
+      en: "ma-garde-sereine-en-light.png",
+    },
   },
   {
     slug: "personal-website",

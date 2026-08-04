@@ -20,12 +20,14 @@ test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
   // At least one URL carries a lastmod.
   expect(xml).toContain("<lastmod>");
 
-  // The known FR post "pourquoi-astro" (pubDate 2026-04-15) carries that date.
+  // The known FR post "mon-parcours-qui-je-suis" (pubDate 2026-05-07) carries
+  // that date, not the build date — the dates are read from the article
+  // filenames at config load (see `src/lib/post-files.ts`).
   const match = xml.match(
-    /<loc>[^<]*\/blog\/pourquoi-astro\/<\/loc><lastmod>([^<]+)<\/lastmod>/,
+    /<loc>[^<]*\/blog\/mon-parcours-qui-je-suis\/<\/loc><lastmod>([^<]+)<\/lastmod>/,
   );
-  expect(match, "pourquoi-astro url with a lastmod").toBeTruthy();
-  expect((match as RegExpMatchArray)[1]).toContain("2026-04-15");
+  expect(match, "mon-parcours-qui-je-suis url with a lastmod").toBeTruthy();
+  expect((match as RegExpMatchArray)[1]).toContain("2026-05-07");
 });
 
 // T1 — the on-page sitemap hint points at a file that actually exists. The

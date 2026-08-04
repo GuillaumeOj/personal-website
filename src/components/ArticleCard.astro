@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Locale } from '../config';
 import { articlePath, formatDate } from '../i18n/ui';
+import AuthorByline from './AuthorByline.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -13,6 +14,12 @@ interface Props {
 const { post, locale, priority = false } = Astro.props;
 const href = articlePath(locale, post.data.slug);
 const { author } = post.data;
+
+// The list is a 2-column grid (`sm:grid-cols-2`, `gap-6`) inside `max-w-6xl
+// px-6`, so a card tops out at (1152 - 48 - 24) / 2 = 540 CSS px. Declaring a
+// narrower box would make the browser pick a candidate smaller than the slot
+// and upscale it.
+const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
 ---
 
 <a
@@ -20,22 +27,22 @@ const { author } = post.data;
   aria-label={post.data.title}
   class="group flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
 >
-  {
-    post.data.cover ? (
-      <div class="aspect-[16/9] w-full overflow-hidden">
-        <Image
-          src={post.data.cover}
-          inferSize
-          alt={post.data.title}
-          loading={priority ? 'eager' : 'lazy'}
-          fetchpriority={priority ? 'high' : 'auto'}
-          class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        />
-      </div>
-    ) : (
-      <div class="aspect-[16/9] w-full bg-surface-sunken" />
-    )
-  }
+  <div class="aspect-[16/9] w-full overflow-hidden">
+    {/* width/height pin the 16:9 crop so sharp does it at build rather than
+        shipping the full portrait for `object-cover` to discard. */}
+    <Image
+      src={post.data.cover}
+      alt={post.data.title}
+      width={1080}
+      height={608}
+      fit="cover"
+      widths={[540, 800, 1080]}
+      sizes={COVER_SIZES}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+    />
+  </div>
   <div class="flex flex-1 flex-col gap-2 p-5">
     <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
       {post.data.title}
@@ -47,23 +54,7 @@ const { author } = post.data;
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDate(post.data.pubDate, locale)}
       </time>
-      {
-        author && (
-          <span class="inline-flex items-center gap-1.5">
-            {author.avatarUrl && (
-              <img
-                src={author.avatarUrl}
-                alt=""
-                width="20"
-                height="20"
-                loading="lazy"
-                class="h-5 w-5 rounded-full object-cover"
-              />
-            )}
-            <span>{author.name}</span>
-          </span>
-        )
-      }
+      <AuthorByline locale={locale} author={author} size="sm" />
     </div>
   </div>
 </a>

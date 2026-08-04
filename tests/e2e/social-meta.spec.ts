@@ -14,11 +14,6 @@ const altHref = (page: Page, lang: string) =>
   page
     .locator(`head link[rel="alternate"][hreflang="${lang}"]`)
     .getAttribute("href");
-// Count of hreflang alternates (the RSS `rel="alternate"` link has no hreflang,
-// so it's excluded).
-const altCount = (page: Page) =>
-  page.locator('head link[rel="alternate"][hreflang]').count();
-
 // og:image is always an absolute URL on the production origin, and og/twitter
 // stay in sync. Asserted on every page below via checkImage().
 async function checkImage(page: Page, mustContain: string) {
@@ -96,22 +91,22 @@ test("blog list: inherits the landscape default card, brand not doubled", async 
 test("blog article: hreflang pairs the translated (differing) slugs", async ({
   page,
 }) => {
-  await page.goto("/blog/pourquoi-astro/");
-  expect(await altHref(page, "fr")).toBe(`${ORIGIN}/blog/pourquoi-astro/`);
-  expect(await altHref(page, "en")).toBe(`${ORIGIN}/en/blog/why-astro/`);
+  await page.goto("/blog/mon-parcours-qui-je-suis/");
+  expect(await altHref(page, "fr")).toBe(
+    `${ORIGIN}/blog/mon-parcours-qui-je-suis/`,
+  );
+  expect(await altHref(page, "en")).toBe(
+    `${ORIGIN}/en/blog/my-journey-who-i-am/`,
+  );
   expect(await altHref(page, "x-default")).toBe(
-    `${ORIGIN}/blog/pourquoi-astro/`,
+    `${ORIGIN}/blog/mon-parcours-qui-je-suis/`,
   );
 });
 
-test("blog article without a translation emits no hreflang", async ({
-  page,
-}) => {
-  await page.goto("/blog/sans-auteur/");
-  expect(await altCount(page)).toBe(0);
-  // canonical is still present.
-  await expect(page.locator('head link[rel="canonical"]')).toHaveCount(1);
-});
+// The "article with no translated sibling emits no hreflang" case has no fixture
+// left: every published article is part of an FR/EN pair. It is covered instead
+// by tests/unit/alternates.test.ts, against the pure `articleAlternates` helper
+// that BlogPostLayout uses.
 
 // T7 — the About portrait card ships og:image:width/height (like home and the
 // project cards), so scrapers can render it without a fetch round-trip.

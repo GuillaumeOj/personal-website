@@ -193,14 +193,14 @@ export const projects: Project[] = [
     // Steer clear of "blog" here — the blog list and articles already own that
     // query; naming the stack keeps this a build/case-study, not a competitor.
     titleDescriptor: {
-      fr: "Astro, i18n & Notion",
-      en: "Astro, i18n & Notion",
+      fr: "Astro, i18n & Markdown",
+      en: "Astro, i18n & Markdown",
     },
     url: "https://guillaume.ojardias.info",
     repoUrl: "https://github.com/GuillaumeOj/personal-website",
     context: "side",
     platform: ["web"],
-    stack: ["Astro", "Tailwind CSS", "Notion", "Vercel"],
+    stack: ["Astro", "Tailwind CSS", "Markdown", "Vercel"],
     cover: {
       fr: { light: personalFrLight, dark: personalFrDark },
       en: { light: personalEnLight, dark: personalEnDark },
@@ -217,17 +217,17 @@ export const projects: Project[] = [
     content: {
       fr: {
         description:
-          "Ce site : blog adossé à Notion, bilingue, déployé sur Vercel.",
+          "Ce site : blog bilingue en Markdown versionné, déployé sur Vercel.",
         aim: "Un espace personnel pour écrire et présenter mon travail.",
         longDescription:
-          "Ce site est construit avec Astro et Tailwind CSS, entièrement bilingue (français / anglais), et déployé sur Vercel. Le blog est adossé à Notion : j’écris mes articles dans Notion et un webhook déclenche la reconstruction du site, les images étant persistées pour rester disponibles. Un terrain de jeu pour soigner les performances, l’accessibilité et le référencement.",
+          "Ce site est construit avec Astro et Tailwind CSS, entièrement bilingue (français / anglais), et déployé sur Vercel. Les articles sont des fichiers Markdown versionnés avec le code : chaque publication passe par une pull request, les images vivent dans le dépôt, et un push suffit à déclencher le déploiement. Un terrain de jeu pour soigner les performances, l’accessibilité et le référencement.",
       },
       en: {
         description:
-          "This site: a bilingual, Notion-backed blog deployed on Vercel.",
+          "This site: a bilingual blog written in version-controlled Markdown, deployed on Vercel.",
         aim: "A personal space to write and showcase my work.",
         longDescription:
-          "This site is built with Astro and Tailwind CSS, fully bilingual (French / English), and deployed on Vercel. The blog is backed by Notion: I write posts in Notion and a webhook triggers a rebuild, with images persisted so they stay available. A playground to sharpen performance, accessibility and SEO.",
+          "This site is built with Astro and Tailwind CSS, fully bilingual (French / English), and deployed on Vercel. Posts are Markdown files versioned alongside the code: every publication goes through a pull request, images live in the repository, and a push is all it takes to deploy. A playground to sharpen performance, accessibility and SEO.",
       },
     },
   },

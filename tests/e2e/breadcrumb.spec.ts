@@ -39,7 +39,7 @@ test("EN project detail: Home › Projects › {name}", async ({ page }) => {
 });
 
 test("blog article: Home › Blog › {title}", async ({ page }) => {
-  await page.goto("/blog/pourquoi-astro/");
+  await page.goto("/blog/mon-parcours-qui-je-suis/");
   const nav = breadcrumb(page);
   await expect(nav).toBeVisible();
   const labels = await crumbLabels(nav);

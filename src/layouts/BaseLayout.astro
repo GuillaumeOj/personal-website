@@ -115,9 +115,9 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
 // (blog posts, project details) pass their own `ogImage` + dimensions.
 let ogImageUrl: string;
 // Dimensions let scrapers render the card without a fetch round-trip. Always
-// known for the landscape default (1200×630) and for any page that supplies
-// them; unknown only for a bare remote `ogImage` (blog covers), where they're
-// omitted.
+// known now: the landscape default is 1200×630, and every page that passes its
+// own `ogImage` (blog covers cropped by `getImage()`, project cards) passes the
+// matching width/height with it.
 let ogWidth: number | undefined = ogImageWidth;
 let ogHeight: number | undefined = ogImageHeight;
 if (ogImage) {

@@ -1,8 +1,8 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
-import { renderPostBody } from '../../../lib/notion';
 import { getPostsForLocale } from '../../../lib/posts';
+import { tocFromHeadings } from '../../../lib/toc';
 
 export async function getStaticPaths() {
   const posts = await getPostsForLocale('en');
@@ -17,9 +17,9 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { html, headings } = await renderPostBody(post);
+const { Content, headings } = await render(post);
 ---
 
-<BlogPostLayout locale="en" post={post} headings={headings}>
-  <Fragment set:html={html} />
+<BlogPostLayout locale="en" post={post} headings={tocFromHeadings(headings)}>
+  <Content />
 </BlogPostLayout>

@@ -1,0 +1,27 @@
+<svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Pipeline EAS Build : Development, Preview, Production</title>
+<desc>Schéma du pipeline de build EAS avec trois profils : Development pour le développement local, Preview pour les testeurs internes, et Production pour la soumission aux stores.</desc>
+<rect width="800" height="260" fill="#faf8f4"/>
+<text x="400" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#1c1917">eas.json — profils de build</text>
+<rect x="60" y="80" width="200" height="110" rx="12" fill="#ffffff" stroke="#e7e2d9" stroke-width="1.5"/>
+<text x="160" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#292524">Development</text>
+<text x="160" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#78716c">Modules de debug</text>
+<text x="160" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#78716c">Serveur local</text>
+<text x="160" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#78716c">💻</text>
+<path d="M262 135 L318 135" stroke="#78716c" stroke-width="1.5" marker-end="url(#b1)"/>
+<rect x="322" y="80" width="200" height="110" rx="12" fill="#fdf1e6" stroke="#ea7317" stroke-width="1.5"/>
+<text x="422" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#b45309">Preview</text>
+<text x="422" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#b45309">Proche de la prod</text>
+<text x="422" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#b45309">Lien direct, testeurs</text>
+<text x="422" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#b45309">🧪</text>
+<path d="M524 135 L580 135" stroke="#78716c" stroke-width="1.5" marker-end="url(#b1)"/>
+<rect x="584" y="80" width="200" height="110" rx="12" fill="#ffffff" stroke="#e7e2d9" stroke-width="1.5"/>
+<text x="684" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#292524">Production</text>
+<text x="684" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#78716c">Optimisée, signée</text>
+<text x="684" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#78716c">App Store / Play Console</text>
+<text x="684" y="172" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#78716c">🚀</text>
+<text x="400" y="230" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#78716c">Reproductible pour n'importe qui sur le projet</text>
+<defs>
+<marker id="b1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#78716c"/></marker>
+</defs>
+</svg>

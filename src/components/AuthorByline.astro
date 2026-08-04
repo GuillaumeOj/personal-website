@@ -1,0 +1,38 @@
+---
+import { SITE, type Locale } from '../config';
+import Portrait from './about/Portrait.astro';
+
+interface Props {
+  locale: Locale;
+  /** Guest byline from the article frontmatter; absent means the site author. */
+  author?: string;
+  /** `sm` for the card grid, `md` for an article header. */
+  size?: 'sm' | 'md';
+}
+
+// Class strings stay literal so Tailwind's scanner can see them.
+const VARIANTS = {
+  sm: { gap: 'gap-1.5', box: 'h-5 w-5', px: 20 },
+  md: { gap: 'gap-2', box: 'h-6 w-6', px: 24 },
+} as const;
+
+const { locale, author, size = 'md' } = Astro.props;
+const variant = VARIANTS[size];
+// Only the site author has a portrait in the repo, so a guest byline is
+// name-only rather than fetching an avatar from a third-party host.
+---
+
+<span class:list={['inline-flex items-center', variant.gap]}>
+  {
+    !author && (
+      <Portrait
+        locale={locale}
+        width={variant.px}
+        height={variant.px}
+        decorative
+        class={`${variant.box} ring-0`}
+      />
+    )
+  }
+  <span>{author ?? SITE.name}</span>
+</span>

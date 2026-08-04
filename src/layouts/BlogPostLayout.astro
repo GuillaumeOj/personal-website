@@ -1,16 +1,17 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Portrait from '../components/about/Portrait.astro';
+import AuthorByline from '../components/AuthorByline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
 import { articlePath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
-import { portraitAlt } from '../lib/about';
-import type { TocHeading } from '../lib/notion';
-import { articleSocialImage } from '../lib/og';
+import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
+import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
 import { blogPostJsonLd } from '../lib/schema';
+import type { TocHeading } from '../lib/toc';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -21,26 +22,30 @@ interface Props {
 
 const { locale, post, headings = [] } = Astro.props;
 const { author } = post.data;
+const authorName = author ?? SITE.name;
 
 // hreflang: blog slugs differ across locales, so pair this post with its
 // translated sibling (shared `translationKey`) and hand BaseLayout explicit
 // alternate URLs. A post with no published sibling gets none (canonical only).
 const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
-const hasAlternate = Boolean(sibling);
-const frSlug = locale === 'fr' ? post.data.slug : sibling?.data.slug;
-const enSlug = locale === 'en' ? post.data.slug : sibling?.data.slug;
-const altFrUrl = frSlug
-  ? new URL(articlePath('fr', frSlug), SITE.url).toString()
-  : undefined;
-const altEnUrl = enSlug
-  ? new URL(articlePath('en', enSlug), SITE.url).toString()
-  : undefined;
+const { altFrUrl, altEnUrl } = articleAlternates({
+  locale,
+  slug: post.data.slug,
+  siblingSlug: sibling?.data.slug,
+});
 
 const canonical = new URL(articlePath(locale, post.data.slug), SITE.url).toString();
-// Resolve the social card once: covered posts preview their cover, cover-less
-// posts a landscape fallback — so every BlogPosting carries an `image` (feeding
-// BOTH og:image and the JSON-LD) instead of the cover-less path dropping it.
-const og = articleSocialImage({ cover: post.data.cover, locale });
+// Crop the cover into a real 1200×630 landscape share card. Covers are local
+// assets now, so this is a build-time resize with exact dimensions — the Notion
+// pipeline handed LinkedIn/Slack the raw remote URL with no width/height at all.
+// JPEG (not webp) because some crawlers still refuse webp previews.
+const card = await getImage({
+  src: post.data.cover,
+  width: OG_WIDTH,
+  height: OG_HEIGHT,
+  fit: 'cover',
+  format: 'jpeg',
+});
 // Breadcrumb trail (Home › Blog › {title}), shared by the visible <nav> and the
 // BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
@@ -60,9 +65,11 @@ const jsonLd = blogPostJsonLd(locale, {
   url: canonical,
   title: post.data.title,
   description: post.data.description,
-  image: new URL(og.url, SITE.url).toString(),
+  image: new URL(card.src, SITE.url).toString(),
   datePublished: post.data.pubDate.toISOString(),
-  authorName: author?.name,
+  // Left undefined for the site author on purpose: the builder then points at
+  // the canonical `#person` node instead of inlining a second, unlinked Person.
+  authorName: author,
   breadcrumbs: crumbs,
 });
 ---
@@ -71,18 +78,18 @@ const jsonLd = blogPostJsonLd(locale, {
   locale={locale}
   title={post.data.title}
   description={post.data.description}
-  ogImage={og.url}
-  ogImageWidth={og.width}
-  ogImageHeight={og.height}
-  ogImageAlt={post.data.cover ? post.data.title : portraitAlt[locale]}
+  ogImage={card.src}
+  ogImageWidth={OG_WIDTH}
+  ogImageHeight={OG_HEIGHT}
+  ogImageAlt={post.data.title}
   ogType="article"
   articleMeta={{
     publishedTime: post.data.pubDate.toISOString(),
-    author: author?.name,
+    author: authorName,
     tags: post.data.tags,
   }}
   jsonLd={jsonLd}
-  hreflang={hasAlternate}
+  hreflang={Boolean(altFrUrl)}
   altFrUrl={altFrUrl}
   altEnUrl={altEnUrl}
 >
@@ -95,18 +102,22 @@ const jsonLd = blogPostJsonLd(locale, {
   </a>
   <article class="space-y-6">
     <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
-    {
-      post.data.cover && (
-        <Image
-          src={post.data.cover}
-          inferSize
-          alt={post.data.title}
-          loading="eager"
-          fetchpriority="high"
-          class="aspect-[3/1] w-full rounded-2xl object-cover"
-        />
-      )
-    }
+    {/* width/height pin the 3:1 crop so sharp does it at build. Without them
+        Astro keeps the source aspect (the covers are portraits up to 1600×2400)
+        and `object-cover` throws ~3/4 of every byte away in the browser — on the
+        LCP element. */}
+    <Image
+      src={post.data.cover}
+      alt={post.data.title}
+      width={1600}
+      height={533}
+      fit="cover"
+      widths={[640, 960, 1280, 1600]}
+      sizes="(min-width: 768px) 768px, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="aspect-[3/1] w-full rounded-2xl object-cover"
+    />
     <header class="space-y-2">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
         <p>
@@ -115,21 +126,7 @@ const jsonLd = blogPostJsonLd(locale, {
             {formatDate(post.data.pubDate, locale)}
           </time>
         </p>
-        {
-          author && (
-            <span class="inline-flex items-center gap-2">
-              {author.avatarUrl && (
-                <img
-                  src={author.avatarUrl}
-                  alt=""
-                  loading="lazy"
-                  class="h-6 w-6 rounded-full object-cover"
-                />
-              )}
-              <span>{author.name}</span>
-            </span>
-          )
-        }
+        <AuthorByline locale={locale} author={author} />
       </div>
       <h1 class="page-title">{post.data.title}</h1>
       <p class="text-lg text-muted">

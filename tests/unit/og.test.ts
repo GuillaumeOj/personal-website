@@ -2,7 +2,6 @@ import path from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import {
-  articleSocialImage,
   composeDefaultCard,
   composeProjectCard,
   defaultSocialImage,
@@ -78,32 +77,6 @@ describe("projectSocialImage", () => {
       url: "/og/project-fusily-en.png",
       width: 1200,
       height: 630,
-    });
-  });
-});
-
-describe("articleSocialImage", () => {
-  it("falls back to the landscape default when there is no cover", () => {
-    expect(articleSocialImage({ locale: "fr" })).toEqual({
-      url: "/og/default-fr.png",
-      width: 1200,
-      height: 630,
-    });
-  });
-
-  it("parses w/h dimensions from an Unsplash-style cover URL", () => {
-    const cover = "https://images.unsplash.com/photo-123?w=1200&h=675&fit=crop";
-    expect(articleSocialImage({ cover, locale: "en" })).toEqual({
-      url: cover,
-      width: 1200,
-      height: 675,
-    });
-  });
-
-  it("returns the cover URL without dimensions when none are encoded", () => {
-    const cover = "https://abc.public.blob.vercel-storage.com/notion/cover.png";
-    expect(articleSocialImage({ cover, locale: "fr" })).toEqual({
-      url: cover,
     });
   });
 });

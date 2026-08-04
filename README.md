@@ -4,9 +4,10 @@ Site personnel de Guillaume Ojardias — landing page bilingue (FR / EN) + blog.
 
 ## Stack
 
-- **[Astro 6](https://astro.build/)** — générateur de site statique, i18n natif, Content Collections.
+- **[Astro 7](https://astro.build/)** — générateur de site statique, i18n natif, Content Layer.
 - **[Tailwind CSS v4](https://tailwindcss.com/)** + `@tailwindcss/typography` pour le rendu Markdown.
-- **Markdown** dans `src/content/blog/{fr,en}/` (validé via Zod).
+- **Markdown** dans `src/content/blog/{fr,en}/` (chargé par le loader `glob`, validé via Zod).
+- **Shiki** (intégré à Astro) pour la coloration syntaxique, en double thème clair/sombre.
 - **[Bun](https://bun.sh/)** pour la gestion des dépendances et l'exécution des scripts.
 - **[Biome](https://biomejs.dev/)** pour le lint et le formatage.
 - **[Vitest](https://vitest.dev/)** pour les tests unitaires.
@@ -43,36 +44,80 @@ bunx playwright install chromium  # nécessaire la première fois pour les tests
 
 ## Ajouter un article de blog
 
-1. Créer un fichier Markdown dans `src/content/blog/fr/` (ou `en/`) avec le nom `YYYY-MM-DD-slug.md`.
+1. Créer un fichier Markdown dans `src/content/blog/fr/` (ou `en/`) nommé
+   `YYYY-MM-DD-<slug>.md`. Le préfixe de date garde le dossier lisible dans l'ordre
+   de publication ; les métadonnées, elles, viennent toujours du frontmatter.
 2. Inclure le frontmatter requis :
 
    ```yaml
    ---
-   title: 'Titre de l’article'
-   description: 'Résumé d’une ou deux phrases.'
+   title: "Titre de l’article"
+   description: "Résumé d’une ou deux phrases."
    pubDate: 2026-05-06
    lang: fr
-   tags: [optionnel]
-   draft: false
+   slug: titre-de-l-article
+   translationKey: sujet-partage
+   cover: ../../../assets/blog/sujet-partage/cover.jpg
+   tags: []
    ---
    ```
 
-3. L'idéal est de créer la version dans l'autre langue (mêmes `pubDate` et `slug`) pour que le sélecteur de langue tombe sur l'équivalent.
+   - `slug` — le segment d'URL. Il diffère d'une langue à l'autre et **ne doit jamais
+     changer** une fois publié (SEO).
+   - `translationKey` — clé partagée par la paire FR/EN. C'est elle qui alimente le
+     `hreflang` et le sélecteur de langue. Interne : elle n'apparaît dans aucune URL.
+   - `cover` — chemin **relatif au fichier Markdown** (les chemins nus ou les alias
+     TypeScript ne sont pas résolus par le Content Layer). Les deux langues d'une paire
+     pointent vers la même image ; son `alt` rendu est le titre de l'article.
+   - `author` (optionnel) — uniquement pour une signature invitée ; absent, c'est
+     l'auteur du site.
+3. Créer la version dans l'autre langue avec la **même `translationKey`**, sinon
+   l'article n'a ni `hreflang` ni équivalent dans le sélecteur de langue.
 4. Commit + push : Vercel rebuild automatiquement.
+
+### Images des articles
+
+Les visuels vivent dans `src/assets/blog/<translationKey>/`, partagés par la paire
+FR/EN — la couverture à la racine, les illustrations du corps de texte dans un
+sous-dossier par langue quand elles contiennent du texte à traduire :
+
+```
+src/assets/blog/react-native-expo/
+├── cover.jpg
+├── fr/01-natif-vs-cross-platform.svg
+└── en/01-native-vs-cross-platform.svg
+```
+
+On les référence relativement depuis le Markdown
+(`![Description](../../../assets/blog/<clé>/fr/01-schema.svg)`) : Astro les optimise
+au build. Les couvertures `.jpg` sont suivies par **Git LFS** (règle
+`src/assets/**/*.jpg` dans `.gitattributes`) ; les SVG, qui sont du texte, en sont
+volontairement exclus pour rester diffables.
 
 ## Architecture rapide
 
 ```
 src/
 ├── config.ts            # Constantes du site (URL, locales, liens sociaux)
-├── content.config.ts    # Schéma Zod des Content Collections
+├── content.config.ts    # Loader glob + schéma Zod de la collection blog
 ├── content/blog/{fr,en}/  # Articles Markdown
+├── assets/blog/         # Couvertures et illustrations des articles
 ├── i18n/ui.ts           # Helper t(locale, key) + utilitaires i18n
-├── layouts/             # BaseLayout, BlogPostLayout
+├── layouts/             # BaseLayout, BlogPostLayout, ProjectLayout
 ├── components/          # Header, Footer, ThemeToggle, LangSwitcher, PostList
+├── lib/
+│   ├── posts.ts         # Requêtes sur la collection (runtime Astro)
+│   ├── post-files.ts    # Lecture du frontmatter sur disque (chargement de la config)
+│   ├── alternates.ts    # Calcul des hreflang FR/EN
+│   ├── toc.ts           # Sommaire à partir des titres Markdown
+│   └── og.ts            # Cartes Open Graph générées au build (sharp)
 ├── pages/               # Routes FR (index.astro, blog/, rss.xml.ts)
 └── pages/en/            # Routes EN (mêmes routes, préfixées par /en)
 ```
+
+`api/` (hors `src/`) contient les fonctions serverless Vercel — aujourd'hui le seul
+`contact.ts`. Le build ne lit **aucune** variable d'environnement : il fonctionne hors
+ligne.
 
 ## CI
 

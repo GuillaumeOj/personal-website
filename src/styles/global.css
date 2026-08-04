@@ -322,3 +322,41 @@ html.snap-home footer {
     scroll-snap-align: end;
   }
 }
+
+/*
+ * Shiki dual theme for article code blocks.
+ *
+ * With `defaultColor: false` (astro.config.mjs) Shiki inlines only the
+ * `--shiki-light*` / `--shiki-dark*` custom properties on each token and sets no
+ * colour itself, so these rules bind them with normal specificity — no
+ * `!important` arms race with an inline style.
+ *
+ * Dark mode here is the `.dark` class (see @custom-variant above), not a media
+ * query, so this must not be written as `prefers-color-scheme`.
+ */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+/*
+ * Typography adds smart quotes around inline <code>; the article bodies already
+ * read as code without them, and they leak into copied snippets.
+ */
+.prose code::before,
+.prose code::after {
+  content: none;
+}

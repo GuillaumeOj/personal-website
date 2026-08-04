@@ -32,6 +32,14 @@ export interface PostFile {
  * that file's frontmatter.
  */
 export function readPostFiles(): PostFile[] {
+  // Fail loudly if the content root itself is missing. This runs from
+  // `astro.config.mjs`, where a mis-resolved `BLOG_DIR` (the config loader has
+  // been known to rewrite `import.meta.url` — see the `assetUrl` note in
+  // `lib/og.ts`) would otherwise return an empty list and silently push every
+  // blog URL back onto the build date, which is the exact bug this replaced.
+  if (!existsSync(BLOG_DIR)) {
+    throw new Error(`Blog content directory not found: ${BLOG_DIR}`);
+  }
   const posts: PostFile[] = [];
   for (const lang of ["fr", "en"] as const) {
     const dir = path.join(BLOG_DIR, lang);

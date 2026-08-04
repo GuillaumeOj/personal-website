@@ -15,6 +15,12 @@ const { post, locale, priority = false } = Astro.props;
 const href = articlePath(locale, post.data.slug);
 const { author } = post.data;
 const authorName = author ?? SITE.name;
+
+// The list is a 2-column grid (`sm:grid-cols-2`, `gap-6`) inside `max-w-6xl
+// px-6`, so a card tops out at (1152 - 48 - 24) / 2 = 540 CSS px. Declaring a
+// narrower box would make the browser pick a candidate smaller than the slot
+// and upscale it.
+const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
 ---
 
 <a
@@ -26,8 +32,8 @@ const authorName = author ?? SITE.name;
     <Image
       src={post.data.cover}
       alt={post.data.coverAlt ?? post.data.title}
-      widths={[400, 640, 960]}
-      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+      widths={[540, 800, 1080]}
+      sizes={COVER_SIZES}
       loading={priority ? 'eager' : 'lazy'}
       fetchpriority={priority ? 'high' : 'auto'}
       class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"

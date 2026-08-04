@@ -45,10 +45,8 @@ bunx playwright install chromium  # nécessaire la première fois pour les tests
 ## Ajouter un article de blog
 
 1. Créer un fichier Markdown dans `src/content/blog/fr/` (ou `en/`) nommé
-   `YYYY-MM-DD-<slug>.md`. **Le nom de fichier n'est pas décoratif** : la date et le
-   slug qu'il contient alimentent le `<lastmod>` du sitemap, lu au chargement de la
-   config Astro (`src/lib/post-files.ts`) — là où `astro:content` n'existe pas encore.
-   `tests/unit/post-files.test.ts` vérifie qu'ils restent alignés sur le frontmatter.
+   `YYYY-MM-DD-<slug>.md`. Le préfixe de date garde le dossier lisible dans l'ordre
+   de publication ; les métadonnées, elles, viennent toujours du frontmatter.
 2. Inclure le frontmatter requis :
 
    ```yaml
@@ -70,8 +68,7 @@ bunx playwright install chromium  # nécessaire la première fois pour les tests
      `hreflang` et le sélecteur de langue. Interne : elle n'apparaît dans aucune URL.
    - `cover` — chemin **relatif au fichier Markdown** (les chemins nus ou les alias
      TypeScript ne sont pas résolus par le Content Layer). Les deux langues d'une paire
-     pointent vers la même image.
-   - `coverAlt` (optionnel) — par défaut le titre de l'article.
+     pointent vers la même image ; son `alt` rendu est le titre de l'article.
    - `author` (optionnel) — uniquement pour une signature invitée ; absent, c'est
      l'auteur du site.
 3. Créer la version dans l'autre langue avec la **même `translationKey`**, sinon
@@ -110,7 +107,7 @@ src/
 ├── components/          # Header, Footer, ThemeToggle, LangSwitcher, PostList
 ├── lib/
 │   ├── posts.ts         # Requêtes sur la collection (runtime Astro)
-│   ├── post-files.ts    # Lecture disque des articles (chargement de la config)
+│   ├── post-files.ts    # Lecture du frontmatter sur disque (chargement de la config)
 │   ├── alternates.ts    # Calcul des hreflang FR/EN
 │   ├── toc.ts           # Sommaire à partir des titres Markdown
 │   └── og.ts            # Cartes Open Graph générées au build (sharp)

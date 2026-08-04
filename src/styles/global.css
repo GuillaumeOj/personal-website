@@ -356,7 +356,7 @@ html.snap-home footer {
  * Typography adds smart quotes around inline <code>; the article bodies already
  * read as code without them, and they leak into copied snippets.
  */
-.prose :where(code):not(:where([class~="not-prose"] *))::before,
-.prose :where(code):not(:where([class~="not-prose"] *))::after {
+.prose code::before,
+.prose code::after {
   content: none;
 }

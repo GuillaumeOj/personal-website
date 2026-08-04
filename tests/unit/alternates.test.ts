@@ -12,7 +12,6 @@ describe("articleAlternates", () => {
         siblingSlug: "my-journey-who-i-am",
       }),
     ).toEqual({
-      hasAlternate: true,
       altFrUrl: `${ORIGIN}/blog/mon-parcours-qui-je-suis/`,
       altEnUrl: `${ORIGIN}/en/blog/my-journey-who-i-am/`,
     });
@@ -39,8 +38,6 @@ describe("articleAlternates", () => {
    * asserted here instead.
    */
   it("emits no alternates when the sibling is unpublished", () => {
-    expect(articleAlternates({ locale: "fr", slug: "orphelin" })).toEqual({
-      hasAlternate: false,
-    });
+    expect(articleAlternates({ locale: "fr", slug: "orphelin" })).toEqual({});
   });
 });

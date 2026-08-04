@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import { SITE, type Locale } from '../config';
+import type { Locale } from '../config';
 import { articlePath, formatDate } from '../i18n/ui';
-import Portrait from './about/Portrait.astro';
+import AuthorByline from './AuthorByline.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -14,7 +14,6 @@ interface Props {
 const { post, locale, priority = false } = Astro.props;
 const href = articlePath(locale, post.data.slug);
 const { author } = post.data;
-const authorName = author ?? SITE.name;
 
 // The list is a 2-column grid (`sm:grid-cols-2`, `gap-6`) inside `max-w-6xl
 // px-6`, so a card tops out at (1152 - 48 - 24) / 2 = 540 CSS px. Declaring a
@@ -29,9 +28,14 @@ const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
   class="group flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
 >
   <div class="aspect-[16/9] w-full overflow-hidden">
+    {/* width/height pin the 16:9 crop so sharp does it at build rather than
+        shipping the full portrait for `object-cover` to discard. */}
     <Image
       src={post.data.cover}
-      alt={post.data.coverAlt ?? post.data.title}
+      alt={post.data.title}
+      width={1080}
+      height={608}
+      fit="cover"
       widths={[540, 800, 1080]}
       sizes={COVER_SIZES}
       loading={priority ? 'eager' : 'lazy'}
@@ -50,22 +54,7 @@ const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDate(post.data.pubDate, locale)}
       </time>
-      <span class="inline-flex items-center gap-1.5">
-        {
-          /* Guest bylines are name-only; the site author gets the local
-             portrait, so no avatar is fetched from a third-party host. */
-          !author && (
-            <Portrait
-              locale={locale}
-              width={20}
-              height={20}
-              decorative
-              class="h-5 w-5 ring-0"
-            />
-          )
-        }
-        <span>{authorName}</span>
-      </span>
+      <AuthorByline locale={locale} author={author} size="sm" />
     </div>
   </div>
 </a>

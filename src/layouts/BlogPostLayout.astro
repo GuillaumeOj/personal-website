@@ -2,11 +2,12 @@
 import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Portrait from '../components/about/Portrait.astro';
+import AuthorByline from '../components/AuthorByline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
 import { articlePath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
-import { OG_HEIGHT, OG_WIDTH, articleSocialImage } from '../lib/og';
+import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
 import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
 import { blogPostJsonLd } from '../lib/schema';
@@ -27,7 +28,7 @@ const authorName = author ?? SITE.name;
 // translated sibling (shared `translationKey`) and hand BaseLayout explicit
 // alternate URLs. A post with no published sibling gets none (canonical only).
 const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
-const { hasAlternate, altFrUrl, altEnUrl } = articleAlternates({
+const { altFrUrl, altEnUrl } = articleAlternates({
   locale,
   slug: post.data.slug,
   siblingSlug: sibling?.data.slug,
@@ -44,10 +45,6 @@ const card = await getImage({
   height: OG_HEIGHT,
   fit: 'cover',
   format: 'jpeg',
-});
-const og = articleSocialImage({
-  cover: { url: card.src, width: OG_WIDTH, height: OG_HEIGHT },
-  locale,
 });
 // Breadcrumb trail (Home › Blog › {title}), shared by the visible <nav> and the
 // BreadcrumbList JSON-LD so both stay in lockstep.
@@ -68,7 +65,7 @@ const jsonLd = blogPostJsonLd(locale, {
   url: canonical,
   title: post.data.title,
   description: post.data.description,
-  image: new URL(og.url, SITE.url).toString(),
+  image: new URL(card.src, SITE.url).toString(),
   datePublished: post.data.pubDate.toISOString(),
   // Left undefined for the site author on purpose: the builder then points at
   // the canonical `#person` node instead of inlining a second, unlinked Person.
@@ -81,10 +78,10 @@ const jsonLd = blogPostJsonLd(locale, {
   locale={locale}
   title={post.data.title}
   description={post.data.description}
-  ogImage={og.url}
-  ogImageWidth={og.width}
-  ogImageHeight={og.height}
-  ogImageAlt={post.data.coverAlt ?? post.data.title}
+  ogImage={card.src}
+  ogImageWidth={OG_WIDTH}
+  ogImageHeight={OG_HEIGHT}
+  ogImageAlt={post.data.title}
   ogType="article"
   articleMeta={{
     publishedTime: post.data.pubDate.toISOString(),
@@ -92,7 +89,7 @@ const jsonLd = blogPostJsonLd(locale, {
     tags: post.data.tags,
   }}
   jsonLd={jsonLd}
-  hreflang={hasAlternate}
+  hreflang={Boolean(altFrUrl)}
   altFrUrl={altFrUrl}
   altEnUrl={altEnUrl}
 >
@@ -105,9 +102,16 @@ const jsonLd = blogPostJsonLd(locale, {
   </a>
   <article class="space-y-6">
     <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    {/* width/height pin the 3:1 crop so sharp does it at build. Without them
+        Astro keeps the source aspect (the covers are portraits up to 1600×2400)
+        and `object-cover` throws ~3/4 of every byte away in the browser — on the
+        LCP element. */}
     <Image
       src={post.data.cover}
-      alt={post.data.coverAlt ?? post.data.title}
+      alt={post.data.title}
+      width={1600}
+      height={533}
+      fit="cover"
       widths={[640, 960, 1280, 1600]}
       sizes="(min-width: 768px) 768px, 100vw"
       loading="eager"
@@ -122,20 +126,7 @@ const jsonLd = blogPostJsonLd(locale, {
             {formatDate(post.data.pubDate, locale)}
           </time>
         </p>
-        <span class="inline-flex items-center gap-2">
-          {
-            !author && (
-              <Portrait
-                locale={locale}
-                width={24}
-                height={24}
-                decorative
-                class="h-6 w-6 ring-0"
-              />
-            )
-          }
-          <span>{authorName}</span>
-        </span>
+        <AuthorByline locale={locale} author={author} />
       </div>
       <h1 class="page-title">{post.data.title}</h1>
       <p class="text-lg text-muted">

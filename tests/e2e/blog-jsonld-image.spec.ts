@@ -23,26 +23,53 @@ function nodeOfType(nodes: LdNode[], type: string): LdNode {
   return node as LdNode;
 }
 
-// Every BlogPosting must carry a non-empty `image`. Rather than pinning a couple
-// of slugs, sweep every article the sitemap advertises: the check then covers new
-// posts automatically and fails loudly if one ever ships without a resolvable
-// cover. The cover-less *fallback* itself is unit-tested (`articleSocialImage` in
-// tests/unit/og.test.ts) — no published article lacks a cover, so there is no
-// integration fixture for it.
-test("every BlogPosting has a non-empty image", async ({ page, request }) => {
-  const res = await request.get("/sitemap-0.xml");
-  expect(res.ok()).toBe(true);
-  const xml = await res.text();
+/** Same flattening as `jsonLdNodes`, over raw HTML instead of a live page. */
+function jsonLdNodesFromHtml(html: string): LdNode[] {
+  const blocks = [
+    ...html.matchAll(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+    ),
+  ];
+  return blocks.flatMap((m) => {
+    const parsed = JSON.parse(m[1]);
+    return (parsed["@graph"] ?? [parsed]) as LdNode[];
+  });
+}
 
-  const paths = [...xml.matchAll(/<loc>([^<]*\/blog\/[^<]+\/)<\/loc>/g)]
-    .map((m) => new URL(m[1]).pathname)
-    // Drop the two listing pages; only article details carry a BlogPosting.
-    .filter((p) => !/\/blog\/$/.test(p));
-  expect(paths.length, "article URLs in the sitemap").toBe(14);
+// Every BlogPosting must carry a non-empty `image`. Rather than pinning a couple
+// of slugs, sweep every article the sitemap advertises, so the check covers new
+// posts automatically. `cover` is required by the content schema, so this is the
+// guard that a cover always survives all the way into the structured data.
+//
+// Fetched rather than driven through a browser: the assertion reads a <script>
+// out of static HTML, and `page.goto` would download each article's hero image
+// (up to ~200 kB) 14 times for nothing.
+test("every BlogPosting has a non-empty image", async ({ request }) => {
+  const index = await request.get("/sitemap-index.xml");
+  expect(index.ok()).toBe(true);
+  // The chunk filename (`sitemap-0.xml`) is an entryLimit implementation detail.
+  const chunks = [...(await index.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+    (m) => new URL(m[1]).pathname,
+  );
+  expect(chunks.length).toBeGreaterThan(0);
+
+  const paths: string[] = [];
+  for (const chunk of chunks) {
+    const xml = await (await request.get(chunk)).text();
+    paths.push(
+      ...[...xml.matchAll(/<loc>([^<]*\/blog\/[^<]+\/)<\/loc>/g)]
+        .map((m) => new URL(m[1]).pathname)
+        // Drop the two listing pages; only article details carry a BlogPosting.
+        .filter((p) => !/\/blog\/$/.test(p)),
+    );
+  }
+  // Guards against the regex silently matching nothing; the exact inventory is
+  // owned by tests/unit/post-files.test.ts so publishing doesn't turn this red.
+  expect(paths.length, "article URLs in the sitemap").toBeGreaterThan(0);
 
   for (const path of paths) {
-    await page.goto(path);
-    const posting = nodeOfType(await jsonLdNodes(page), "BlogPosting");
+    const html = await (await request.get(path)).text();
+    const posting = nodeOfType(jsonLdNodesFromHtml(html), "BlogPosting");
     expect(typeof posting.image, path).toBe("string");
     expect(posting.image as string, path).not.toBe("");
   }

@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { SITE } from "./config";
 
 const blog = defineCollection({
   loader: glob({
@@ -18,7 +19,7 @@ const blog = defineCollection({
       title: z.string(),
       description: z.string(),
       pubDate: z.coerce.date(),
-      lang: z.enum(["fr", "en"]),
+      lang: z.enum(SITE.locales),
       /** URL segment. Differs per locale; must stay stable (SEO). */
       slug: z.string(),
       /** Shared by an FR/EN pair — powers hreflang and the language switcher. */
@@ -27,15 +28,10 @@ const blog = defineCollection({
       draft: z.boolean().default(false),
       // Path is resolved relative to the Markdown file (`../../../assets/…` →
       // `src/assets/…`). Bare or tsconfig-aliased paths do NOT resolve through
-      // the content layer, so keep them relative.
+      // the content layer, so keep them relative. The rendered `alt` is the
+      // article title: covers are stock photography set for mood, and repeating
+      // the title feeds image search without inventing a description.
       cover: image(),
-      /**
-       * Optional override. Covers are stock photography chosen to set a mood,
-       * so the default stays the article title — a deliberate call (it feeds
-       * image search, and the alternative for a purely decorative image would
-       * be `alt=""`). Set this when a cover actually depicts something.
-       */
-      coverAlt: z.string().optional(),
       /** Guest byline. Absent (the norm) means the site author. */
       author: z.string().optional(),
     }),

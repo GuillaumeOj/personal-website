@@ -75,27 +75,10 @@ export function projectSocialImage(slug: string, locale: Locale): SocialImage {
   };
 }
 
-/**
- * Social image for a blog article.
- *
- * - With a `cover`: pass it straight through. Every card is now a measured
- *   1200×630 crop, so `og:image:width/height` is always emitted — remote
- *   Unsplash covers used to omit both.
- * - Without a `cover`: fall back to the locale's landscape default card (so
- *   cover-less posts don't degrade to the vertical portrait).
- */
-export function articleSocialImage(opts: {
-  /**
-   * The article's cover, already resized to a landscape card by the layout via
-   * `getImage()`. Covers are local assets now, so the caller always knows the
-   * exact dimensions — the old signature took a remote URL and had to guess
-   * them from `?w=&h=` query params, which real Unsplash covers never carried.
-   */
-  cover?: SocialImage;
-  locale: Locale;
-}): SocialImage {
-  return opts.cover ?? defaultSocialImage(opts.locale);
-}
+// Blog articles have no resolver here: `cover` is required by the content
+// schema, so every article crops its own 1200×630 card with `getImage()` in
+// BlogPostLayout and passes it straight to BaseLayout. There is no cover-less
+// branch left to fall back from.
 
 // ---------------------------------------------------------------------------
 // Card copy

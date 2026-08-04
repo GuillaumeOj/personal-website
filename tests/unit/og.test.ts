@@ -2,7 +2,6 @@ import path from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import {
-  articleSocialImage,
   composeDefaultCard,
   composeProjectCard,
   defaultSocialImage,
@@ -79,28 +78,5 @@ describe("projectSocialImage", () => {
       width: 1200,
       height: 630,
     });
-  });
-});
-
-describe("articleSocialImage", () => {
-  it("falls back to the landscape default when there is no cover", () => {
-    expect(articleSocialImage({ locale: "fr" })).toEqual({
-      url: "/og/default-fr.png",
-      width: 1200,
-      height: 630,
-    });
-  });
-
-  it("passes through the card the layout resolved", () => {
-    // Covers are local assets cropped to 1200×630 by `getImage()` in
-    // BlogPostLayout, so dimensions are always known. The previous resolver took
-    // a remote URL and guessed them from `?w=&h=` — which real Unsplash covers
-    // never carried, so articles shipped without og:image:width/height.
-    const cover = {
-      url: "/_astro/cover.abc123_xyz.jpeg",
-      width: 1200,
-      height: 630,
-    };
-    expect(articleSocialImage({ cover, locale: "en" })).toEqual(cover);
   });
 });

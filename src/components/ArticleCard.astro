@@ -1,8 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import type { Locale } from '../config';
+import { SITE, type Locale } from '../config';
 import { articlePath, formatDate } from '../i18n/ui';
+import Portrait from './about/Portrait.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -13,6 +14,7 @@ interface Props {
 const { post, locale, priority = false } = Astro.props;
 const href = articlePath(locale, post.data.slug);
 const { author } = post.data;
+const authorName = author ?? SITE.name;
 ---
 
 <a
@@ -20,22 +22,17 @@ const { author } = post.data;
   aria-label={post.data.title}
   class="group flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
 >
-  {
-    post.data.cover ? (
-      <div class="aspect-[16/9] w-full overflow-hidden">
-        <Image
-          src={post.data.cover}
-          inferSize
-          alt={post.data.title}
-          loading={priority ? 'eager' : 'lazy'}
-          fetchpriority={priority ? 'high' : 'auto'}
-          class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        />
-      </div>
-    ) : (
-      <div class="aspect-[16/9] w-full bg-surface-sunken" />
-    )
-  }
+  <div class="aspect-[16/9] w-full overflow-hidden">
+    <Image
+      src={post.data.cover}
+      alt={post.data.coverAlt ?? post.data.title}
+      widths={[400, 640, 960]}
+      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+    />
+  </div>
   <div class="flex flex-1 flex-col gap-2 p-5">
     <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
       {post.data.title}
@@ -47,23 +44,22 @@ const { author } = post.data;
       <time datetime={post.data.pubDate.toISOString()}>
         {formatDate(post.data.pubDate, locale)}
       </time>
-      {
-        author && (
-          <span class="inline-flex items-center gap-1.5">
-            {author.avatarUrl && (
-              <img
-                src={author.avatarUrl}
-                alt=""
-                width="20"
-                height="20"
-                loading="lazy"
-                class="h-5 w-5 rounded-full object-cover"
-              />
-            )}
-            <span>{author.name}</span>
-          </span>
-        )
-      }
+      <span class="inline-flex items-center gap-1.5">
+        {
+          /* Guest bylines are name-only; the site author gets the local
+             portrait, so no avatar is fetched from a third-party host. */
+          !author && (
+            <Portrait
+              locale={locale}
+              width={20}
+              height={20}
+              decorative
+              class="h-5 w-5 ring-0"
+            />
+          )
+        }
+        <span>{authorName}</span>
+      </span>
     </div>
   </div>
 </a>

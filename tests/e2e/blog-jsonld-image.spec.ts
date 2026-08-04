@@ -23,18 +23,30 @@ function nodeOfType(nodes: LdNode[], type: string): LdNode {
   return node as LdNode;
 }
 
-// Every BlogPosting must carry a non-empty `image`, whether the post has a cover
-// or not — the cover-less path resolves a landscape fallback card rather than
-// dropping the key. (og:image already always falls back; the structured data now
-// matches.)
-for (const path of ["/blog/pourquoi-astro/", "/blog/tailwind-sans-cover/"]) {
-  test(`BlogPosting (${path}) always has an image`, async ({ page }) => {
+// Every BlogPosting must carry a non-empty `image`. Rather than pinning a couple
+// of slugs, sweep every article the sitemap advertises: the check then covers new
+// posts automatically and fails loudly if one ever ships without a resolvable
+// cover. The cover-less *fallback* itself is unit-tested (`articleSocialImage` in
+// tests/unit/og.test.ts) — no published article lacks a cover, so there is no
+// integration fixture for it.
+test("every BlogPosting has a non-empty image", async ({ page, request }) => {
+  const res = await request.get("/sitemap-0.xml");
+  expect(res.ok()).toBe(true);
+  const xml = await res.text();
+
+  const paths = [...xml.matchAll(/<loc>([^<]*\/blog\/[^<]+\/)<\/loc>/g)]
+    .map((m) => new URL(m[1]).pathname)
+    // Drop the two listing pages; only article details carry a BlogPosting.
+    .filter((p) => !/\/blog\/$/.test(p));
+  expect(paths.length, "article URLs in the sitemap").toBe(14);
+
+  for (const path of paths) {
     await page.goto(path);
     const posting = nodeOfType(await jsonLdNodes(page), "BlogPosting");
-    expect(typeof posting.image).toBe("string");
-    expect(posting.image as string).not.toBe("");
-  });
-}
+    expect(typeof posting.image, path).toBe("string");
+    expect(posting.image as string, path).not.toBe("");
+  }
+});
 
 // A live mobile app is a SoftwareApplication; a web project stays a generic
 // CreativeWork (the portfolio mixes apps and showcase sites).

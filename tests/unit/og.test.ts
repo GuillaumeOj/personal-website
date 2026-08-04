@@ -91,19 +91,16 @@ describe("articleSocialImage", () => {
     });
   });
 
-  it("parses w/h dimensions from an Unsplash-style cover URL", () => {
-    const cover = "https://images.unsplash.com/photo-123?w=1200&h=675&fit=crop";
-    expect(articleSocialImage({ cover, locale: "en" })).toEqual({
-      url: cover,
+  it("passes through the card the layout resolved", () => {
+    // Covers are local assets cropped to 1200×630 by `getImage()` in
+    // BlogPostLayout, so dimensions are always known. The previous resolver took
+    // a remote URL and guessed them from `?w=&h=` — which real Unsplash covers
+    // never carried, so articles shipped without og:image:width/height.
+    const cover = {
+      url: "/_astro/cover.abc123_xyz.jpeg",
       width: 1200,
-      height: 675,
-    });
-  });
-
-  it("returns the cover URL without dimensions when none are encoded", () => {
-    const cover = "https://abc.public.blob.vercel-storage.com/notion/cover.png";
-    expect(articleSocialImage({ cover, locale: "fr" })).toEqual({
-      url: cover,
-    });
+      height: 630,
+    };
+    expect(articleSocialImage({ cover, locale: "en" })).toEqual(cover);
   });
 });

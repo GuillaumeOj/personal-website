@@ -72,7 +72,7 @@ test("home: WebSite + Person graph, cross-referenced by @id", async ({
 test("blog post: article og:type + BlogPosting + breadcrumb", async ({
   page,
 }) => {
-  await page.goto("/blog/pourquoi-astro/");
+  await page.goto("/blog/mon-parcours-qui-je-suis/");
   expect(await metaContent(page, 'meta[property="og:type"]')).toBe("article");
   // article:published_time is a valid ISO date.
   const published = await metaContent(
@@ -216,7 +216,7 @@ for (const path of ["/about/", "/en/about/"]) {
   });
 }
 
-for (const path of ["/blog/pourquoi-astro/", "/projects/fusily/"]) {
+for (const path of ["/blog/mon-parcours-qui-je-suis/", "/projects/fusily/"]) {
   test(`breadcrumbs (${path}): every crumb URL ends with '/'`, async ({
     page,
   }) => {

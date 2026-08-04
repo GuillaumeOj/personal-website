@@ -9,20 +9,31 @@ interface Props {
   /** Square sizing classes for the image, e.g. `h-40 w-40`. */
   class?: string;
   loading?: 'eager' | 'lazy';
+  /**
+   * Intrinsic size to emit. Defaults to the hero portrait; byline avatars pass
+   * a small square so they don't download a 448px image to render 20 CSS px.
+   */
+  width?: number;
+  height?: number;
+  /** Decorative use (the author name is already adjacent) — renders `alt=""`. */
+  decorative?: boolean;
 }
 
 const {
   locale,
   class: sizeClass = 'h-40 w-40 sm:h-48 sm:w-48',
   loading = 'lazy',
+  width = 448,
+  height = 597,
+  decorative = false,
 } = Astro.props;
 ---
 
 <Image
   src={portrait}
-  alt={portraitAlt[locale]}
-  width={448}
-  height={597}
+  alt={decorative ? '' : portraitAlt[locale]}
+  width={width}
+  height={height}
   loading={loading}
   fetchpriority={loading === 'eager' ? 'high' : undefined}
   class:list={['rounded-full bg-surface object-cover ring-1 ring-line', sizeClass]}

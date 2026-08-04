@@ -78,37 +78,23 @@ export function projectSocialImage(slug: string, locale: Locale): SocialImage {
 /**
  * Social image for a blog article.
  *
- * - With a `cover`: return the cover URL. Dimensions are best-effort — remote
- *   covers can't be measured from a pure sync resolver, but Unsplash (and any
- *   URL that encodes `?w=&h=`) carries them in the query string, so we parse
- *   those when present. Otherwise `width`/`height` are omitted and the caller
- *   simply doesn't emit `og:image:width/height` for that card.
+ * - With a `cover`: pass it straight through. Every card is now a measured
+ *   1200×630 crop, so `og:image:width/height` is always emitted — remote
+ *   Unsplash covers used to omit both.
  * - Without a `cover`: fall back to the locale's landscape default card (so
- *   cover-less posts no longer degrade to the vertical portrait).
+ *   cover-less posts don't degrade to the vertical portrait).
  */
-export function articleSocialImage(opts: { cover?: string; locale: Locale }): {
-  url: string;
-  width?: number;
-  height?: number;
-} {
-  if (!opts.cover) return defaultSocialImage(opts.locale);
-  const dims = dimsFromUrl(opts.cover);
-  return { url: opts.cover, ...dims };
-}
-
-/** Extract `w`/`h` query params from a remote image URL, when both are present. */
-function dimsFromUrl(url: string): { width?: number; height?: number } {
-  try {
-    const params = new URL(url).searchParams;
-    const w = Number(params.get("w"));
-    const h = Number(params.get("h"));
-    if (Number.isFinite(w) && w > 0 && Number.isFinite(h) && h > 0) {
-      return { width: w, height: h };
-    }
-  } catch {
-    // Not an absolute URL / unparseable — fall through to no dims.
-  }
-  return {};
+export function articleSocialImage(opts: {
+  /**
+   * The article's cover, already resized to a landscape card by the layout via
+   * `getImage()`. Covers are local assets now, so the caller always knows the
+   * exact dimensions — the old signature took a remote URL and had to guess
+   * them from `?w=&h=` query params, which real Unsplash covers never carried.
+   */
+  cover?: SocialImage;
+  locale: Locale;
+}): SocialImage {
+  return opts.cover ?? defaultSocialImage(opts.locale);
 }
 
 // ---------------------------------------------------------------------------

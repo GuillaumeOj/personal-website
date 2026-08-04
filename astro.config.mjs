@@ -5,22 +5,24 @@ import { defineConfig } from "astro/config";
 import { SITE } from "./src/config.ts";
 import { articlePath } from "./src/i18n/ui.ts";
 import { generateOgImages } from "./src/lib/og.ts";
-import { getPostsForLocale } from "./src/lib/posts.ts";
+import { readPostFiles } from "./src/lib/post-files.ts";
 
 // Sitemap freshness signal (<lastmod>). Blog URLs carry their article's pubDate;
 // every other URL carries the build date. Precomputed once here (config load) as
 // a pathname → ISO-date map, since @astrojs/sitemap's `serialize` runs per URL.
 // Projects/static pages have no per-item date, so they get the build date
 // deliberately (the modified-date upgrade is a separate, later step).
+//
+// Dates are read straight off disk (`readPostFiles`) rather than through
+// `astro:content`: that virtual module does not exist in the config loader, so
+// querying the collection here always failed and silently yielded no dates.
 const BUILD_DATE = new Date().toISOString();
 const blogLastmod = new Map();
-for (const locale of SITE.locales) {
-  for (const post of await getPostsForLocale(locale)) {
-    blogLastmod.set(
-      articlePath(locale, post.data.slug),
-      post.data.pubDate.toISOString(),
-    );
-  }
+for (const post of readPostFiles()) {
+  blogLastmod.set(
+    articlePath(post.lang, post.slug),
+    post.pubDate.toISOString(),
+  );
 }
 
 export default defineConfig({
@@ -73,11 +75,23 @@ export default defineConfig({
       },
     }),
   ],
-  image: {
-    remotePatterns: [
-      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
-      { protocol: "https", hostname: "images.unsplash.com" },
-    ],
+  markdown: {
+    // Article bodies are Markdown now, so code fences go through Astro's
+    // bundled Shiki instead of the Notion renderer's hljs plugin (which emitted
+    // classes no stylesheet ever styled — code blocks shipped unhighlighted).
+    // The site toggles dark mode with a `.dark` class, not a media query, so
+    // both themes are emitted. `defaultColor: false` makes Shiki inline *only*
+    // `--shiki-light`/`--shiki-dark` custom properties and no `color` of its
+    // own, so `global.css` can bind them per theme with ordinary specificity —
+    // picking a default instead would inline one theme's colours and force
+    // every override to be `!important`.
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark" },
+      defaultColor: false,
+      // Long Django/TypeScript lines would otherwise force a horizontal
+      // scrollbar inside the prose column on mobile.
+      wrap: true,
+    },
   },
   vite: {
     plugins: [tailwindcss()],

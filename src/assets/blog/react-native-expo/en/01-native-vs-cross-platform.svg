@@ -1,0 +1,39 @@
+<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Fully native (two codebases) vs React Native (one codebase)</title>
+<desc>Diagram comparing fully native development, which requires two separate codebases for iOS and Android, and React Native, which lets you write one codebase deployed to both platforms.</desc>
+<rect width="800" height="380" fill="#faf8f4"/>
+<line x1="400" y1="40" x2="400" y2="340" stroke="#e7e2d9" stroke-width="2"/>
+<text x="200" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#1c1917">Fully native</text>
+<rect x="70" y="90" width="150" height="60" rx="10" fill="#ffffff" stroke="#e7e2d9" stroke-width="1.5"/>
+<text x="145" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#292524">Swift</text>
+<text x="145" y="133" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">iOS codebase</text>
+<rect x="230" y="90" width="150" height="60" rx="10" fill="#ffffff" stroke="#e7e2d9" stroke-width="1.5"/>
+<text x="305" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#292524">Kotlin</text>
+<text x="305" y="133" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">Android codebase</text>
+<path d="M145 150 L145 190" stroke="#78716c" stroke-width="1.5" marker-end="url(#arrow1)"/>
+<path d="M305 150 L305 190" stroke="#78716c" stroke-width="1.5" marker-end="url(#arrow1)"/>
+<rect x="110" y="200" width="70" height="120" rx="12" fill="#f3efe8" stroke="#e7e2d9" stroke-width="1.5"/>
+<rect x="120" y="212" width="50" height="86" rx="3" fill="#ffffff"/>
+<text x="145" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">iOS</text>
+<rect x="270" y="200" width="70" height="120" rx="12" fill="#f3efe8" stroke="#e7e2d9" stroke-width="1.5"/>
+<rect x="280" y="212" width="50" height="86" rx="3" fill="#ffffff"/>
+<text x="305" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">Android</text>
+<text x="200" y="360" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#78716c">2 codebases · 2 release cycles</text>
+<text x="600" y="50" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#1c1917">React Native + Expo</text>
+<rect x="525" y="90" width="150" height="60" rx="10" fill="#fdf1e6" stroke="#ea7317" stroke-width="1.5"/>
+<text x="600" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="600" fill="#b45309">TypeScript</text>
+<text x="600" y="133" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#b45309">one single codebase</text>
+<path d="M600 150 C600 175, 530 175, 530 195" stroke="#ea7317" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+<path d="M600 150 C600 175, 670 175, 670 195" stroke="#ea7317" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+<rect x="495" y="200" width="70" height="120" rx="12" fill="#f3efe8" stroke="#e7e2d9" stroke-width="1.5"/>
+<rect x="505" y="212" width="50" height="86" rx="3" fill="#ffffff"/>
+<text x="530" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">iOS</text>
+<rect x="635" y="200" width="70" height="120" rx="12" fill="#f3efe8" stroke="#e7e2d9" stroke-width="1.5"/>
+<rect x="645" y="212" width="50" height="86" rx="3" fill="#ffffff"/>
+<text x="670" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#78716c">Android</text>
+<text x="600" y="360" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#78716c">1 codebase → iOS + Android</text>
+<defs>
+<marker id="arrow1" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#78716c"/></marker>
+<marker id="arrow2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ea7317"/></marker>
+</defs>
+</svg>

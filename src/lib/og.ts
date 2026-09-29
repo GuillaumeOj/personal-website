@@ -115,7 +115,7 @@ interface ProjectCard {
   screenshot: Record<Locale, string>;
 }
 
-const PROJECT_CARDS: ProjectCard[] = [
+export const PROJECT_CARDS: ProjectCard[] = [
   {
     slug: "fusily",
     name: { fr: "Fusily", en: "Fusily" },
@@ -146,6 +146,11 @@ const PROJECT_CARDS: ProjectCard[] = [
     slug: "eva-biezunski-avocate",
     name: { fr: "Eva Biezunski Avocate", en: "Eva Biezunski Avocate" },
     screenshot: { fr: "eb-avocat.png", en: "eb-avocat.png" },
+  },
+  {
+    slug: "re-source-et-moi",
+    name: { fr: "Re-Source Et Moi", en: "Re-Source Et Moi" },
+    screenshot: { fr: "re-source-et-moi.png", en: "re-source-et-moi.png" },
   },
 ];
 

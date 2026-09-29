@@ -14,6 +14,7 @@ import personalEnDark from "../assets/projects/personal-website-en-dark.png";
 import personalEnLight from "../assets/projects/personal-website-en-light.png";
 import personalFrDark from "../assets/projects/personal-website-fr-dark.png";
 import personalFrLight from "../assets/projects/personal-website-fr-light.png";
+import reSourceEtMoiCover from "../assets/projects/re-source-et-moi.png";
 import type { Locale } from "../config";
 
 export type ProjectContext = "personal" | "client" | "side" | "oss";
@@ -311,12 +312,52 @@ export const projects: Project[] = [
       },
     },
   },
+  {
+    slug: "re-source-et-moi",
+    name: "Re-Source Et Moi",
+    titleDescriptor: {
+      fr: "Site associatif",
+      en: "Non-profit website",
+    },
+    url: "https://re-source-et-moi.fr",
+    repoUrl: "https://github.com/GuillaumeOj/re-source-et-moi",
+    context: "client",
+    platform: ["web"],
+    stack: ["Django", "DRF", "Next.js", "Vercel", "Neon", "Brevo"],
+    cover: reSourceEtMoiCover,
+    imageAlt: {
+      fr: "Page d’accueil du site de l’association Re-Source Et Moi",
+      en: "Home page of the Re-Source Et Moi association website",
+    },
+    year: 2026,
+    result: {
+      fr: "Projet client livré clés en main, en ligne depuis septembre 2026.",
+      en: "Turnkey client project, live since September 2026.",
+    },
+    content: {
+      fr: {
+        description:
+          "Site d’une association d’Éducation Kinesthésique® : activités, ateliers et tarifs.",
+        aim: "Présenter les activités de l’association, tenir à jour la liste des ateliers et événements, afficher des tarifs clairs et faciliter la prise de contact — sur une base technique sur laquelle itérer ensuite.",
+        longDescription:
+          "L’association, cliente à but non lucratif, avait besoin d’un site pour présenter sa pratique et sa fondatrice, publier ses ateliers et leurs tarifs, afficher les avis et recevoir des demandes de contact. Au-delà des pages publiques, une interface d’administration dédiée, plus simple que l’admin Django, permet de gérer soi-même les avis, les tarifs et les événements. Les e-mails (formulaire de contact, mot de passe oublié) passent par Brevo. Le front Next.js s’appuie sur une API Django / DRF, le tout hébergé sur Vercel avec une base Neon. Le site est en ligne depuis septembre 2026.",
+      },
+      en: {
+        description:
+          "Website for a Kinesthetic Education® non-profit: activities, workshops and pricing.",
+        aim: "Present the association’s activities, keep an up-to-date list of workshops and events, show clear pricing and make getting in touch easy — on a stack that can be iterated on later.",
+        longDescription:
+          "The client, a non-profit association, needed a website to present its practice and its founder, publish its workshops and their pricing, show reviews and receive contact requests. Beyond the public pages, a dedicated admin interface, simpler than the Django admin, lets the association manage reviews, pricing and events on its own. Emails (contact form, password reset) are sent through Brevo. The Next.js front end relies on a Django / DRF API, hosted on Vercel with a Neon database. The site has been live since September 2026.",
+      },
+    },
+  },
 ];
 
 /** Explicit display order (first → last) for the list and the home teaser. */
 const DISPLAY_ORDER = [
   "fusily",
   "ma-garde-sereine",
+  "re-source-et-moi",
   "eva-biezunski-avocate",
   "dotcraft",
   "personal-website",

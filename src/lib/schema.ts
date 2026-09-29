@@ -244,14 +244,39 @@ export const projectJsonLd = (locale: Locale, input: ProjectSchemaInput) => {
   };
 };
 
-/** Fields describing an indexable hub (the projects / blog list). */
-export interface CollectionPageInput {
+/** Fields describing a standalone page (a hub, the contact pages…). */
+export interface WebPageInput {
+  /** schema.org `WebPage` subtype, e.g. `CollectionPage` or `ContactPage`. */
+  type: string;
   /** Canonical (trailing-slash) URL — used as both `@id` and `url`. */
   url: string;
   name: string;
   description: string;
   breadcrumbs: Crumb[];
+  /** Extra properties merged into the page node (e.g. `about`). */
+  extra?: Record<string, unknown>;
 }
+
+/** A page node (part of the WebSite) plus its breadcrumb. */
+export const webPageJsonLd = (locale: Locale, input: WebPageInput) => {
+  const page = {
+    "@type": input.type,
+    "@id": input.url,
+    url: input.url,
+    name: input.name,
+    description: input.description,
+    inLanguage: inLanguage(locale),
+    isPartOf: { "@id": WEBSITE_ID },
+    ...input.extra,
+  };
+  return {
+    "@context": "https://schema.org",
+    "@graph": [page, breadcrumbList(input.breadcrumbs)],
+  };
+};
+
+/** Fields describing an indexable hub (the projects / blog list). */
+export type CollectionPageInput = Omit<WebPageInput, "type" | "extra">;
 
 /**
  * Hub graph: a `CollectionPage` (part of the WebSite) plus its breadcrumb
@@ -261,18 +286,4 @@ export interface CollectionPageInput {
 export const collectionPageJsonLd = (
   locale: Locale,
   input: CollectionPageInput,
-) => {
-  const page = {
-    "@type": "CollectionPage",
-    "@id": input.url,
-    url: input.url,
-    name: input.name,
-    description: input.description,
-    inLanguage: inLanguage(locale),
-    isPartOf: { "@id": WEBSITE_ID },
-  };
-  return {
-    "@context": "https://schema.org",
-    "@graph": [page, breadcrumbList(input.breadcrumbs)],
-  };
-};
+) => webPageJsonLd(locale, { ...input, type: "CollectionPage" });

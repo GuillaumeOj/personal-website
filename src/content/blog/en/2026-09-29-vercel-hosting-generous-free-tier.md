@@ -80,4 +80,4 @@ For a blog, a business website, a non-profit's website, an MVP or a side project
 
 Vercel for the front end and the Django backend, Neon for PostgreSQL: this combination lets me launch a complete application in an afternoon, without a credit card. The limits are real (database resources, sleep, non-commercial use) but, for the projects I work on, I almost never run into them.
 
-Have a project to put online and unsure about hosting? [Let's talk](/en#contact).
+Have a project to put online and unsure about hosting? [Let's talk](/en/contact/).

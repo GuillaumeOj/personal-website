@@ -10,12 +10,10 @@ interface Props {
 const { locale } = Astro.props;
 const home = localizedPath(locale, '/');
 const links = navItems(locale);
-// Normalize page links to the site's canonical trailing-slash form. The CTA is
-// left untouched because it carries a `#contact` fragment.
-const navLinks = links
-  .filter((link) => !link.cta)
-  .map((link) => ({ ...link, href: ensureTrailingSlash(link.href) }));
-const cta = links.find((link) => link.cta);
+// Normalize links to the site's canonical trailing-slash form.
+const canonical = links.map((link) => ({ ...link, href: ensureTrailingSlash(link.href) }));
+const navLinks = canonical.filter((link) => !link.cta);
+const cta = canonical.find((link) => link.cta);
 // No dedicated i18n key exists for the header nav landmark (footer owns
 // `footer.nav`), so label it from the locale directly.
 const primaryNavLabel =

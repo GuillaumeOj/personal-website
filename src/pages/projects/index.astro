@@ -2,7 +2,7 @@
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProjectsExplorer from '../../components/ProjectsExplorer.astro';
 import { SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
+import { contactPath, ensureTrailingSlash, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getProjects } from '../../lib/projects';
 import { collectionPageJsonLd } from '../../lib/schema';
@@ -57,7 +57,7 @@ const crumbs = [
 
     <section class="mt-16 border-t border-line pt-10 text-center">
       <p class="text-lg text-ink-strong">{t(locale, 'projects.listCta.title')}</p>
-      <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary mt-5">
+      <a href={contactPath(locale)} class="btn btn-primary mt-5">
         {t(locale, 'projects.listCta.link')}
       </a>
     </section>

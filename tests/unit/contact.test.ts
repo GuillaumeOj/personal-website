@@ -36,6 +36,34 @@ describe("validateSubmission", () => {
     expect(validateSubmission({ ...valid, message: "   " }).ok).toBe(false);
   });
 
+  it("keeps allow-listed quote fields and drops unknown ones", () => {
+    const kept = validateSubmission({
+      ...valid,
+      budget: "15-40k",
+      timeline: "1-3m",
+      intent: "quote",
+    });
+    expect(kept.ok).toBe(true);
+    if (kept.ok) {
+      expect(kept.data.budget).toBe("15-40k");
+      expect(kept.data.timeline).toBe("1-3m");
+      expect(kept.data.intent).toBe("quote");
+    }
+
+    const dropped = validateSubmission({
+      ...valid,
+      budget: "1M",
+      timeline: "",
+      intent: "evil",
+    });
+    expect(dropped.ok).toBe(true);
+    if (dropped.ok) {
+      expect(dropped.data).not.toHaveProperty("budget");
+      expect(dropped.data).not.toHaveProperty("timeline");
+      expect(dropped.data).not.toHaveProperty("intent");
+    }
+  });
+
   it("flags a filled honeypot as spam", () => {
     const result = validateSubmission({ ...valid, company: "Acme Corp" });
     expect(result).toEqual({ ok: false, spam: true });
@@ -55,5 +83,32 @@ describe("buildBrevoPayload", () => {
     expect(payload.htmlContent).toContain("A&lt;b&gt;");
     expect(payload.htmlContent).toContain("x &amp; y");
     expect(payload.subject).toContain("Application mobile");
+  });
+
+  it("flags quote requests and lists budget + timeline", () => {
+    const payload = buildBrevoPayload({
+      name: "Jane",
+      email: "jane@example.com",
+      projectType: "saas",
+      message: "Hi",
+      budget: "gt40k",
+      timeline: "asap",
+      intent: "quote",
+    });
+    expect(payload.subject.startsWith("[Devis] ")).toBe(true);
+    expect(payload.textContent).toContain("Budget : > 40 k€");
+    expect(payload.textContent).toContain("Délai : Dès que possible");
+    expect(payload.htmlContent).toContain("&gt; 40 k€");
+  });
+
+  it("leaves plain messages unflagged", () => {
+    const payload = buildBrevoPayload({
+      name: "Jane",
+      email: "jane@example.com",
+      projectType: "web",
+      message: "Hi",
+    });
+    expect(payload.subject.startsWith("Nouveau message")).toBe(true);
+    expect(payload.textContent).not.toContain("Budget");
   });
 });

@@ -34,7 +34,15 @@ test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
 // build emits sitemap-index.xml (+ sitemap-0.xml), never /sitemap.xml, so the
 // old href advertised a dead location. Assert the hint resolves and no page
 // advertises the 404 path.
-for (const path of ["/", "/en/", "/about/", "/services/", "/blog/"]) {
+for (const path of [
+  "/",
+  "/en/",
+  "/about/",
+  "/services/",
+  "/blog/",
+  "/contact/",
+  "/contact/quote/",
+]) {
   test(`sitemap hint on ${path} points at the real index`, async ({ page }) => {
     await page.goto(path);
     expect(await sitemapHref(page)).toBe("/sitemap-index.xml");

@@ -80,4 +80,4 @@ Pour un blog, un site vitrine, le site d'une association, un MVP ou un projet pe
 
 Vercel pour le front-end et le backend Django, Neon pour PostgreSQL : ce duo me permet de lancer une application complète en un après-midi, sans sortir la carte bancaire. Les limites existent (ressources de la base, mise en veille, usage non commercial), mais pour le type de projets que je mène, je ne les ressens quasiment jamais.
 
-Vous avez un projet à mettre en ligne et hésitez sur l'hébergement ? [Parlons-en](/#contact).
+Vous avez un projet à mettre en ligne et hésitez sur l'hébergement ? [Parlons-en](/contact/).

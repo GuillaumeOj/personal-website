@@ -1,0 +1,58 @@
+---
+import type { Locale } from '../../config';
+import { quotePath } from '../../i18n/ui';
+import {
+  type ContactMode,
+  contactCrumbs,
+  contactModes,
+  quoteCrossLink,
+} from '../../lib/contact-page';
+import Breadcrumb from '../Breadcrumb.astro';
+import EmailLink from '../EmailLink.astro';
+import Icon from '../Icon.astro';
+import SocialLinks from '../SocialLinks.astro';
+import ContactForm from './ContactForm.astro';
+
+interface Props {
+  locale: Locale;
+  mode: ContactMode;
+}
+
+const { locale, mode } = Astro.props;
+const cfg = contactModes[mode];
+
+// Visible trail, the same crumbs as the BreadcrumbList JSON-LD.
+const crumbs = contactCrumbs(locale, mode).map((c) => ({ name: c.name, href: c.url }));
+---
+
+<div class="mx-auto max-w-6xl px-6 pb-24 pt-8">
+  <Breadcrumb items={crumbs} />
+
+  <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+    <div class="reveal space-y-6 lg:sticky lg:top-24 lg:self-start">
+      <p class="eyebrow">{cfg.eyebrow[locale]}</p>
+      <h1 class="page-title">{cfg.title[locale]}</h1>
+      <p class="text-lg leading-relaxed text-muted">{cfg.lead[locale]}</p>
+      {cfg.note && <p class="leading-relaxed text-muted">{cfg.note[locale]}</p>}
+      {
+        mode === 'general' && (
+          <p>
+            <a
+              href={quotePath(locale)}
+              class="inline-flex items-center gap-1.5 font-display font-medium text-accent-ink no-underline hover:underline"
+            >
+              {quoteCrossLink[locale]}
+              <Icon name="arrow-right" size={15} />
+            </a>
+          </p>
+        )
+      }
+      <SocialLinks locale={locale} />
+      {/* Secondary channel: the form stays primary, but some visitors prefer a
+          plain email — surface the real inbox as a visible mailto link. */}
+      <EmailLink locale={locale} />
+    </div>
+
+    <ContactForm locale={locale} mode={mode} />
+  </div>
+</div>

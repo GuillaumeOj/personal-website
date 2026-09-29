@@ -2,7 +2,7 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
+import { contactPath, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
 import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
 import { projectJsonLd } from '../lib/schema';
@@ -176,7 +176,7 @@ const jsonLd = projectJsonLd(locale, {
         {t(locale, 'projects.similarCta.title')}
       </h2>
       <div class="mt-5 flex flex-wrap justify-center gap-3">
-        <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary">
+        <a href={contactPath(locale)} class="btn btn-primary">
           {t(locale, 'projects.similarCta.primary')}
         </a>
         <a href={localizedPath(locale, '/services')} class="btn btn-secondary">

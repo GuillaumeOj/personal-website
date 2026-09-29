@@ -1,5 +1,11 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash, localizedPath, projectPath, t } from "../i18n/ui";
+import {
+  contactPath,
+  ensureTrailingSlash,
+  localizedPath,
+  projectPath,
+  t,
+} from "../i18n/ui";
 import {
   breadcrumbList,
   inLanguage,
@@ -188,7 +194,7 @@ const frDoc = (): AboutDoc => {
       h: "Parlons de votre projet",
       lead: "Que vous ayez une idée précise ou juste une intuition à creuser, la première étape est toujours la même : un échange gratuit et sans engagement pour comprendre ce dont vous avez besoin. Réponse sous 24 h.",
       linkLabel: "Contactez-moi",
-      href: `${home}#contact`,
+      href: contactPath("fr"),
     },
   };
 };
@@ -310,7 +316,7 @@ const enDoc = (): AboutDoc => {
       h: "Let’s talk about your project",
       lead: "Whether you have a clear idea or just a hunch to explore, the first step is always the same: a free, no-obligation conversation to understand what you need. I’ll get back to you within 24 hours.",
       linkLabel: "Get in touch",
-      href: `${home}#contact`,
+      href: contactPath("en"),
     },
   };
 };

@@ -13,8 +13,8 @@ for (const path of ["/projects/fusily/", "/en/projects/fusily/"]) {
   }) => {
     await page.goto(path);
     const article = page.locator("article");
-    // A same-site anchor to the home contact section.
-    const contact = article.locator('a[href$="#contact"]');
+    // A same-site link to the contact page.
+    const contact = article.locator('a[href$="/contact/"]');
     await expect(contact.first()).toBeVisible();
     // …and a link to the services page.
     const servicesHref = isFr ? "/services" : "/en/services";
@@ -52,7 +52,7 @@ for (const path of ["/projects/", "/en/projects/"]) {
     page,
   }) => {
     await page.goto(path);
-    const cta = page.locator('main a[href$="#contact"]');
+    const cta = page.locator('main a[href$="/contact/"]');
     await expect(cta.first()).toBeVisible();
   });
 }

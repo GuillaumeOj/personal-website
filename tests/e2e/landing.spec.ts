@@ -57,8 +57,9 @@ test("FR blog list page renders", async ({ page }) => {
   ).toBeVisible();
 });
 
-// T2 — the funnel ends on the #contact form, not the soft AboutTeaser: contact
-// is the final snap section and comes after the About block, on both locales.
+// T2 — the funnel ends on the #contact CTA band (linking to /contact), not the
+// soft AboutTeaser: it is the final snap section and comes after the About
+// block, on both locales.
 for (const path of ["/", "/en/"]) {
   test(`home (${path}): #contact is the last section, after #about`, async ({
     page,
@@ -80,6 +81,18 @@ for (const path of ["/", "/en/"]) {
     const mailto = page.locator('#contact a[href^="mailto:"]');
     await expect(mailto).toBeVisible();
     await expect(mailto).toHaveAttribute("href", /^mailto:.+@.+/);
+  });
+
+  test(`home (${path}): #contact routes to the contact page`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const cta = page.locator("#contact a.btn-primary");
+    await expect(cta).toBeVisible();
+    await expect(cta).toHaveAttribute(
+      "href",
+      path === "/" ? "/contact/" : "/en/contact/",
+    );
   });
 }
 

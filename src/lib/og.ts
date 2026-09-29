@@ -147,6 +147,11 @@ const PROJECT_CARDS: ProjectCard[] = [
     name: { fr: "Eva Biezunski Avocate", en: "Eva Biezunski Avocate" },
     screenshot: { fr: "eb-avocat.png", en: "eb-avocat.png" },
   },
+  {
+    slug: "re-source-et-moi",
+    name: { fr: "Re-Source Et Moi", en: "Re-Source Et Moi" },
+    screenshot: { fr: "re-source-et-moi.png", en: "re-source-et-moi.png" },
+  },
 ];
 
 // ---------------------------------------------------------------------------

@@ -284,7 +284,17 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/EB-Avocat/eb-avocat",
     context: "client",
     platform: ["web"],
-    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Django",
+      "DRF",
+      "PostgreSQL",
+      "Neon",
+      "Vercel",
+    ],
     cover: ebAvocatCover,
     imageAlt: {
       fr: "Page d’accueil du site vitrine de l’avocate Eva Biezunski",
@@ -292,23 +302,23 @@ export const projects: Project[] = [
     },
     year: 2026,
     result: {
-      fr: "Projet client livré clés en main, en ligne depuis juin 2026.",
-      en: "Turnkey client project, live since June 2026.",
+      fr: "Projet client livré clés en main, en ligne depuis juin 2026, avec espace de publications.",
+      en: "Turnkey client project, live since June 2026, with a publications space.",
     },
     content: {
       fr: {
         description:
-          "Site vitrine d’un cabinet d’avocate spécialisé en droit des sociétés.",
+          "Site d’un cabinet d’avocate en droit des sociétés, avec un espace de publications.",
         aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), avec un focus sur les professions libérales (avocats, médecins, dentistes…).",
         longDescription:
-          "La cliente, avocate en droit des sociétés, avait besoin d’un site vitrine pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site a été livré clés en main, en ligne depuis juin 2026, développé avec Next.js, React, TypeScript et Tailwind CSS. Le code et l’hébergement restent la propriété de la cliente.",
+          "La cliente, avocate en droit des sociétés, avait besoin d’un site pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site, en ligne depuis juin 2026, associe un front Next.js / React / TypeScript / Tailwind CSS à un backend Django / DRF et une base PostgreSQL hébergée sur Neon, le tout déployé sur Vercel. Il intègre un espace de publications doté d’une interface d’administration dédiée, plus simple à prendre en main que l’admin Django : Eva y rédige ses articles et gère les catégories de la page /publications. J’y ai aussi ajouté un endpoint /mcp qui permet de créer des articles depuis n’importe quel chat IA compatible, comme Claude Desktop. Le code et l’hébergement restent la propriété de la cliente.",
       },
       en: {
         description:
-          "Business website for a lawyer specialized in companies law.",
+          "Website for a companies-law practice, with a publications space.",
         aim: "Present the practice and its areas of expertise — companies law (contracts, company formation, etc.), with a focus on liberal professions (lawyers, doctors, dentists…).",
         longDescription:
-          "The client, a lawyer specialized in companies law, needed a business website to clearly present her practice, build trust and make getting in touch easy. The site was delivered turnkey, live since June 2026, built with Next.js, React, TypeScript and Tailwind CSS. The code and hosting remain the client’s property.",
+          "The client, a lawyer specialized in companies law, needed a website to clearly present her practice, build trust and make getting in touch easy. Live since June 2026, the site pairs a Next.js / React / TypeScript / Tailwind CSS front end with a Django / DRF backend and a PostgreSQL database hosted on Neon, all deployed on Vercel. It includes a publications space with a dedicated admin interface, friendlier than the Django admin: Eva writes her articles there and manages the categories of the /publications page. I also added an /mcp endpoint so articles can be created from any compatible AI chat, such as Claude Desktop. The code and hosting remain the client’s property.",
       },
     },
   },

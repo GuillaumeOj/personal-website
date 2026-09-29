@@ -9,7 +9,7 @@ cover: ../../../assets/blog/vercel-free-tier/cover.jpg
 tags: []
 ---
 
-For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? This blog, [Dotcraft](https://dotcraft.fr), [Ma Garde Sereine](https://ma-garde-sereine.fr), [Re-Source Et Moi](https://re-source-et-moi.fr), the website of [Maître Eva Biezunski](https://biezunski-avocat.fr)… they all run on **Vercel** today. And most of them cost me nothing. Here's how I got there, and what you should know before doing the same.
+For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [Dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), Re-Source Et Moi, [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. And most of them cost me nothing. Here's how I got there, and what you should know before doing the same.
 
 ## Static sites first
 
@@ -22,7 +22,7 @@ That's exactly what I needed for this blog (Astro, version-controlled Markdown) 
 - **The GitHub integration**: every push to `main` triggers a production deployment. No pipeline to write.
 - **Preview deployments**: every pull request gets its own URL. Proofreading a post or showing a feature to someone before merging it becomes trivial.
 - **One-click rollback**: every deployment is immutable; going back to the previous version takes a few seconds.
-- **Environment variables** per environment (production, preview, development), which you can pull locally with `vercel env pull`.
+- **Separate environment variables** for production, previews and development, which you can pull locally with `vercel env pull`.
 
 ## The discovery: you can run a Django backend there too
 
@@ -58,7 +58,7 @@ DATABASES = {
 }
 ```
 
-Another bonus: Neon can create a **database branch** for every preview deployment. Each pull request can test its migrations on a copy of the data without touching production.
+Another bonus: Neon can create a **database branch** for every preview deployment. You can test each pull request's migrations on a copy of the data without touching production.
 
 The result: front end, Django API and PostgreSQL database, deployed automatically from GitHub… for **$0**.
 

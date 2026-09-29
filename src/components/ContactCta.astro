@@ -1,0 +1,34 @@
+---
+import type { Locale } from '../config';
+import { type ContactMode, contactModes } from '../lib/contact-page';
+import { contact } from '../lib/home';
+import EmailLink from './EmailLink.astro';
+import Section from './home/Section.astro';
+import SectionHeader from './home/SectionHeader.astro';
+import Icon from './Icon.astro';
+
+/**
+ * Closing call-to-action band that routes visitors to a contact page (the only
+ * places with the contact form). Keeps `id="contact"` so legacy `#contact` deep
+ * links and the home snap order still land on it. `mode` picks the target page
+ * and its band copy (the general form by default).
+ */
+interface Props {
+  locale: Locale;
+  mode?: ContactMode;
+}
+
+const { locale, mode = 'general' } = Astro.props;
+const cfg = contactModes[mode];
+---
+
+<Section id="contact">
+  <SectionHeader locale={locale} eyebrow={contact.eyebrow} title={contact.title} lead={cfg.band.lead} />
+  <div class="reveal mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+    <a href={cfg.path(locale)} class="btn btn-primary">
+      {cfg.band.cta[locale]}
+      <Icon name="arrow-right" size={15} />
+    </a>
+    <EmailLink locale={locale} />
+  </div>
+</Section>

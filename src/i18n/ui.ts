@@ -8,6 +8,8 @@ const dictionaries = {
     "nav.projects": "Projets",
     "nav.services": "Prestations",
     "nav.about": "À propos",
+    "nav.contact": "Contact",
+    "nav.quote": "Devis",
     "nav.menu": "Menu",
     "nav.mainNav": "Navigation principale",
     "nav.skipToContent": "Aller au contenu",
@@ -98,6 +100,8 @@ const dictionaries = {
     "nav.projects": "Projects",
     "nav.services": "Services",
     "nav.about": "About",
+    "nav.contact": "Contact",
+    "nav.quote": "Quote",
     "nav.menu": "Menu",
     "nav.mainNav": "Main navigation",
     "nav.skipToContent": "Skip to content",
@@ -209,6 +213,14 @@ export const articlePath = (locale: Locale, slug: string): string =>
 export const projectPath = (locale: Locale, slug: string): string =>
   `${localizedPath(locale, `/projects/${slug}`)}/`;
 
+/** The contact pages — the only places the contact form lives. */
+export const contactPath = (locale: Locale): string =>
+  `${localizedPath(locale, "/contact")}/`;
+
+/** The quote-request variant of the contact form (linked from /services). */
+export const quotePath = (locale: Locale): string =>
+  `${localizedPath(locale, "/contact/quote")}/`;
+
 export interface NavItem {
   href: string;
   label: string;
@@ -234,6 +246,10 @@ export const navItems = (locale: Locale): NavItem[] => {
     },
     { href: localizedPath(locale, "/about"), label: t(locale, "nav.about") },
     { href: localizedPath(locale, "/blog"), label: t(locale, "nav.blog") },
-    { href: `${home}#contact`, label: hero.ctaPrimary[locale], cta: true },
+    {
+      href: contactPath(locale),
+      label: hero.ctaPrimary[locale],
+      cta: true,
+    },
   ];
 };

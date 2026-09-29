@@ -6,7 +6,7 @@ import AuthorByline from '../components/AuthorByline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, contactPath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
 import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
 import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
@@ -156,7 +156,7 @@ const jsonLd = blogPostJsonLd(locale, {
         </p>
         <p class="leading-relaxed text-muted">{t(locale, 'blog.cta.lead')}</p>
         <div class="flex flex-wrap gap-3 pt-1">
-          <a href={`${localizedPath(locale, '/')}#contact`} class="btn btn-primary">
+          <a href={contactPath(locale)} class="btn btn-primary">
             {t(locale, 'blog.cta.primary')}
           </a>
           <a href={localizedPath(locale, '/services')} class="btn btn-secondary">

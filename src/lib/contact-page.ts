@@ -1,0 +1,209 @@
+import { type Locale, SITE } from "../config";
+import {
+  contactPath,
+  ensureTrailingSlash,
+  localizedPath,
+  quotePath,
+  type TranslationKey,
+  t,
+} from "../i18n/ui";
+import type { Budget, Intent, ProjectType, Timeline } from "./contact";
+import { contact } from "./home";
+import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
+import { contactNote, cost } from "./services";
+
+type L = Record<Locale, string>;
+
+/** The two contact pages: the general form and the quote-request form. */
+export type ContactMode = "general" | "quote";
+
+/** Field copy shared by both contact pages. */
+export const form = {
+  name: { fr: "Nom", en: "Name" },
+  email: { fr: "E-mail", en: "Email" },
+  projectType: { fr: "Type de projet", en: "Project type" },
+  projectTypeOptions: [
+    {
+      value: "web",
+      label: { fr: "Site / application web", en: "Web site / app" },
+    },
+    { value: "saas", label: { fr: "SaaS", en: "SaaS" } },
+    {
+      value: "mobile",
+      label: { fr: "Application mobile", en: "Mobile app" },
+    },
+    { value: "other", label: { fr: "Autre", en: "Other" } },
+  ] satisfies { value: ProjectType; label: L }[],
+  message: { fr: "Votre projet", en: "Your project" },
+  // Compliance line under the submit button. The trailing fragment
+  // (`consentLink`) is rendered as an inline link to the privacy policy at the
+  // point of submission — see ContactForm.astro.
+  consent: {
+    fr: "En envoyant ce formulaire, vous acceptez que vos informations soient utilisées pour répondre à votre demande. Voir la ",
+    en: "By sending this form, you agree that your information may be used to respond to your request. See the ",
+  },
+  consentLink: {
+    fr: "politique de confidentialité",
+    en: "privacy policy",
+  },
+  sending: { fr: "Envoi…", en: "Sending…" },
+  success: {
+    fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",
+    en: "Thanks! Your message is on its way — you’ll get a reply within 24 h.",
+  },
+  error: {
+    fr: "Une erreur est survenue, merci de réessayer.",
+    en: "Something went wrong, please try again.",
+  },
+};
+
+/** The optional budget/timeline fields, rendered only on the quote form. */
+export const qualifying = {
+  optional: { fr: "facultatif", en: "optional" },
+  budget: { fr: "Budget envisagé", en: "Estimated budget" },
+  budgetOptions: [
+    { value: "lt5k", label: { fr: "Moins de 5 k€", en: "Under €5k" } },
+    { value: "5-15k", label: { fr: "5 – 15 k€", en: "€5k – €15k" } },
+    { value: "15-40k", label: { fr: "15 – 40 k€", en: "€15k – €40k" } },
+    { value: "gt40k", label: { fr: "Plus de 40 k€", en: "Over €40k" } },
+    {
+      value: "unknown",
+      label: { fr: "Je ne sais pas encore", en: "Not sure yet" },
+    },
+  ] satisfies { value: Budget; label: L }[],
+  timeline: { fr: "Délai souhaité", en: "Desired timeline" },
+  timelineOptions: [
+    {
+      value: "asap",
+      label: { fr: "Dès que possible", en: "As soon as possible" },
+    },
+    {
+      value: "1-3m",
+      label: { fr: "D’ici 1 à 3 mois", en: "Within 1–3 months" },
+    },
+    {
+      value: "3-6m",
+      label: { fr: "D’ici 3 à 6 mois", en: "Within 3–6 months" },
+    },
+    { value: "flexible", label: { fr: "Flexible", en: "Flexible" } },
+  ] satisfies { value: Timeline; label: L }[],
+};
+
+/** Cross-link from the general /contact page to the quote form. */
+export const quoteCrossLink = {
+  fr: "Vous avez un projet précis ? Demandez un devis gratuit",
+  en: "Have a specific project? Request a free quote",
+};
+
+interface ContactModeConfig {
+  path: (locale: Locale) => string;
+  /** Breadcrumb label for this page. */
+  crumb: TranslationKey;
+  /** `<title>` segment (the layout appends ` — {SITE.name}`) and description. */
+  meta: { title: L; description: L };
+  eyebrow: L;
+  title: L;
+  lead: L;
+  /** Reassurance line under the lead. */
+  note?: L;
+  submit: L;
+  messagePlaceholder: L;
+  /** Posted with the form; the server flags quote requests (`[Devis]`). */
+  intent?: Intent;
+  /** Copy for the `ContactCta` band that links to this page. */
+  band: { lead: L; cta: L };
+}
+
+/**
+ * Everything that differs between /contact and /contact/quote. Those two pages
+ * are the only places the contact form lives; every other page links to one of
+ * them through a `ContactCta` band or a CTA button.
+ */
+export const contactModes: Record<ContactMode, ContactModeConfig> = {
+  general: {
+    path: contactPath,
+    crumb: "nav.contact",
+    meta: {
+      title: { fr: "Contact", en: "Contact" },
+      description: {
+        fr: "Contactez un développeur web & mobile freelance à Lyon : décrivez votre projet en quelques lignes, réponse sous 24 h, devis gratuit et sans engagement.",
+        en: "Get in touch with a freelance web & mobile developer in Lyon: describe your project in a few lines, reply within 24 h, free quote, no commitment.",
+      },
+    },
+    // Deliberately the same heading as the Home band that links here.
+    eyebrow: contact.eyebrow,
+    title: contact.title,
+    lead: contact.lead,
+    submit: { fr: "Envoyer", en: "Send" },
+    messagePlaceholder: {
+      fr: "En quelques lignes : ce que vous voulez construire, pour qui, et sous quel délai.",
+      en: "In a few lines: what you want to build, for whom, and by when.",
+    },
+    band: { lead: contact.lead, cta: contact.cta },
+  },
+  // Linked from the services page. Owns the "devis" query cluster, leaving
+  // /contact the generic one.
+  quote: {
+    path: quotePath,
+    crumb: "nav.quote",
+    meta: {
+      title: { fr: "Demande de devis gratuit", en: "Request a Free Quote" },
+      description: {
+        fr: "Demandez un devis gratuit pour votre application web, mobile ou SaaS : quelques lignes sur votre projet, un budget et un délai indicatifs, réponse sous 24 h.",
+        en: "Request a free quote for your web, mobile or SaaS app: a few lines about your project, an indicative budget and timeline, reply within 24 h.",
+      },
+    },
+    eyebrow: { fr: "Devis gratuit", en: "Free quote" },
+    title: {
+      fr: "Demandez votre estimation gratuite",
+      en: "Request your free estimate",
+    },
+    lead: contact.lead,
+    note: contactNote,
+    submit: cost.cta,
+    messagePlaceholder: {
+      fr: "Les fonctionnalités clés, qui va l’utiliser, et ce qui existe déjà (maquettes, site actuel, cahier des charges…).",
+      en: "The key features, who will use it, and what already exists (mockups, current site, specs…).",
+    },
+    intent: "quote",
+    band: { lead: contactNote, cta: cost.cta },
+  },
+};
+
+/**
+ * Home › Contact (› Quote) — shared by the visible breadcrumb and the JSON-LD.
+ * The last crumb is the current page.
+ */
+export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
+  const crumb = (key: TranslationKey, path: string): Crumb => ({
+    name: t(locale, key),
+    url: new URL(path, SITE.url).toString(),
+  });
+  const { general } = contactModes;
+  const crumbs = [
+    crumb("nav.home", ensureTrailingSlash(localizedPath(locale, "/"))),
+    crumb(general.crumb, general.path(locale)),
+  ];
+  if (mode !== "general") {
+    const cfg = contactModes[mode];
+    crumbs.push(crumb(cfg.crumb, cfg.path(locale)));
+  }
+  return crumbs;
+};
+
+/**
+ * schema.org JSON-LD for a contact page: a `ContactPage` about the canonical
+ * `#business` entity (referenced by `@id`, never redefined), plus breadcrumbs.
+ */
+export const contactJsonLd = (locale: Locale, mode: ContactMode) => {
+  const { meta } = contactModes[mode];
+  const breadcrumbs = contactCrumbs(locale, mode);
+  return webPageJsonLd(locale, {
+    type: "ContactPage",
+    url: breadcrumbs[breadcrumbs.length - 1].url,
+    name: meta.title[locale],
+    description: meta.description[locale],
+    breadcrumbs,
+    extra: { about: { "@id": BUSINESS_ID } },
+  });
+};

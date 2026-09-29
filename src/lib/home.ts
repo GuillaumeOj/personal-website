@@ -243,6 +243,7 @@ export const about = {
   },
 };
 
+/** Closing CTA band copy (the form itself lives on /contact — see `lib/contact-page.ts`). */
 export const contact = {
   eyebrow: { fr: "Contact", en: "Contact" },
   title: { fr: "Parlons de votre projet", en: "Let’s talk about your project" },
@@ -250,47 +251,5 @@ export const contact = {
     fr: "Décrivez votre idée en quelques mots, vous avez une réponse sous 24 h.",
     en: "Tell me about your idea in a few words — you’ll get a reply within 24 h.",
   },
-  form: {
-    name: { fr: "Nom", en: "Name" },
-    email: { fr: "E-mail", en: "Email" },
-    projectType: { fr: "Type de projet", en: "Project type" },
-    projectTypeOptions: [
-      {
-        value: "web",
-        label: { fr: "Site / application web", en: "Web site / app" },
-      },
-      { value: "saas", label: { fr: "SaaS", en: "SaaS" } },
-      {
-        value: "mobile",
-        label: { fr: "Application mobile", en: "Mobile app" },
-      },
-      { value: "other", label: { fr: "Autre", en: "Other" } },
-    ],
-    message: { fr: "Votre projet", en: "Your project" },
-    messagePlaceholder: {
-      fr: "En quelques lignes : ce que vous voulez construire, pour qui, et sous quel délai.",
-      en: "In a few lines: what you want to build, for whom, and by when.",
-    },
-    submit: { fr: "Envoyer", en: "Send" },
-    // Compliance line under the submit button. The trailing fragment
-    // (`consentLink`) is rendered as an inline link to the privacy policy at the
-    // point of submission — see Contact.astro.
-    consent: {
-      fr: "En envoyant ce formulaire, vous acceptez que vos informations soient utilisées pour répondre à votre demande. Voir la ",
-      en: "By sending this form, you agree that your information may be used to respond to your request. See the ",
-    },
-    consentLink: {
-      fr: "politique de confidentialité",
-      en: "privacy policy",
-    },
-    sending: { fr: "Envoi…", en: "Sending…" },
-    success: {
-      fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",
-      en: "Thanks! Your message is on its way — you’ll get a reply within 24 h.",
-    },
-    error: {
-      fr: "Une erreur est survenue, merci de réessayer.",
-      en: "Something went wrong, please try again.",
-    },
-  },
+  cta: { fr: "Écrire un message", en: "Send a message" },
 };

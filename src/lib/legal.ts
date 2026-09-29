@@ -81,7 +81,7 @@ export const privacyPolicy: Record<Locale, LegalDoc> = {
     title: "Politique de confidentialité",
     metaDescription:
       "Politique de confidentialité du site de Guillaume Ojardias : quelles données le formulaire de contact collecte, leur usage, leur conservation et vos droits RGPD.",
-    updated: "Dernière mise à jour : 7 juillet 2026",
+    updated: "Dernière mise à jour : 29 septembre 2026",
     sections: [
       {
         h: "Introduction",
@@ -92,7 +92,7 @@ export const privacyPolicy: Record<Locale, LegalDoc> = {
       {
         h: "Données collectées",
         body: [
-          "Le formulaire de contact recueille votre nom, votre adresse e-mail, le type de projet et votre message. Ces informations servent uniquement à répondre à votre demande.",
+          "Le formulaire de contact recueille votre nom, votre adresse e-mail, le type de projet et votre message, ainsi que, si vous les renseignez lors d’une demande de devis, votre budget et votre délai envisagés. Ces informations servent uniquement à répondre à votre demande.",
         ],
       },
       {
@@ -125,7 +125,7 @@ export const privacyPolicy: Record<Locale, LegalDoc> = {
     title: "Privacy policy",
     metaDescription:
       "Privacy policy for Guillaume Ojardias's website: what data the contact form collects, how it is used and retained, and your GDPR rights.",
-    updated: "Last updated: July 7, 2026",
+    updated: "Last updated: September 29, 2026",
     sections: [
       {
         h: "Introduction",
@@ -136,7 +136,7 @@ export const privacyPolicy: Record<Locale, LegalDoc> = {
       {
         h: "Data collected",
         body: [
-          "The contact form collects your name, email address, project type and message. This information is used solely to respond to your request.",
+          "The contact form collects your name, email address, project type and message, plus, if you provide them with a quote request, your estimated budget and timeline. This information is used solely to respond to your request.",
         ],
       },
       {

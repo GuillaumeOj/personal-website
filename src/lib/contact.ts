@@ -25,6 +25,32 @@ const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
   other: "Autre",
 };
 
+/**
+ * Optional qualifying fields, only on the quote form (/contact/quote), which
+ * also posts `intent: "quote"`. Values are allow-listed; anything else is
+ * dropped rather than rejected, since the fields are optional.
+ */
+export const BUDGETS = ["lt5k", "5-15k", "15-40k", "gt40k", "unknown"] as const;
+export type Budget = (typeof BUDGETS)[number];
+export const TIMELINES = ["asap", "1-3m", "3-6m", "flexible"] as const;
+export type Timeline = (typeof TIMELINES)[number];
+export const INTENTS = ["quote"] as const;
+export type Intent = (typeof INTENTS)[number];
+
+const BUDGET_LABELS: Record<Budget, string> = {
+  lt5k: "< 5 k€",
+  "5-15k": "5 – 15 k€",
+  "15-40k": "15 – 40 k€",
+  gt40k: "> 40 k€",
+  unknown: "Ne sait pas",
+};
+const TIMELINE_LABELS: Record<Timeline, string> = {
+  asap: "Dès que possible",
+  "1-3m": "1 à 3 mois",
+  "3-6m": "3 à 6 mois",
+  flexible: "Flexible",
+};
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX = { name: 100, email: 200, message: 5000 };
 
@@ -33,6 +59,9 @@ export interface ContactSubmission {
   email: string;
   projectType: ProjectType;
   message: string;
+  budget?: Budget;
+  timeline?: Timeline;
+  intent?: Intent;
 }
 
 export type ValidationResult =
@@ -42,6 +71,12 @@ export type ValidationResult =
 
 const asString = (value: unknown): string =>
   typeof value === "string" ? value.trim() : "";
+
+/** The value if it belongs to `allowed`, otherwise `undefined`. */
+const pick = <T extends string>(
+  allowed: readonly T[],
+  value: unknown,
+): T | undefined => (allowed.includes(value as T) ? (value as T) : undefined);
 
 const invalid = (error: string): ValidationResult => ({
   ok: false,
@@ -74,7 +109,15 @@ export function validateSubmission(raw: unknown): ValidationResult {
   if (!message || message.length > MAX.message)
     return invalid("invalid message");
 
-  return { ok: true, data: { name, email, projectType, message } };
+  const data: ContactSubmission = { name, email, projectType, message };
+  const budget = pick(BUDGETS, r.budget);
+  const timeline = pick(TIMELINES, r.timeline);
+  const intent = pick(INTENTS, r.intent);
+  if (budget) data.budget = budget;
+  if (timeline) data.timeline = timeline;
+  if (intent) data.intent = intent;
+
+  return { ok: true, data };
 }
 
 const escapeHtml = (s: string): string =>
@@ -87,25 +130,35 @@ const escapeHtml = (s: string): string =>
 /** Build the Brevo `POST /v3/smtp/email` payload for a valid submission. */
 export function buildBrevoPayload(data: ContactSubmission) {
   const typeLabel = PROJECT_TYPE_LABELS[data.projectType];
+  const fields: [string, string][] = [
+    ["Nom", data.name],
+    ["E-mail", data.email],
+    ["Type de projet", typeLabel],
+  ];
+  if (data.budget) fields.push(["Budget", BUDGET_LABELS[data.budget]]);
+  if (data.timeline) fields.push(["Délai", TIMELINE_LABELS[data.timeline]]);
+
   const textContent = [
-    `Nom : ${data.name}`,
-    `E-mail : ${data.email}`,
-    `Type de projet : ${typeLabel}`,
+    ...fields.map(([label, value]) => `${label} : ${value}`),
     "",
     data.message,
   ].join("\n");
   const htmlContent =
     "<h2>Nouveau message du site</h2>" +
-    `<p><strong>Nom :</strong> ${escapeHtml(data.name)}<br>` +
-    `<strong>E-mail :</strong> ${escapeHtml(data.email)}<br>` +
-    `<strong>Type de projet :</strong> ${escapeHtml(typeLabel)}</p>` +
+    `<p>${fields
+      .map(
+        ([label, value]) => `<strong>${label} :</strong> ${escapeHtml(value)}`,
+      )
+      .join("<br>")}</p>` +
     `<p>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>`;
+  // Quote requests are flagged so they stand out in the inbox.
+  const prefix = data.intent === "quote" ? "[Devis] " : "";
 
   return {
     sender: CONTACT_FROM,
     to: [CONTACT_TO],
     replyTo: { email: data.email, name: data.name },
-    subject: `Nouveau message du site — ${typeLabel} — ${data.name}`,
+    subject: `${prefix}Nouveau message du site — ${typeLabel} — ${data.name}`,
     textContent,
     htmlContent,
   };

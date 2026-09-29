@@ -1,8 +1,7 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath, projectPath, t } from '../../i18n/ui';
+import { ensureTrailingSlash, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
 import {
-  contactNote,
   cost,
   faq,
   hero,
@@ -12,7 +11,7 @@ import {
   web,
 } from '../../lib/services';
 import Breadcrumb from '../Breadcrumb.astro';
-import Contact from '../home/Contact.astro';
+import ContactCta from '../ContactCta.astro';
 import Section from '../home/Section.astro';
 import SectionHeader from '../home/SectionHeader.astro';
 import Icon from '../Icon.astro';
@@ -43,6 +42,9 @@ const offerings = [
   { id: 'web', data: web, sunken: true },
 ];
 
+// Every contact CTA here opens the quote-request form.
+const quoteHref = quotePath(locale);
+
 const linkClass =
   'font-display font-medium text-accent-ink no-underline hover:underline';
 ---
@@ -61,7 +63,7 @@ const linkClass =
       </h1>
       <p class="text-lg leading-relaxed text-muted">{hero.subtitle[locale]}</p>
       <div class="flex flex-wrap gap-3 pt-1">
-        <a href="#contact" class="btn btn-primary">{hero.cta[locale]}</a>
+        <a href={quoteHref} class="btn btn-primary">{hero.cta[locale]}</a>
         <a href="#mobile" class="btn btn-secondary">
           {hero.anchorMobile[locale]}
           <Icon name="arrow-right" size={15} />
@@ -194,7 +196,7 @@ const linkClass =
   </p>
 
   <p class="reveal mt-6">
-    <a href="#contact" class="btn btn-secondary">
+    <a href={quoteHref} class="btn btn-secondary">
       {cost.cta[locale]}
       <Icon name="arrow-right" size={15} />
     </a>
@@ -218,4 +220,4 @@ const linkClass =
   </div>
 </Section>
 
-<Contact locale={locale} note={contactNote[locale]} />
+<ContactCta locale={locale} mode="quote" />

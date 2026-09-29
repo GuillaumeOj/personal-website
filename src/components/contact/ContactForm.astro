@@ -1,0 +1,205 @@
+---
+import type { Locale } from '../../config';
+import { localizedPath } from '../../i18n/ui';
+import {
+  type ContactMode,
+  contactModes,
+  form as f,
+  qualifying as q,
+} from '../../lib/contact-page';
+
+interface Props {
+  locale: Locale;
+  mode: ContactMode;
+}
+
+const { locale, mode } = Astro.props;
+const cfg = contactModes[mode];
+
+const statusLabels = JSON.stringify({
+  success: f.success[locale],
+  error: f.error[locale],
+  sending: f.sending[locale],
+});
+
+const fieldLabel =
+  'font-mono text-xs uppercase tracking-[0.14em] text-muted';
+const fieldInput =
+  'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/30';
+const optionalHint = 'normal-case tracking-normal text-muted/80';
+---
+
+<form
+  class="reveal space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  data-contact-form
+  data-labels={statusLabels}
+  novalidate
+>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div class="space-y-1.5">
+      <label class={fieldLabel} for="contact-name">{f.name[locale]}</label>
+      <input
+        class={fieldInput}
+        id="contact-name"
+        name="name"
+        type="text"
+        autocomplete="name"
+        required
+      />
+    </div>
+    <div class="space-y-1.5">
+      <label class={fieldLabel} for="contact-email">{f.email[locale]}</label>
+      <input
+        class={fieldInput}
+        id="contact-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+      />
+    </div>
+  </div>
+
+  <div class="space-y-1.5">
+    <label class={fieldLabel} for="contact-type">{f.projectType[locale]}</label>
+    <select class={fieldInput} id="contact-type" name="projectType">
+      {
+        f.projectTypeOptions.map((opt) => (
+          <option value={opt.value}>{opt.label[locale]}</option>
+        ))
+      }
+    </select>
+  </div>
+
+  {
+    cfg.intent && (
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div class="space-y-1.5">
+          <label class={fieldLabel} for="contact-budget">
+            {q.budget[locale]} <span class={optionalHint}>({q.optional[locale]})</span>
+          </label>
+          <select class={fieldInput} id="contact-budget" name="budget">
+            <option value="">—</option>
+            {
+              q.budgetOptions.map((opt) => (
+                <option value={opt.value}>{opt.label[locale]}</option>
+              ))
+            }
+          </select>
+        </div>
+        <div class="space-y-1.5">
+          <label class={fieldLabel} for="contact-timeline">
+            {q.timeline[locale]} <span class={optionalHint}>({q.optional[locale]})</span>
+          </label>
+          <select class={fieldInput} id="contact-timeline" name="timeline">
+            <option value="">—</option>
+            {
+              q.timelineOptions.map((opt) => (
+                <option value={opt.value}>{opt.label[locale]}</option>
+              ))
+            }
+          </select>
+        </div>
+        <input type="hidden" name="intent" value={cfg.intent} />
+      </div>
+    )
+  }
+
+  <div class="space-y-1.5">
+    <label class={fieldLabel} for="contact-message">{f.message[locale]}</label>
+    <textarea
+      class:list={[fieldInput, 'min-h-32 resize-y']}
+      id="contact-message"
+      name="message"
+      rows="5"
+      placeholder={cfg.messagePlaceholder[locale]}
+      required></textarea>
+  </div>
+
+  {/* Honeypot: hidden from users, tempting to bots. */}
+  <div class="hidden" aria-hidden="true">
+    <label>
+      Company
+      <input type="text" name="company" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4 pt-1">
+    <button type="submit" class="btn btn-primary">
+      {cfg.submit[locale]}
+    </button>
+    <p class="text-sm text-muted" data-contact-status role="status" aria-live="polite"></p>
+  </div>
+
+  {/* Compliance: a consent line with a link to the privacy policy, right at
+      the point of submission. */}
+  <p class="text-xs leading-relaxed text-muted">
+    {f.consent[locale]}
+    <a
+      href={localizedPath(locale, '/privacy-policy')}
+      class="text-accent-ink no-underline hover:underline"
+    >
+      {f.consentLink[locale]}
+    </a>.
+  </p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const params = new URLSearchParams(window.location.search);
+
+    // `?type=mobile|web|saas` preselects the project type. Marked as the
+    // default too, so `form.reset()` after a send keeps the preselection.
+    const type = params.get('type');
+    const typeSelect = form.querySelector<HTMLSelectElement>('select[name="projectType"]');
+    const typeOption = type && [...(typeSelect?.options ?? [])].find((o) => o.value === type);
+    if (typeOption) {
+      typeOption.selected = typeOption.defaultSelected = true;
+    }
+
+    const labels = JSON.parse(form.dataset.labels!);
+    const status = form.querySelector<HTMLElement>('[data-contact-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submitLabel = button?.textContent ?? '';
+
+    const setStatus = (message: string, ok: boolean) => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = `text-sm ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (status) status.textContent = '';
+      if (button) {
+        button.disabled = true;
+        button.textContent = labels.sending;
+      }
+
+      const payload = Object.fromEntries(new FormData(form).entries());
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setStatus(labels.success, true);
+        form.reset();
+      } catch {
+        setStatus(labels.error, false);
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = submitLabel;
+        }
+      }
+    });
+  }
+</script>

@@ -9,7 +9,7 @@ cover: ../../../assets/blog/vercel-free-tier/cover.jpg
 tags: []
 ---
 
-For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [Dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), Re-Source Et Moi, [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. And most of them cost me nothing. Here's how I got there, and what you should know before doing the same.
+For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [Dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. And most of them cost me nothing. Here's how I got there, and what you should know before doing the same.
 
 ## Static sites first
 

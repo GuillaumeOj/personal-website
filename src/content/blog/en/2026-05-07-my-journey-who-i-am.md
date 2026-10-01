@@ -1,5 +1,5 @@
 ---
-title: "My journey — Who I am"
+title: "My Journey: Who I Am"
 description: "An honest introduction to my story — from developer to entrepreneur, and why I built Fusily."
 pubDate: 2026-05-07
 lang: en

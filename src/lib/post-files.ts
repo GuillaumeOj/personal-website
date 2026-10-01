@@ -21,7 +21,7 @@ export interface PostFile {
  * of Astro rather than a declared one — relying on it resolving would break the
  * moment hoisting changes.
  */
-function readFrontmatter(filePath: string): Record<string, string> {
+export function readFrontmatter(filePath: string): Record<string, string> {
   const block = /^---\r?\n([\s\S]*?)\r?\n---/.exec(
     readFileSync(filePath, "utf8"),
   );

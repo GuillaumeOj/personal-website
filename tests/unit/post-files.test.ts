@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { SITE } from "../../src/config";
-import { readPostFiles } from "../../src/lib/post-files";
+import { readFrontmatter, readPostFiles } from "../../src/lib/post-files";
 
 const BLOG_DIR = fileURLToPath(
   new URL("../../src/content/blog", import.meta.url),
@@ -22,15 +22,11 @@ function readArticles(): Article[] {
     const dir = path.join(BLOG_DIR, lang);
     for (const fileName of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
       const filePath = path.join(dir, fileName);
-      const block = /^---\n([\s\S]*?)\n---/.exec(
-        readFileSync(filePath, "utf8"),
-      );
-      expect(block, `${lang}/${fileName} has a frontmatter block`).toBeTruthy();
-      const frontmatter: Record<string, string> = {};
-      for (const line of (block as RegExpExecArray)[1].split("\n")) {
-        const kv = /^([a-zA-Z]+):\s*(.*)$/.exec(line);
-        if (kv) frontmatter[kv[1]] = kv[2].trim().replace(/^["']|["']$/g, "");
-      }
+      const frontmatter = readFrontmatter(filePath);
+      expect(
+        Object.keys(frontmatter),
+        `${lang}/${fileName} has a frontmatter block`,
+      ).not.toHaveLength(0);
       out.push({ lang, fileName, filePath, frontmatter });
     }
   }
@@ -124,6 +120,45 @@ describe("blog content invariants", () => {
       );
     }
   });
+});
+
+// Audit E4: what search results show for every post — `seoTitle` /
+// `seoDescription` when set, else the visible title / lead — fits.
+describe("post search snippets", () => {
+  for (const { lang, fileName, frontmatter: fm } of articles) {
+    it(`${lang}/${fileName}: title ≤ 60 and description 50–160 characters`, () => {
+      const title = fm.seoTitle ?? fm.title ?? "";
+      const description = fm.seoDescription ?? fm.description ?? "";
+      expect(title.length).toBeLessThanOrEqual(60);
+      expect(description.length).toBeLessThanOrEqual(160);
+      expect(description.length).toBeGreaterThanOrEqual(50);
+    });
+  }
+});
+
+// Audit W9: English post titles use Title Case (like the meta titles).
+describe("EN post titles", () => {
+  const minor = new Set(
+    "a an the and or but nor for of on in at to by with vs into".split(" "),
+  );
+  for (const { fileName, frontmatter } of articles.filter(
+    (a) => a.lang === "en",
+  )) {
+    it(`en/${fileName}: Title Case`, () => {
+      const title = frontmatter.title ?? "";
+      // Lowercase-by-design brand names keep their spelling.
+      const words = title.replace(/^dotcraft\b/, "").split(/\s+/);
+      words.forEach((word, i) => {
+        const bare = word.replace(/^[^\p{L}]+/u, "");
+        // Minor words, and numeronyms like "i18n", stay lowercase, except as
+        // the first word of the title or of a subtitle (after a colon).
+        if (!bare || /\d/.test(bare)) return;
+        const starts = i === 0 || words[i - 1].endsWith(":");
+        if (!starts && minor.has(bare.toLowerCase())) return;
+        expect(bare[0], `${word} in "${title}"`).toBe(bare[0].toUpperCase());
+      });
+    });
+  }
 });
 
 describe("readPostFiles", () => {

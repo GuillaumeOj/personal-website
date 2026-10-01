@@ -134,11 +134,17 @@ describe("readPostFiles", () => {
    */
   it("agrees with the frontmatter on every published slug and date", () => {
     const fromDisk = readPostFiles()
-      .map((p) => `${p.lang}:${p.slug}:${p.pubDate.toISOString().slice(0, 10)}`)
+      .map(
+        (p) =>
+          `${p.lang}:${p.slug}:${p.pubDate.toISOString().slice(0, 10)}:${p.updatedDate?.toISOString().slice(0, 10) ?? ""}`,
+      )
       .sort();
     const expected = articles
       .filter((a) => a.frontmatter.draft !== "true")
-      .map((a) => `${a.lang}:${a.frontmatter.slug}:${a.frontmatter.pubDate}`)
+      .map(
+        (a) =>
+          `${a.lang}:${a.frontmatter.slug}:${a.frontmatter.pubDate}:${a.frontmatter.updatedDate ?? ""}`,
+      )
       .sort();
     expect(fromDisk).toEqual(expected);
   });

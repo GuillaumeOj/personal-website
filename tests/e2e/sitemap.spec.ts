@@ -3,8 +3,8 @@ import { expect, type Page, test } from "@playwright/test";
 const sitemapHref = (page: Page) =>
   page.locator('head link[rel="sitemap"]').getAttribute("href");
 
-// T5 — the sitemap ships a <lastmod> freshness signal on every URL: the
-// article's pubDate for blog posts, the build date for everything else.
+// T5 / audit E8 — <lastmod> only where a real date exists: a post's
+// updatedDate or pubDate, and the newest post's date for the blog indexes.
 test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
   request,
 }) => {
@@ -28,6 +28,29 @@ test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
   );
   expect(match, "mon-parcours-qui-je-suis url with a lastmod").toBeTruthy();
   expect((match as RegExpMatchArray)[1]).toContain("2026-05-07");
+});
+
+test("sitemap: no build-time lastmod on static pages", async ({ request }) => {
+  const xml = await (await request.get("/sitemap-0.xml")).text();
+  // The home and services pages have no content date: no <lastmod> at all.
+  for (const path of ["/", "/services/"]) {
+    const entry = xml.match(
+      new RegExp(
+        `<url><loc>https?://[^/<]+${path.replace(/\//g, "\\/")}</loc>(.*?)</url>`,
+      ),
+    );
+    expect(entry, path).toBeTruthy();
+    expect((entry as RegExpMatchArray)[1]).not.toContain("<lastmod>");
+  }
+  // The blog index carries its newest post's date, not today.
+  const blog = xml.match(/<loc>[^<]*\/blog\/<\/loc><lastmod>([^<]+)</);
+  expect(blog).toBeTruthy();
+  expect((blog as RegExpMatchArray)[1].slice(0, 10)).toMatch(
+    /^2026-\d\d-\d\d$/,
+  );
+  expect((blog as RegExpMatchArray)[1].slice(0, 10)).not.toBe(
+    new Date().toISOString().slice(0, 10),
+  );
 });
 
 // T1 — the on-page sitemap hint points at a file that actually exists. The

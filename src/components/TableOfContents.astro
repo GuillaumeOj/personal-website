@@ -70,19 +70,12 @@ const label = t(locale, 'blog.tocLabel');
     );
     if (items.length === 0) return;
 
-    const entries = items
-      .map((item) => {
-        const link = item.querySelector<HTMLAnchorElement>('[data-toc-link]');
-        const id = link?.dataset.tocLink;
-        const heading = id ? document.getElementById(id) : null;
-        return { item, link, heading, id };
-      })
-      .filter((e) => e.link && e.heading) as Array<{
-      item: HTMLElement;
-      link: HTMLAnchorElement;
-      heading: HTMLElement;
-      id: string;
-    }>;
+    const entries = items.flatMap((item) => {
+      const id = item.querySelector<HTMLElement>('[data-toc-link]')?.dataset
+        .tocLink;
+      const heading = id ? document.getElementById(id) : null;
+      return heading ? [{ item, heading }] : [];
+    });
 
     if (entries.length === 0) return;
 

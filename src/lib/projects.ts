@@ -191,7 +191,7 @@ export const projects: Project[] = [
   },
   {
     slug: "personal-website",
-    relatedPosts: ["blog-stack"],
+    relatedPosts: ["blog-two-paths", "blog-stack"],
     name: { fr: "Site personnel", en: "Personal website" },
     // Steer clear of "blog" here — the blog list and articles already own that
     // query; naming the stack keeps this a build/case-study, not a competitor.
@@ -276,7 +276,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eva-biezunski-avocate",
-    relatedPosts: ["vercel-free-tier"],
+    relatedPosts: ["blog-two-paths", "vercel-free-tier"],
     name: "Eva Biezunski Avocate",
     // Short descriptor: the name already carries "Avocate", and the full
     // three-part title must clear ~60 chars without clipping.

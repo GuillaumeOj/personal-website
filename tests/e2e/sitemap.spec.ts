@@ -51,10 +51,9 @@ test("sitemap: no build-time lastmod on static pages", async ({ request }) => {
   expect((blog as RegExpMatchArray)[1]).toBe(postDates.sort().at(-1));
 });
 
-// T1 — the on-page sitemap hint points at a file that actually exists. The
-// build emits sitemap-index.xml (+ sitemap-0.xml), never /sitemap.xml, so the
-// old href advertised a dead location. Assert the hint resolves and no page
-// advertises the 404 path.
+// T1 — the on-page sitemap hint points at a file the build actually emits
+// (sitemap-index.xml), not at /sitemap.xml, which only exists as a Vercel
+// rewrite.
 for (const path of [
   "/",
   "/en/",
@@ -70,14 +69,11 @@ for (const path of [
   });
 }
 
-test("the advertised sitemap index resolves, and /sitemap.xml is a 404", async ({
-  request,
-}) => {
+// `/sitemap.xml` is a Vercel rewrite to the index, which `astro preview`
+// doesn't serve: `tests/unit/vercel-config.test.ts` guards that rewrite.
+test("the advertised sitemap index resolves", async ({ request }) => {
   const index = await request.get("/sitemap-index.xml");
   expect(index.status()).toBe(200);
-
-  const dead = await request.get("/sitemap.xml");
-  expect(dead.status()).toBe(404);
 });
 
 test("robots.txt advertises only the sitemap index", async ({ request }) => {

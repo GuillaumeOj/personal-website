@@ -203,29 +203,36 @@ export const formatDate = (date: Date, locale: Locale): string =>
 export const otherLocale = (locale: Locale): Locale =>
   locale === "fr" ? "en" : "fr";
 
-export const localizedPath = (locale: Locale, path: string): string => {
-  const cleaned = path.startsWith("/") ? path : `/${path}`;
-  if (locale === "fr") return cleaned;
-  return `/en${cleaned === "/" ? "" : cleaned}`;
-};
-
 /** Append a trailing slash unless present — the site's canonical URL form. */
 export const ensureTrailingSlash = (path: string): string =>
   path.endsWith("/") ? path : `${path}/`;
 
+/**
+ * Locale-prefixed URL of a page, in the site's canonical trailing-slash form
+ * (`/services/`, `/en/`, `/en/services/`). Paths to files (a last segment with
+ * an extension, e.g. `/rss.xml`) are left as they are.
+ */
+export const localizedPath = (locale: Locale, path: string): string => {
+  const cleaned = path.startsWith("/") ? path : `/${path}`;
+  const prefixed =
+    locale === "fr" ? cleaned : `/en${cleaned === "/" ? "" : cleaned}`;
+  const last = prefixed.slice(prefixed.lastIndexOf("/") + 1);
+  return last.includes(".") ? prefixed : ensureTrailingSlash(prefixed);
+};
+
 export const articlePath = (locale: Locale, slug: string): string =>
-  `${localizedPath(locale, `/blog/${slug}`)}/`;
+  localizedPath(locale, `/blog/${slug}`);
 
 export const projectPath = (locale: Locale, slug: string): string =>
-  `${localizedPath(locale, `/projects/${slug}`)}/`;
+  localizedPath(locale, `/projects/${slug}`);
 
 /** The contact pages — the only places the contact form lives. */
 export const contactPath = (locale: Locale): string =>
-  `${localizedPath(locale, "/contact")}/`;
+  localizedPath(locale, "/contact");
 
 /** The quote-request variant of the contact form (linked from /services). */
 export const quotePath = (locale: Locale): string =>
-  `${localizedPath(locale, "/contact/quote")}/`;
+  localizedPath(locale, "/contact/quote");
 
 export interface NavItem {
   href: string;

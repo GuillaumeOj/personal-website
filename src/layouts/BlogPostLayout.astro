@@ -6,7 +6,7 @@ import AuthorByline from '../components/AuthorByline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, contactPath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, contactPath, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
 import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
 import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
@@ -53,11 +53,11 @@ const card = await getImage({
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   {
     name: t(locale, 'nav.blog'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/blog')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/blog'), SITE.url).toString(),
   },
   { name: post.data.title, url: canonical },
 ];

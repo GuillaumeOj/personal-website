@@ -1,7 +1,6 @@
 import { type Locale, SITE } from "../config";
 import {
   contactPath,
-  ensureTrailingSlash,
   localizedPath,
   quotePath,
   type TranslationKey,
@@ -224,7 +223,7 @@ export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
   });
   const { general } = contactModes;
   const crumbs = [
-    crumb("nav.home", ensureTrailingSlash(localizedPath(locale, "/"))),
+    crumb("nav.home", localizedPath(locale, "/")),
     crumb(general.crumb, general.path(locale)),
   ];
   if (mode !== "general") {

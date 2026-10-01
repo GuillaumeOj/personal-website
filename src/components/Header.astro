@@ -1,6 +1,6 @@
 ---
 import { SITE, type Locale } from '../config';
-import { ensureTrailingSlash, localizedPath, navItems, t } from '../i18n/ui';
+import { localizedPath, navItems, t } from '../i18n/ui';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -10,10 +10,8 @@ interface Props {
 const { locale } = Astro.props;
 const home = localizedPath(locale, '/');
 const links = navItems(locale);
-// Normalize links to the site's canonical trailing-slash form.
-const canonical = links.map((link) => ({ ...link, href: ensureTrailingSlash(link.href) }));
-const navLinks = canonical.filter((link) => !link.cta);
-const cta = canonical.find((link) => link.cta);
+const navLinks = links.filter((link) => !link.cta);
+const cta = links.find((link) => link.cta);
 // No dedicated i18n key exists for the header nav landmark (footer owns
 // `footer.nav`), so label it from the locale directly.
 const primaryNavLabel =

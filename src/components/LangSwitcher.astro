@@ -23,7 +23,7 @@ const pathFor = async (target: Locale): Promise<string> => {
       current && (await findSibling(current.data.translationKey, target));
     return sibling
       ? articlePath(target, sibling.data.slug)
-      : `${localizedPath(target, '/blog')}/`;
+      : localizedPath(target, '/blog');
   }
   const stripped =
     locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;

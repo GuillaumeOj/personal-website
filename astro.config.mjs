@@ -42,6 +42,9 @@ if (process.env.VERCEL_ENV === "production") {
 
 export default defineConfig({
   site: SITE.url,
+  // One URL per page: the trailing-slash form. Vercel 308-redirects the bare
+  // form (`trailingSlash` in vercel.json); internal links use the slash form.
+  trailingSlash: "always",
   env: {
     schema: Object.fromEntries(
       LEGAL_ENV.map((name) => [

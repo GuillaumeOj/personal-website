@@ -1,6 +1,6 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
+import { localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -28,11 +28,11 @@ const { locale } = Astro.props;
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   {
     name: t(locale, 'nav.services'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/services')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/services'), SITE.url).toString(),
   },
 ];
 

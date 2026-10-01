@@ -1,6 +1,6 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { contactPath, ensureTrailingSlash, localizedPath } from '../../i18n/ui';
+import { contactPath, localizedPath } from '../../i18n/ui';
 import type { ContactOutcome as Outcome } from '../../lib/contact';
 import { contactOutcomes } from '../../lib/contact-page';
 
@@ -14,7 +14,7 @@ const { locale, outcome } = Astro.props;
 const copy = contactOutcomes[outcome];
 const back =
   outcome === 'thanks'
-    ? ensureTrailingSlash(localizedPath(locale, '/'))
+    ? localizedPath(locale, '/')
     : contactPath(locale);
 ---
 

@@ -2,7 +2,7 @@
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import PostList from '../../../components/PostList.astro';
 import { SITE } from '../../../config';
-import { ensureTrailingSlash, localizedPath, t } from '../../../i18n/ui';
+import { localizedPath, t } from '../../../i18n/ui';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getPostsForLocale } from '../../../lib/posts';
 import { collectionPageJsonLd } from '../../../lib/schema';
@@ -11,7 +11,7 @@ const locale = 'en' as const;
 const posts = await getPostsForLocale(locale);
 
 const canonical = new URL(
-  ensureTrailingSlash(localizedPath(locale, '/blog')),
+  localizedPath(locale, '/blog'),
   SITE.url,
 ).toString();
 const jsonLd = collectionPageJsonLd(locale, {
@@ -19,7 +19,7 @@ const jsonLd = collectionPageJsonLd(locale, {
   name: t(locale, 'meta.blogTitle'),
   description: t(locale, 'meta.blogDescription'),
   breadcrumbs: [
-    { name: t(locale, 'nav.home'), url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString() },
+    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
     { name: t(locale, 'nav.blog'), url: canonical },
   ],
 });
@@ -28,7 +28,7 @@ const jsonLd = collectionPageJsonLd(locale, {
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   { name: t(locale, 'nav.blog'), href: canonical },
 ];

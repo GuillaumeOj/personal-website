@@ -86,9 +86,8 @@ const {
 const path = Astro.url.pathname;
 const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
 const enPath = localizedPath('en', frPath);
-// Match the canonical form: every route is served with a trailing slash, but
-// `localizedPath('en', '/')` returns a bare `/en`. Guard so the home alternate
-// doesn't point at a redirect. Blog posts override with explicit alternates.
+// Match the canonical trailing-slash form even if the request URL lacks it.
+// Blog posts override with explicit alternates.
 const frURL = altFrUrl ?? new URL(ensureTrailingSlash(frPath), SITE.url).toString();
 const enURL = altEnUrl ?? new URL(ensureTrailingSlash(enPath), SITE.url).toString();
 const mainClass =

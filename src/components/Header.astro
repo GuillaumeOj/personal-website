@@ -7,19 +7,29 @@ import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
   locale: Locale;
+  /** Logo only: the 404, whose locale is only known client-side. */
+  minimal?: boolean;
 }
 
-const { locale } = Astro.props;
+const { locale, minimal = false } = Astro.props;
 const home = localizedPath(locale, '/');
 const links = navItems(locale);
 const navLinks = links.filter((link) => !link.cta);
+// The current page gets aria-current="page"; on a child page (a post, a
+// project) its section's hub link gets aria-current="true" instead, so
+// screen readers don't announce the index as the page being read.
+const path = Astro.url.pathname;
+const currentFor = (href: string): 'page' | 'true' | undefined => {
+  if (path === href) return 'page';
+  return href !== home && path.startsWith(href) ? 'true' : undefined;
+};
 const cta = links.find((link) => link.cta);
 // No dedicated i18n key exists for the header nav landmark (footer owns
 // `footer.nav`), so label it from the locale directly.
 const primaryNavLabel =
   locale === 'fr' ? 'Navigation principale' : 'Main navigation';
 const linkClass =
-  'rounded-md px-2.5 py-1 text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong';
+  'rounded-md px-2.5 py-1 text-muted no-underline transition-colors hover:bg-surface-sunken hover:text-ink-strong aria-[current]:text-ink-strong aria-[current]:font-medium';
 ---
 
 <header
@@ -29,70 +39,95 @@ const linkClass =
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
     <a
       href={home}
+      data-home-link
       class="font-display text-base font-semibold tracking-tight text-ink-strong no-underline"
     >
       {SITE.name}
     </a>
 
-    {/* Desktop nav, then the language and theme switchers (audit U4: an
-        English-speaking visitor shouldn't have to scroll to the footer). */}
-    <div class="hidden items-center gap-2 lg:flex">
-      <nav class="flex items-center gap-2 text-sm" aria-label={primaryNavLabel}>
-        {navLinks.map((link) => (
-          <a href={link.href} class={linkClass}>{link.label}</a>
-        ))}
-      </nav>
-      <div class="flex items-center gap-1.5">
-        <LangSwitcher locale={locale} placement="desktop" />
-        <ThemeToggle locale={locale} placement="desktop" />
+    {!minimal && (
+      <>
+        {/* Desktop nav, then the language and theme switchers (audit U4: an
+            English-speaking visitor shouldn't have to scroll to the footer). */}
+        <nav
+          class="hidden items-center gap-2 text-sm lg:flex"
+          aria-label={primaryNavLabel}
+        >
+          <div class="flex items-center gap-2">
+            {navLinks.map((link) => (
+              <a
+                href={link.href}
+                class={linkClass}
+                aria-current={currentFor(link.href)}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+          <div class="flex items-center gap-1.5">
+            <LangSwitcher locale={locale} placement="desktop" />
+            <ThemeToggle locale={locale} placement="desktop" />
+          </div>
+          {cta && (
+            <a href={cta.href} class="btn btn-primary px-4 py-2">{cta.label}</a>
+          )}
+        </nav>
+
+        {/* Mobile burger */}
+        <button
+          type="button"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong lg:hidden"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label={t(locale, 'nav.menu')}
+        >
+          <Icon name="menu" size={20} data-menu-icon="open" />
+          <Icon name="x" size={20} data-menu-icon="close" class="hidden" />
+        </button>
+      </>
+    )}
+  </div>
+
+  {!minimal && (
+    <>
+      {/* Mobile menu panel */}
+      <div
+        id="mobile-menu"
+        class="hidden max-h-[calc(100dvh-var(--header-h))] overflow-y-auto border-t border-line lg:hidden"
+        data-menu-panel
+      >
+        <nav
+          class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4"
+          aria-label={primaryNavLabel}
+        >
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[linkClass, 'py-2']}
+              aria-current={currentFor(link.href)}
+            >
+              {link.label}
+            </a>
+          ))}
+          {cta && (
+            <a href={cta.href} class="btn btn-primary mt-3 w-full">{cta.label}</a>
+          )}
+        </nav>
+        <div class="mx-auto flex max-w-6xl items-center gap-2 px-6 pb-4">
+          <LangSwitcher locale={locale} placement="mobile" />
+          <ThemeToggle locale={locale} placement="mobile" />
+        </div>
       </div>
-      {cta && (
-        <a href={cta.href} class="btn btn-primary px-4 py-2">{cta.label}</a>
-      )}
-    </div>
-
-    {/* Mobile burger */}
-    <button
-      type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong lg:hidden"
-      data-menu-toggle
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      aria-label={t(locale, 'nav.menu')}
-    >
-      <Icon name="menu" size={20} data-menu-icon="open" />
-      <Icon name="x" size={20} data-menu-icon="close" class="hidden" />
-    </button>
-  </div>
-
-  {/* Mobile menu panel */}
-  <div
-    id="mobile-menu"
-    class="hidden border-t border-line lg:hidden"
-    data-menu-panel
-  >
-    <nav
-      class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4"
-      aria-label={primaryNavLabel}
-    >
-      {navLinks.map((link) => (
-        <a href={link.href} class:list={[linkClass, 'py-2']}>{link.label}</a>
-      ))}
-      {cta && (
-        <a href={cta.href} class="btn btn-primary mt-3 w-full">{cta.label}</a>
-      )}
-    </nav>
-    <div class="mx-auto flex max-w-6xl items-center gap-2 px-6 pb-4">
-      <LangSwitcher locale={locale} placement="mobile" />
-      <ThemeToggle locale={locale} placement="mobile" />
-    </div>
-  </div>
+    </>
+  )}
 </header>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
   if (toggle && panel) {
+    const header = toggle.closest('[data-header]');
     const openIcon = toggle.querySelector<SVGElement>('[data-menu-icon="open"]');
     const closeIcon = toggle.querySelector<SVGElement>('[data-menu-icon="close"]');
 
@@ -103,15 +138,26 @@ const linkClass =
       closeIcon?.classList.toggle('hidden', !open);
     };
 
-    toggle.addEventListener('click', () =>
-      setOpen(panel.classList.contains('hidden')),
-    );
+    const isOpen = () => !panel.classList.contains('hidden');
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
     // Close after following a link (section anchors, page changes).
     panel.querySelectorAll('a').forEach((link) =>
       link.addEventListener('click', () => setOpen(false)),
     );
+    // Escape closes an open menu and hands focus back to its button, unless
+    // it was meant for a language/theme dropdown open inside the panel.
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key !== 'Escape' || !isOpen() || event.defaultPrevented) return;
+      if (panel.querySelector('[data-dropdown-trigger][aria-expanded="true"]')) return;
+      setOpen(false);
+      toggle.focus();
+    });
+    // A tap outside the header closes it.
+    document.addEventListener('click', (event) => {
+      if (isOpen() && header && !header.contains(event.target as Node)) {
+        setOpen(false);
+      }
     });
   }
 </script>

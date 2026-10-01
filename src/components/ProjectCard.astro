@@ -8,9 +8,12 @@ interface Props {
   project: Project;
   locale: Locale;
   priority?: boolean;
+  /** Heading level of the card title: 3 under a section heading (home). */
+  headingLevel?: 2 | 3;
 }
 
-const { project, locale, priority = false } = Astro.props;
+const { project, locale, priority = false, headingLevel = 2 } = Astro.props;
+const Heading = `h${headingLevel}` as const;
 const href = projectPath(locale, project.slug);
 const { description } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
@@ -23,6 +26,7 @@ const tags = project.stack.slice(0, 4);
 
 <a
   href={href}
+  aria-label={name}
   data-platform={project.platform.join(' ')}
   class="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
 >
@@ -46,9 +50,9 @@ const tags = project.stack.slice(0, 4);
   </div>
   <div class="flex flex-1 flex-col gap-2 p-5">
     <div class="flex items-center justify-between gap-2">
-      <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
+      <Heading class="font-display text-lg font-semibold tracking-tight text-ink-strong">
         {name}
-      </h2>
+      </Heading>
       <span class="shrink-0 text-xs text-muted">{contextLabel}</span>
     </div>
     <p class="line-clamp-3 text-sm leading-relaxed text-muted">{description}</p>

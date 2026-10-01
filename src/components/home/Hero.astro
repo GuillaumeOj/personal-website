@@ -109,6 +109,12 @@ const defaultSentence = `${lead} ${phrases[0]}`;
     animation: hero-caret-blink 1s steps(1) infinite;
   }
 
+  /* No caret once the rotation has settled, nor without JS (no rotation). */
+  .hero-rotate.is-done .hero-rotate__caret,
+  :global(html:not(.js)) .hero-rotate__caret {
+    display: none;
+  }
+
   @keyframes hero-caret-blink {
     0%,
     50% {
@@ -131,7 +137,11 @@ const defaultSentence = `${lead} ${phrases[0]}`;
 
 <script is:inline>
   // Kinetic closing line: types the current phrase in, holds, deletes, pauses,
-  // then swaps to the next — forever, calmly. Enhancement only: the default
+  // then swaps to the next. One pass through the phrases, ending back on the
+  // default one, then it stops. The pass lasts ~20 s, so for WCAG 2.2.2 any
+  // interaction (pointer, key, wheel, touch) stops it at once on the default
+  // phrase; it also waits while the hero is off-screen or the tab is hidden.
+  // Enhancement only: the default
   // phrase (index 0) is already server-rendered, so JS-off and reduced-motion
   // visitors read a complete sentence. Timings reproduce the reference feel.
   (() => {
@@ -159,29 +169,67 @@ const defaultSentence = `${lead} ${phrases[0]}`;
     const PAUSE = 220; // ms of stillness before the next phrase types in
 
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    // Every listener goes once the rotation ends, by itself or not.
+    const listeners = new AbortController();
+    const { signal } = listeners;
+    // Wakes a rotation paused in whenVisible() (see below).
+    let resume = null;
+    let stopped = false;
+    for (const type of ['pointerdown', 'keydown', 'wheel', 'touchstart']) {
+      addEventListener(
+        type,
+        () => {
+          stopped = true;
+          resume?.();
+        },
+        { once: true, passive: true, signal },
+      );
+    }
     let index = 0; // index 0 is already rendered — start by holding it
 
     const typeIn = async (word) => {
-      for (let i = 1; i <= word.length; i++) {
+      for (let i = 1; i <= word.length && !stopped; i++) {
         el.textContent = word.slice(0, i);
         await wait(TYPE);
       }
     };
     const deleteOut = async (word) => {
-      for (let i = word.length - 1; i >= 0; i--) {
+      for (let i = word.length - 1; i >= 0 && !stopped; i--) {
         el.textContent = word.slice(0, i);
         await wait(DEL);
       }
     };
 
+    let onScreen = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      resume?.();
+    });
+    observer.observe(el);
+    document.addEventListener('visibilitychange', () => resume?.(), { signal });
+    const whenVisible = async () => {
+      while (!stopped && (!onScreen || document.hidden)) {
+        await new Promise((resolve) => {
+          resume = resolve;
+        });
+      }
+      resume = null;
+    };
+
     (async () => {
-      while (true) {
+      for (let step = 0; step < phrases.length && !stopped; step++) {
         await wait(HOLD);
+        await whenVisible();
         await deleteOut(phrases[index]);
         await wait(PAUSE);
         index = (index + 1) % phrases.length;
         await typeIn(phrases[index]);
       }
+      observer.disconnect();
+      listeners.abort();
+      el.textContent = phrases[0];
+      // Back on the default phrase: settle, and stop the caret blinking too.
+      el.closest('.hero-rotate')?.classList.add('is-done');
     })();
   })();
 </script>

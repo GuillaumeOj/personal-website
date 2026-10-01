@@ -51,10 +51,11 @@
   --surface-sunken: #f3efe8; /* recessed wells, tags */
   --ink: #292524; /* body text — charcoal */
   --ink-strong: #1c1917; /* headings */
-  --muted: #78716c; /* secondary text */
-  --line: #e7e2d9; /* hairlines / borders */
+  --muted: #6b645f; /* secondary text — AA (≥5:1) on every light surface */
+  --line: #e7e2d9; /* hairlines / borders (decorative) */
+  --field-line: #8a8279; /* form-field borders — 3:1 non-text contrast */
   --accent: #ea7317; /* amber — fills, marks, timeline */
-  --accent-ink: #b45309; /* amber, darkened for AA text/links on paper */
+  --accent-ink: #9a4a0c; /* amber, darkened for AA text/links on every light surface */
   --accent-contrast: #ffffff; /* text sitting on an accent/button fill */
   --btn-bg: #b45309; /* solid button fill — darkened for AA against white text */
 }
@@ -67,6 +68,7 @@
   --ink-strong: #fafaf9;
   --muted: #a8a29e;
   --line: #37322e;
+  --field-line: #7a716a;
   --accent: #fb923c; /* brighter amber holds up on dark */
   --accent-ink: #fdba74;
   --accent-contrast: #1c1917;
@@ -115,6 +117,7 @@
   --color-ink-strong: var(--ink-strong);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-field-line: var(--field-line);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-contrast: var(--accent-contrast);
@@ -228,6 +231,12 @@
   html {
     @apply scroll-smooth;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* One visible keyboard-focus ring everywhere (WCAG 2.4.7). */
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
   }
 
   body {

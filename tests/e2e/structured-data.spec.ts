@@ -263,6 +263,8 @@ test("legal pages are noindex, follow", async ({ page }) => {
     "/en/legal-notice/",
     "/en/privacy-policy/",
     "/en/terms-of-service/",
+    "/accessibility/",
+    "/en/accessibility/",
   ]) {
     await page.goto(path);
     expect(await metaContent(page, 'meta[name="robots"]')).toBe(
@@ -287,6 +289,7 @@ test("English legal pages state that the French version prevails", async ({
     "/legal-notice/",
     "/privacy-policy/",
     "/terms-of-service/",
+    "/en/accessibility/",
   ]) {
     await page.goto(path);
     await expect(page.locator("main")).not.toContainText(notice);
@@ -303,3 +306,19 @@ test("legal notice links to the localized privacy policy", async ({ page }) => {
     await expect(page).toHaveURL(new RegExp(`${privacy}$`));
   }
 });
+
+// Audit L12: a voluntary accessibility statement, linked from every footer.
+for (const [path, from, heading] of [
+  ["/accessibility/", "/", "Déclaration d’accessibilité"],
+  ["/en/accessibility/", "/en/", "Accessibility statement"],
+] as const) {
+  test(`${path}: accessibility statement, linked from the footer`, async ({
+    page,
+  }) => {
+    await page.goto(from);
+    await page.locator(`footer a[href="${path}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`${path}$`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+    await expect(page.getByText("WCAG 2.2")).toBeVisible();
+  });
+}

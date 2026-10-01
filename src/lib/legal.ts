@@ -18,6 +18,11 @@ export interface LegalDoc {
   metaDescription: string;
   updated: string;
   sections: LegalSection[];
+  /**
+   * `false` for a voluntary, non-contractual text (the accessibility
+   * statement): its English page carries no "French version prevails" line.
+   */
+  binding?: false;
 }
 
 /**
@@ -591,6 +596,95 @@ export function termsOfService(
         h: "Governing law and disputes",
         body: [
           "These terms are governed by French law. In case of dispute, the parties first seek an amicable solution. Failing that, the dispute is brought before the competent courts within the jurisdiction of the Lyon Court of Appeal.",
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * Voluntary accessibility statement (audit L12). A microenterprise's B2B
+ * showcase site falls under neither the RGAA obligation nor the European
+ * Accessibility Act, so it states an aim, what is in place and how to report
+ * a problem — never "conforme RGAA", which would need an audit.
+ */
+export function accessibilityStatement(locale: Locale): LegalDoc {
+  const contactMail = mail(SITE.email);
+  if (locale === "fr") {
+    return {
+      title: "Déclaration d’accessibilité",
+      metaDescription:
+        "Engagement d’accessibilité du site de Guillaume Ojardias : objectif WCAG 2.2 niveau AA, mesures en place et signalement d’un problème.",
+      updated: "Dernière mise à jour : 1er octobre 2026",
+      sections: [
+        {
+          h: "Engagement",
+          body: [
+            "Ce site vise la conformité au niveau AA des WCAG 2.2 (Règles pour l’accessibilité des contenus web). Il n’est pas soumis à l’obligation légale de déclaration d’accessibilité : cette déclaration est volontaire.",
+          ],
+        },
+        {
+          h: "Ce qui est en place",
+          body: [
+            "Contrastes de texte conformes au niveau AA en thème clair comme en thème sombre, vérifiés par des tests automatisés ; navigation complète au clavier avec un indicateur de focus visible et un lien d’accès direct au contenu ; structure de titres et zones de page balisées ; textes alternatifs sur les images informatives ; champs de formulaire étiquetés, avec des messages d’erreur reliés aux champs concernés.",
+            "Les animations sont désactivées lorsque votre système demande de réduire les mouvements, et le contenu des pages comme le formulaire de contact fonctionnent sans JavaScript.",
+          ],
+        },
+        {
+          h: "Limites",
+          body: [
+            "L’accessibilité est vérifiée par des tests automatisés et des contrôles manuels, mais aucun audit complet n’a été réalisé : des défauts peuvent subsister.",
+            "Sans JavaScript, le menu mobile et les sélecteurs de langue et de thème ne s’ouvrent pas ; les pages restent accessibles depuis le pied de page.",
+          ],
+        },
+        {
+          h: "Signaler un problème",
+          body: [
+            [
+              "Si un contenu ou une fonctionnalité vous est inaccessible, écrivez-moi à ",
+              contactMail,
+              " en précisant la page et la difficulté rencontrée. Je vous répondrai et vous proposerai une alternative.",
+            ],
+          ],
+        },
+      ],
+    };
+  }
+  return {
+    binding: false,
+    title: "Accessibility statement",
+    metaDescription:
+      "Accessibility commitment for Guillaume Ojardias’ website: WCAG 2.2 level AA as the target, what is in place, and how to report a problem.",
+    updated: "Last updated: October 1, 2026",
+    sections: [
+      {
+        h: "Commitment",
+        body: [
+          "This site aims to conform to WCAG 2.2 level AA (Web Content Accessibility Guidelines). It is not subject to the legal obligation to publish an accessibility statement: this statement is voluntary.",
+        ],
+      },
+      {
+        h: "What is in place",
+        body: [
+          "Text contrast meets level AA in both the light and dark themes, checked by automated tests; full keyboard navigation with a visible focus indicator and a skip-to-content link; a proper heading structure and page landmarks; alternative text on informative images; labeled form fields, with error messages tied to the fields they concern.",
+          "Animations are turned off when your system asks for reduced motion, and both the page content and the contact form work without JavaScript.",
+        ],
+      },
+      {
+        h: "Limitations",
+        body: [
+          "Accessibility is checked with automated tests and manual reviews, but no full audit has been carried out: some issues may remain.",
+          "Without JavaScript, the mobile menu and the language and theme switchers don’t open; the pages stay reachable from the footer.",
+        ],
+      },
+      {
+        h: "Report a problem",
+        body: [
+          [
+            "If any content or feature is inaccessible to you, email me at ",
+            contactMail,
+            " with the page and the difficulty you ran into. I’ll get back to you and offer an alternative.",
+          ],
         ],
       },
     ],

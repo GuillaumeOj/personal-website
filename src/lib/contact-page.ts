@@ -1,4 +1,4 @@
-import { type Locale, SITE } from "../config";
+import { type Locale, type Localized, SITE } from "../config";
 import {
   contactPath,
   localizedPath,
@@ -17,8 +17,6 @@ import {
 import { contact } from "./home";
 import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
 import { contactNote, cost } from "./services";
-
-type L = Record<Locale, string>;
 
 /** The two contact pages: the general form and the quote-request form. */
 export type ContactMode = "general" | "quote";
@@ -78,7 +76,7 @@ export const form = {
       fr: "Décrivez votre projet en quelques lignes.",
       en: "Describe your project in a few lines.",
     },
-  } satisfies Record<"name" | "email" | "message", L>,
+  } satisfies Record<"name" | "email" | "message", Localized>,
   successTitle: { fr: "Message envoyé", en: "Message sent" },
   success: {
     fr: "Merci ! Votre message a bien été envoyé, je vous réponds généralement sous 24 h ouvrées.",
@@ -105,7 +103,7 @@ export const qualifying = {
       value: "unknown",
       label: { fr: "Je ne sais pas encore", en: "Not sure yet" },
     },
-  ] satisfies { value: Budget; label: L }[],
+  ] satisfies { value: Budget; label: Localized }[],
   timeline: { fr: "Délai souhaité", en: "Desired timeline" },
   timelineOptions: [
     {
@@ -121,7 +119,7 @@ export const qualifying = {
       label: { fr: "D’ici 3 à 6 mois", en: "Within 3–6 months" },
     },
     { value: "flexible", label: { fr: "Flexible", en: "Flexible" } },
-  ] satisfies { value: Timeline; label: L }[],
+  ] satisfies { value: Timeline; label: Localized }[],
 };
 
 /** Cross-link from the general /contact page to the quote form. */
@@ -138,16 +136,16 @@ interface ContactModeConfig {
    * `<title>` segment (the layout appends ` — {SITE.name}` while the result
    * fits BaseLayout's TITLE_MAX) and description.
    */
-  meta: { title: L; description: L };
-  eyebrow: L;
-  title: L;
-  lead: L;
-  submit: L;
-  messagePlaceholder: L;
+  meta: { title: Localized; description: Localized };
+  eyebrow: Localized;
+  title: Localized;
+  lead: Localized;
+  submit: Localized;
+  messagePlaceholder: Localized;
   /** Posted with the form; the server flags quote requests (`[Devis]`). */
   intent?: Intent;
   /** Copy for the `ContactCta` band that links to this page. */
-  band: { lead: L; cta: L };
+  band: { lead: Localized; cta: Localized };
 }
 
 /**
@@ -267,4 +265,7 @@ export const contactOutcomes = {
     },
     back: { fr: "Revenir au formulaire", en: "Back to the form" },
   },
-} satisfies Record<ContactOutcome, { title: L; lead: L; back: L }>;
+} satisfies Record<
+  ContactOutcome,
+  { title: Localized; lead: Localized; back: Localized }
+>;

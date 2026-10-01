@@ -23,5 +23,8 @@ export const SITE = {
 
 export type Locale = (typeof SITE.locales)[number];
 
+/** A string in every locale. */
+export type Localized = Record<Locale, string>;
+
 export const isLocale = (value: string): value is Locale =>
   (SITE.locales as readonly string[]).includes(value);

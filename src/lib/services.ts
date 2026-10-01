@@ -1,4 +1,4 @@
-import type { Locale } from "../config";
+import type { Locale, Localized } from "../config";
 import { absoluteUrl, localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
@@ -9,15 +9,14 @@ import {
 } from "./schema";
 
 /** A localized string. */
-type L = Record<Locale, string>;
 
 /** The one public price (audit U8), shared by the cost list and the FAQ. */
-const FLOOR_PRICE: L = { fr: "1 500 €", en: "€1,500" };
+const FLOOR_PRICE: Localized = { fr: "1 500 €", en: "€1,500" };
 
 /** An inline run inside a "proof" sentence: plain text, or a link to a project. */
 export type ServiceRun =
-  | { t: "text"; v: L }
-  | { t: "link"; v: L; slug: string };
+  | { t: "text"; v: Localized }
+  | { t: "link"; v: Localized; slug: string };
 
 const text = (fr: string, en: string): ServiceRun => ({
   t: "text",
@@ -35,7 +34,7 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
  * Services owns the offer/"prestations" query cluster — deliberately distinct
  * from Home's "développeur … à Lyon" head term to avoid cannibalization.
  */
-export const servicesMeta: { title: L; description: L } = {
+export const servicesMeta: { title: Localized; description: Localized } = {
   title: {
     // "Développement", not "Développeur": the home page owns the person query
     // ("Développeur web & mobile freelance à Lyon"); this page owns the offer.
@@ -99,7 +98,7 @@ export const mobile = {
       fr: "Les captures, fiches et visuels nécessaires à la publication, y compris en plusieurs langues.",
       en: "The screenshots, store listings and assets needed to publish, including in several languages.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   proof: [
     text(
       "C’est exactement la chaîne que j’ai menée de bout en bout, seul, pour ",
@@ -140,7 +139,7 @@ export const web = {
       fr: "Progressive Web Apps (PWA) — l’expérience d’une app, accessible depuis un navigateur.",
       en: "Progressive Web Apps (PWA) — the feel of an app, straight from a browser.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   proof: [
     text(
       "Backend à fort trafic sur des plateformes utilisées par des millions de personnes (Sketchfab, FAB / Epic Games) ; site vitrine livré pour le cabinet d’avocate ",
@@ -240,7 +239,7 @@ export const cost = {
       fr: "SaaS complet — construit par lots, pour étaler l’investissement et livrer de la valeur tôt.",
       en: "Full SaaS — built in phases, to spread the investment and deliver value early.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   closing: {
     fr: "Le premier échange et le devis sont gratuits, sans engagement. Vous repartez avec une estimation, que l’on travaille ensemble ou non.",
     en: "The first conversation and the quote are free, no strings attached. You leave with an estimate, whether we work together or not.",

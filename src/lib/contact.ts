@@ -4,7 +4,7 @@
  * `api/contact.ts` is a thin wrapper around it.
  */
 
-import type { Locale } from "../config";
+import type { Locale, Localized } from "../config";
 import { escapeHtml } from "./html.js";
 
 export const PROJECT_TYPES = ["web", "saas", "mobile", "other"] as const;
@@ -14,10 +14,7 @@ export type ProjectType = (typeof PROJECT_TYPES)[number];
  * Project-type labels: the form options (`lib/contact-page.ts`) and the
  * notification email (French) both read them, so a new type needs one edit.
  */
-export const PROJECT_TYPE_LABELS: Record<
-  ProjectType,
-  Record<Locale, string>
-> = {
+export const PROJECT_TYPE_LABELS: Record<ProjectType, Localized> = {
   web: { fr: "Site / application web", en: "Website / web app" },
   saas: { fr: "SaaS", en: "SaaS" },
   mobile: { fr: "Application mobile", en: "Mobile app" },

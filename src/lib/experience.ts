@@ -1,7 +1,6 @@
-import type { Locale } from "../config";
+import type { Locale, Localized } from "../config";
 
 /** A localized string, one entry per locale. */
-type Localized = Record<Locale, string>;
 
 /** A localized list of strings, one entry per locale. */
 type LocalizedList = Record<Locale, string[]>;

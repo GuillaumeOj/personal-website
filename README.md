@@ -19,7 +19,7 @@ Site personnel de Guillaume Ojardias — landing page bilingue (FR / EN) + blog.
 ## Pré-requis
 
 - [Bun](https://bun.sh/) (`curl -fsSL https://bun.sh/install | bash`)
-- Node.js ≥ 22 (utilisé par certains outils via `bunx`, ex. `astro check`)
+- Node.js 24 (version exacte dans `.nvmrc`, utilisé par certains outils via `bunx`, ex. `astro check`)
 
 ## Installation
 
@@ -98,20 +98,26 @@ volontairement exclus pour rester diffables.
 
 ```
 src/
-├── config.ts            # Constantes du site (URL, locales, liens sociaux)
+├── config.ts            # Constantes du site (nom, URL, e-mails, SIREN, locales, liens)
 ├── content.config.ts    # Loader glob + schéma Zod de la collection blog
 ├── content/blog/{fr,en}/  # Articles Markdown
-├── assets/blog/         # Couvertures et illustrations des articles
-├── i18n/ui.ts           # Helper t(locale, key) + utilitaires i18n
-├── layouts/             # BaseLayout, BlogPostLayout, ProjectLayout
-├── components/          # Header, Footer, ThemeToggle, LangSwitcher, PostList
-├── lib/
-│   ├── posts.ts         # Requêtes sur la collection (runtime Astro)
+├── assets/              # Portrait, couvertures et illustrations, captures de projets
+├── i18n/ui.ts           # Dictionnaires, t(locale, key), localizedPath/localizedUrl
+├── middleware.ts        # Typographie française (espaces insécables) sur le HTML
+├── layouts/             # BaseLayout, HubLayout, BlogPostLayout, ProjectLayout
+├── components/          # En-tête, pied de page, sélecteurs, cartes, SeoHead…
+│   ├── home/ about/ services/ contact/ legal/  # Sections par page
+│   └── lists/           # NumberedCards, Timeline, CheckList
+├── scripts/             # Scripts client bundlés (reveal, snap, halo des boutons)
+├── lib/                 # Contenu et logique pure, testés unitairement
+│   ├── home.ts about.ts services.ts contact-page.ts legal.ts  # Textes des pages
+│   ├── projects.ts case-studies.ts experience.ts  # Projets et parcours
+│   ├── posts.ts related.ts rss.ts  # Blog (runtime Astro)
 │   ├── post-files.ts    # Lecture du frontmatter sur disque (chargement de la config)
-│   ├── alternates.ts    # Calcul des hreflang FR/EN
-│   ├── toc.ts           # Sommaire à partir des titres Markdown
-│   └── og.ts            # Cartes Open Graph générées au build (sharp)
-├── pages/               # Routes FR (index.astro, blog/, rss.xml.ts)
+│   ├── schema.ts seo.ts alternates.ts  # JSON-LD, titres, hreflang
+│   ├── og.ts og-compose.ts  # URLs et composition (sharp) des cartes Open Graph
+│   └── contact.ts http.ts  # Validation et envoi du formulaire de contact
+├── pages/               # Routes FR (+ og/ : cartes Open Graph, rss.xml.ts)
 └── pages/en/            # Routes EN (mêmes routes, préfixées par /en)
 ```
 
@@ -164,6 +170,4 @@ Ojardias. Voir les mentions légales du site.
 
 ## TODO (post-V1)
 
-- [ ] Créer un `public/og-image.png` (1200×630) pour les partages sociaux.
-- [ ] Domaine personnalisé (configuration DNS dans Vercel).
-- [ ] Optionnel : analytics (Plausible / Vercel), commentaires (giscus), formulaire de contact.
+- [ ] Optionnel : analytics (Plausible / Vercel), commentaires (giscus).

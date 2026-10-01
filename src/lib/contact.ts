@@ -4,6 +4,8 @@
  * `api/contact.ts` is a thin wrapper around it.
  */
 
+import type { Locale } from "../config";
+
 export type ProjectType = "web" | "saas" | "mobile" | "other";
 const PROJECT_TYPES: ProjectType[] = ["web", "saas", "mobile", "other"];
 
@@ -17,6 +19,16 @@ const CONTACT_FROM = {
   email: "guillaume@ojardias.me",
   name: "Site guillaume.ojardias.info",
 };
+
+/**
+ * Where a no-JS form post lands (`303 See Other`): a static thank-you or
+ * error page per locale. With JS the form posts JSON and stays in place.
+ */
+export type ContactOutcome = "thanks" | "error";
+export const contactOutcomePath = (
+  locale: Locale,
+  outcome: ContactOutcome,
+): string => `${locale === "en" ? "/en" : ""}/contact/${outcome}/`;
 
 const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
   web: "Site / application web",

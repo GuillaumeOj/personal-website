@@ -1,0 +1,27 @@
+---
+import ContactOutcome from '../../components/contact/ContactOutcome.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { ContactOutcome as Outcome } from '../../lib/contact';
+import { contactOutcomes } from '../../lib/contact-page';
+
+/** The no-JS form's landing pages: /thanks/ and /error/. */
+export function getStaticPaths() {
+  return Object.keys(contactOutcomes).map((outcome) => ({
+    params: { outcome },
+  }));
+}
+
+const locale = 'fr' as const;
+const outcome = Astro.params.outcome as Outcome;
+const copy = contactOutcomes[outcome];
+---
+
+<BaseLayout
+  locale={locale}
+  title={copy.title[locale]}
+  description={copy.title[locale]}
+  container="full"
+  noindex
+>
+  <ContactOutcome locale={locale} outcome={outcome} />
+</BaseLayout>

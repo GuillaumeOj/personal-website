@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { t } from "../../src/i18n/ui";
+import { faq } from "../../src/lib/services";
 
 // SEO copy guards for the fixes in the round-2 audit: a broken FR projects
 // sentence, stack-list meta descriptions, and missing local intent ("Lyon").
@@ -46,5 +47,15 @@ describe("nav aria-label key", () => {
   it("nav.mainNav is defined in both locales", () => {
     expect(t("fr", "nav.mainNav")).toBe("Navigation principale");
     expect(t("en", "nav.mainNav")).toBe("Main navigation");
+  });
+});
+
+describe("services FAQ states the B2B scope (audit L6)", () => {
+  const [first] = faq.items;
+
+  it("opens with who the services are for", () => {
+    expect(first.a.fr).toContain("professionnels");
+    expect(first.a.fr).toContain("dans le cadre de leur activité");
+    expect(first.a.en).toContain("businesses");
   });
 });

@@ -82,10 +82,11 @@ export default defineConfig({
       },
     },
     sitemap({
-      // Drop the legal pages (notice, privacy policy, terms): they're `noindex` (thin,
-      // low-value), so they shouldn't advertise themselves for crawling.
+      // Drop the `noindex` pages: legal pages (notice, privacy policy, terms)
+      // and the no-JS contact-form outcomes. They shouldn't advertise
+      // themselves for crawling.
       filter: (page) =>
-        !/\/(legal-notice|privacy-policy|terms-of-service)\/?$/.test(
+        !/\/(legal-notice|privacy-policy|terms-of-service|contact\/(thanks|error))\/?$/.test(
           new URL(page).pathname,
         ),
       // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both

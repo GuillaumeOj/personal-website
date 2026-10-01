@@ -2,9 +2,10 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { contactPath, localizedPath, t } from '../i18n/ui';
+import { articlePath, contactPath, localizedPath, t } from '../i18n/ui';
 import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
+import { postsForProject } from '../lib/related';
 import { projectJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
@@ -19,6 +20,7 @@ const result = project.result?.[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
+const posts = await postsForProject(project, locale);
 // `<title>` = `{name} — {descriptor} — Brand`, so a bare project name isn't
 // stranded in search results. The descriptor is a short (2–4 word) stored
 // field; without one, the title falls back to just the name.
@@ -170,6 +172,25 @@ const jsonLd = projectJsonLd(locale, {
     <div class="space-y-6 border-t border-line pt-6 leading-relaxed text-ink">
       <p>{longDescription}</p>
     </div>
+
+    {
+      posts.length > 0 && (
+        <section class="space-y-3 border-t border-line pt-6">
+          <h2 class="font-display text-xl font-semibold tracking-tight text-ink-strong">
+            {t(locale, 'projects.relatedPosts')}
+          </h2>
+          <ul class="space-y-2">
+            {posts.map((post) => (
+              <li>
+                <a href={articlePath(locale, post.data.slug)} class="font-medium text-accent-ink">
+                  {post.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     <aside
       class="rounded-2xl border border-line bg-surface-sunken p-6 text-center sm:p-8"

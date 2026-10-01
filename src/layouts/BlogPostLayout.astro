@@ -3,13 +3,16 @@ import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Portrait from '../components/about/Portrait.astro';
 import AuthorByline from '../components/AuthorByline.astro';
+import ArticleCard from '../components/ArticleCard.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, contactPath, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, contactPath, formatDate, localizedPath, otherLocale, projectPath, t } from '../i18n/ui';
 import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
 import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
+import { localizedName } from '../lib/projects';
+import { projectsForPost, relatedPosts } from '../lib/related';
 import { blogPostJsonLd } from '../lib/schema';
 import type { TocHeading } from '../lib/toc';
 import BaseLayout from './BaseLayout.astro';
@@ -30,6 +33,8 @@ const unsplashLink = (url: string) => `${url}?utm_source=guillaume_ojardias&utm_
 // translated sibling (shared `translationKey`) and hand BaseLayout explicit
 // alternate URLs. A post with no published sibling gets none (canonical only).
 const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
+const aboutProjects = projectsForPost(post);
+const furtherReading = await relatedPosts(post, locale, 2);
 const { altFrUrl, altEnUrl } = articleAlternates({
   locale,
   slug: post.data.slug,
@@ -156,6 +161,22 @@ const jsonLd = blogPostJsonLd(locale, {
       <slot />
     </div>
 
+    {
+      aboutProjects.length > 0 && (
+        <p class="not-prose mt-10 text-muted">
+          {t(locale, aboutProjects.length > 1 ? 'blog.aboutProjects' : 'blog.aboutProject')}{' '}
+          {aboutProjects.map((project, i) => (
+            <>
+              {i > 0 && ', '}
+              <a href={projectPath(locale, project.slug)} class="font-medium text-accent-ink">
+                {localizedName(project, locale)}
+              </a>
+            </>
+          ))}
+        </p>
+      )
+    }
+
     {/* End-of-article conversion block: an author card (the visible human behind
         the BlogPosting author Person) plus CTAs, so a post isn't a dead-end. */}
     <footer class="not-prose mt-14 space-y-6 rounded-2xl border border-line bg-surface p-6 sm:p-8">
@@ -182,4 +203,24 @@ const jsonLd = blogPostJsonLd(locale, {
       </div>
     </footer>
   </article>
+
+  {
+    furtherReading.length > 0 && (
+      <section class="mt-16 space-y-6">
+        <h2 class="font-display text-2xl font-semibold tracking-tight text-ink-strong">
+          {t(locale, 'blog.related')}
+        </h2>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {furtherReading.map((other) => (
+            <ArticleCard
+              post={other}
+              locale={locale}
+              headingLevel={3}
+              sizes="(min-width: 768px) 348px, (min-width: 640px) 50vw, 100vw"
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

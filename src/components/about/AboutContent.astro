@@ -1,6 +1,9 @@
 ---
 import type { Locale } from '../../config';
+import { t } from '../../i18n/ui';
 import { about } from '../../lib/about';
+import { getPostsForLocale } from '../../lib/posts';
+import ArticleCard from '../ArticleCard.astro';
 import AboutProse from './AboutProse.astro';
 import ExperienceShowcase from './ExperienceShowcase.astro';
 import Portrait from './Portrait.astro';
@@ -11,6 +14,8 @@ interface Props {
 
 const { locale } = Astro.props;
 const doc = about[locale];
+// The latest writing, so the blog is reachable from more than its index.
+const latest = await getPostsForLocale(locale, 3);
 ---
 
 <div class="mx-auto max-w-6xl space-y-12 px-6 py-16">
@@ -34,6 +39,26 @@ const doc = about[locale];
   </section>
 
   <AboutProse doc={doc} />
+
+  {
+    latest.length > 0 && (
+      <section class="reveal space-y-6">
+        <h2 class="font-display text-2xl font-semibold text-ink-strong sm:text-3xl">
+          {t(locale, 'blog.latest')}
+        </h2>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {latest.map((post) => (
+            <ArticleCard
+              post={post}
+              locale={locale}
+              headingLevel={3}
+              sizes="(min-width: 1152px) 352px, (min-width: 768px) 33vw, 100vw"
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   <section class="reveal space-y-4">
     <h2 class="font-display text-2xl font-semibold text-ink-strong sm:text-3xl">

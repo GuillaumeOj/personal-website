@@ -87,12 +87,13 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # Astro keeps optimized images in node_modules/.astro: reuse them while
-      # the source images are unchanged.
+      # Astro keeps optimized images in node_modules/.astro/assets: reuse them
+      # while the source images are unchanged. Only that folder: the content
+      # data store next to it is rebuilt from the checked-out sources.
       - name: Cache Astro images
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: node_modules/.astro
+          path: node_modules/.astro/assets
           key: astro-${{ runner.os }}-${{ hashFiles('src/assets/**', 'src/content/**') }}
           restore-keys: astro-${{ runner.os }}-
 

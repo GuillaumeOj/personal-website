@@ -11,7 +11,9 @@ export default defineConfig({
   // Two workers on the 2-vCPU CI runners; the server is static, so tests
   // don't contend for state.
   workers: process.env.CI ? 2 : undefined,
-  reporter: process.env.CI ? "github" : "list",
+  // On CI, also write the HTML report (with first-retry traces) that the
+  // workflow uploads when the job fails.
+  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: BASE_URL,
     trace: "on-first-retry",

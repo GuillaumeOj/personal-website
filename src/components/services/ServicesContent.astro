@@ -68,7 +68,7 @@ const linkClass =
           <Icon name="arrow-right" size={15} />
         </a>
       </div>
-      <p class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+      <p class="mono-label text-muted">
         {hero.reassurance[locale]}
       </p>
       <p class="border-t border-line pt-5 text-sm leading-relaxed text-muted">
@@ -84,7 +84,7 @@ const linkClass =
     <Section id={id} class={sunken ? 'bg-surface-sunken' : ''}>
       <SectionHeader locale={locale} title={data.title} lead={data.intro} />
 
-      <div class="reveal mt-8 rounded-2xl border border-line bg-surface p-7">
+      <div class="reveal mt-8 card p-7">
         <p class="font-display font-semibold text-ink-strong">
           {data.leadIn[locale]}
         </p>
@@ -150,7 +150,7 @@ const linkClass =
 <Section id="faq" class="bg-surface-sunken">
   <SectionHeader locale={locale} title={faq.title} />
 
-  <div class="reveal mt-10 divide-y divide-line rounded-2xl border border-line bg-surface">
+  <div class="reveal mt-10 divide-y divide-line card">
     {
       faq.items.map((item) => (
         <div class="p-6">

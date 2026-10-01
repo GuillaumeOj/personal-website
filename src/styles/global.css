@@ -123,6 +123,23 @@
   --color-btn-bg: var(--btn-bg);
 }
 
+/* The bordered surface of every card and panel. */
+@utility card {
+  @apply rounded-2xl border border-line bg-surface;
+}
+
+/* A whole-card link (article and project cards) that lifts on hover. Pair
+ * with `group` in the markup for the image zoom. */
+@utility card-link {
+  @apply card flex flex-col overflow-hidden no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5;
+}
+
+/* Small uppercase mono label: footer column headings, field and fact labels.
+ * Colour is left to the caller. */
+@utility mono-label {
+  @apply font-mono text-xs uppercase tracking-[0.14em];
+}
+
 @layer components {
   .btn {
     @apply relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium no-underline transition;

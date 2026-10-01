@@ -9,7 +9,8 @@ import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import { SITE, type Locale } from '@/config';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
-import { absoluteUrl, ensureTrailingSlash, localizedPath, t } from '@/i18n/ui';
+import { absoluteUrl, localizedPath, t } from '@/i18n/ui';
+import { type Alternates, prefixAlternates } from '@/lib/alternates';
 import { portraitAlt } from '@/lib/about';
 import { defaultSocialImage } from '@/lib/og';
 
@@ -48,20 +49,14 @@ interface Props {
   container?: 'prose' | 'full';
   /** Enables full-height scroll-snap between sections (the home landing). */
   snap?: boolean;
-  /**
-   * Emit reciprocal fr/en + x-default hreflang alternates. Same-slug pages
-   * (home, about, services, lists, project details) rely on the default `/en`
-   * prefix swap; pages whose slugs differ across locales (blog posts) pass
-   * explicit `altFrUrl`/`altEnUrl` below.
-   */
+  /** Emit reciprocal fr/en + x-default hreflang alternates. */
   hreflang?: boolean;
   /**
-   * Absolute hreflang alternates for pages whose fr/en slugs differ — blog
-   * posts, paired via `translationKey`. Omit on same-slug pages; the `/en`
-   * prefix swap handles those.
+   * Site path of this page in each locale, for the hreflang links and the
+   * language switcher. Same-slug pages omit it (the `/en` prefix swap); blog
+   * posts pass their translated sibling (see `articleAlternates`).
    */
-  altFrUrl?: string;
-  altEnUrl?: string;
+  alternates?: Alternates;
   /**
    * Use `title` verbatim as the `<title>` instead of appending ` — {SITE.name}`.
    * For the one page whose title is brand-*forward* (About: "{SITE.name} — …"),
@@ -92,18 +87,12 @@ const {
   container = 'prose',
   snap = false,
   hreflang = false,
-  altFrUrl,
-  altEnUrl,
+  alternates = prefixAlternates(locale, Astro.url.pathname),
   rawTitle = false,
   errorPage = false,
 } = Astro.props;
-const path = Astro.url.pathname;
-const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
-const enPath = localizedPath('en', frPath);
-// Match the canonical trailing-slash form even if the request URL lacks it.
-// Blog posts override with explicit alternates.
-const frURL = altFrUrl ?? absoluteUrl(ensureTrailingSlash(frPath));
-const enURL = altEnUrl ?? absoluteUrl(enPath);
+const frURL = absoluteUrl(alternates.fr);
+const enURL = absoluteUrl(alternates.en);
 const mainClass =
   container === 'full'
     ? 'flex-1'
@@ -285,7 +274,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     >
       {t(locale, 'nav.skipToContent')}
     </a>
-    <Header locale={locale} minimal={errorPage} />
+    <Header locale={locale} alternates={alternates} minimal={errorPage} />
     <main id="main" class={mainClass}>
       <slot />
     </main>

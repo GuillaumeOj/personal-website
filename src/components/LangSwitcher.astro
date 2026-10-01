@@ -1,49 +1,30 @@
 ---
 import type { Locale } from '../config';
-import { articlePath, localizedPath, t } from '../i18n/ui';
-import { findBySlug, findSibling } from '../lib/posts';
+import { t } from '../i18n/ui';
+import type { Alternates } from '../lib/alternates';
 import Dropdown from './Dropdown.astro';
 import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
+  /** This page in each locale (from BaseLayout). */
+  alternates: Alternates;
   /** Which copy of the switcher this is, for unique ids. */
   placement: 'desktop' | 'mobile';
 }
 
-const { locale, placement } = Astro.props;
-
-const currentPath = Astro.url.pathname;
-const articleMatch = currentPath.match(/^(?:\/en)?\/blog\/([^/]+)\/?$/);
-
-/** The equivalent of the current page in `target`, preserving blog siblings. */
-const pathFor = async (target: Locale): Promise<string> => {
-  if (articleMatch) {
-    const [, slug] = articleMatch;
-    const current = await findBySlug(slug, locale);
-    const sibling =
-      current && (await findSibling(current.data.translationKey, target));
-    return sibling
-      ? articlePath(target, sibling.data.slug)
-      : localizedPath(target, '/blog');
-  }
-  const stripped =
-    locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
-  return localizedPath(target, stripped);
-};
+const { locale, alternates, placement } = Astro.props;
 
 const LOCALES: { code: Locale; label: string }[] = [
   { code: 'fr', label: 'Français' },
   { code: 'en', label: 'English' },
 ];
-const options = await Promise.all(
-  LOCALES.map(async ({ code, label }) => ({
-    code,
-    label,
-    // The current locale links to this very page, marked aria-current.
-    href: code === locale ? Astro.url.pathname : await pathFor(code),
-  })),
-);
+const options = LOCALES.map(({ code, label }) => ({
+  code,
+  label,
+  // The current locale links to this very page, marked aria-current.
+  href: code === locale ? Astro.url.pathname : alternates[code],
+}));
 ---
 
 <Dropdown label={t(locale, 'lang.menu')} id={`lang-${placement}`}>

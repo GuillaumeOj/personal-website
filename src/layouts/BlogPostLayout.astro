@@ -29,13 +29,13 @@ const authorName = author ?? SITE.name;
 const credit = post.data.coverCredit;
 const unsplashLink = (url: string) => `${url}?utm_source=guillaume_ojardias&utm_medium=referral`;
 
-// hreflang: blog slugs differ across locales, so pair this post with its
-// translated sibling (shared `translationKey`) and hand BaseLayout explicit
-// alternate URLs. A post with no published sibling gets none (canonical only).
+// Blog slugs differ across locales, so pair this post with its translated
+// sibling (shared `translationKey`) for hreflang and the language switcher. A
+// post with no published sibling gets no hreflang (canonical only).
 const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
 const aboutProjects = projectsForPost(post);
 const furtherReading = await relatedPosts(post, locale, 2);
-const { altFrUrl, altEnUrl } = articleAlternates({
+const { alternates, paired } = articleAlternates({
   locale,
   slug: post.data.slug,
   siblingSlug: sibling?.data.slug,
@@ -98,9 +98,8 @@ const jsonLd = blogPostJsonLd(locale, {
     tags: post.data.tags,
   }}
   jsonLd={jsonLd}
-  hreflang={Boolean(altFrUrl)}
-  altFrUrl={altFrUrl}
-  altEnUrl={altEnUrl}
+  alternates={alternates}
+  hreflang={paired}
 >
   <TableOfContents locale={locale} headings={headings} />
   <a

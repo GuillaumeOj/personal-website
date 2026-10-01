@@ -15,7 +15,7 @@ coverCredit:
 tags: ["Figma", "Design", "Claude", "Fusily"]
 ---
 
-## Let's be honest
+## Interfaces were someone else's job
 
 I'm a backend developer, specialized in Django. My playground is data models, APIs, SQL queries, and everything that happens once the user has clicked. What they click on, though, has never really been my business.
 

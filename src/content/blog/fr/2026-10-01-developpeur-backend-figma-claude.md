@@ -15,7 +15,7 @@ coverCredit:
 tags: ["Figma", "Design", "Claude", "Fusily"]
 ---
 
-## Soyons honnêtes
+## L'interface, c'était le métier des autres
 
 Je suis développeur backend, spécialisé Django. Mon terrain de jeu, ce sont les modèles de données, les API, les requêtes SQL et tout ce qui se passe une fois que l'utilisateur a cliqué. Ce sur quoi il clique, en revanche, n'a jamais vraiment été mon affaire.
 

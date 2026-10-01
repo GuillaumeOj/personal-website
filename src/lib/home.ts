@@ -219,10 +219,10 @@ export const methodology = {
 
 export const featured = {
   eyebrow: { fr: "Réalisations", en: "Work" },
-  title: { fr: "Des projets déjà en ligne", en: "Products already live" },
+  title: { fr: "Des projets déjà en ligne", en: "Projects already live" },
   lead: {
-    fr: "Des applications réelles, en production — la meilleure preuve de ce que je peux livrer pour vous.",
-    en: "Real apps, in production — the best proof of what I can deliver for you.",
+    fr: "Des projets réels, en production — la meilleure preuve de ce que je peux livrer pour vous.",
+    en: "Real projects, in production — the best proof of what I can deliver for you.",
   },
   cta: { fr: "Tous les projets", en: "All projects" },
 };

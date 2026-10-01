@@ -1,6 +1,6 @@
 import { type Locale, SITE } from "../config";
 import { ensureTrailingSlash } from "../i18n/ui";
-import { occupations } from "./experience";
+import { workRoles } from "./experience";
 import { tech } from "./home";
 
 /**
@@ -20,17 +20,17 @@ export const WEBSITE_ID = `${SITE.url}/#website`;
 export const inLanguage = (locale: Locale): string =>
   locale === "fr" ? "fr-FR" : "en-US";
 
-/** Job title — the Person's role (never the ProfessionalService `serviceType`). */
+/** Job title — the Person's role (never one of the business's offers). */
 export const jobTitle: Record<Locale, string> = {
   fr: "Développeur web & mobile freelance",
   en: "Freelance web & mobile developer",
 };
 
 /**
- * The ProfessionalService `serviceType` — the *services offered*, not the
- * person's job title. Shared by the About and Services pages so the merged
- * `#business` entity reads one consistent list from either. schema.org's
- * `serviceType` has no locale variants, so it stays in one language.
+ * The services the business offers (`makesOffer` → `Service`), not the
+ * person's job title. Shared by every page emitting the `#business` entity so
+ * it reads one consistent list. Kept in one language: the node is
+ * locale-invariant.
  */
 export const SERVICE_TYPES: string[] = [
   "Mobile app development",
@@ -69,8 +69,9 @@ export const personNode = (locale: Locale, image: string) => ({
   address: LYON_ADDRESS,
   sameAs: Object.values(SITE.social),
   knowsAbout,
-  // Structured view of the career the About page renders as prose.
-  hasOccupation: occupations(locale),
+  // Structured view of the career the About page renders as prose: one
+  // OrganizationRole per position, naming the employer and the dates.
+  worksFor: workRoles(locale),
 });
 
 /** The site-wide WebSite entity, published by the Person. */
@@ -87,7 +88,10 @@ export const websiteNode = (locale: Locale) => ({
 
 /**
  * The canonical local-business entity (`ProfessionalService`, `@id`
- * `BUSINESS_ID`), provided by the Person and serving Lyon/France. Single source
+ * `BUSINESS_ID`), founded by the Person, serving Lyon/France and offering
+ * `SERVICE_TYPES`. Only properties schema.org defines for a LocalBusiness:
+ * `provider`, `serviceType`, `isPartOf` and `inLanguage` are not, so they'd
+ * be dropped (and the business → person link with them). Single source
  * of truth referenced by `@id` across Home, About and Services so Google merges
  * them into one local business. `knowsAbout` deliberately lives on the Person
  * only — the `@id` reference carries it — so it is NOT duplicated here. The node
@@ -99,15 +103,27 @@ export const professionalServiceNode = () => ({
   "@id": BUSINESS_ID,
   name: SITE.name,
   url: ensureTrailingSlash(SITE.url),
-  provider: { "@id": PERSON_ID },
+  founder: { "@id": PERSON_ID },
   areaServed: [
     { "@type": "City", name: "Lyon" },
     { "@type": "Country", name: "France" },
   ],
-  serviceType: SERVICE_TYPES,
+  makesOffer: SERVICE_TYPES.map((name) => ({
+    "@type": "Offer",
+    itemOffered: { "@type": "Service", name },
+  })),
   address: LYON_ADDRESS,
-  isPartOf: { "@id": WEBSITE_ID },
 });
+
+/**
+ * Contact details the About and Services pages add to the #business node (the
+ * pages that show them). `priceRange` is a coarse schema.org band: it signals
+ * a professional (not budget) tier without committing to a public figure.
+ */
+export const businessContact = {
+  email: SITE.email,
+  priceRange: "€€",
+} as const;
 
 /** A breadcrumb crumb: a visible `name` and its absolute `url`. */
 export interface Crumb {

@@ -1,7 +1,6 @@
 import { type Locale, SITE } from "../config";
 import {
   contactPath,
-  ensureTrailingSlash,
   localizedPath,
   quotePath,
   type TranslationKey,
@@ -147,8 +146,6 @@ interface ContactModeConfig {
   eyebrow: L;
   title: L;
   lead: L;
-  /** Reassurance line under the lead. */
-  note?: L;
   submit: L;
   messagePlaceholder: L;
   /** Posted with the form; the server flags quote requests (`[Devis]`). */
@@ -201,8 +198,8 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
       fr: "Demandez votre estimation gratuite",
       en: "Request your free estimate",
     },
-    lead: contact.lead,
-    note: contactNote,
+    // Not `contact.lead`: the quote note says the same, plus "free quote".
+    lead: contactNote,
     submit: cost.cta,
     messagePlaceholder: {
       fr: "Les fonctionnalités clés, qui va l’utiliser, et ce qui existe déjà (maquettes, site actuel, cahier des charges…).",
@@ -224,7 +221,7 @@ export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
   });
   const { general } = contactModes;
   const crumbs = [
-    crumb("nav.home", ensureTrailingSlash(localizedPath(locale, "/"))),
+    crumb("nav.home", localizedPath(locale, "/")),
     crumb(general.crumb, general.path(locale)),
   ];
   if (mode !== "general") {

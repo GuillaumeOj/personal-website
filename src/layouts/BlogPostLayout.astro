@@ -6,7 +6,7 @@ import AuthorByline from '../components/AuthorByline.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, contactPath, ensureTrailingSlash, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
+import { articlePath, contactPath, formatDate, localizedPath, otherLocale, t } from '../i18n/ui';
 import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
 import { articleAlternates } from '../lib/alternates';
 import { findSibling } from '../lib/posts';
@@ -53,11 +53,11 @@ const card = await getImage({
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   {
     name: t(locale, 'nav.blog'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/blog')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/blog'), SITE.url).toString(),
   },
   { name: post.data.title, url: canonical },
 ];
@@ -103,7 +103,7 @@ const jsonLd = blogPostJsonLd(locale, {
     {t(locale, 'blog.backToList')}
   </a>
   <article class="space-y-6">
-    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
     {/* width/height pin the 3:1 crop so sharp does it at build. Without them
         Astro keeps the source aspect (the covers are portraits up to 1600×2400)
         and `object-cover` throws ~3/4 of every byte away in the browser — on the
@@ -151,7 +151,7 @@ const jsonLd = blogPostJsonLd(locale, {
     </header>
 
     <div
-      class="prose prose-stone max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4 prose-h2:scroll-mt-24"
+      class="prose prose-stone max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:underline-offset-4"
     >
       <slot />
     </div>

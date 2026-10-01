@@ -17,7 +17,7 @@ for (const path of ["/projects/fusily/", "/en/projects/fusily/"]) {
     const contact = article.locator('a[href$="/contact/"]');
     await expect(contact.first()).toBeVisible();
     // …and a link to the services page.
-    const servicesHref = isFr ? "/services" : "/en/services";
+    const servicesHref = isFr ? "/services/" : "/en/services/";
     await expect(article.locator(`a[href="${servicesHref}"]`)).toHaveCount(1);
   });
 }

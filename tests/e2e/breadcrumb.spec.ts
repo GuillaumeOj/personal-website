@@ -4,8 +4,11 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 // BreadcrumbList JSON-LD. Root first, current page last (aria-current="page",
 // rendered as text, not a link).
 
+// Labelled in the page's language (audit W2).
 const breadcrumb = (page: Page): Locator =>
-  page.locator('nav[aria-label="Breadcrumb"]').first();
+  page
+    .locator('nav[aria-label="Fil d’Ariane"], nav[aria-label="Breadcrumb"]')
+    .first();
 
 // The ordered crumb labels — every link plus the final aria-current span, in DOM
 // order (the "/" separators are aria-hidden and excluded).
@@ -78,3 +81,10 @@ for (const { path, trail } of hubs) {
     await expectTrail(page, trail);
   });
 }
+
+test("breadcrumb is labelled in the page's language", async ({ page }) => {
+  await page.goto("/services/");
+  await expect(page.locator('nav[aria-label="Fil d’Ariane"]')).toBeVisible();
+  await page.goto("/en/services/");
+  await expect(page.locator('nav[aria-label="Breadcrumb"]')).toBeVisible();
+});

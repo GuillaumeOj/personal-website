@@ -3,6 +3,7 @@ import type { APIContext } from "astro";
 import { SITE } from "../config";
 import { articlePath, t } from "../i18n/ui";
 import { getPostsForLocale } from "../lib/posts";
+import { typeset } from "../lib/typography";
 
 export async function GET(context: APIContext) {
   const posts = await getPostsForLocale("fr");
@@ -13,9 +14,9 @@ export async function GET(context: APIContext) {
     site: context.site ?? SITE.url,
     customData: "<language>fr-FR</language>",
     items: posts.map((post) => ({
-      title: post.data.title,
+      title: typeset(post.data.title, "fr"),
       pubDate: post.data.pubDate,
-      description: post.data.description,
+      description: typeset(post.data.description, "fr"),
       link: articlePath("fr", post.data.slug),
     })),
   });

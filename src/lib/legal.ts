@@ -1,5 +1,5 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash, localizedPath } from "../i18n/ui";
+import { localizedPath } from "../i18n/ui";
 
 /** A run of text inside a paragraph, optionally a link. */
 export type LegalInline = string | { text: string; href: string };
@@ -37,9 +37,7 @@ const link = (text: string, href: string): LegalInline => ({ text, href });
 const mail = (address: string) => link(address, `mailto:${address}`);
 
 export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
-  const privacyHref = ensureTrailingSlash(
-    localizedPath(locale, "/privacy-policy"),
-  );
+  const privacyHref = localizedPath(locale, "/privacy-policy");
   const repoLink = link("github.com/GuillaumeOj/personal-website", REPO_URL);
   const hostLinks: LegalInline[] = [
     link("vercel.com", "https://vercel.com"),
@@ -167,9 +165,7 @@ export function privacyPolicy(
   locale: Locale,
   contact: Pick<LegalContact, "address">,
 ): LegalDoc {
-  const legalNoticeHref = ensureTrailingSlash(
-    localizedPath(locale, "/legal-notice"),
-  );
+  const legalNoticeHref = localizedPath(locale, "/legal-notice");
   const gdprLink = mail(GDPR_EMAIL);
   const cnilLink = link("www.cnil.fr", "https://www.cnil.fr");
 
@@ -350,9 +346,7 @@ export function termsOfService(
   locale: Locale,
   contact: Pick<LegalContact, "address">,
 ): LegalDoc {
-  const privacyHref = ensureTrailingSlash(
-    localizedPath(locale, "/privacy-policy"),
-  );
+  const privacyHref = localizedPath(locale, "/privacy-policy");
 
   if (locale === "fr") {
     const missing = "[non renseigné]";

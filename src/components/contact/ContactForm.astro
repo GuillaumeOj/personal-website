@@ -1,6 +1,6 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/ui';
 import {
   type ContactMode,
   contactModes,
@@ -8,6 +8,7 @@ import {
   qualifying as q,
 } from '../../lib/contact-page';
 import { GDPR_EMAIL } from '../../lib/legal';
+import { typeset } from '../../lib/typography';
 
 interface Props {
   locale: Locale;
@@ -17,13 +18,15 @@ interface Props {
 const { locale, mode } = Astro.props;
 const cfg = contactModes[mode];
 
+// Shown by the script, so the page-wide typesetting (middleware) can't reach
+// them: typeset here.
 const statusLabels = JSON.stringify({
-  error: f.error[locale],
+  error: typeset(f.error[locale], locale),
   sending: f.sending[locale],
   email: SITE.email,
   mailtoSubject: f.mailtoSubject[locale],
   fields: Object.fromEntries(
-    Object.entries(f.fieldErrors).map(([field, msg]) => [field, msg[locale]]),
+    Object.entries(f.fieldErrors).map(([field, msg]) => [field, typeset(msg[locale], locale)]),
   ),
 });
 const required = 'text-accent-ink';
@@ -32,8 +35,8 @@ const fieldError = 'text-sm text-red-700 dark:text-red-400';
 const fieldLabel =
   'font-mono text-xs uppercase tracking-[0.14em] text-muted';
 const fieldInput =
-  'w-full rounded-lg border border-line bg-paper px-3.5 py-2.5 text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/30';
-const optionalHint = 'normal-case tracking-normal text-muted/80';
+  'w-full rounded-lg border border-field-line bg-paper px-3.5 py-2.5 text-ink transition-colors placeholder:text-muted focus:border-accent-ink';
+const optionalHint = 'normal-case tracking-normal text-muted';
 ---
 
 <div class="reveal">
@@ -43,7 +46,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
 <form
   class="space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
   method="post"
-  action="/api/contact"
+  action="/api/contact/"
   data-contact-form
   data-labels={statusLabels}
 >
@@ -166,7 +169,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
       {GDPR_EMAIL}
     </a>. {f.privacyNoticeMore[locale]}
     <a
-      href={ensureTrailingSlash(localizedPath(locale, '/privacy-policy'))}
+      href={localizedPath(locale, '/privacy-policy')}
       class="text-accent-ink no-underline hover:underline"
     >
       {f.privacyNoticeLink[locale]}
@@ -176,7 +179,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
         <>
           {' '}{f.termsNotice[locale]}
           <a
-            href={ensureTrailingSlash(localizedPath(locale, '/terms-of-service'))}
+            href={localizedPath(locale, '/terms-of-service')}
             class="text-accent-ink no-underline hover:underline"
           >
             {f.termsLink[locale]}
@@ -284,7 +287,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
 
       const payload = Object.fromEntries(new FormData(form).entries());
       try {
-        const res = await fetch('/api/contact', {
+        const res = await fetch('/api/contact/', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(payload),

@@ -1,20 +1,25 @@
 ---
 /**
- * A menu dropdown: a trigger button and a popover panel. Fill the `trigger`
- * slot with the button content and the default slot with `role="menuitem"`
- * rows (see `.menu-item`). Open/close for every dropdown on the page is wired
- * once by the co-located script below.
+ * A disclosure dropdown: a trigger button that shows or hides a panel of
+ * links or buttons (WAI-ARIA disclosure pattern, not `role="menu"`, so Tab
+ * moves through the items and screen readers don't expect arrow keys). Fill
+ * the `trigger` slot with the button content and the default slot with
+ * `<li>` rows (see `.menu-item`). Every dropdown on the page is wired once by
+ * the co-located script below.
  */
 interface Props {
   /** Accessible label + tooltip for the trigger button. */
   label: string;
+  /** Unique on the page: each switcher renders twice (desktop + mobile). */
+  id: string;
 }
 
-const { label } = Astro.props;
+const { label, id } = Astro.props;
+const panelId = `dropdown-${id}`;
 
 const triggerClass =
   'inline-flex h-9 items-center gap-1.5 rounded-md border border-line px-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-sunken hover:text-ink-strong';
-const menuClass =
+const panelClass =
   'absolute left-0 top-full z-30 mt-2 hidden min-w-[9rem] rounded-lg border border-line bg-surface p-1 shadow-lg shadow-black/5';
 ---
 
@@ -22,44 +27,41 @@ const menuClass =
   <button
     type="button"
     data-dropdown-trigger
-    aria-haspopup="true"
     aria-expanded="false"
+    aria-controls={panelId}
     aria-label={label}
     title={label}
     class={triggerClass}
   >
     <slot name="trigger" />
   </button>
-  <div data-dropdown-menu role="menu" class={menuClass}>
+  <ul id={panelId} data-dropdown-menu class={panelClass}>
     <slot />
-  </div>
+  </ul>
 </div>
 
 <script>
   // Open/close for every [data-dropdown] on the page. Astro emits this script
   // once no matter how many Dropdowns render, so it wires them all up together.
-  const dropdowns = [
-    ...document.querySelectorAll<HTMLElement>('[data-dropdown]'),
-  ];
+  type Parts = { root: HTMLElement; trigger: HTMLElement; menu: HTMLElement };
+  const dropdowns: Parts[] = [];
+  for (const root of document.querySelectorAll<HTMLElement>('[data-dropdown]')) {
+    const trigger = root.querySelector<HTMLElement>('[data-dropdown-trigger]');
+    const menu = root.querySelector<HTMLElement>('[data-dropdown-menu]');
+    if (trigger && menu) dropdowns.push({ root, trigger, menu });
+  }
 
-  const closeAll = (except?: HTMLElement | null): void => {
-    for (const dropdown of dropdowns) {
-      if (dropdown === except) continue;
-      dropdown
-        .querySelector<HTMLElement>('[data-dropdown-menu]')
-        ?.classList.add('hidden');
-      dropdown
-        .querySelector<HTMLElement>('[data-dropdown-trigger]')
-        ?.setAttribute('aria-expanded', 'false');
-    }
+  const close = ({ trigger, menu }: Parts): void => {
+    menu.classList.add('hidden');
+    trigger.setAttribute('aria-expanded', 'false');
+  };
+
+  const closeAll = (except?: Parts): void => {
+    for (const dropdown of dropdowns) if (dropdown !== except) close(dropdown);
   };
 
   for (const dropdown of dropdowns) {
-    const trigger = dropdown.querySelector<HTMLElement>(
-      '[data-dropdown-trigger]',
-    );
-    const menu = dropdown.querySelector<HTMLElement>('[data-dropdown-menu]');
-    if (!trigger || !menu) continue;
+    const { root, trigger, menu } = dropdown;
 
     trigger.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -67,7 +69,7 @@ const menuClass =
       closeAll(dropdown);
       if (willOpen) {
         // Reset to the default placement (below, left-aligned), then flip on
-        // either edge if the menu would overflow the viewport.
+        // either edge if the panel would overflow the viewport.
         menu.classList.remove('right-0', 'bottom-full', 'mb-2');
         menu.classList.add('left-0', 'top-full', 'mt-2');
         menu.classList.remove('hidden');
@@ -85,15 +87,29 @@ const menuClass =
       }
       trigger.setAttribute('aria-expanded', String(willOpen));
     });
-    // Choosing an item closes the menu.
-    menu.addEventListener('click', () => {
-      menu.classList.add('hidden');
-      trigger.setAttribute('aria-expanded', 'false');
+    // Tabbing out of the dropdown closes it. A null relatedTarget (a click on
+    // a non-focusable spot, or Safari not focusing a clicked item) is left to
+    // the document click handler, so the item's click still lands.
+    root.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget as Node | null;
+      if (next && !root.contains(next)) close(dropdown);
     });
   }
 
-  document.addEventListener('click', () => closeAll(null));
+  // Any click outside a trigger — including choosing an item — closes the panels.
+  document.addEventListener('click', () => closeAll());
+  // Escape closes an open panel, and puts focus back on its trigger when focus
+  // was inside. Listening on the document also covers Safari, where clicking
+  // the trigger doesn't focus it. preventDefault tells the header's own
+  // Escape handler (mobile menu) that this keypress is taken.
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeAll(null);
+    if (event.key !== 'Escape') return;
+    for (const dropdown of dropdowns) {
+      if (dropdown.menu.classList.contains('hidden')) continue;
+      const hadFocus = dropdown.root.contains(document.activeElement);
+      close(dropdown);
+      if (hadFocus) dropdown.trigger.focus();
+      event.preventDefault();
+    }
   });
 </script>

@@ -363,12 +363,15 @@ export const projects: Project[] = [
   },
 ];
 
-/** Explicit display order (first → last) for the list and the home teaser. */
+/**
+ * Explicit display order (first → last) for the list and the home teaser,
+ * which shows the first three: lead with the product, then client work.
+ */
 const DISPLAY_ORDER = [
   "fusily",
-  "ma-garde-sereine",
-  "re-source-et-moi",
   "eva-biezunski-avocate",
+  "re-source-et-moi",
+  "ma-garde-sereine",
   "dotcraft",
   "personal-website",
 ];

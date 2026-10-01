@@ -6,9 +6,11 @@ import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
+  /** Which copy of the switcher this is, for unique ids. */
+  placement: 'desktop' | 'mobile';
 }
 
-const { locale } = Astro.props;
+const { locale, placement } = Astro.props;
 
 const modes = [
   { mode: 'system', icon: 'monitor', label: t(locale, 'theme.system') },
@@ -17,7 +19,7 @@ const modes = [
 ] as const;
 ---
 
-<Dropdown label={t(locale, 'theme.toggle')}>
+<Dropdown label={t(locale, 'theme.toggle')} id={`theme-${placement}`}>
   <Icon slot="trigger" name="sun" data-theme-icon="light" />
   <Icon slot="trigger" name="moon" data-theme-icon="dark" class="hidden" />
   <Icon slot="trigger" name="monitor" data-theme-icon="system" class="hidden" />
@@ -25,16 +27,18 @@ const modes = [
 
   {
     modes.map((m) => (
-      <button
-        type="button"
-        role="menuitem"
-        data-theme-option={m.mode}
-        class="menu-item"
-      >
-        <Icon name={m.icon} size={16} />
-        <span class="flex-1">{m.label}</span>
-        <Icon name="check" size={16} data-theme-check class="hidden text-accent-ink" />
-      </button>
+      <li>
+        <button
+          type="button"
+          aria-pressed="false"
+          data-theme-option={m.mode}
+          class="menu-item"
+        >
+          <Icon name={m.icon} size={16} />
+          <span class="flex-1">{m.label}</span>
+          <Icon name="check" size={16} data-theme-check class="hidden text-accent-ink" />
+        </button>
+      </li>
     ))
   }
 </Dropdown>
@@ -73,7 +77,7 @@ const modes = [
       .querySelectorAll<HTMLElement>('[data-theme-option]')
       .forEach((btn) => {
         const active = btn.dataset.themeOption === mode;
-        btn.setAttribute('aria-current', active ? 'true' : 'false');
+        btn.setAttribute('aria-pressed', String(active));
         btn
           .querySelector<HTMLElement>('[data-theme-check]')
           ?.classList.toggle('hidden', !active);

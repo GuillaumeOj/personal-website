@@ -15,6 +15,8 @@ coverCredit:
 tags: []
 ---
 
+> **Update (2026)**: the site now runs on Astro alone, with Markdown posts versioned in the repository. This post describes the previous version, built with Next.js and Notion.
+
 My personal blog is the technical project I keep coming back to and improving. It's also the perfect playground for testing stacks, tools, and architectures. Here's a detailed look at the technical choices I made and how everything fits together.
 
 ## The Stack: Why Next.js *and* Astro?

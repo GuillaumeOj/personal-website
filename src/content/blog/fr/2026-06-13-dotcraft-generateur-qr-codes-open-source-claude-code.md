@@ -14,6 +14,8 @@ coverCredit:
 tags: []
 ---
 
+> **Mise à jour (octobre 2026)** : dotcraft propose désormais un compte gratuit, facultatif, pour sauvegarder et synchroniser sa bibliothèque entre plusieurs appareils. Sans compte, tout reste dans le navigateur, comme décrit ci-dessous.
+
 J'avais juste besoin d'un QR code. Stylé, propre, avec mon logo au centre. Une demande banale — sauf que le chercher m'a rappelé à quel point le web regorge d'outils auxquels on n'a pas vraiment envie de confier quoi que ce soit. De cette frustration est né [Dotcraft](https://dotcraft.fr), un éditeur de QR codes que j'ai construit de A à Z, en open source, en quelques heures. Voici comment, et surtout pourquoi.
 
 ## Le problème avec les générateurs de QR codes en ligne

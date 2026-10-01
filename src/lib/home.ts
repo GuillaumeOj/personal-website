@@ -234,8 +234,8 @@ export const about = {
     en: "Who will build your project",
   },
   teaser: {
-    fr: "Ancien développeur backend chez Sketchfab (racheté par Epic Games), je suis aujourd’hui développeur web et mobile freelance à Lyon. Je construis aussi Fusily, mon application de recettes, de bout en bout — la meilleure preuve que je sais mener un projet de l’idée jusqu’au store.",
-    en: "A former backend developer at Sketchfab (acquired by Epic Games), I’m now a freelance web and mobile developer in Lyon. I also build Fusily, my own recipe app, end to end — the best proof I can carry a project from idea to app store.",
+    fr: "Ancien développeur backend chez Sketchfab (racheté par Epic Games), je suis aujourd’hui développeur web et mobile freelance à Lyon. Je construis aussi Fusily, mon application de recettes et de planification de repas, de bout en bout — la meilleure preuve que je sais mener un projet de l’idée jusqu’au store.",
+    en: "A former backend developer at Sketchfab (acquired by Epic Games), I’m now a freelance web and mobile developer in Lyon. I also build Fusily, my own recipe and meal-planning app, end to end — the best proof I can carry a project from idea to app store.",
   },
   teaserCta: {
     fr: "En savoir plus sur mon parcours",

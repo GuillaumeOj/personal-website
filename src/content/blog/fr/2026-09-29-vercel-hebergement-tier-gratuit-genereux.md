@@ -14,7 +14,7 @@ coverCredit:
 tags: []
 ---
 
-À chaque nouveau projet, la même question revient : comment mettre en ligne quelque chose de propre, rapidement, sans payer un serveur qui tournera à vide 95 % du temps ? [Ce blog](/projects/personal-website/), [Dotcraft](/projects/dotcraft/), [Ma Garde Sereine](/projects/ma-garde-sereine/), [Re-Source Et Moi](/projects/re-source-et-moi/), le [site de Maître Eva Biezunski](/projects/eva-biezunski-avocate/)… tous tournent aujourd'hui sur **Vercel**, et la plupart ne me coûtent rien. Voici comment j'en suis arrivé là, et ce qu'il faut savoir avant de faire de même.
+À chaque nouveau projet, la même question revient : comment mettre en ligne quelque chose de propre, rapidement, sans payer un serveur qui tournera à vide 95 % du temps ? [Ce blog](/projects/personal-website/), [Dotcraft](/projects/dotcraft/), [Ma Garde Sereine](/projects/ma-garde-sereine/), [Re-Source Et Moi](/projects/re-source-et-moi/), le [site de Maître Eva Biezunski](/projects/eva-biezunski-avocate/)… tous tournent aujourd'hui sur **Vercel**. Voici comment j'en suis arrivé là, et ce qu'il faut savoir avant de faire de même.
 
 ## D'abord, des sites statiques
 
@@ -79,10 +79,10 @@ Gratuit ne veut pas dire illimité, et mieux vaut le savoir avant de se lancer.
 
 ## À qui s'adresse cette solution ?
 
-Pour un blog, un site vitrine, le site d'une association, un MVP ou un projet personnel, c'est à mon sens l'une des meilleures options du moment : on consacre son temps au produit, pas à l'infrastructure. Pour une application à fort trafic ou qui manipule beaucoup de données, l'offre gratuite deviendra vite trop juste, mais le passage aux offres payantes se fait sans toucher une ligne de code.
+Pour un blog, un MVP ou un projet personnel, l'offre gratuite est à mon sens l'une des meilleures options du moment : on consacre son temps au produit, pas à l'infrastructure. Pour un site vitrine ou tout projet commercial, il faut prévoir l'offre Pro : la plateforme et le code restent les mêmes. Pour une application à fort trafic ou qui manipule beaucoup de données, l'offre gratuite deviendra vite trop juste, mais le passage aux offres payantes se fait sans toucher une ligne de code.
 
 ## En résumé
 
-Vercel pour le front-end et le backend Django, Neon pour PostgreSQL : ce duo me permet de lancer une application complète en un après-midi, sans sortir la carte bancaire. Les limites existent (ressources de la base, mise en veille, usage non commercial), mais pour le type de projets que je mène, je ne les ressens quasiment jamais.
+Vercel pour le front-end et le backend Django, Neon pour PostgreSQL : ce duo me permet de lancer une application complète en un après-midi, sans sortir la carte bancaire. Les limites existent (ressources de la base, mise en veille, usage non commercial), mais pour mes projets personnels, je ne les ressens quasiment jamais.
 
 Vous avez un projet à mettre en ligne et hésitez sur l'hébergement ? [Parlons-en](/contact/).

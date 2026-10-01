@@ -126,8 +126,8 @@ export const projects: Project[] = [
     ],
     name: "Fusily",
     titleDescriptor: {
-      fr: "Application mobile de repas",
-      en: "Meal-planning mobile app",
+      fr: "Recettes et planification de repas",
+      en: "Recipe & Meal-Planning App",
     },
     url: "https://fusily.com",
     context: "personal",
@@ -150,14 +150,13 @@ export const projects: Project[] = [
     content: {
       fr: {
         description:
-          "Application mobile (iOS et Android) pour organiser les repas de la semaine.",
+          "Application mobile (iOS et Android) de recettes et de planification de repas.",
         aim: "Aider à planifier les repas de la semaine, n’acheter que le nécessaire, varier les plats à chaque fois et découvrir de nouvelles recettes.",
         longDescription:
           "Fusily est un produit complet que je construis de bout en bout : une application mobile React Native / Expo publiée sur iOS et Android, adossée à un backend Django / DRF et une base PostgreSQL. On y crée, partage et planifie des recettes, on génère sa liste de courses, et on réduit le gaspillage en n’achetant que le nécessaire. Du modèle de données au déploiement des stores, chaque brique — API, authentification, notifications, mise en production — est pensée pour durer.",
       },
       en: {
-        description:
-          "Mobile app (iOS and Android) to organize your week’s meals.",
+        description: "Recipe and meal-planning mobile app for iOS and Android.",
         aim: "Help people plan their week’s meals, buy only what they need, eat something different each time and discover new recipes.",
         longDescription:
           "Fusily is a full product I build end to end: a React Native / Expo mobile app shipped on iOS and Android, backed by a Django / DRF backend and a PostgreSQL database. You create, share and plan recipes, generate your shopping list, and cut waste by buying only what you need. From the data model to store deployment, every piece — API, authentication, notifications, going to production — is built to last.",
@@ -263,7 +262,7 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/GuillaumeOj/dotcraft",
     context: "side",
     platform: ["web"],
-    stack: ["React", "TypeScript", "Vite"],
+    stack: ["React", "TypeScript", "Vite", "Django", "DRF", "PostgreSQL"],
     cover: { fr: dotcraftFr, en: dotcraftEn },
     imageAlt: {
       fr: "Interface du générateur de QR codes dotcraft",
@@ -271,23 +270,23 @@ export const projects: Project[] = [
     },
     year: 2025,
     result: {
-      fr: "En production, 100 % côté client, sans compte ni serveur.",
-      en: "In production, fully client-side, no account or server.",
+      fr: "En production sur dotcraft.fr, utilisable sans compte, avec une synchronisation facultative entre appareils.",
+      en: "Live at dotcraft.fr, usable without an account, with optional sync across devices.",
     },
     content: {
       fr: {
         description:
-          "Générateur de QR codes directement dans le navigateur, sans serveur.",
-        aim: "Créer et conserver ses QR codes entièrement côté client, en utilisant uniquement le localStorage du navigateur — pas de compte, pas de backend.",
+          "Éditeur de QR codes stylisés dans le navigateur, utilisable sans compte.",
+        aim: "Créer des QR codes soignés et les conserver sans avoir à créer de compte : la bibliothèque vit dans le navigateur (localStorage et IndexedDB), et un compte gratuit facultatif la synchronise entre vos appareils.",
         longDescription:
-          "dotcraft est une application web React / TypeScript qui génère des QR codes entièrement côté client. Aucun serveur, aucun compte : les codes sont créés et conservés dans le localStorage du navigateur. Un exemple d’application rapide et respectueuse de la vie privée, où toute la logique vit dans le navigateur.",
+          "dotcraft est une application web React / TypeScript qui génère des QR codes directement dans le navigateur. Sans compte, la bibliothèque est enregistrée localement (localStorage et IndexedDB) et s’exporte dans un fichier ; avec un compte gratuit, elle est sauvegardée et synchronisée entre vos appareils grâce à une API Django / DRF. Le rendu des QR codes reste entièrement côté client.",
       },
       en: {
         description:
-          "QR code generator that runs entirely in the browser, with no server.",
-        aim: "Create and keep your QR codes fully client-side, using only the browser’s localStorage — no account, no backend.",
+          "Styled QR code editor in the browser, usable without an account.",
+        aim: "Create polished QR codes and keep them without signing up: the library lives in the browser (localStorage and IndexedDB), and an optional free account syncs it across your devices.",
         longDescription:
-          "dotcraft is a React / TypeScript web app that generates QR codes entirely client-side. No server, no account: codes are created and kept in the browser’s localStorage. An example of a fast, privacy-friendly app where all the logic lives in the browser.",
+          "dotcraft is a React / TypeScript web app that generates QR codes right in the browser. Without an account, the library is saved locally (localStorage and IndexedDB) and can be exported to a file; with a free account, it is backed up and synced across your devices through a Django / DRF API. QR code rendering stays fully client-side.",
       },
     },
   },

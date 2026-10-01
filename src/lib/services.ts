@@ -2,12 +2,10 @@ import { type Locale, SITE } from "../config";
 import { localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
-  BUSINESS_ID,
   breadcrumbList,
+  businessContact,
   inLanguage,
-  LYON_ADDRESS,
-  PERSON_ID,
-  SERVICE_TYPES,
+  professionalServiceNode,
   WEBSITE_ID,
 } from "./schema";
 
@@ -341,33 +339,19 @@ export const contactNote = {
 
 /**
  * schema.org JSON-LD for the services page: the canonical `#business`
- * ProfessionalService node (the *same* entity defined on About — same `@id`,
- * name, address and `WebSite`) enriched here with the offer's `serviceType`s and
- * `areaServed`, plus a FAQPage built from the visible FAQ. Sharing the `@id`
+ * ProfessionalService node (the *same* entity defined on About and Home — same
+ * `@id`, name, address and offers) plus contact details, and a FAQPage built
+ * from the visible FAQ. Sharing the `@id`
  * (rather than minting a second businessless node) lets Google merge both pages
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
   const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
 
+  // The shared #business node plus the contact details this page shows.
   const service = {
-    "@type": "ProfessionalService",
-    "@id": BUSINESS_ID,
-    name: SITE.name,
-    url: homeUrl,
-    email: SITE.email,
-    inLanguage: inLanguage(locale),
-    isPartOf: { "@id": WEBSITE_ID },
-    address: LYON_ADDRESS,
-    // Same coarse band as the About #business node so the merged entity reads
-    // consistently from either page.
-    priceRange: "€€",
-    areaServed: [
-      { "@type": "City", name: "Lyon" },
-      { "@type": "Country", name: "France" },
-    ],
-    serviceType: SERVICE_TYPES,
-    provider: { "@id": PERSON_ID },
+    ...professionalServiceNode(),
+    ...businessContact,
   };
 
   const faqPage = {

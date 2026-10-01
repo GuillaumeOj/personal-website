@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { typeset, typesetHtml } from "../../src/lib/typography";
 
-const NBSP = " ";
-const NNBSP = " ";
+const NBSP = "\u00a0";
+const NNBSP = "\u202f";
 
 describe("typeset (fr)", () => {
   it("binds high punctuation to the previous word", () => {
@@ -11,6 +11,16 @@ describe("typeset (fr)", () => {
     );
     expect(typeset("Stack : Astro ; Vercel", "fr")).toBe(
       `Stack${NBSP}: Astro${NNBSP}; Vercel`,
+    );
+  });
+
+  it("adds the missing space before a closing ? ! ;", () => {
+    expect(typeset("Combien coûte votre projet?", "fr")).toBe(
+      `Combien coûte votre projet${NNBSP}?`,
+    );
+    expect(typeset("Vraiment?! Oui.", "fr")).toBe(`Vraiment${NNBSP}?! Oui.`);
+    expect(typeset("web &amp; mobile, l&#39;IA", "fr")).toBe(
+      "web &amp; mobile, l’IA",
     );
   });
 
@@ -26,6 +36,10 @@ describe("typeset (fr)", () => {
     );
     expect(typeset("dès 1 500 €", "fr")).toBe(`dès 1${NNBSP}500${NBSP}€`);
     expect(typeset("en 3 heures", "fr")).toBe("en 3 heures");
+    // Every group of a long number is bound, not just the first.
+    expect(typeset("SIREN : 993 870 955", "fr")).toBe(
+      `SIREN${NBSP}: 993${NNBSP}870${NNBSP}955`,
+    );
   });
 
   it("spaces guillemets and converts English quotes", () => {

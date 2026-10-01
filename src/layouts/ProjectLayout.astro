@@ -2,7 +2,7 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { articlePath, contactPath, localizedPath, t } from '../i18n/ui';
+import { absoluteUrl, articlePath, contactPath, localizedPath, projectPath, t } from '../i18n/ui';
 import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
 import { caseStudyFor } from '../lib/case-studies';
@@ -36,27 +36,19 @@ const metaTitle = titleDescriptor ? `${name} — ${titleDescriptor}` : name;
 // link previews the work rather than a raw portrait phone screenshot.
 const og = projectSocialImage(project.slug, locale);
 
-// Per-project alt when authored, else a generic fallback (kept distinct for the
-// on-page screenshot vs. the social card, matching their prior fallbacks).
-const imageAlt =
-  project.imageAlt?.[locale] ??
-  (locale === 'fr' ? `Capture d’écran de ${name}` : `${name} screenshot`);
-const ogImageAlt = project.imageAlt?.[locale] ?? name;
+const imageAlt = project.imageAlt[locale];
 
-const canonical = new URL(
-  localizedPath(locale, `/projects/${project.slug}`),
-  SITE.url,
-).toString();
+const canonical = absoluteUrl(projectPath(locale, project.slug));
 // Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
 // the BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    url: new URL(localizedPath(locale, '/'), SITE.url).toString(),
+    url: absoluteUrl(localizedPath(locale, '/')),
   },
   {
     name: t(locale, 'nav.projects'),
-    url: new URL(localizedPath(locale, '/projects'), SITE.url).toString(),
+    url: absoluteUrl(localizedPath(locale, '/projects')),
   },
   { name, url: canonical },
 ];
@@ -82,7 +74,7 @@ const jsonLd = projectJsonLd(locale, {
   title={metaTitle}
   description={metaDescription}
   ogImage={og.url}
-  ogImageAlt={ogImageAlt}
+  ogImageAlt={imageAlt}
   ogImageWidth={og.width}
   ogImageHeight={og.height}
   jsonLd={jsonLd}

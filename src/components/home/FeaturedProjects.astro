@@ -35,7 +35,7 @@ const allHref = localizedPath(locale, '/projects');
   <div class="reveal mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {
       items.map((project) => (
-        <ProjectCard project={project} locale={locale} priority={false} />
+        <ProjectCard project={project} locale={locale} priority={false} headingLevel={3} />
       ))
     }
   </div>

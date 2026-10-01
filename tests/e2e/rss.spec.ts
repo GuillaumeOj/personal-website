@@ -14,3 +14,20 @@ for (const [path, language] of [
     expect(xml).toContain(`<language>${language}</language>`);
   });
 }
+
+// Audit E-min: each feed's channel links its own blog index and itself.
+for (const [feed, index] of [
+  ["/rss.xml", "/blog/"],
+  ["/en/rss.xml", "/en/blog/"],
+] as const) {
+  test(`${feed}: channel link and atom:self`, async ({ request }) => {
+    const xml = await (await request.get(feed)).text();
+    expect(xml).toContain(`<channel><title>`);
+    expect(xml).toMatch(
+      new RegExp(`<link>https://guillaume\\.ojardias\\.info${index}</link>`),
+    );
+    expect(xml).toContain(
+      `<atom:link href="https://guillaume.ojardias.info${feed}" rel="self"`,
+    );
+  });
+}

@@ -1,4 +1,4 @@
-import type { Locale } from "../config";
+import { type Locale, SITE } from "../config";
 import { hero } from "../lib/home";
 
 const dictionaries = {
@@ -20,7 +20,7 @@ const dictionaries = {
     // Home owns the "développeur … à Lyon" head term (About leads with the name,
     // Services with "prestations") so no two titles share a leading phrase.
     "meta.homeTitle": "Développeur web & mobile freelance à Lyon",
-    "meta.projectsTitle": "Projets & réalisations web",
+    "meta.projectsTitle": "Projets et réalisations web & mobile",
     "meta.blogTitle": "Blog — Développement web & mobile",
     // SEO meta descriptions for hub pages — richer than the on-page subtitle
     // (`projects.subtitle` / `blog.subtitle`), which stays as the visible lead.
@@ -42,6 +42,7 @@ const dictionaries = {
       "Notes et retours d’expérience d’un développeur web & mobile freelance à Lyon.",
     "blog.empty": "Aucun article pour le moment.",
     "blog.published": "Publié le",
+    "blog.updated": "Mis à jour le",
     "blog.backToList": "← Tous les articles",
     "blog.tocLabel": "Sommaire",
     "blog.coverCredit.by": "Photo\u00a0:",
@@ -97,6 +98,7 @@ const dictionaries = {
     "footer.legalNotice": "Mentions légales",
     "footer.privacy": "Politique de confidentialité",
     "footer.terms": "Conditions générales",
+    "footer.accessibility": "Accessibilité",
     "error.404.title": "404",
     "error.404.lead": "Cette page a pris un café…",
     "error.404.message":
@@ -137,6 +139,7 @@ const dictionaries = {
       "Notes and field lessons from a freelance web & mobile developer in Lyon.",
     "blog.empty": "No posts yet.",
     "blog.published": "Published on",
+    "blog.updated": "Updated on",
     "blog.backToList": "← All posts",
     "blog.tocLabel": "On this page",
     "blog.coverCredit.by": "Photo by",
@@ -191,6 +194,7 @@ const dictionaries = {
     "footer.legalNotice": "Legal notice",
     "footer.privacy": "Privacy policy",
     "footer.terms": "Terms of service",
+    "footer.accessibility": "Accessibility",
     "error.404.title": "404",
     "error.404.lead": "This page took a coffee break…",
     "error.404.message":
@@ -236,6 +240,10 @@ export const localizedPath = (locale: Locale, path: string): string => {
   const last = prefixed.slice(prefixed.lastIndexOf("/") + 1);
   return last.includes(".") ? prefixed : ensureTrailingSlash(prefixed);
 };
+
+/** Absolute URL on the production origin of a site path. */
+export const absoluteUrl = (path: string): string =>
+  new URL(path, SITE.url).toString();
 
 export const articlePath = (locale: Locale, slug: string): string =>
   localizedPath(locale, `/blog/${slug}`);

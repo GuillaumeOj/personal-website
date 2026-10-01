@@ -11,7 +11,7 @@ coverCredit:
   author: Kristaps Grundsteins
   authorUrl: https://unsplash.com/@grundsteins
   url: https://unsplash.com/photos/Dzd-Xt3QWKw
-tags: []
+tags: ["AI", "Software development", "Freelance"]
 ---
 
 Let me be upfront before we start: I'm a developer. So yes, feel free to read me with that in mind — it's fair. But this isn't a plea to protect my livelihood. I use AI every day and I'm the first to sing its praises. What interests me here is something else: the line — often invisible — between what AI does brilliantly and what it can't yet do on its own.

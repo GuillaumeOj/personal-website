@@ -1,5 +1,5 @@
 ---
-title: "My journey — Who I am"
+title: "My Journey: Who I Am"
 description: "An honest introduction to my story — from developer to entrepreneur, and why I built Fusily."
 pubDate: 2026-05-07
 lang: en
@@ -10,7 +10,7 @@ coverCredit:
   author: Tom Swinnen
   authorUrl: https://unsplash.com/@shottrotter
   url: https://unsplash.com/photos/-5M0spOZfc0
-tags: []
+tags: ["Career", "Freelance", "Web development"]
 ---
 
 Welcome to this blog. This first post is my way of introducing myself — not with a résumé, but with the real lines of my story.

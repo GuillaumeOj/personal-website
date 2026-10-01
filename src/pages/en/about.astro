@@ -4,7 +4,7 @@ import portrait from '../../assets/portrait.jpg';
 import AboutContent from '../../components/about/AboutContent.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { SITE } from '../../config';
-import { localizedPath, t } from '../../i18n/ui';
+import { absoluteUrl, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { about, aboutJsonLd } from '../../lib/about';
 
@@ -15,11 +15,11 @@ const doc = about[locale];
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
+    href: absoluteUrl(localizedPath(locale, '/')),
   },
   {
     name: t(locale, 'nav.about'),
-    href: new URL(localizedPath(locale, '/about'), SITE.url).toString(),
+    href: absoluteUrl(localizedPath(locale, '/about')),
   },
 ];
 

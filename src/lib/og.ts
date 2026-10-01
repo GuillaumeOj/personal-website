@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import type { Locale } from "../config";
+import { escapeHtml as esc } from "./html";
 
 /**
  * Build-time Open Graph card generator + resolver.
@@ -13,7 +14,7 @@ import type { Locale } from "../config";
  * that vertical image into a broken sliver. This module composes real
  * **1200×630** landscape cards with `sharp` — a warm branded canvas matching the
  * stone/amber palette, an inset visual (the portrait, or a project screenshot),
- * and legible text — and emits them into the build output under `/og/*.png` via
+ * and legible text — and emits them into the build output under `/og/` (`default-{locale}.jpg`, `project-*.png`) via
  * an `astro:build:done` integration hook (see `astro.config.mjs`).
  *
  * The layouts import only the pure resolver helpers below
@@ -53,11 +54,13 @@ export interface SocialImage {
 /**
  * The sitewide default landscape card for a locale — used by home, /about, the
  * projects hub, the blog list, and as the cover-less-article fallback.
- * Resolves to `/og/default-{locale}.png` at 1200×630.
+ * Resolves to `/og/default-{locale}.jpg` at 1200×630: a JPEG, since the
+ * portrait photo made the PNG ~680 KB and some scrapers (WhatsApp) skip images
+ * much above 300 KB.
  */
 export function defaultSocialImage(locale: Locale): SocialImage {
   return {
-    url: `/og/default-${locale}.png`,
+    url: `/og/default-${locale}.jpg`,
     width: OG_WIDTH,
     height: OG_HEIGHT,
   };
@@ -158,14 +161,6 @@ export const PROJECT_CARDS: ProjectCard[] = [
 // SVG helpers
 // ---------------------------------------------------------------------------
 
-const esc = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
 /**
  * Greedy word-wrap tuned for the card fonts. `maxChars` is an approximate
  * budget per line (proportional to the box width / font size); good enough for
@@ -260,7 +255,7 @@ async function roundCorners(buf: Buffer, radius: number): Promise<Buffer> {
 /**
  * Compose the default (portrait) card for a locale: the portrait cover-cropped
  * into a full-height right panel, name + tagline + Lyon marker on the left.
- * Returns a 1200×630 PNG buffer.
+ * Returns a 1200×630 JPEG buffer.
  */
 export async function composeDefaultCard(locale: Locale): Promise<Buffer> {
   const sharp = await getSharp();
@@ -286,7 +281,7 @@ export async function composeDefaultCard(locale: Locale): Promise<Buffer> {
 
   return sharp(Buffer.from(svg))
     .composite([{ input: portrait, left: panelX, top: 0 }])
-    .png()
+    .jpeg({ quality: 82, mozjpeg: true })
     .toBuffer();
 }
 
@@ -341,7 +336,7 @@ export async function composeProjectCard(
 
 /**
  * Generate every OG card (per-locale default + per-project) and write them to
- * `<outDir>/og/*.png`. Idempotent: re-run overwrites the same files. Called from
+ * `<outDir>/og/` (default `.jpg`, project `.png`). Idempotent: re-run overwrites the same files. Called from
  * the Astro integration's `astro:build:done` hook with the build output `dir`.
  */
 export async function generateOgImages(outDir: URL): Promise<string[]> {
@@ -357,7 +352,7 @@ export async function generateOgImages(outDir: URL): Promise<string[]> {
 
   for (const locale of LOCALES) {
     const card = await composeDefaultCard(locale);
-    await write(`default-${locale}.png`, card);
+    await write(`default-${locale}.jpg`, card);
   }
 
   for (const card of PROJECT_CARDS) {

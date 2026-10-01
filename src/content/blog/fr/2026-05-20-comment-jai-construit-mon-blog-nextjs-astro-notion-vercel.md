@@ -4,6 +4,7 @@ description: "Retour détaillé sur les choix techniques de mon blog personnel :
 seoTitle: "Mon blog : Next.js, Astro, Notion et Vercel"
 seoDescription: "Les choix techniques de mon blog : Next.js et Astro, Notion en CMS headless bilingue, déploiement automatisé sur Vercel et images sur Vercel Blob."
 pubDate: 2026-05-20
+updatedDate: 2026-10-01
 lang: fr
 slug: comment-jai-construit-mon-blog-nextjs-astro-notion-vercel
 translationKey: blog-stack
@@ -12,7 +13,7 @@ coverCredit:
   author: AltumCode
   authorUrl: https://unsplash.com/@altumcode
   url: https://unsplash.com/photos/P2SkP_PXhlU
-tags: []
+tags: ["Astro", "Next.js", "Notion", "Vercel"]
 ---
 
 > **Mise à jour (2026)** : le site tourne désormais sur Astro seul, avec des articles Markdown versionnés dans le dépôt. Cet article décrit la version précédente, avec Next.js et Notion.
@@ -50,7 +51,7 @@ Notion joue donc le rôle d'un vrai CMS headless : interface d'édition agréabl
 
 La mécanique de publication repose sur un webhook. Quand un article est modifié ou publié dans Notion, un événement est déclenché et intercepté côté Vercel. Vercel lance alors un rebuild du site, qui va ré-interroger l'API Notion pour récupérer le contenu à jour et régénérer les pages statiques correspondantes.
 
-Le flow complet ressemble à ceci :
+Le déroulé complet ressemble à ceci :
 
 ```
 ┌─────────────────────────────┐
@@ -87,11 +88,11 @@ Le seul délai est celui du build — quelques dizaines de secondes en général
 
 ## Les images : Vercel Blob à la rescousse
 
-L'intégration des images est l'un des points les plus délicats quand on utilise Notion comme CMS. Par défaut, les URLs des images dans Notion sont temporaires et expirables. Une image uploadée dans une page Notion génère une URL signée avec une durée de vie limitée. Au bout de quelques heures, cette URL n'est plus valide.
+L'intégration des images est l'un des points les plus délicats quand on utilise Notion comme CMS. Par défaut, les URL des images dans Notion sont temporaires et expirables. Une image importée dans une page Notion génère une URL signée avec une durée de vie limitée. Au bout de quelques heures, cette URL n'est plus valide.
 
 Pour un site statique généré au moment du build, c'est un problème majeur : les images affichées dans les articles pourraient devenir inaccessibles peu de temps après la génération du site.
 
-La solution retenue est **Vercel Blob** : lors du build, les images référencées dans les articles Notion sont téléchargées et ré-hébergées dans Vercel Blob. Les URLs Blob sont stables et permanentes. Les pages générées pointent vers ces URLs Blob plutôt que vers les URLs temporaires de Notion.
+La solution retenue est **Vercel Blob** : lors du build, les images référencées dans les articles Notion sont téléchargées et ré-hébergées dans Vercel Blob. Les URL Blob sont stables et permanentes. Les pages générées pointent vers ces URL Blob plutôt que vers les URL temporaires de Notion.
 
 Ce mécanisme garantit que les images restent accessibles indéfiniment, peu importe ce qui se passe du côté de Notion. C'est une couche de robustesse essentielle pour un site en production.
 

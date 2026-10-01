@@ -1,5 +1,5 @@
 ---
-title: "Tamagui vs React Native Paper: why I switched UI frameworks on Fusily"
+title: "Tamagui vs React Native Paper: Why I Switched UI Frameworks on Fusily"
 description: "A look back at the UI framework choice on Fusily: from Tamagui to React Native Paper, and why I eventually split mobile and web."
 seoTitle: "Tamagui vs React Native Paper: Why I Switched UI Kits"
 pubDate: 2026-05-19
@@ -11,7 +11,7 @@ coverCredit:
   author: Gustavo Boaron
   authorUrl: https://unsplash.com/@kreamytime
   url: https://unsplash.com/photos/BDpEmeB8HUk
-tags: []
+tags: ["React Native", "Tamagui", "React Native Paper", "UI"]
 ---
 
 Choosing a UI framework in React Native is one of those decisions you make early in a project, somewhat hastily, and sometimes regret for a long time. On Fusily, I went through exactly that: Tamagui first, then React Native Paper. Here's why.

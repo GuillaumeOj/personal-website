@@ -1,6 +1,6 @@
 ---
 title: "Django & React Native i18n: Translate User-Generated Content"
-description: "How we internationalized a Django + React Native app: gettext, i18next, and translating user-generated content with the Google Translate API and Celery."
+description: "How I internationalized a Django + React Native app: gettext, i18next, and translating user-generated content with the Google Translate API and Celery."
 pubDate: 2026-07-13
 lang: en
 slug: i18n-django-react-native-user-content
@@ -10,7 +10,7 @@ coverCredit:
   author: Brett Jordan
   authorUrl: https://unsplash.com/@brett_jordan
   url: https://unsplash.com/photos/hJjC2RhAG0s
-tags: []
+tags: ["i18n", "Django", "React Native"]
 ---
 
 Fusily is a recipe and meal-planning app where users share their own dishes and tips. By the very nature of the product — written content, meant to be shared and to travel — I built in multi-language support from the earliest days. Some will say that's premature so early in an app's life. They're right. But beyond the timing, there was a genuine technical curiosity to satisfy.
@@ -163,7 +163,7 @@ Up to here, everything is well-trodden: the docs are plentiful and the libraries
 
 ## The real challenge: user-generated content
 
-We've handled the strings we control — the ones in the interfaces. But what about user-generated content? The internet is full of articles on internationalization with Django; far fewer when it comes to translating what users write. I turned the problem over several times, tried a few approaches, looked for existing apps, and found nothing truly convincing.
+I've handled the strings I control — the ones in the interfaces. But what about user-generated content? The internet is full of articles on internationalization with Django; far fewer when it comes to translating what users write. I turned the problem over several times, tried a few approaches, looked for existing apps, and found nothing truly convincing.
 
 ### What should you translate?
 
@@ -211,7 +211,7 @@ The structure is there. Now we actually need to get the content translated into 
 
 ### Google Translate API enters the picture
 
-How do you detect the source language? Relying on the app's language isn't enough: Fusily only has interfaces in French and English, which would force our Spanish-speaking users to write in one of those two. That's where Google's translation API comes in, offering two tools: detecting a content's language, and translating from a source to a target language. In the create/update serializers, a Celery task then fills in the missing translations.
+How do you detect the source language? Relying on the app's language isn't enough: Fusily only has interfaces in French and English, which would force Spanish-speaking users to write in one of those two. That's where Google's translation API comes in, offering two tools: detecting a content's language, and translating from a source to a target language. In the create/update serializers, a Celery task then fills in the missing translations.
 
 ### Determining the source language
 

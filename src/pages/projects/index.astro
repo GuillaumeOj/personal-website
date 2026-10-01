@@ -1,8 +1,7 @@
 ---
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProjectsExplorer from '../../components/ProjectsExplorer.astro';
-import { SITE } from '../../config';
-import { contactPath, localizedPath, t } from '../../i18n/ui';
+import { absoluteUrl, contactPath, localizedPath, t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getProjects } from '../../lib/projects';
 import { collectionPageJsonLd } from '../../lib/schema';
@@ -10,16 +9,13 @@ import { collectionPageJsonLd } from '../../lib/schema';
 const locale = 'fr' as const;
 const projects = getProjects();
 
-const canonical = new URL(
-  localizedPath(locale, '/projects'),
-  SITE.url,
-).toString();
+const canonical = absoluteUrl(localizedPath(locale, '/projects'));
 const jsonLd = collectionPageJsonLd(locale, {
   url: canonical,
   name: t(locale, 'meta.projectsTitle'),
   description: t(locale, 'meta.projectsDescription'),
   breadcrumbs: [
-    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
+    { name: t(locale, 'nav.home'), url: absoluteUrl(localizedPath(locale, '/')) },
     { name: t(locale, 'nav.projects'), url: canonical },
   ],
 });
@@ -28,7 +24,7 @@ const jsonLd = collectionPageJsonLd(locale, {
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
+    href: absoluteUrl(localizedPath(locale, '/')),
   },
   { name: t(locale, 'nav.projects'), href: canonical },
 ];

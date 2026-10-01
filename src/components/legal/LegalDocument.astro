@@ -6,8 +6,9 @@ interface Props {
 }
 
 const { doc } = Astro.props;
-// The French text is the legally binding one; English pages say so up front.
-const isTranslation = Astro.currentLocale === 'en';
+// The French text is the legally binding one; English pages say so up front
+// (not on voluntary, non-binding texts like the accessibility statement).
+const isTranslation = Astro.currentLocale === 'en' && doc.binding !== false;
 ---
 
 <article class="space-y-8">

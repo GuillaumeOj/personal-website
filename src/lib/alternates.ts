@@ -1,5 +1,5 @@
-import { type Locale, SITE } from "../config";
-import { articlePath } from "../i18n/ui";
+import type { Locale } from "../config";
+import { absoluteUrl, articlePath } from "../i18n/ui";
 
 export interface ArticleAlternates {
   altFrUrl?: string;
@@ -30,7 +30,7 @@ export function articleAlternates(opts: {
   const frSlug = locale === "fr" ? slug : siblingSlug;
   const enSlug = locale === "en" ? slug : siblingSlug;
   return {
-    altFrUrl: new URL(articlePath("fr", frSlug), SITE.url).toString(),
-    altEnUrl: new URL(articlePath("en", enSlug), SITE.url).toString(),
+    altFrUrl: absoluteUrl(articlePath("fr", frSlug)),
+    altEnUrl: absoluteUrl(articlePath("en", enSlug)),
   };
 }

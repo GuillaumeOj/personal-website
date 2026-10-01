@@ -69,7 +69,7 @@ export default defineConfig({
   integrations: [
     // Build-time Open Graph cards. Composes real 1200×630 landscape share cards
     // (branded canvas + portrait/screenshot + text) with `sharp` and writes them
-    // to `dist/og/*.png`, so LinkedIn/Slack/Twitter shares stop cropping the old
+    // to `dist/og/` (JPEG default cards, PNG project cards), so LinkedIn/Slack/Twitter shares stop cropping the old
     // vertical portrait. Only runs on `astro build` (never `astro dev`). The
     // generator lives in `src/lib/og.ts`. It is imported statically (like the
     // sitemap helpers above) rather than lazily inside the hook: by the time
@@ -87,11 +87,12 @@ export default defineConfig({
       },
     },
     sitemap({
-      // Drop the `noindex` pages: legal pages (notice, privacy policy, terms)
+      // Drop the `noindex` pages: legal pages (notice, privacy policy, terms,
+      // accessibility statement)
       // and the no-JS contact-form outcomes. They shouldn't advertise
       // themselves for crawling.
       filter: (page) =>
-        !/\/(legal-notice|privacy-policy|terms-of-service|contact\/(thanks|error))\/?$/.test(
+        !/\/(legal-notice|privacy-policy|terms-of-service|accessibility|contact\/(thanks|error))\/?$/.test(
           new URL(page).pathname,
         ),
       // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both
@@ -99,7 +100,7 @@ export default defineConfig({
       // per-locale slugs (blog/project details) simply get no alternate.
       i18n: {
         defaultLocale: SITE.defaultLocale,
-        locales: { fr: "fr-FR", en: "en-US" },
+        locales: { fr: "fr", en: "en" },
       },
       // Attach <lastmod> where a real date exists (matched on the
       // trailing-slash pathname); see `lastmodByPath` above.

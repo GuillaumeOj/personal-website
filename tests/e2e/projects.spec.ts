@@ -68,3 +68,11 @@ test("project page renders its case study", async ({ page }) => {
     .getAttribute("content");
   expect(meta?.length).toBeGreaterThanOrEqual(130);
 });
+
+// Audit W7: cards use the curated, per-locale screenshot description.
+test("project cards use the curated image alt", async ({ page }) => {
+  await page.goto("/en/projects/");
+  await expect(
+    page.locator('img[alt="Fusily mobile app home screen"]').first(),
+  ).toBeAttached();
+});

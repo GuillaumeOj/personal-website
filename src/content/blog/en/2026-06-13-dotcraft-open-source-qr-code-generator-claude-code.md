@@ -3,6 +3,7 @@ title: "dotcraft: Building an Open-Source QR Code Generator in a Few Hours with 
 description: "How I built dotcraft, an open-source, privacy-first styled QR code editor, in a few hours with Claude Code — and why it works without an account."
 seoTitle: "dotcraft: A QR Code Generator Built with Claude Code"
 pubDate: 2026-06-13
+updatedDate: 2026-10-01
 lang: en
 slug: dotcraft-open-source-qr-code-generator-claude-code
 translationKey: dotcraft
@@ -11,12 +12,12 @@ coverCredit:
   author: Markus Winkler
   authorUrl: https://unsplash.com/@markuswinkler
   url: https://unsplash.com/photos/bgySUDeDCfI
-tags: []
+tags: ["Open source", "React", "QR code", "Claude Code"]
 ---
 
 > **Update (October 2026)**: dotcraft now offers an optional free account to back up and sync your library across devices. Without an account, everything stays in the browser, as described below.
 
-I just needed a QR code. Styled, clean, with my logo in the center. A trivial request — except looking for one reminded me how the web is flooded with tools you don't really want to hand anything over to. Out of that frustration came [dotcraft](https://dotcraft.fr), a QR code editor I built from A to Z, open source, in a few hours. Here's how, and above all why.
+I just needed a QR code. Styled, clean, with my logo in the center. A trivial request — except looking for one reminded me how the web is flooded with tools you don't really want to hand anything over to. Out of that frustration came [dotcraft](https://dotcraft.fr), a QR code editor I built entirely, open source, in a few hours. Here's how, and above all why.
 
 ## The problem with online QR code generators
 
@@ -48,7 +49,7 @@ That left one classic downside of local storage: it's tied to a single browser. 
 
 I also wanted the tool to hold up when you have a lot of QR codes to manage. So you can **organize them by projects and subfolders**, the way you'd sort files — one project per client, per campaign, whatever fits. It's the kind of comfort you almost never find in free generators.
 
-## The making-of: A to Z in a few hours
+## Behind the scenes: from script to editor in a few hours
 
 The detail I care about most in this story is the speed of execution. dotcraft went from idea to a working online tool in a few hours, leaning on Claude Code.
 

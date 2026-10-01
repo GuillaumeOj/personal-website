@@ -28,6 +28,41 @@ describe("validateSubmission", () => {
     }
   });
 
+  // Audit S5: name/email feed the subject and Reply-To headers.
+  it("collapses control characters in single-line fields", () => {
+    const result = validateSubmission({
+      ...valid,
+      name: "Jane\r\nBcc: victim@example.com",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(result.data.name).toBe("Jane Bcc: victim@example.com");
+    expect(
+      validateSubmission({ ...valid, email: "ja\u0001ne@example.com" }).ok,
+    ).toBe(false);
+    const nel = validateSubmission({
+      ...valid,
+      name: "Jane\u0085Bcc: x\u2028y",
+    });
+    expect(nel.ok).toBe(true);
+    if (nel.ok) expect(nel.data.name).toBe("Jane Bcc: x y");
+  });
+
+  it("rejects a message made only of control characters", () => {
+    expect(validateSubmission({ ...valid, message: "\u0001\n\u0001" }).ok).toBe(
+      false,
+    );
+  });
+
+  it("keeps line breaks in the message but drops other control chars", () => {
+    const result = validateSubmission({
+      ...valid,
+      message: "Line one\r\nLine two\u0007\tend",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.data.message).toBe("Line one\nLine two\tend");
+  });
+
   it("rejects a missing name, bad email, or empty message", () => {
     expect(validateSubmission({ ...valid, name: "" }).ok).toBe(false);
     expect(validateSubmission({ ...valid, email: "not-an-email" }).ok).toBe(
@@ -83,6 +118,19 @@ describe("buildBrevoPayload", () => {
     expect(payload.htmlContent).toContain("A&lt;b&gt;");
     expect(payload.htmlContent).toContain("x &amp; y");
     expect(payload.subject).toContain("Application mobile");
+  });
+
+  // Audit S6: safe in attribute values too, not only element text.
+  it("escapes quotes, single and double", () => {
+    const payload = buildBrevoPayload({
+      name: `O'Brien "Jo"`,
+      email: "a@b.com",
+      projectType: "web",
+      message: "it's",
+    });
+    expect(payload.htmlContent).toContain("O&#39;Brien &quot;Jo&quot;");
+    expect(payload.htmlContent).toContain("it&#39;s");
+    expect(payload.htmlContent).not.toMatch(/O'Brien/);
   });
 
   it("flags quote requests and lists budget + timeline", () => {

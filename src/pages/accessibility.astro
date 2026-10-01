@@ -1,0 +1,18 @@
+---
+import LegalDocument from '../components/legal/LegalDocument.astro';
+import { t } from '../i18n/ui';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { accessibilityStatement } from '../lib/legal';
+
+const locale = 'fr' as const;
+const doc = accessibilityStatement(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'footer.accessibility')}
+  description={doc.metaDescription}
+  noindex
+>
+  <LegalDocument doc={doc} />
+</BaseLayout>

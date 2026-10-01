@@ -26,13 +26,6 @@
     {
       "matchUpdateTypes": ["major"],
       "addLabels": ["major-update"]
-    },
-    {
-      "matchPackageNames": ["@playwright/test"],
-      "postUpgradeTasks": {
-        "commands": ["bunx playwright install --with-deps chromium"],
-        "executionMode": "branch"
-      }
     }
   ],
   "minimumReleaseAge": "3 days"

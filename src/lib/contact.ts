@@ -81,8 +81,32 @@ export type ValidationResult =
   | { ok: false; spam: true }
   | { ok: false; spam: false; error: string };
 
-const asString = (value: unknown): string =>
-  typeof value === "string" ? value.trim() : "";
+const text = (value: unknown): string =>
+  typeof value === "string" ? value : "";
+
+// biome-ignore lint/suspicious/noControlCharactersInRegex: stripping them is the point
+const CONTROL_CHARS = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g;
+// biome-ignore lint/suspicious/noControlCharactersInRegex: stripping them is the point
+const CONTROL_CHARS_BUT_TAB_LF = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g;
+
+/**
+ * Single-line fields (name, email) end up in the email subject and Reply-To:
+ * collapse any control character (C0, DEL, C1 incl. NEL), CR/LF and the
+ * Unicode line/paragraph separators included, to a space so a value can
+ * never smuggle in a header line.
+ */
+const singleLine = (value: unknown): string =>
+  text(value).replace(CONTROL_CHARS, " ").trim();
+
+/**
+ * The message keeps its line breaks and tabs, minus other control chars, and
+ * is trimmed afterwards so a body of only control characters counts as empty.
+ */
+const multiLine = (value: unknown): string =>
+  text(value)
+    .replace(/\r\n?|[\u2028\u2029]/g, "\n")
+    .replace(CONTROL_CHARS_BUT_TAB_LF, "")
+    .trim();
 
 /** The value if it belongs to `allowed`, otherwise `undefined`. */
 const pick = <T extends string>(
@@ -105,11 +129,11 @@ export function validateSubmission(raw: unknown): ValidationResult {
   const r = raw as Record<string, unknown>;
 
   // Honeypot: a real user never fills the hidden `company` field.
-  if (asString(r.company) !== "") return { ok: false, spam: true };
+  if (text(r.company).trim() !== "") return { ok: false, spam: true };
 
-  const name = asString(r.name);
-  const email = asString(r.email);
-  const message = asString(r.message);
+  const name = singleLine(r.name);
+  const email = singleLine(r.email);
+  const message = multiLine(r.message);
   const projectType = PROJECT_TYPES.includes(r.projectType as ProjectType)
     ? (r.projectType as ProjectType)
     : "other";

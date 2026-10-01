@@ -13,7 +13,7 @@ import { articleAlternates } from '@/lib/alternates';
 import { findSibling } from '@/lib/posts';
 import { localizedName } from '@/lib/projects';
 import { projectsForPost, relatedPosts } from '@/lib/related';
-import { blogPostJsonLd } from '@/lib/schema';
+import { blogPostJsonLd, navTrail } from '@/lib/schema';
 import type { TocHeading } from '@/lib/toc';
 import BaseLayout from './BaseLayout.astro';
 
@@ -56,14 +56,7 @@ const card = await getImage({
 // Breadcrumb trail (Home › Blog › {title}), shared by the visible <nav> and the
 // BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    url: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.blog'),
-    url: absoluteUrl(localizedPath(locale, '/blog')),
-  },
+  ...navTrail(locale, ['nav.blog', '/blog']),
   { name: post.data.title, url: canonical },
 ];
 // BlogPosting + breadcrumb (Home › Blog › {title}). Author falls back to the
@@ -109,7 +102,7 @@ const jsonLd = blogPostJsonLd(locale, {
     {t(locale, 'blog.backToList')}
   </a>
   <article class="space-y-6">
-    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs} />
     {/* width/height pin the 3:1 crop so sharp does it at build. Without them
         Astro keeps the source aspect (the covers are portraits up to 1600×2400)
         and `object-cover` throws ~3/4 of every byte away in the browser — on the

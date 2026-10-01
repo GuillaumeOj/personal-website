@@ -1,9 +1,10 @@
 import type { Locale, Localized } from "../config";
-import { absoluteUrl, localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
   breadcrumbList,
+  type Crumb,
   inLanguage,
+  navTrail,
   professionalServiceNode,
   WEBSITE_ID,
 } from "./schema";
@@ -352,6 +353,10 @@ export const contactNote = {
   en: "Tell me about your idea in a few words — usually a reply within one business day, free quote, no commitment.",
 };
 
+/** Home › Services — the visible trail and the JSON-LD `BreadcrumbList`. */
+export const servicesCrumbs = (locale: Locale): Crumb[] =>
+  navTrail(locale, ["nav.services", "/services"]);
+
 /**
  * schema.org JSON-LD for the services page: the canonical `#business`
  * ProfessionalService node (the *same* entity defined on About and Home — same
@@ -361,8 +366,6 @@ export const contactNote = {
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
-
   const service = professionalServiceNode();
 
   const faqPage = {
@@ -376,13 +379,7 @@ export const servicesJsonLd = (locale: Locale) => {
     })),
   };
 
-  const breadcrumbs = breadcrumbList([
-    { name: t(locale, "nav.home"), url: homeUrl },
-    {
-      name: t(locale, "nav.services"),
-      url: absoluteUrl(localizedPath(locale, "/services")),
-    },
-  ]);
+  const breadcrumbs = breadcrumbList(servicesCrumbs(locale));
 
   return {
     "@context": "https://schema.org",

@@ -245,6 +245,10 @@ export const localizedPath = (locale: Locale, path: string): string => {
 export const absoluteUrl = (path: string): string =>
   new URL(path, SITE.url).toString();
 
+/** Absolute, canonical URL of a page in `locale` (see `localizedPath`). */
+export const localizedUrl = (locale: Locale, path: string): string =>
+  absoluteUrl(localizedPath(locale, path));
+
 export const articlePath = (locale: Locale, slug: string): string =>
   localizedPath(locale, `/blog/${slug}`);
 

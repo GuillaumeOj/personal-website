@@ -1,7 +1,7 @@
-import { type Locale, type Localized, SITE } from "../config";
+import type { Locale, Localized } from "../config";
 import {
+  absoluteUrl,
   contactPath,
-  localizedPath,
   quotePath,
   type TranslationKey,
   t,
@@ -15,7 +15,7 @@ import {
   type Timeline,
 } from "./contact";
 import { contact } from "./home";
-import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
+import { BUSINESS_ID, type Crumb, navTrail, webPageJsonLd } from "./schema";
 import { contactNote, cost } from "./services";
 
 /** The two contact pages: the general form and the quote-request form. */
@@ -211,11 +211,11 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
 export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
   const crumb = (key: TranslationKey, path: string): Crumb => ({
     name: t(locale, key),
-    url: new URL(path, SITE.url).toString(),
+    url: absoluteUrl(path),
   });
   const { general } = contactModes;
   const crumbs = [
-    crumb("nav.home", localizedPath(locale, "/")),
+    ...navTrail(locale),
     crumb(general.crumb, general.path(locale)),
   ];
   if (mode !== "general") {

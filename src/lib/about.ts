@@ -1,14 +1,15 @@
 import type { Locale } from "../config";
 import {
-  absoluteUrl,
   contactPath,
   localizedPath,
+  localizedUrl,
   projectPath,
-  t,
 } from "../i18n/ui";
 import {
   breadcrumbList,
+  type Crumb,
   inLanguage,
+  navTrail,
   PERSON_ID,
   personNode,
   professionalServiceNode,
@@ -341,6 +342,10 @@ export const experienceSection = {
   seeLess: { fr: "Voir moins", en: "See less" },
 };
 
+/** Home › About — the visible trail and the JSON-LD `BreadcrumbList`. */
+export const aboutCrumbs = (locale: Locale): Crumb[] =>
+  navTrail(locale, ["nav.about", "/about"]);
+
 /**
  * schema.org JSON-LD for the About page: the shared Person (with sameAs social
  * profiles and knowsAbout tech) who provides a ProfessionalService serving
@@ -351,8 +356,7 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
   // Canonical trailing-slash form so these JSON-LD URLs match the page
   // canonicals and the `@id`-based entity consolidation can't silently miss.
-  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
-  const aboutUrl = absoluteUrl(localizedPath(locale, "/about"));
+  const aboutUrl = localizedUrl(locale, "/about");
 
   const person = personNode(locale, image);
   // The shared `#business` node (single source of truth in schema.ts), enriched
@@ -378,10 +382,7 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     primaryImageOfPage: image,
   };
   // Home › About trail — the last major content page that was missing one.
-  const breadcrumbs = breadcrumbList([
-    { name: t(locale, "nav.home"), url: homeUrl },
-    { name: t(locale, "nav.about"), url: aboutUrl },
-  ]);
+  const breadcrumbs = breadcrumbList(aboutCrumbs(locale));
 
   return {
     "@context": "https://schema.org",

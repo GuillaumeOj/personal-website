@@ -1,5 +1,10 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash } from "../i18n/ui";
+import {
+  ensureTrailingSlash,
+  localizedUrl,
+  type TranslationKey,
+  t,
+} from "../i18n/ui";
 import { workRoles } from "./experience";
 import { tech } from "./home";
 
@@ -124,6 +129,22 @@ export interface Crumb {
   name: string;
   url: string;
 }
+
+/**
+ * A Home › … breadcrumb trail. Each step is a nav label and its unlocalized
+ * path; callers append the current item when it isn't a nav page (a post, a
+ * project). Feeds both the visible `Breadcrumb` and `breadcrumbList`.
+ */
+export const navTrail = (
+  locale: Locale,
+  ...steps: [TranslationKey, string][]
+): Crumb[] =>
+  [["nav.home", "/"] as [TranslationKey, string], ...steps].map(
+    ([key, path]) => ({
+      name: t(locale, key),
+      url: localizedUrl(locale, path),
+    }),
+  );
 
 /** A `BreadcrumbList` from ordered crumbs (root first). */
 export const breadcrumbList = (items: Crumb[]) => ({

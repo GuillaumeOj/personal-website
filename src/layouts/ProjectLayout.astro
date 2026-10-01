@@ -7,7 +7,7 @@ import { projectSocialImage } from '@/lib/og';
 import { localizedName, type Project, resolveImage } from '@/lib/projects';
 import { caseStudyFor } from '@/lib/case-studies';
 import { postsForProject } from '@/lib/related';
-import { projectJsonLd } from '@/lib/schema';
+import { navTrail, projectJsonLd } from '@/lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -42,14 +42,7 @@ const canonical = absoluteUrl(projectPath(locale, project.slug));
 // Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
 // the BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    url: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.projects'),
-    url: absoluteUrl(localizedPath(locale, '/projects')),
-  },
+  ...navTrail(locale, ['nav.projects', '/projects']),
   { name, url: canonical },
 ];
 // CreativeWork (or SoftwareApplication for mobile apps) + breadcrumb; the live
@@ -81,7 +74,7 @@ const jsonLd = projectJsonLd(locale, {
   hreflang
 >
   <article class="space-y-8">
-    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs} />
 
     <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage

@@ -1,9 +1,9 @@
 ---
 import Breadcrumb from '@/components/Breadcrumb.astro';
 import type { Locale } from '@/config';
-import { absoluteUrl, localizedPath, t } from '@/i18n/ui';
+import { localizedUrl, type TranslationKey } from '@/i18n/ui';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { collectionPageJsonLd } from '@/lib/schema';
+import { collectionPageJsonLd, navTrail } from '@/lib/schema';
 
 // A section index (blog, projects): Home › Section breadcrumb, a
 // CollectionPage JSON-LD, the page heading and the list in the slot.
@@ -11,29 +11,25 @@ interface Props {
   locale: Locale;
   /** Unlocalized section path, e.g. '/blog'. */
   path: string;
-  /** Section name in the breadcrumb. */
-  crumb: string;
+  /** Nav label of the section, its breadcrumb name. */
+  navKey: TranslationKey;
   metaTitle: string;
   metaDescription: string;
   heading: string;
   subtitle: string;
 }
 
-const { locale, path, crumb, metaTitle, metaDescription, heading, subtitle } =
+const { locale, path, navKey, metaTitle, metaDescription, heading, subtitle } =
   Astro.props;
 
-const canonical = absoluteUrl(localizedPath(locale, path));
-const trail = [
-  { name: t(locale, 'nav.home'), url: absoluteUrl(localizedPath(locale, '/')) },
-  { name: crumb, url: canonical },
-];
+const canonical = localizedUrl(locale, path);
+const crumbs = navTrail(locale, [navKey, path]);
 const jsonLd = collectionPageJsonLd(locale, {
   url: canonical,
   name: metaTitle,
   description: metaDescription,
-  breadcrumbs: trail,
+  breadcrumbs: crumbs,
 });
-const crumbs = trail.map(({ name, url }) => ({ name, href: url }));
 ---
 
 <BaseLayout

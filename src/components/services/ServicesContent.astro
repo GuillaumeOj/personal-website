@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { absoluteUrl, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
+import { projectPath, quotePath } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -8,6 +8,7 @@ import {
   included,
   mobile,
   projectFlow,
+  servicesCrumbs,
   web,
 } from '../../lib/services';
 import Breadcrumb from '../Breadcrumb.astro';
@@ -25,16 +26,7 @@ const { locale } = Astro.props;
 // Visible trail (Home › Services), rendered inside the hero section (top-left,
 // on the sunken background) rather than a separate strip above it. Mirrors the
 // BreadcrumbList JSON-LD emitted by `servicesJsonLd`.
-const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    href: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.services'),
-    href: absoluteUrl(localizedPath(locale, '/services')),
-  },
-];
+const crumbs = servicesCrumbs(locale);
 
 /** The two proof-with-a-link blocks share the same offering shape. */
 const offerings = [

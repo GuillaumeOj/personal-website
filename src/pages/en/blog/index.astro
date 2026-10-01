@@ -11,7 +11,7 @@ const posts = await getPostsForLocale(locale);
 <HubLayout
   locale={locale}
   path="/blog"
-  crumb={t(locale, 'nav.blog')}
+  navKey="nav.blog"
   metaTitle={t(locale, 'meta.blogTitle')}
   metaDescription={t(locale, 'meta.blogDescription')}
   heading={t(locale, 'blog.title')}

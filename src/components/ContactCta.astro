@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '../config';
+import { localizedPath } from '../i18n/ui';
 import { type ContactMode, contactModes } from '../lib/contact-page';
 import { contact } from '../lib/home';
 import EmailLink from './EmailLink.astro';
@@ -25,7 +26,7 @@ const cfg = contactModes[mode];
 <Section id="contact">
   <SectionHeader locale={locale} eyebrow={contact.eyebrow} title={contact.title} lead={cfg.band.lead} />
   <div class="reveal mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-    <a href={cfg.path(locale)} class="btn btn-primary">
+    <a href={localizedPath(locale, cfg.path)} class="btn btn-primary">
       {cfg.band.cta[locale]}
       <Icon name="arrow-right" size={15} />
     </a>

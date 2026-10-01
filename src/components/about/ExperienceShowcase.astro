@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../../config';
 import { experienceSection } from '../../lib/about';
-import { getExperience } from '../../lib/experience';
+import { experience } from '../../lib/experience';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-const entries = getExperience();
 
 // Experience entries expose only a localized display `period` (e.g.
 // "sept. 2024 → aujourd'hui"), with no ISO fields. Derive a best-effort
@@ -30,8 +29,8 @@ const startYear = (period: string): string | undefined =>
 
     <ul class="list-none space-y-4 p-0">
       {
-        entries.map((entry, index) => (
-          <li class="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
+        experience.map((entry, index) => (
+          <li class="flex items-start gap-4 card p-5">
               <img
                 src={entry.logo}
                 alt={entry.alt}
@@ -87,7 +86,7 @@ const startYear = (period: string): string | undefined =>
                     </div>
                     <button
                       type="button"
-                      class="exp-summary font-mono text-xs uppercase tracking-[0.16em] text-accent-ink"
+                      class="exp-summary mono-label text-accent-ink"
                       data-exp-toggle
                       aria-expanded="true"
                       aria-controls={`exp-panel-${index}`}
@@ -198,5 +197,4 @@ const startYear = (period: string): string | undefined =>
   };
 
   init();
-  document.addEventListener('astro:after-swap', init);
 </script>

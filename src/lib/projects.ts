@@ -27,34 +27,19 @@ const PLATFORM_ORDER: ProjectPlatform[] = ["web", "saas", "mobile"];
 
 /** A light/dark pair for theme-aware screenshots. */
 export type ThemeVariants = { light: ImageMetadata; dark: ImageMetadata };
-/** A single image, or one per theme. */
-type ThemeImage = ImageMetadata | ThemeVariants;
-/** A theme-image, or one theme-image per locale (e.g. localized screenshots). */
-export type LocalizedImage = ThemeImage | Record<Locale, ThemeImage>;
+/** A project screenshot: a light/dark pair per locale. */
+export type ProjectScreenshot = Record<Locale, ThemeVariants>;
 
-const isImageMetadata = (
-  value: ThemeImage | LocalizedImage,
-): value is ImageMetadata => "src" in value;
-const isThemeVariants = (
-  value: ThemeVariants | Record<Locale, ThemeImage>,
-): value is ThemeVariants => "light" in value && "dark" in value;
-
-/**
- * Resolve a `LocalizedImage` down to a `{ light, dark }` pair for the given
- * locale. When the image has no theme variants, light and dark are identical
- * (the same reference), so callers can render a single `<Image>`.
- */
-export const resolveImage = (
-  image: LocalizedImage,
-  locale: Locale,
-): ThemeVariants => {
-  const themed: ThemeImage = isImageMetadata(image)
-    ? image
-    : isThemeVariants(image)
-      ? image
-      : image[locale];
-  return isImageMetadata(themed) ? { light: themed, dark: themed } : themed;
-};
+/** One image for both themes (light and dark are the same reference). */
+const untinted = (image: ImageMetadata): ThemeVariants => ({
+  light: image,
+  dark: image,
+});
+/** The same image in every locale and theme. */
+const sameEverywhere = (image: ImageMetadata): ProjectScreenshot => ({
+  fr: untinted(image),
+  en: untinted(image),
+});
 
 export interface Project {
   /** URL segment + stable key, shared across locales */
@@ -78,7 +63,7 @@ export interface Project {
   /** Tech stack, e.g. ['Astro', 'Django', 'PostgreSQL'] */
   stack: string[];
   /** 16:9 screenshot used on the summary card */
-  cover: LocalizedImage;
+  cover: ProjectScreenshot;
   /**
    * Per-locale descriptive `alt` for the screenshot, used by the card, the
    * detail page and its social card. Describe what the screenshot actually
@@ -86,7 +71,7 @@ export interface Project {
    */
   imageAlt: Record<Locale, string>;
   /** Wide hero used on the detail view; falls back to `cover` */
-  banner?: LocalizedImage;
+  banner?: ProjectScreenshot;
   year?: number;
   /**
    * Store price in EUR for an installable app (0 = free), emitted as the
@@ -262,7 +247,7 @@ export const projects: Project[] = [
     context: "side",
     platform: ["web"],
     stack: ["React", "TypeScript", "Vite", "Django", "DRF", "PostgreSQL"],
-    cover: { fr: dotcraftFr, en: dotcraftEn },
+    cover: { fr: untinted(dotcraftFr), en: untinted(dotcraftEn) },
     imageAlt: {
       fr: "Interface du générateur de QR codes dotcraft",
       en: "dotcraft QR code generator interface",
@@ -314,7 +299,7 @@ export const projects: Project[] = [
       "Neon",
       "Vercel",
     ],
-    cover: ebAvocatCover,
+    cover: sameEverywhere(ebAvocatCover),
     imageAlt: {
       fr: "Page d’accueil du site vitrine de l’avocate Eva Biezunski",
       en: "Home page of lawyer Eva Biezunski’s business website",
@@ -354,7 +339,7 @@ export const projects: Project[] = [
     context: "client",
     platform: ["web"],
     stack: ["Django", "DRF", "Next.js", "Vercel", "Neon", "Brevo"],
-    cover: reSourceEtMoiCover,
+    cover: sameEverywhere(reSourceEtMoiCover),
     imageAlt: {
       fr: "Page d’accueil du site de l’association Re-Source Et Moi",
       en: "Home page of the Re-Source Et Moi non-profit website",

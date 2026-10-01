@@ -22,7 +22,7 @@ const { locale, mode } = Astro.props;
 const cfg = contactModes[mode];
 
 // Visible trail, the same crumbs as the BreadcrumbList JSON-LD.
-const crumbs = contactCrumbs(locale, mode).map((c) => ({ name: c.name, href: c.url }));
+const crumbs = contactCrumbs(locale, mode);
 ---
 
 <div class="mx-auto max-w-6xl px-6 pb-24 pt-8">

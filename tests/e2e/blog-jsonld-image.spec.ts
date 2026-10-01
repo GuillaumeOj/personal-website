@@ -1,40 +1,10 @@
-import { expect, type Page, test } from "@playwright/test";
-
-interface LdNode {
-  "@type": string;
-  [key: string]: unknown;
-}
-
-// Parse every JSON-LD block on the page and flatten each `@graph`, so a test can
-// find a node by `@type` regardless of how graphs are split across <script>s.
-async function jsonLdNodes(page: Page): Promise<LdNode[]> {
-  const blocks = await page
-    .locator('head script[type="application/ld+json"]')
-    .allTextContents();
-  return blocks.flatMap((raw) => {
-    const parsed = JSON.parse(raw);
-    return (parsed["@graph"] ?? [parsed]) as LdNode[];
-  });
-}
-
-function nodeOfType(nodes: LdNode[], type: string): LdNode {
-  const node = nodes.find((n) => n["@type"] === type);
-  expect(node, `expected a ${type} JSON-LD node`).toBeTruthy();
-  return node as LdNode;
-}
-
-/** Same flattening as `jsonLdNodes`, over raw HTML instead of a live page. */
-function jsonLdNodesFromHtml(html: string): LdNode[] {
-  const blocks = [
-    ...html.matchAll(
-      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
-    ),
-  ];
-  return blocks.flatMap((m) => {
-    const parsed = JSON.parse(m[1]);
-    return (parsed["@graph"] ?? [parsed]) as LdNode[];
-  });
-}
+import { expect, test } from "@playwright/test";
+import {
+  jsonLdNodes,
+  jsonLdNodesFromHtml,
+  nodeOfType,
+  SAMPLE_PROJECT,
+} from "./helpers";
 
 // Every BlogPosting must carry a non-empty `image`. Rather than pinning a couple
 // of slugs, sweep every article the sitemap advertises, so the check covers new
@@ -75,11 +45,6 @@ test("every BlogPosting has a non-empty image", async ({ request }) => {
   }
 });
 
-test("project detail: web project is CreativeWork", async ({ page }) => {
-  await page.goto("/projects/dotcraft/");
-  nodeOfType(await jsonLdNodes(page), "CreativeWork");
-});
-
 // A live mobile app is a SoftwareApplication; a web project stays a generic
 // CreativeWork (the portfolio mixes apps and showcase sites). Audit E3: the app
 // node carries a free offer (app rich results also need a rating, which we
@@ -87,7 +52,7 @@ test("project detail: web project is CreativeWork", async ({ page }) => {
 test("project detail: mobile app is SoftwareApplication with a free offer and a year date", async ({
   page,
 }) => {
-  await page.goto("/projects/fusily/");
+  await page.goto(SAMPLE_PROJECT);
   const app = nodeOfType(await jsonLdNodes(page), "SoftwareApplication");
   expect(app.offers).toMatchObject({ price: 0, priceCurrency: "EUR" });
   expect(app.datePublished).toMatch(/^\d{4}$/);

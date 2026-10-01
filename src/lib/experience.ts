@@ -1,7 +1,6 @@
-import type { Locale } from "../config";
+import type { Locale, Localized } from "../config";
 
 /** A localized string, one entry per locale. */
-type Localized = Record<Locale, string>;
 
 /** A localized list of strings, one entry per locale. */
 type LocalizedList = Record<Locale, string[]>;
@@ -33,7 +32,7 @@ export interface ExperienceEntry {
   note?: Localized;
 }
 
-const experience: ExperienceEntry[] = [
+export const experience: ExperienceEntry[] = [
   {
     logo: "/logos/fusily.png",
     alt: "Logo Fusily",
@@ -185,8 +184,6 @@ const experience: ExperienceEntry[] = [
     },
   },
 ];
-
-export const getExperience = (): ExperienceEntry[] => experience;
 
 /**
  * schema.org `OrganizationRole` nodes derived from the experience timeline,

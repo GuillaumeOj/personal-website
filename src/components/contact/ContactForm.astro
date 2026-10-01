@@ -7,7 +7,6 @@ import {
   form as f,
   qualifying as q,
 } from '../../lib/contact-page';
-import { GDPR_EMAIL } from '../../lib/legal';
 import { typeset } from '../../lib/typography';
 
 interface Props {
@@ -33,7 +32,7 @@ const required = 'text-accent-ink';
 const fieldError = 'text-sm text-red-700 dark:text-red-400';
 
 const fieldLabel =
-  'font-mono text-xs uppercase tracking-[0.14em] text-muted';
+  'mono-label text-muted';
 const fieldInput =
   'w-full rounded-lg border border-field-line bg-paper px-3.5 py-2.5 text-ink transition-colors placeholder:text-muted focus:border-accent-ink';
 const optionalHint = 'normal-case tracking-normal text-muted';
@@ -44,7 +43,7 @@ const optionalHint = 'normal-case tracking-normal text-muted';
     303 to /contact/thanks/ or /contact/error/); the script below takes over
     with JSON, inline field errors and an in-place confirmation. */}
 <form
-  class="space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  class="space-y-5 card p-6 sm:p-8"
   method="post"
   action="/api/contact/"
   data-contact-form
@@ -165,8 +164,8 @@ const optionalHint = 'normal-case tracking-normal text-muted';
   <p class="text-xs leading-relaxed text-muted">
     {f.privacyNotice[locale]}{' '}
     {f.privacyNoticeRights[locale]}
-    <a href={`mailto:${GDPR_EMAIL}`} class="text-accent-ink no-underline hover:underline">
-      {GDPR_EMAIL}
+    <a href={`mailto:${SITE.gdprEmail}`} class="text-accent-ink no-underline hover:underline">
+      {SITE.gdprEmail}
     </a>. {f.privacyNoticeMore[locale]}
     <a
       href={localizedPath(locale, '/privacy-policy')}
@@ -191,7 +190,7 @@ const optionalHint = 'normal-case tracking-normal text-muted';
 </form>
 
 <div
-  class="space-y-3 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  class="space-y-3 card p-6 sm:p-8"
   data-contact-success
   tabindex="-1"
   hidden

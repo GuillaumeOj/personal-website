@@ -1,11 +1,13 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/bricolage-grotesque/600.css";
-@import "@fontsource/bricolage-grotesque/700.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
+/* Latin subset only: the site is French/English, and the full imports added
+ * ~34 KB of render-blocking @font-face rules for unused scripts. */
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/bricolage-grotesque/latin-600.css";
+@import "@fontsource/bricolage-grotesque/latin-700.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
 
 @plugin "@tailwindcss/typography";
 
@@ -96,19 +98,6 @@
     }
   }
 
-  --animate-glow: glow 3.6s ease-in-out infinite;
-  @keyframes glow {
-    0%,
-    100% {
-      opacity: 0.45;
-      transform: scale(1.05);
-    }
-    50% {
-      opacity: 0.85;
-      transform: scale(1.25);
-    }
-  }
-
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-sunken: var(--surface-sunken);
@@ -121,6 +110,23 @@
   --color-accent-ink: var(--accent-ink);
   --color-accent-contrast: var(--accent-contrast);
   --color-btn-bg: var(--btn-bg);
+}
+
+/* The bordered surface of every card and panel. */
+@utility card {
+  @apply rounded-2xl border border-line bg-surface;
+}
+
+/* A whole-card link (article and project cards) that lifts on hover. Pair
+ * with `group` in the markup for the image zoom. */
+@utility card-link {
+  @apply card flex flex-col overflow-hidden no-underline transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5;
+}
+
+/* Small uppercase mono label: footer column headings, field and fact labels.
+ * Colour is left to the caller. */
+@utility mono-label {
+  @apply font-mono text-xs uppercase tracking-[0.14em];
 }
 
 @layer components {
@@ -148,9 +154,8 @@
   /*
    * Amber glow behind the button (z-index -2, under the surface). It's blurred
    * so it bleeds onto the page around the button and tracks the pointer via
-   * --glow-x / --glow-y (set in BaseLayout). Same accent as the hero memoji
-   * glow. Because it's behind the opaque surface it haloes the button rather
-   * than tinting the fill.
+   * --glow-x / --glow-y (set by scripts/button-glow.ts). Because it's behind
+   * the opaque surface it haloes the button rather than tinting the fill.
    */
   .btn::before {
     content: "";
@@ -169,7 +174,7 @@
   }
 
   /* Match the site's motion policy: the hover glow only appears (and fades)
-   * when motion is allowed. BaseLayout's pointer script is gated the same way. */
+   * when motion is allowed. The pointer script is gated the same way. */
   @media (prefers-reduced-motion: no-preference) {
     .btn:hover::before {
       opacity: 1;
@@ -276,8 +281,9 @@
 /*
  * Scroll-reveal. Elements start hidden only when JS is available and the user
  * has not asked to reduce motion, so no-JS and reduced-motion visitors always
- * see fully-rendered content. BaseLayout adds `is-visible` and staggers via
- * `--reveal-delay` (on scroll-rest for the snap landing, on intersection else).
+ * see fully-rendered content. scripts/reveal.ts adds `is-visible` on
+ * intersection; on the snap landing, scripts/snap-landing.ts adds it as each
+ * element scrolls in, staggered via `--reveal-delay`.
  */
 @media (prefers-reduced-motion: no-preference) {
   html.js .reveal {
@@ -319,8 +325,9 @@ html.snap-home footer {
 
 @media (prefers-reduced-motion: no-preference) {
   /*
-   * `scroll-snap-type` is *armed* (via `.snap-armed`, added by BaseLayout on the
-   * first user scroll intent) rather than set on load. Snapping on the root
+   * `scroll-snap-type` is *armed* (via `.snap-armed`, added by
+   * scripts/snap-landing.ts on the first user scroll intent) rather than set
+   * on load. Snapping on the root
    * scroller makes the browser re-snap as sections lay out, which scrolls
    * the page during load and repeatedly invalidates the Largest Contentful Paint
    * candidate — Lighthouse's trace engine then finds no LCP and throws NO_LCP.

@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { absoluteUrl, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
+import { projectPath, quotePath, t } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -8,6 +8,7 @@ import {
   included,
   mobile,
   projectFlow,
+  servicesCrumbs,
   web,
 } from '../../lib/services';
 import Breadcrumb from '../Breadcrumb.astro';
@@ -15,6 +16,9 @@ import ContactCta from '../ContactCta.astro';
 import Section from '../home/Section.astro';
 import SectionHeader from '../home/SectionHeader.astro';
 import Icon from '../Icon.astro';
+import CheckList from '../lists/CheckList.astro';
+import NumberedCards from '../lists/NumberedCards.astro';
+import Timeline from '../lists/Timeline.astro';
 
 interface Props {
   locale: Locale;
@@ -25,16 +29,7 @@ const { locale } = Astro.props;
 // Visible trail (Home › Services), rendered inside the hero section (top-left,
 // on the sunken background) rather than a separate strip above it. Mirrors the
 // BreadcrumbList JSON-LD emitted by `servicesJsonLd`.
-const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    href: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.services'),
-    href: absoluteUrl(localizedPath(locale, '/services')),
-  },
-];
+const crumbs = servicesCrumbs(locale);
 
 /** The two proof-with-a-link blocks share the same offering shape. */
 const offerings = [
@@ -63,7 +58,7 @@ const linkClass =
       </h1>
       <p class="text-lg leading-relaxed text-muted">{hero.subtitle[locale]}</p>
       <div class="flex flex-wrap gap-3 pt-1">
-        <a href={quoteHref} class="btn btn-primary">{hero.cta[locale]}</a>
+        <a href={quoteHref} class="btn btn-primary">{t(locale, 'cta.talk')}</a>
         <a href="#mobile" class="btn btn-secondary">
           {hero.anchorMobile[locale]}
           <Icon name="arrow-right" size={15} />
@@ -73,7 +68,7 @@ const linkClass =
           <Icon name="arrow-right" size={15} />
         </a>
       </div>
-      <p class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+      <p class="mono-label text-muted">
         {hero.reassurance[locale]}
       </p>
       <p class="border-t border-line pt-5 text-sm leading-relaxed text-muted">
@@ -89,22 +84,15 @@ const linkClass =
     <Section id={id} class={sunken ? 'bg-surface-sunken' : ''}>
       <SectionHeader locale={locale} title={data.title} lead={data.intro} />
 
-      <div class="reveal mt-8 rounded-2xl border border-line bg-surface p-7">
+      <div class="reveal mt-8 card p-7">
         <p class="font-display font-semibold text-ink-strong">
           {data.leadIn[locale]}
         </p>
-        <ul class="mt-6 space-y-3 border-t border-line pt-6 text-ink list-none p-0">
-          {data.list.map((item) => (
-            <li class="flex items-start gap-3">
-              <Icon
-                name="check"
-                size={16}
-                class="mt-1 shrink-0 text-accent"
-              />
-              <span>{item[locale]}</span>
-            </li>
-          ))}
-        </ul>
+        <CheckList
+          locale={locale}
+          items={data.list}
+          class="mt-6 border-t border-line pt-6"
+        />
       </div>
 
       <p class="reveal mt-6 max-w-2xl leading-relaxed text-muted">
@@ -125,23 +113,7 @@ const linkClass =
 <Section id="included">
   <SectionHeader locale={locale} title={included.title} lead={included.intro} />
 
-  <ol class="reveal mt-10 grid list-none gap-4 p-0 sm:grid-cols-3">
-    {
-      included.items.map((item, i) => (
-        <li class="rounded-2xl border border-line bg-surface p-6">
-          <div class="flex items-baseline gap-3">
-            <span class="font-mono text-sm text-accent-ink">0{i + 1}</span>
-            <h3 class="font-display text-lg font-semibold text-ink-strong">
-              {item.label[locale]}
-            </h3>
-          </div>
-          <p class="mt-3 text-sm leading-relaxed text-muted">
-            {item.desc[locale]}
-          </p>
-        </li>
-      ))
-    }
-  </ol>
+  <NumberedCards locale={locale} items={included.items} />
 </Section>
 
 <Section id="process" class="bg-surface-sunken">
@@ -151,26 +123,7 @@ const linkClass =
     lead={projectFlow.intro}
   />
 
-  <ol class="reveal mt-10 ml-4 list-none border-l-2 border-line p-0">
-    {
-      projectFlow.steps.map((step, i) => (
-        <li class="reveal relative pb-10 pl-10 last:pb-0">
-          <span
-            class="absolute left-0 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-surface-sunken font-mono text-sm font-medium text-accent-ink ring-2 ring-accent"
-            aria-hidden="true"
-          >
-            {i + 1}
-          </span>
-          <h3 class="font-display text-lg font-semibold text-ink-strong">
-            {step.label[locale]}
-          </h3>
-          <p class="mt-1.5 max-w-xl leading-relaxed text-muted">
-            {step.desc[locale]}
-          </p>
-        </li>
-      ))
-    }
-  </ol>
+  <Timeline locale={locale} items={projectFlow.steps} />
 
   <p class="reveal mt-2 max-w-2xl leading-relaxed text-muted">
     {projectFlow.reassurance[locale]}
@@ -180,16 +133,7 @@ const linkClass =
 <Section id="cost">
   <SectionHeader locale={locale} title={cost.title} lead={cost.intro} />
 
-  <ul class="reveal mt-8 space-y-3 text-ink list-none p-0">
-    {
-      cost.list.map((item) => (
-        <li class="flex items-start gap-3">
-          <Icon name="check" size={16} class="mt-1 shrink-0 text-accent" />
-          <span>{item[locale]}</span>
-        </li>
-      ))
-    }
-  </ul>
+  <CheckList locale={locale} items={cost.list} class="reveal mt-8" />
 
   <p class="reveal mt-6 max-w-2xl leading-relaxed text-muted">
     {cost.closing[locale]}
@@ -206,7 +150,7 @@ const linkClass =
 <Section id="faq" class="bg-surface-sunken">
   <SectionHeader locale={locale} title={faq.title} />
 
-  <div class="reveal mt-10 divide-y divide-line rounded-2xl border border-line bg-surface">
+  <div class="reveal mt-10 divide-y divide-line card">
     {
       faq.items.map((item) => (
         <div class="p-6">

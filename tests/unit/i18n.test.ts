@@ -14,14 +14,15 @@ describe("t", () => {
 });
 
 // T3 — the end-of-article blog CTA strings exist and are non-empty in both
-// locales (the layout renders them under every post).
+// locales (the layout renders them under every post; `cta.talk` is its
+// primary button).
 describe("blog CTA translations", () => {
   const keys = [
     "blog.cta.bio",
     "blog.cta.heading",
     "blog.cta.lead",
-    "blog.cta.primary",
     "blog.cta.secondary",
+    "cta.talk",
   ] as const;
 
   for (const key of keys) {

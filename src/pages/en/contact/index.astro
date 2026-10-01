@@ -1,7 +1,7 @@
 ---
-import ContactContent from '../../../components/contact/ContactContent.astro';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { contactJsonLd, contactModes } from '../../../lib/contact-page';
+import ContactContent from '@/components/contact/ContactContent.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contactJsonLd, contactModes } from '@/lib/contact-page';
 
 const locale = 'en' as const;
 const mode = 'general' as const;
@@ -14,7 +14,6 @@ const { meta } = contactModes[mode];
   description={meta.description[locale]}
   jsonLd={contactJsonLd(locale, mode)}
   container="full"
-  hreflang
 >
   <ContactContent locale={locale} mode={mode} />
 </BaseLayout>

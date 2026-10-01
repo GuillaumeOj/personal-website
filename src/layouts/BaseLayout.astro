@@ -1,151 +1,44 @@
 ---
-import '../styles/global.css';
+import '@/styles/global.css';
 // Preloaded: the display face of the LCP heading (600 for the home hero, 700
 // for every other page's `.page-title` H1) and the body text face, latin
 // subset. `?url` resolves to the same hashed file the @fontsource CSS uses.
 import bricolage600 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-600-normal.woff2?url';
 import bricolage700 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
-import { SITE, type Locale } from '../config';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { absoluteUrl, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
-import { portraitAlt } from '../lib/about';
-import { defaultSocialImage } from '../lib/og';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import SeoHead, { type Props as SeoProps } from '@/components/SeoHead.astro';
+import ScrollReveal from '@/components/ScrollReveal.astro';
+import SnapLanding from '@/components/SnapLanding.astro';
+import { t } from '@/i18n/ui';
+import { type Alternates, prefixAlternates } from '@/lib/alternates';
 
-interface Props {
-  locale: Locale;
-  title: string;
-  description: string;
-  ogImage?: string;
-  /** Alt text describing the OG/Twitter image. */
-  ogImageAlt?: string;
-  /** Intrinsic dimensions of a page-supplied `ogImage`, so scrapers can render
-   *  the card without a fetch round-trip. The landscape default card sets its
-   *  own (1200×630); omit unless you pass `ogImage`. */
-  ogImageWidth?: number;
-  ogImageHeight?: number;
-  /** `og:type`. Content pages (blog posts) set `article`; everything else is a
-   *  `website`. */
-  ogType?: 'website' | 'article';
-  /** Emitted as `article:*` meta when `ogType` is `article` (blog posts). */
-  articleMeta?: {
-    /** ISO 8601 publication date. */
-    publishedTime: string;
-    /** ISO 8601 last-modified date, when known. */
-    modifiedTime?: string;
-    author?: string;
-    tags?: string[];
-  };
-  /** Emit `<meta name="robots" content="noindex, follow">` — thin, low-value
-   *  pages (legal notice, privacy policy) that shouldn't rank but whose links
-   *  should still be followed. */
-  noindex?: boolean;
-  /** schema.org structured data rendered as a JSON-LD script. */
-  jsonLd?: unknown;
+interface Props extends Omit<SeoProps, 'alternates'> {
   /** `prose` keeps the readable max-w-3xl column (blog, project detail).
    *  `full` lets the page own its section widths (the home landing). */
   container?: 'prose' | 'full';
   /** Enables full-height scroll-snap between sections (the home landing). */
   snap?: boolean;
   /**
-   * Emit reciprocal fr/en + x-default hreflang alternates. Same-slug pages
-   * (home, about, services, lists, project details) rely on the default `/en`
-   * prefix swap; pages whose slugs differ across locales (blog posts) pass
-   * explicit `altFrUrl`/`altEnUrl` below.
+   * Site path of this page in each locale, for the hreflang links and the
+   * language switcher. Same-slug pages omit it (the `/en` prefix swap); blog
+   * posts pass their translated sibling (see `articleAlternates`).
    */
-  hreflang?: boolean;
-  /**
-   * Absolute hreflang alternates for pages whose fr/en slugs differ — blog
-   * posts, paired via `translationKey`. Omit on same-slug pages; the `/en`
-   * prefix swap handles those.
-   */
-  altFrUrl?: string;
-  altEnUrl?: string;
-  /**
-   * Use `title` verbatim as the `<title>` instead of appending ` — {SITE.name}`.
-   * For the one page whose title is brand-*forward* (About: "{SITE.name} — …"),
-   * where appending the brand again would duplicate it.
-   */
-  rawTitle?: boolean;
-  /**
-   * The 404 page: served for every missing URL in both locales, so it has no
-   * canonical or `og:url` (it has no URL of its own), is `noindex`, and swaps
-   * the French nav/footer for a logo-only header — the page script localizes
-   * the rest (see `src/pages/404.astro`).
-   */
-  errorPage?: boolean;
+  alternates?: Alternates;
 }
 
 const {
-  locale,
-  title,
-  description,
-  ogImage,
-  ogImageAlt,
-  ogImageWidth,
-  ogImageHeight,
-  ogType = 'website',
-  articleMeta,
-  noindex = false,
-  jsonLd,
   container = 'prose',
   snap = false,
-  hreflang = false,
-  altFrUrl,
-  altEnUrl,
-  rawTitle = false,
-  errorPage = false,
+  alternates = prefixAlternates(Astro.props.locale, Astro.url.pathname),
+  ...seo
 } = Astro.props;
-const path = Astro.url.pathname;
-const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
-const enPath = localizedPath('en', frPath);
-// Match the canonical trailing-slash form even if the request URL lacks it.
-// Blog posts override with explicit alternates.
-const frURL = altFrUrl ?? absoluteUrl(ensureTrailingSlash(frPath));
-const enURL = altEnUrl ?? absoluteUrl(enPath);
+const { locale, errorPage = false } = seo;
 const mainClass =
   container === 'full'
     ? 'flex-1'
     : 'mx-auto w-full max-w-3xl flex-1 px-6 py-12';
-// The brand suffix only when it still fits in what search results show
-// (~60–65 characters); a long title keeps its own words instead.
-const TITLE_MAX = 65;
-const brandSuffix = ` — ${SITE.name}`;
-const branded = `${title}${brandSuffix}`;
-const fullTitle = rawTitle || branded.length > TITLE_MAX ? title : branded;
-// The social card (og/twitter) title mirrors the page's own descriptive
-// headline with the brand stripped — whether it sits as a suffix (most pages)
-// or a prefix (About). `og:site_name` below already carries "Guillaume
-// Ojardias" and the card renders the name + portrait, so repeating it here just
-// wastes the most valuable line of the share.
-const brandPrefix = `${SITE.name} — `;
-const socialTitle = fullTitle.endsWith(brandSuffix)
-  ? fullTitle.slice(0, -brandSuffix.length)
-  : fullTitle.startsWith(brandPrefix)
-    ? fullTitle.slice(brandPrefix.length)
-    : fullTitle;
-const canonicalURL = absoluteUrl(Astro.url.pathname);
-// Social preview: pages without their own `ogImage` get the locale's landscape
-// 1200×630 card (branded canvas + portrait + tagline), built at build time by
-// the `og-cards` integration into `/og/default-{locale}.jpg`. Content pages
-// (blog posts, project details) pass their own `ogImage` + dimensions.
-let ogImageUrl: string;
-// Dimensions let scrapers render the card without a fetch round-trip. Always
-// known now: the landscape default is 1200×630, and every page that passes its
-// own `ogImage` (blog covers cropped by `getImage()`, project cards) passes the
-// matching width/height with it.
-let ogWidth: number | undefined = ogImageWidth;
-let ogHeight: number | undefined = ogImageHeight;
-if (ogImage) {
-  ogImageUrl = new URL(ogImage, SITE.url).toString();
-} else {
-  const card = defaultSocialImage(locale);
-  ogImageUrl = new URL(card.url, SITE.url).toString();
-  ogWidth = card.width;
-  ogHeight = card.height;
-}
-const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
 ---
 
 <!doctype html>
@@ -165,97 +58,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    {
-      !errorPage && (
-        <>
-          <link
-            rel="alternate"
-            type="application/rss+xml"
-            title={`${SITE.name} — RSS`}
-            href={localizedPath(locale, '/rss.xml')}
-          />
-          <link rel="canonical" href={canonicalURL} />
-        </>
-      )
-    }
-    {(noindex || errorPage) && <meta name="robots" content="noindex, follow" />}
-    {
-      hreflang && (
-        <>
-          <link rel="alternate" hreflang="fr" href={frURL} />
-          <link rel="alternate" hreflang="en" href={enURL} />
-          <link rel="alternate" hreflang="x-default" href={frURL} />
-        </>
-      )
-    }
-    <meta name="generator" content={Astro.generator} />
-
-    <title>{fullTitle}</title>
-    <meta name="description" content={description} />
-
-    {/* The 404 has no URL of its own and its locale is only known client-side:
-        it keeps the default card image but no locale-specific card text. */}
-    <meta property="og:type" content={ogType} />
-    <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:image" content={ogImageUrl} />
-    {ogWidth && <meta property="og:image:width" content={String(ogWidth)} />}
-    {ogHeight && <meta property="og:image:height" content={String(ogHeight)} />}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content={ogImageUrl} />
-    {
-      !errorPage && (
-        <>
-          <meta property="og:title" content={socialTitle} />
-          <meta property="og:description" content={description} />
-          <meta property="og:url" content={canonicalURL} />
-          <meta property="og:image:alt" content={socialImageAlt} />
-          <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
-          <meta name="twitter:title" content={socialTitle} />
-          <meta name="twitter:description" content={description} />
-          <meta name="twitter:image:alt" content={socialImageAlt} />
-        </>
-      )
-    }
-    {
-      hreflang && (
-        <meta
-          property="og:locale:alternate"
-          content={locale === 'fr' ? 'en_US' : 'fr_FR'}
-        />
-      )
-    }
-    {
-      ogType === 'article' && articleMeta && (
-        <>
-          <meta
-            property="article:published_time"
-            content={articleMeta.publishedTime}
-          />
-          {articleMeta.modifiedTime && (
-            <meta
-              property="article:modified_time"
-              content={articleMeta.modifiedTime}
-            />
-          )}
-          {articleMeta.author && (
-            <meta property="article:author" content={articleMeta.author} />
-          )}
-          {articleMeta.tags?.map((tag) => (
-            <meta property="article:tag" content={tag} />
-          ))}
-        </>
-      )
-    }
-
-    {
-      jsonLd && (
-        <script
-          type="application/ld+json"
-          is:inline
-          set:html={JSON.stringify(jsonLd)}
-        />
-      )
-    }
+    <SeoHead {...seo} alternates={alternates} />
 
     <script is:inline>
       (() => {
@@ -285,137 +88,15 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     >
       {t(locale, 'nav.skipToContent')}
     </a>
-    <Header locale={locale} minimal={errorPage} />
+    <Header locale={locale} alternates={alternates} minimal={errorPage} />
     <main id="main" class={mainClass}>
       <slot />
     </main>
     {!errorPage && <Footer locale={locale} />}
 
-    <script is:inline>
-      // Point a button's amber glow at the cursor (CSS handles the rest).
-      // Skipped without a real hover pointer or under reduced-motion.
-      (() => {
-        if (
-          !window.matchMedia('(hover: hover)').matches ||
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) {
-          return;
-        }
-        document.addEventListener(
-          'pointermove',
-          (event) => {
-            const target = event.target;
-            const btn =
-              target instanceof Element ? target.closest('.btn') : null;
-            if (!btn) return;
-            const rect = btn.getBoundingClientRect();
-            btn.style.setProperty('--glow-x', `${event.clientX - rect.left}px`);
-            btn.style.setProperty('--glow-y', `${event.clientY - rect.top}px`);
-          },
-          { passive: true },
-        );
-      })();
+    <script>
+      import '@/scripts/button-glow';
     </script>
-
-    <script is:inline>
-      // Arm root scroll-snapping on the first scroll intent. Enabling it on load
-      // would make the browser re-snap during layout, scrolling the page while it
-      // paints and wiping the Largest Contentful Paint candidate (Lighthouse's
-      // trace engine then throws NO_LCP). Automated audits never interact, so
-      // snap stays off through measurement; real users get it from their first
-      // gesture. See the `.snap-armed` note in global.css.
-      (() => {
-        const root = document.documentElement;
-        if (
-          !root.classList.contains('snap-home') ||
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) {
-          return;
-        }
-        const types = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
-        const arm = () => {
-          root.classList.add('snap-armed');
-          for (const type of types) window.removeEventListener(type, arm);
-        };
-        for (const type of types) {
-          window.addEventListener(type, arm, { passive: true });
-        }
-      })();
-    </script>
-
-    <script is:inline>
-      (() => {
-        const els = [...document.querySelectorAll('.reveal')];
-        if (
-          !els.length ||
-          !('IntersectionObserver' in window) ||
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ) {
-          els.forEach((el) => el.classList.add('is-visible'));
-          return;
-        }
-
-        // Snap landing: full-height sections slide ~100vh at once. Reveal each
-        // element the moment it scrolls into view (leading-edge, rAF-throttled)
-        // so content is already fading in as the section arrives instead of
-        // popping in only after the snap settles. `scrollend` is a safety net
-        // for anything still hidden once motion stops.
-        if (document.documentElement.classList.contains('snap-home')) {
-          const inView = (el) => {
-            const r = el.getBoundingClientRect();
-            return r.top < window.innerHeight * 0.95 && r.bottom > window.innerHeight * 0.05;
-          };
-          let ticking = false;
-          const onScroll = () => {
-            // Fire on the leading edge (via rAF) so reveals start mid-slide
-            // rather than 50ms after the snap has come to rest.
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(() => {
-              ticking = false;
-              reveal();
-            });
-          };
-          const reveal = () => {
-            // Read every candidate before writing so no measurement flushes a
-            // pending style change; stagger through the shared --reveal-delay.
-            const pending = els.filter(
-              (el) => !el.classList.contains('is-visible') && inView(el),
-            );
-            pending.forEach((el, i) => {
-              // Small lead-in delay, then a capped stagger so a section full of
-              // reveals doesn't leave the last few elements hidden long after
-              // the snap has settled.
-              el.style.setProperty('--reveal-delay', `${120 + Math.min(i, 6) * 55}ms`);
-              el.classList.add('is-visible');
-            });
-            // Nothing left to animate — stop listening so the closures release.
-            if (els.every((el) => el.classList.contains('is-visible'))) {
-              window.removeEventListener('scroll', onScroll);
-              window.removeEventListener('scrollend', reveal);
-            }
-          };
-          reveal();
-          window.addEventListener('scroll', onScroll, { passive: true });
-          if ('onscrollend' in window) {
-            window.addEventListener('scrollend', reveal);
-          }
-          return;
-        }
-
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                io.unobserve(entry.target);
-              }
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
-        );
-        els.forEach((el) => io.observe(el));
-      })();
-    </script>
+    {snap ? <SnapLanding /> : <ScrollReveal />}
   </body>
 </html>

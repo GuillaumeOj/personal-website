@@ -1,0 +1,45 @@
+name: Setup
+description: >-
+  Git LFS objects, Node, Bun and the project dependencies, with the LFS
+  objects and Bun's package cache restored between runs. Run after checkout.
+
+runs:
+  using: composite
+  steps:
+    # The LFS objects (images) are cached so each job doesn't download them
+    # again from GitHub's metered LFS bandwidth.
+    - name: List LFS objects
+      shell: bash
+      run: git lfs ls-files --long | cut -d ' ' -f 1 | sort > .lfs-objects
+
+    - name: Cache LFS objects
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .git/lfs
+        key: lfs-${{ hashFiles('.lfs-objects') }}
+        restore-keys: lfs-
+
+    - name: Pull LFS objects
+      shell: bash
+      run: git lfs pull
+
+    - name: Setup Node
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version-file: .nvmrc
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      with:
+        bun-version: 1.4.2
+
+    - name: Cache Bun packages
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.bun/install/cache
+        key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+        restore-keys: bun-${{ runner.os }}-
+
+    - name: Install dependencies
+      shell: bash
+      run: bun install --frozen-lockfile

@@ -15,7 +15,7 @@ import {
   websiteNode,
 } from "../../src/lib/schema";
 
-const IMG = "https://guillaume.ojardias.info/portrait.jpg";
+const IMG = `${SITE.url}/portrait.jpg`;
 
 /** Find the first node of a given @type in a JSON-LD `@graph`. */
 // biome-ignore lint/suspicious/noExplicitAny: JSON-LD nodes are heterogeneous.
@@ -42,6 +42,10 @@ describe("personNode.url (x-default consolidation)", () => {
   it("is pinned to the canonical root (never the /en/ variant)", () => {
     expect(personNode("en", IMG).url).toBe(`${SITE.url}/`);
     expect(personNode("en", IMG).url.endsWith("/en/")).toBe(false);
+  });
+
+  it("exposes the public email", () => {
+    expect(personNode("fr", IMG).email).toBe(SITE.email);
   });
 
   it("keeps jobTitle locale-varying", () => {
@@ -245,6 +249,13 @@ describe("ProfessionalService properties", () => {
     for (const key of ["provider", "serviceType", "isPartOf", "inLanguage"]) {
       expect(key in node).toBe(false);
     }
+  });
+
+  it("carries the contact details on every page (one shape per @id)", () => {
+    expect(professionalServiceNode()).toMatchObject({
+      email: SITE.email,
+      priceRange: "€€",
+    });
   });
 
   it("lists its services as Offer → Service", () => {

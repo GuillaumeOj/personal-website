@@ -1,0 +1,30 @@
+---
+import type { Locale, Localized } from '../../config';
+
+// A row of numbered cards (01, 02, …): the home "what I do" pillars and the
+// services "what's included" list.
+interface Props {
+  locale: Locale;
+  items: { label: Localized; desc: Localized }[];
+}
+
+const { locale, items } = Astro.props;
+---
+
+<ol class="reveal mt-10 grid list-none gap-4 p-0 sm:grid-cols-3">
+  {
+    items.map((item, i) => (
+      <li class="card p-6">
+        <div class="flex items-baseline gap-3">
+          <span class="font-mono text-sm text-accent-ink">0{i + 1}</span>
+          <h3 class="font-display text-lg font-semibold text-ink-strong">
+            {item.label[locale]}
+          </h3>
+        </div>
+        <p class="mt-3 text-sm leading-relaxed text-muted">
+          {item.desc[locale]}
+        </p>
+      </li>
+    ))
+  }
+</ol>

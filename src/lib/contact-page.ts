@@ -1,23 +1,16 @@
-import { type Locale, SITE } from "../config";
+import type { Locale, Localized } from "../config";
+import type { TranslationKey } from "../i18n/ui";
 import {
-  contactPath,
-  localizedPath,
-  quotePath,
-  type TranslationKey,
-  t,
-} from "../i18n/ui";
-import type {
-  Budget,
-  ContactOutcome,
-  Intent,
-  ProjectType,
-  Timeline,
+  type Budget,
+  type ContactOutcome,
+  type Intent,
+  PROJECT_TYPE_LABELS,
+  PROJECT_TYPES,
+  type Timeline,
 } from "./contact";
 import { contact } from "./home";
-import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
+import { BUSINESS_ID, type Crumb, navTrail, webPageJsonLd } from "./schema";
 import { contactNote, cost } from "./services";
-
-type L = Record<Locale, string>;
 
 /** The two contact pages: the general form and the quote-request form. */
 export type ContactMode = "general" | "quote";
@@ -27,18 +20,10 @@ export const form = {
   name: { fr: "Nom", en: "Name" },
   email: { fr: "E-mail", en: "Email" },
   projectType: { fr: "Type de projet", en: "Project type" },
-  projectTypeOptions: [
-    {
-      value: "web",
-      label: { fr: "Site / application web", en: "Website / web app" },
-    },
-    { value: "saas", label: { fr: "SaaS", en: "SaaS" } },
-    {
-      value: "mobile",
-      label: { fr: "Application mobile", en: "Mobile app" },
-    },
-    { value: "other", label: { fr: "Autre", en: "Other" } },
-  ] satisfies { value: ProjectType; label: L }[],
+  projectTypeOptions: PROJECT_TYPES.map((value) => ({
+    value,
+    label: PROJECT_TYPE_LABELS[value],
+  })),
   message: { fr: "Votre projet", en: "Your project" },
   // GDPR art. 13 information notice under the submit button (not a consent
   // request: the processing rests on pre-contractual steps and legitimate
@@ -85,7 +70,7 @@ export const form = {
       fr: "Décrivez votre projet en quelques lignes.",
       en: "Describe your project in a few lines.",
     },
-  } satisfies Record<"name" | "email" | "message", L>,
+  } satisfies Record<"name" | "email" | "message", Localized>,
   successTitle: { fr: "Message envoyé", en: "Message sent" },
   success: {
     fr: "Merci ! Votre message a bien été envoyé, je vous réponds généralement sous 24 h ouvrées.",
@@ -112,7 +97,7 @@ export const qualifying = {
       value: "unknown",
       label: { fr: "Je ne sais pas encore", en: "Not sure yet" },
     },
-  ] satisfies { value: Budget; label: L }[],
+  ] satisfies { value: Budget; label: Localized }[],
   timeline: { fr: "Délai souhaité", en: "Desired timeline" },
   timelineOptions: [
     {
@@ -128,7 +113,7 @@ export const qualifying = {
       label: { fr: "D’ici 3 à 6 mois", en: "Within 3–6 months" },
     },
     { value: "flexible", label: { fr: "Flexible", en: "Flexible" } },
-  ] satisfies { value: Timeline; label: L }[],
+  ] satisfies { value: Timeline; label: Localized }[],
 };
 
 /** Cross-link from the general /contact page to the quote form. */
@@ -138,23 +123,24 @@ export const quoteCrossLink = {
 };
 
 interface ContactModeConfig {
-  path: (locale: Locale) => string;
+  /** Unlocalized page path (see `localizedPath`). */
+  path: string;
   /** Breadcrumb label for this page. */
   crumb: TranslationKey;
   /**
    * `<title>` segment (the layout appends ` — {SITE.name}` while the result
-   * fits BaseLayout's TITLE_MAX) and description.
+   * fits TITLE_MAX, see `pageTitles` in lib/seo.ts) and description.
    */
-  meta: { title: L; description: L };
-  eyebrow: L;
-  title: L;
-  lead: L;
-  submit: L;
-  messagePlaceholder: L;
+  meta: { title: Localized; description: Localized };
+  eyebrow: Localized;
+  title: Localized;
+  lead: Localized;
+  submit: Localized;
+  messagePlaceholder: Localized;
   /** Posted with the form; the server flags quote requests (`[Devis]`). */
   intent?: Intent;
   /** Copy for the `ContactCta` band that links to this page. */
-  band: { lead: L; cta: L };
+  band: { lead: Localized; cta: Localized };
 }
 
 /**
@@ -164,7 +150,7 @@ interface ContactModeConfig {
  */
 export const contactModes: Record<ContactMode, ContactModeConfig> = {
   general: {
-    path: contactPath,
+    path: "/contact",
     crumb: "nav.contact",
     meta: {
       title: { fr: "Contact", en: "Contact" },
@@ -187,7 +173,7 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
   // Linked from the services page. Owns the "devis" query cluster, leaving
   // /contact the generic one.
   quote: {
-    path: quotePath,
+    path: "/contact/quote",
     crumb: "nav.quote",
     meta: {
       title: { fr: "Demande de devis gratuit", en: "Request a Free Quote" },
@@ -218,20 +204,14 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
  * The last crumb is the current page.
  */
 export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
-  const crumb = (key: TranslationKey, path: string): Crumb => ({
-    name: t(locale, key),
-    url: new URL(path, SITE.url).toString(),
-  });
-  const { general } = contactModes;
-  const crumbs = [
-    crumb("nav.home", localizedPath(locale, "/")),
-    crumb(general.crumb, general.path(locale)),
-  ];
-  if (mode !== "general") {
-    const cfg = contactModes[mode];
-    crumbs.push(crumb(cfg.crumb, cfg.path(locale)));
-  }
-  return crumbs;
+  const pages: ContactMode[] = mode === "general" ? [mode] : ["general", mode];
+  return navTrail(
+    locale,
+    ...pages.map((m): [TranslationKey, string] => [
+      contactModes[m].crumb,
+      contactModes[m].path,
+    ]),
+  );
 };
 
 /**
@@ -274,4 +254,7 @@ export const contactOutcomes = {
     },
     back: { fr: "Revenir au formulaire", en: "Back to the form" },
   },
-} satisfies Record<ContactOutcome, { title: L; lead: L; back: L }>;
+} satisfies Record<
+  ContactOutcome,
+  { title: Localized; lead: Localized; back: Localized }
+>;

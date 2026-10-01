@@ -1,24 +1,23 @@
-import { type Locale, SITE } from "../config";
-import { absoluteUrl, localizedPath, t } from "../i18n/ui";
+import type { Locale, Localized } from "../config";
 import { heroCredibility, methodology } from "./home";
 import {
   breadcrumbList,
-  businessContact,
+  type Crumb,
   inLanguage,
+  navTrail,
   professionalServiceNode,
   WEBSITE_ID,
 } from "./schema";
 
 /** A localized string. */
-type L = Record<Locale, string>;
 
 /** The one public price (audit U8), shared by the cost list and the FAQ. */
-const FLOOR_PRICE: L = { fr: "1 500 €", en: "€1,500" };
+const FLOOR_PRICE: Localized = { fr: "1 500 €", en: "€1,500" };
 
 /** An inline run inside a "proof" sentence: plain text, or a link to a project. */
 export type ServiceRun =
-  | { t: "text"; v: L }
-  | { t: "link"; v: L; slug: string };
+  | { t: "text"; v: Localized }
+  | { t: "link"; v: Localized; slug: string };
 
 const text = (fr: string, en: string): ServiceRun => ({
   t: "text",
@@ -32,11 +31,11 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
 
 /**
  * `<title>` segment and meta description. The layout appends ` — {SITE.name}`
- * only while the result fits BaseLayout's TITLE_MAX (these titles don't).
+ * only while the result fits TITLE_MAX (`pageTitles` in lib/seo.ts; these titles don't).
  * Services owns the offer/"prestations" query cluster — deliberately distinct
  * from Home's "développeur … à Lyon" head term to avoid cannibalization.
  */
-export const servicesMeta: { title: L; description: L } = {
+export const servicesMeta: { title: Localized; description: Localized } = {
   title: {
     // "Développement", not "Développeur": the home page owns the person query
     // ("Développeur web & mobile freelance à Lyon"); this page owns the offer.
@@ -58,7 +57,6 @@ export const hero = {
     fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin. Basé à Lyon, je travaille avec des entreprises et associations de la métropole lyonnaise et, à distance, de toute la France.",
     en: "From the first screen to production: design, development, database, APIs and deployment. You get a clear process, full ownership, and one person to talk to from start to finish. Based in Lyon, I work with businesses and non-profits across the Lyon area and, remotely, all over France.",
   },
-  cta: { fr: "Discutons de votre projet", en: "Let’s talk about your project" },
   reassurance: {
     fr: "Réponse généralement sous 24 h ouvrées · Devis gratuit",
     en: "Usually a reply within one business day · Free quote",
@@ -100,7 +98,7 @@ export const mobile = {
       fr: "Les captures, fiches et visuels nécessaires à la publication, y compris en plusieurs langues.",
       en: "The screenshots, store listings and assets needed to publish, including in several languages.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   proof: [
     text(
       "C’est exactement la chaîne que j’ai menée de bout en bout, seul, pour ",
@@ -141,7 +139,7 @@ export const web = {
       fr: "Progressive Web Apps (PWA) — l’expérience d’une app, accessible depuis un navigateur.",
       en: "Progressive Web Apps (PWA) — the feel of an app, straight from a browser.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   proof: [
     text(
       "Backend à fort trafic sur des plateformes utilisées par des millions de personnes (Sketchfab, FAB / Epic Games) ; site vitrine livré pour le cabinet d’avocate ",
@@ -241,7 +239,7 @@ export const cost = {
       fr: "SaaS complet — construit par lots, pour étaler l’investissement et livrer de la valeur tôt.",
       en: "Full SaaS — built in phases, to spread the investment and deliver value early.",
     },
-  ] satisfies L[],
+  ] satisfies Localized[],
   closing: {
     fr: "Le premier échange et le devis sont gratuits, sans engagement. Vous repartez avec une estimation, que l’on travaille ensemble ou non.",
     en: "The first conversation and the quote are free, no strings attached. You leave with an estimate, whether we work together or not.",
@@ -354,6 +352,10 @@ export const contactNote = {
   en: "Tell me about your idea in a few words — usually a reply within one business day, free quote, no commitment.",
 };
 
+/** Home › Services — the visible trail and the JSON-LD `BreadcrumbList`. */
+export const servicesCrumbs = (locale: Locale): Crumb[] =>
+  navTrail(locale, ["nav.services", "/services"]);
+
 /**
  * schema.org JSON-LD for the services page: the canonical `#business`
  * ProfessionalService node (the *same* entity defined on About and Home — same
@@ -363,13 +365,7 @@ export const contactNote = {
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
-
-  // The shared #business node plus the contact details this page shows.
-  const service = {
-    ...professionalServiceNode(),
-    ...businessContact,
-  };
+  const service = professionalServiceNode();
 
   const faqPage = {
     "@type": "FAQPage",
@@ -382,13 +378,7 @@ export const servicesJsonLd = (locale: Locale) => {
     })),
   };
 
-  const breadcrumbs = breadcrumbList([
-    { name: t(locale, "nav.home"), url: homeUrl },
-    {
-      name: t(locale, "nav.services"),
-      url: absoluteUrl(localizedPath(locale, "/services")),
-    },
-  ]);
+  const breadcrumbs = breadcrumbList(servicesCrumbs(locale));
 
   return {
     "@context": "https://schema.org",

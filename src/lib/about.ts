@@ -1,15 +1,16 @@
 import type { Locale } from "../config";
 import {
-  absoluteUrl,
   contactPath,
   localizedPath,
+  localizedUrl,
   projectPath,
   t,
 } from "../i18n/ui";
 import {
   breadcrumbList,
-  businessContact,
+  type Crumb,
   inLanguage,
+  navTrail,
   PERSON_ID,
   personNode,
   professionalServiceNode,
@@ -194,7 +195,7 @@ const frDoc = (): AboutDoc => {
     cta: {
       h: "Un projet web ou mobile en tête ?",
       lead: "Que vous ayez une idée précise ou juste une intuition à creuser, la première étape est toujours la même : un échange gratuit et sans engagement pour comprendre ce dont vous avez besoin. Réponse généralement sous 24 h ouvrées.",
-      linkLabel: "Discutons de votre projet",
+      linkLabel: t("fr", "cta.talk"),
       href: contactPath("fr"),
     },
   };
@@ -317,7 +318,7 @@ const enDoc = (): AboutDoc => {
     cta: {
       h: "Have a web or mobile project in mind?",
       lead: "Whether you have a clear idea or just a hunch to explore, the first step is always the same: a free, no-obligation conversation to understand what you need. I’ll usually get back to you within one business day.",
-      linkLabel: "Let’s talk about your project",
+      linkLabel: t("en", "cta.talk"),
       href: contactPath("en"),
     },
   };
@@ -342,6 +343,10 @@ export const experienceSection = {
   seeLess: { fr: "Voir moins", en: "See less" },
 };
 
+/** Home › About — the visible trail and the JSON-LD `BreadcrumbList`. */
+export const aboutCrumbs = (locale: Locale): Crumb[] =>
+  navTrail(locale, ["nav.about", "/about"]);
+
 /**
  * schema.org JSON-LD for the About page: the shared Person (with sameAs social
  * profiles and knowsAbout tech) who provides a ProfessionalService serving
@@ -352,8 +357,7 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
   // Canonical trailing-slash form so these JSON-LD URLs match the page
   // canonicals and the `@id`-based entity consolidation can't silently miss.
-  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
-  const aboutUrl = absoluteUrl(localizedPath(locale, "/about"));
+  const aboutUrl = localizedUrl(locale, "/about");
 
   const person = personNode(locale, image);
   // The shared `#business` node (single source of truth in schema.ts), enriched
@@ -362,7 +366,6 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   // so duplicating it on the service is dropped.
   const business = {
     ...professionalServiceNode(),
-    ...businessContact,
     description: doc.metaDescription,
     image,
   };
@@ -380,10 +383,7 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
     primaryImageOfPage: image,
   };
   // Home › About trail — the last major content page that was missing one.
-  const breadcrumbs = breadcrumbList([
-    { name: t(locale, "nav.home"), url: homeUrl },
-    { name: t(locale, "nav.about"), url: aboutUrl },
-  ]);
+  const breadcrumbs = breadcrumbList(aboutCrumbs(locale));
 
   return {
     "@context": "https://schema.org",

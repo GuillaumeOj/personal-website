@@ -60,16 +60,17 @@ const utcDay = (day: string, fileName: string): Date => {
  *
  * Astro offers no later hook that would help: the sitemap integration's
  * `serialize` receives only the URL, and by `astro:build:done` Vite's module
- * runner is torn down (see the `assetUrl` note in `lib/og.ts`). Reading the
+ * runner is torn down (a dynamic `import()` there fails with "module runner
+ * has been closed"). Reading the
  * files ourselves is the supported route, so this parses the same frontmatter
  * the content collection does rather than inferring anything from filenames.
  */
 export function readPostFiles(): PostFile[] {
   // Fail loudly if the content root itself is missing. This runs from
-  // `astro.config.mjs`, where a mis-resolved `BLOG_DIR` (the config loader has
-  // been known to rewrite `import.meta.url` — see the `assetUrl` note in
-  // `lib/og.ts`) would otherwise return an empty list and silently strip every
-  // blog URL of its `<lastmod>`.
+  // `astro.config.mjs`, where a mis-resolved `BLOG_DIR` (the config loader
+  // bundles this module and has been known to rewrite `import.meta.url` to its
+  // temp location) would otherwise return an empty list and silently strip
+  // every blog URL of its `<lastmod>`.
   if (!existsSync(BLOG_DIR)) {
     throw new Error(`Blog content directory not found: ${BLOG_DIR}`);
   }

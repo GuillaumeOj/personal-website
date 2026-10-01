@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { HUBS } from "./helpers";
 
 // The visible breadcrumb `<nav>` rendered above each page's <h1>, mirroring the
 // BreadcrumbList JSON-LD. Root first, current page last (aria-current="page",
@@ -19,7 +20,7 @@ const crumbLabels = async (nav: Locator): Promise<string[]> => {
 
 // Shared assertions: the trail is visible, matches the expected labels in order,
 // and its last crumb is the current page (a non-link with aria-current="page").
-async function expectTrail(page: Page, expected: string[]) {
+async function expectTrail(page: Page, expected: readonly string[]) {
   const nav = breadcrumb(page);
   await expect(nav).toBeVisible();
   expect(await crumbLabels(nav)).toEqual(expected);
@@ -67,15 +68,7 @@ test("about (en): Home › About", async ({ page }) => {
 });
 
 // Hub / list pages carry a 2-crumb trail (Home › {Hub}) too.
-const hubs = [
-  { path: "/services/", trail: ["Accueil", "Prestations"] },
-  { path: "/en/services/", trail: ["Home", "Services"] },
-  { path: "/projects/", trail: ["Accueil", "Projets"] },
-  { path: "/en/projects/", trail: ["Home", "Projects"] },
-  { path: "/blog/", trail: ["Accueil", "Blog"] },
-  { path: "/en/blog/", trail: ["Home", "Blog"] },
-];
-for (const { path, trail } of hubs) {
+for (const { path, trail } of HUBS) {
   test(`hub ${path}: ${trail.join(" › ")}`, async ({ page }) => {
     await page.goto(path);
     await expectTrail(page, trail);

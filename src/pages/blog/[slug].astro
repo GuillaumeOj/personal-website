@@ -1,8 +1,8 @@
 ---
 import { type CollectionEntry, render } from 'astro:content';
-import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
-import { getPostsForLocale } from '../../lib/posts';
-import { tocFromHeadings } from '../../lib/toc';
+import BlogPostLayout from '@/layouts/BlogPostLayout.astro';
+import { getPostsForLocale } from '@/lib/posts';
+import { tocFromHeadings } from '@/lib/toc';
 
 export async function getStaticPaths() {
   const posts = await getPostsForLocale('fr');

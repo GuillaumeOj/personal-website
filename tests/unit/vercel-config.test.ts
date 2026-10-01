@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 // guard the config itself. Audit S3.
 const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
   headers: { source: string; headers: { key: string; value: string }[] }[];
+  rewrites: { source: string; destination: string }[];
 };
 const siteWide = Object.fromEntries(
   (config.headers.find((h) => h.source === "/(.*)")?.headers ?? []).map((h) => [
@@ -31,5 +32,16 @@ describe("vercel.json security headers", () => {
     });
     expect(siteWide["Permissions-Policy"]).toContain("camera=()");
     expect(siteWide["Strict-Transport-Security"]).toContain("max-age=");
+  });
+});
+
+describe("vercel.json rewrites", () => {
+  // The build only emits sitemap-index.xml; crawlers that guess /sitemap.xml
+  // get the index through this rewrite (invisible to `astro preview`).
+  it("serves /sitemap.xml as the sitemap index", () => {
+    expect(config.rewrites).toContainEqual({
+      source: "/sitemap.xml",
+      destination: "/sitemap-index.xml",
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { ORIGIN } from "./helpers";
 
 // T7 — each RSS feed declares its language.
 for (const [path, language] of [
@@ -23,11 +24,7 @@ for (const [feed, index] of [
   test(`${feed}: channel link and atom:self`, async ({ request }) => {
     const xml = await (await request.get(feed)).text();
     expect(xml).toContain(`<channel><title>`);
-    expect(xml).toMatch(
-      new RegExp(`<link>https://guillaume\\.ojardias\\.info${index}</link>`),
-    );
-    expect(xml).toContain(
-      `<atom:link href="https://guillaume.ojardias.info${feed}" rel="self"`,
-    );
+    expect(xml).toContain(`<link>${ORIGIN}${index}</link>`);
+    expect(xml).toContain(`<atom:link href="${ORIGIN}${feed}" rel="self"`);
   });
 }

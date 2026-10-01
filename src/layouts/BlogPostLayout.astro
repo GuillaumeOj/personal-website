@@ -1,20 +1,20 @@
 ---
 import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import Portrait from '../components/about/Portrait.astro';
-import AuthorByline from '../components/AuthorByline.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import TableOfContents from '../components/TableOfContents.astro';
-import { SITE, type Locale } from '../config';
-import { absoluteUrl, articlePath, contactPath, formatDate, localizedPath, otherLocale, projectPath, t } from '../i18n/ui';
-import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
-import { articleAlternates } from '../lib/alternates';
-import { findSibling } from '../lib/posts';
-import { localizedName } from '../lib/projects';
-import { projectsForPost, relatedPosts } from '../lib/related';
-import { blogPostJsonLd } from '../lib/schema';
-import type { TocHeading } from '../lib/toc';
+import Portrait from '@/components/about/Portrait.astro';
+import AuthorByline from '@/components/AuthorByline.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import { SITE, type Locale } from '@/config';
+import { absoluteUrl, articlePath, contactPath, formatDate, localizedPath, otherLocale, projectPath, t } from '@/i18n/ui';
+import { OG_HEIGHT, OG_WIDTH } from '@/lib/og';
+import { articleAlternates } from '@/lib/alternates';
+import { findSibling } from '@/lib/posts';
+import { localizedName } from '@/lib/projects';
+import { projectsForPost, relatedPosts } from '@/lib/related';
+import { blogPostJsonLd, navTrail } from '@/lib/schema';
+import type { TocHeading } from '@/lib/toc';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -29,13 +29,13 @@ const authorName = author ?? SITE.name;
 const credit = post.data.coverCredit;
 const unsplashLink = (url: string) => `${url}?utm_source=guillaume_ojardias&utm_medium=referral`;
 
-// hreflang: blog slugs differ across locales, so pair this post with its
-// translated sibling (shared `translationKey`) and hand BaseLayout explicit
-// alternate URLs. A post with no published sibling gets none (canonical only).
+// Blog slugs differ across locales, so pair this post with its translated
+// sibling (shared `translationKey`) for hreflang and the language switcher. A
+// post with no published sibling gets no hreflang (canonical only).
 const sibling = await findSibling(post.data.translationKey, otherLocale(locale));
 const aboutProjects = projectsForPost(post);
 const furtherReading = await relatedPosts(post, locale, 2);
-const { altFrUrl, altEnUrl } = articleAlternates({
+const { alternates, paired } = articleAlternates({
   locale,
   slug: post.data.slug,
   siblingSlug: sibling?.data.slug,
@@ -56,14 +56,7 @@ const card = await getImage({
 // Breadcrumb trail (Home › Blog › {title}), shared by the visible <nav> and the
 // BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    url: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.blog'),
-    url: absoluteUrl(localizedPath(locale, '/blog')),
-  },
+  ...navTrail(locale, ['nav.blog', '/blog']),
   { name: post.data.title, url: canonical },
 ];
 // BlogPosting + breadcrumb (Home › Blog › {title}). Author falls back to the
@@ -98,9 +91,8 @@ const jsonLd = blogPostJsonLd(locale, {
     tags: post.data.tags,
   }}
   jsonLd={jsonLd}
-  hreflang={Boolean(altFrUrl)}
-  altFrUrl={altFrUrl}
-  altEnUrl={altEnUrl}
+  alternates={alternates}
+  hreflang={paired}
 >
   <TableOfContents locale={locale} headings={headings} />
   <a
@@ -110,7 +102,7 @@ const jsonLd = blogPostJsonLd(locale, {
     {t(locale, 'blog.backToList')}
   </a>
   <article class="space-y-6">
-    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs} />
     {/* width/height pin the 3:1 crop so sharp does it at build. Without them
         Astro keeps the source aspect (the covers are portraits up to 1600×2400)
         and `object-cover` throws ~3/4 of every byte away in the browser — on the
@@ -191,7 +183,7 @@ const jsonLd = blogPostJsonLd(locale, {
 
     {/* End-of-article conversion block: an author card (the visible human behind
         the BlogPosting author Person) plus CTAs, so a post isn't a dead-end. */}
-    <footer class="not-prose mt-14 space-y-6 rounded-2xl border border-line bg-surface p-6 sm:p-8">
+    <footer class="not-prose mt-14 space-y-6 card p-6 sm:p-8">
       <div class="flex items-start gap-4">
         <Portrait locale={locale} class="h-14 w-14 shrink-0" loading="lazy" />
         <div class="space-y-1">
@@ -206,7 +198,7 @@ const jsonLd = blogPostJsonLd(locale, {
         <p class="leading-relaxed text-muted">{t(locale, 'blog.cta.lead')}</p>
         <div class="flex flex-wrap gap-3 pt-1">
           <a href={contactPath(locale)} class="btn btn-primary">
-            {t(locale, 'blog.cta.primary')}
+            {t(locale, 'cta.talk')}
           </a>
           <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
             {t(locale, 'blog.cta.secondary')}

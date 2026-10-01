@@ -1,5 +1,10 @@
-import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash } from "../i18n/ui";
+import { LOCALE_TAG, type Locale, SITE } from "../config";
+import {
+  ensureTrailingSlash,
+  localizedUrl,
+  type TranslationKey,
+  t,
+} from "../i18n/ui";
 import { workRoles } from "./experience";
 import { tech } from "./home";
 
@@ -17,8 +22,7 @@ export const BUSINESS_ID = `${SITE.url}/#business`;
 export const WEBSITE_ID = `${SITE.url}/#website`;
 
 /** schema.org `inLanguage` (IETF BCP 47) for a locale. */
-export const inLanguage = (locale: Locale): string =>
-  locale === "fr" ? "fr-FR" : "en-US";
+export const inLanguage = (locale: Locale): string => LOCALE_TAG[locale];
 
 /** Job title — the Person's role (never one of the business's offers). */
 export const jobTitle: Record<Locale, string> = {
@@ -97,6 +101,8 @@ export const websiteNode = (locale: Locale) => ({
  * only — the `@id` reference carries it — so it is NOT duplicated here. The node
  * is locale-invariant (name, area, service list and address don't translate), so
  * the same entity is emitted from every page — reinforcing the merge.
+ * `priceRange` is a coarse schema.org band: it signals a professional (not
+ * budget) tier without committing to a public figure.
  */
 export const professionalServiceNode = () => ({
   "@type": "ProfessionalService",
@@ -113,23 +119,31 @@ export const professionalServiceNode = () => ({
     itemOffered: { "@type": "Service", name },
   })),
   address: LYON_ADDRESS,
-});
-
-/**
- * Contact details the About and Services pages add to the #business node (the
- * pages that show them). `priceRange` is a coarse schema.org band: it signals
- * a professional (not budget) tier without committing to a public figure.
- */
-export const businessContact = {
   email: SITE.email,
   priceRange: "€€",
-} as const;
+});
 
 /** A breadcrumb crumb: a visible `name` and its absolute `url`. */
 export interface Crumb {
   name: string;
   url: string;
 }
+
+/**
+ * A Home › … breadcrumb trail. Each step is a nav label and its unlocalized
+ * path; callers append the current item when it isn't a nav page (a post, a
+ * project). Feeds both the visible `Breadcrumb` and `breadcrumbList`.
+ */
+export const navTrail = (
+  locale: Locale,
+  ...steps: [TranslationKey, string][]
+): Crumb[] =>
+  [["nav.home", "/"] as [TranslationKey, string], ...steps].map(
+    ([key, path]) => ({
+      name: t(locale, key),
+      url: localizedUrl(locale, path),
+    }),
+  );
 
 /** A `BreadcrumbList` from ordered crumbs (root first). */
 export const breadcrumbList = (items: Crumb[]) => ({

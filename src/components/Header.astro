@@ -1,17 +1,20 @@
 ---
 import { SITE, type Locale } from '../config';
 import { localizedPath, navItems, t } from '../i18n/ui';
+import type { Alternates } from '../lib/alternates';
 import Icon from './Icon.astro';
 import LangSwitcher from './LangSwitcher.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
   locale: Locale;
+  /** This page in each locale, for the language switcher. */
+  alternates: Alternates;
   /** Logo only: the 404, whose locale is only known client-side. */
   minimal?: boolean;
 }
 
-const { locale, minimal = false } = Astro.props;
+const { locale, alternates, minimal = false } = Astro.props;
 const home = localizedPath(locale, '/');
 const links = navItems(locale);
 const navLinks = links.filter((link) => !link.cta);
@@ -65,7 +68,7 @@ const linkClass =
             ))}
           </div>
           <div class="flex items-center gap-1.5">
-            <LangSwitcher locale={locale} placement="desktop" />
+            <LangSwitcher locale={locale} alternates={alternates} placement="desktop" />
             <ThemeToggle locale={locale} placement="desktop" />
           </div>
           {cta && (
@@ -115,7 +118,7 @@ const linkClass =
           )}
         </nav>
         <div class="mx-auto flex max-w-6xl items-center gap-2 px-6 pb-4">
-          <LangSwitcher locale={locale} placement="mobile" />
+          <LangSwitcher locale={locale} alternates={alternates} placement="mobile" />
           <ThemeToggle locale={locale} placement="mobile" />
         </div>
       </div>

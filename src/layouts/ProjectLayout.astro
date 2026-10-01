@@ -1,13 +1,13 @@
 ---
-import Breadcrumb from '../components/Breadcrumb.astro';
-import ProjectImage from '../components/ProjectImage.astro';
-import { SITE, type Locale } from '../config';
-import { absoluteUrl, articlePath, contactPath, localizedPath, projectPath, t } from '../i18n/ui';
-import { projectSocialImage } from '../lib/og';
-import { localizedName, type Project, resolveImage } from '../lib/projects';
-import { caseStudyFor } from '../lib/case-studies';
-import { postsForProject } from '../lib/related';
-import { projectJsonLd } from '../lib/schema';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import ProjectImage from '@/components/ProjectImage.astro';
+import { SITE, type Locale } from '@/config';
+import { absoluteUrl, articlePath, contactPath, localizedPath, projectPath, t } from '@/i18n/ui';
+import { projectSocialImage } from '@/lib/og';
+import { localizedName, type Project } from '@/lib/projects';
+import { caseStudyFor } from '@/lib/case-studies';
+import { postsForProject } from '@/lib/related';
+import { navTrail, projectJsonLd } from '@/lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -19,14 +19,14 @@ const { locale, project } = Astro.props;
 const { description, aim, longDescription } = project.content[locale];
 const result = project.result?.[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
-const screenshot = resolveImage(project.banner ?? project.cover, locale);
+const screenshot = (project.banner ?? project.cover)[locale];
 const name = localizedName(project, locale);
 const posts = await postsForProject(project, locale);
 const caseStudy = caseStudyFor(project.slug, locale);
 // Search snippet: the case study's search-length summary.
 const metaDescription = caseStudy.metaDescription;
-// `<title>` = `{name} — {descriptor} — Brand` (brand dropped past BaseLayout's
-// TITLE_MAX), so a bare project name isn't
+// `<title>` = `{name} — {descriptor} — Brand` (brand dropped past TITLE_MAX,
+// see `pageTitles` in lib/seo.ts), so a bare project name isn't
 // stranded in search results. The descriptor is a short (2–4 word) stored
 // field; without one, the title falls back to just the name.
 const titleDescriptor = project.titleDescriptor?.[locale];
@@ -42,14 +42,7 @@ const canonical = absoluteUrl(projectPath(locale, project.slug));
 // Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
 // the BreadcrumbList JSON-LD so both stay in lockstep.
 const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    url: absoluteUrl(localizedPath(locale, '/')),
-  },
-  {
-    name: t(locale, 'nav.projects'),
-    url: absoluteUrl(localizedPath(locale, '/projects')),
-  },
+  ...navTrail(locale, ['nav.projects', '/projects']),
   { name, url: canonical },
 ];
 // CreativeWork (or SoftwareApplication for mobile apps) + breadcrumb; the live
@@ -78,10 +71,9 @@ const jsonLd = projectJsonLd(locale, {
   ogImageWidth={og.width}
   ogImageHeight={og.height}
   jsonLd={jsonLd}
-  hreflang
 >
   <article class="space-y-8">
-    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs} />
 
     <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage
@@ -135,7 +127,7 @@ const jsonLd = projectJsonLd(locale, {
 
     <dl class="space-y-6 border-t border-line pt-6">
       <div class="space-y-1">
-        <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+        <dt class="mono-label text-muted">
           {t(locale, 'projects.aim')}
         </dt>
         <dd class="text-ink">{aim}</dd>
@@ -143,7 +135,7 @@ const jsonLd = projectJsonLd(locale, {
       {
         result && (
           <div class="space-y-1">
-            <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+            <dt class="mono-label text-muted">
               {t(locale, 'projects.result')}
             </dt>
             <dd class="text-ink">{result}</dd>
@@ -151,7 +143,7 @@ const jsonLd = projectJsonLd(locale, {
         )
       }
       <div class="space-y-2">
-        <dt class="font-mono text-xs uppercase tracking-[0.14em] text-muted">
+        <dt class="mono-label text-muted">
           {t(locale, 'projects.stack')}
         </dt>
         <dd class="flex flex-wrap gap-1.5">
@@ -207,7 +199,7 @@ const jsonLd = projectJsonLd(locale, {
       </h2>
       <div class="mt-5 flex flex-wrap justify-center gap-3">
         <a href={contactPath(locale)} class="btn btn-primary">
-          {t(locale, 'projects.similarCta.primary')}
+          {t(locale, 'cta.talk')}
         </a>
         <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
           {t(locale, 'projects.similarCta.secondary')}

@@ -6,16 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!**/dist",
-      "!**/.astro",
-      "!**/node_modules",
-      "!**/playwright-report",
-      "!**/test-results",
-      "!**/bun.lock",
-      "!**/*.astro"
-    ]
+    "includes": ["**", "!**/bun.lock", "!**/*.astro"]
   },
   "formatter": {
     "enabled": true,

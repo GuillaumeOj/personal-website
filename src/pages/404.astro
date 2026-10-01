@@ -1,13 +1,12 @@
 ---
-import ArticleCard from '../components/ArticleCard.astro';
-import { type Locale, SITE } from '../config';
-import { contactPath, localizedPath, t } from '../i18n/ui';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { hero } from '../lib/home';
-import { getPostsForLocale } from '../lib/posts';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { type Locale, SITE } from '@/config';
+import { contactPath, localizedPath, t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPostsForLocale } from '@/lib/posts';
 
 // One 404.html serves every missing URL, in both locales. It renders in
-// French; for /en/… URLs the script below swaps in the English block (kept in
+// French; for /en/… URLs the script after the blocks swaps in the English block (kept in
 // a <template>, so the document only ever has one h1) and localizes the
 // title, description, skip link and logo link.
 const [frPosts, enPosts] = await Promise.all([
@@ -52,7 +51,7 @@ const en = {
             </p>
             <p class="flex flex-wrap items-center justify-center gap-3 pt-2">
               <a href={contactPath(locale)} class="btn btn-primary">
-                {hero.ctaPrimary[locale]}
+                {t(locale, 'cta.talk')}
               </a>
               <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
                 {t(locale, 'error.services')}
@@ -84,20 +83,20 @@ const en = {
       );
     })
   }
-</BaseLayout>
 
-<script is:inline define:vars={{ en }}>
-  (() => {
-    if (!location.pathname.startsWith('/en/')) return;
-    const template = document.querySelector('[data-locale-template="en"]');
-    const current = document.querySelector('[data-locale-block]');
-    if (!template || !current) return;
-    current.replaceWith(template.content.cloneNode(true));
-    document.documentElement.lang = 'en';
-    document.title = en.title;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', en.description);
-    const skip = document.querySelector('a[href="#main"]');
-    if (skip) skip.textContent = en.skip;
-    document.querySelector('[data-home-link]')?.setAttribute('href', en.home);
-  })();
-</script>
+  <script is:inline define:vars={{ en }}>
+    (() => {
+      if (!location.pathname.startsWith('/en/')) return;
+      const template = document.querySelector('[data-locale-template="en"]');
+      const current = document.querySelector('[data-locale-block]');
+      if (!template || !current) return;
+      current.replaceWith(template.content.cloneNode(true));
+      document.documentElement.lang = 'en';
+      document.title = en.title;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', en.description);
+      const skip = document.querySelector('a[href="#main"]');
+      if (skip) skip.textContent = en.skip;
+      document.querySelector('[data-home-link]')?.setAttribute('href', en.home);
+    })();
+  </script>
+</BaseLayout>

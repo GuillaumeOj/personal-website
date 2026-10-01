@@ -1,6 +1,6 @@
 import rss from "@astrojs/rss";
 import { type Locale, SITE } from "../config";
-import { absoluteUrl, articlePath, localizedPath, t } from "../i18n/ui";
+import { articlePath, localizedUrl, t } from "../i18n/ui";
 import { getPostsForLocale } from "./posts";
 import { inLanguage } from "./schema";
 import { typeset } from "./typography";
@@ -14,11 +14,11 @@ export async function blogFeed(locale: Locale): Promise<Response> {
     description: t(locale, "blog.subtitle"),
     // The channel <link> is this locale's blog index (item links are absolute
     // paths, so they still resolve against the origin).
-    site: absoluteUrl(localizedPath(locale, "/blog")),
+    site: localizedUrl(locale, "/blog"),
     xmlns: { atom: "http://www.w3.org/2005/Atom" },
     customData: [
       `<language>${inLanguage(locale)}</language>`,
-      `<atom:link href="${absoluteUrl(localizedPath(locale, "/rss.xml"))}" rel="self" type="application/rss+xml"/>`,
+      `<atom:link href="${localizedUrl(locale, "/rss.xml")}" rel="self" type="application/rss+xml"/>`,
     ].join(""),
     items: posts.map((post) => ({
       title: typeset(post.data.title, locale),

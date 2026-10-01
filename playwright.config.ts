@@ -8,8 +8,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? "github" : "list",
+  // Two workers on the 2-vCPU CI runners; the server is static, so tests
+  // don't contend for state.
+  workers: process.env.CI ? 2 : undefined,
+  // On CI, also write the HTML report (with first-retry traces) that the
+  // workflow uploads when the job fails.
+  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: BASE_URL,
     trace: "on-first-retry",

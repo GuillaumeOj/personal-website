@@ -1,20 +1,17 @@
 ---
 import type { Locale } from '../config';
 import { t } from '../i18n/ui';
+import type { Crumb } from '../lib/schema';
 
 /**
  * A visible breadcrumb trail mirroring the page's `BreadcrumbList` JSON-LD.
  * Root first, current page last: the last crumb is marked `aria-current="page"`
  * and rendered as plain text (not a link), the rest as muted links.
  */
-interface Item {
-  name: string;
-  href: string;
-}
-
 interface Props {
   locale: Locale;
-  items: Item[];
+  /** The same crumbs as the page's `BreadcrumbList` (see `navTrail`). */
+  items: Crumb[];
   class?: string;
 }
 
@@ -38,7 +35,7 @@ const { locale, items, class: className } = Astro.props;
                 {item.name}
               </span>
             ) : (
-              <a href={item.href} class="no-underline hover:text-ink-strong">
+              <a href={item.url} class="no-underline hover:text-ink-strong">
                 {item.name}
               </a>
             )}

@@ -7,6 +7,10 @@ export const SITE = {
   // static file: keep it in sync. The contact form itself delivers to a separate real inbox via
   // Brevo — see `CONTACT_TO`/`CONTACT_FROM` in `lib/contact.ts`.
   email: "contact@ojardias.me",
+  // Data-protection mailbox, named in the privacy policy and the form notice.
+  gdprEmail: "gdpr@ojardias.me",
+  // Business registration number, quoted on the legal pages.
+  siren: "993 870 955",
   defaultLocale: "fr" as const,
   locales: ["fr", "en"] as const,
   social: {
@@ -18,6 +22,15 @@ export const SITE = {
 };
 
 export type Locale = (typeof SITE.locales)[number];
+
+/** A string in every locale. */
+export type Localized = Record<Locale, string>;
+
+/** BCP 47 tag per locale: JSON-LD `inLanguage`, date formatting, `og:locale`. */
+export const LOCALE_TAG: Record<Locale, string> = {
+  fr: "fr-FR",
+  en: "en-US",
+};
 
 export const isLocale = (value: string): value is Locale =>
   (SITE.locales as readonly string[]).includes(value);

@@ -32,7 +32,7 @@ export interface ExperienceEntry {
   note?: Localized;
 }
 
-const experience: ExperienceEntry[] = [
+export const experience: ExperienceEntry[] = [
   {
     logo: "/logos/fusily.png",
     alt: "Logo Fusily",
@@ -184,8 +184,6 @@ const experience: ExperienceEntry[] = [
     },
   },
 ];
-
-export const getExperience = (): ExperienceEntry[] => experience;
 
 /**
  * schema.org `OrganizationRole` nodes derived from the experience timeline,

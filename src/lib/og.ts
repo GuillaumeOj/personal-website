@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
-import type { Locale } from "../config";
+import { type Locale, SITE } from "../config";
 import { escapeHtml as esc } from "./html";
 
 /**
@@ -94,8 +94,8 @@ const TAGLINE: Record<Locale, string> = {
 };
 
 const LOCATION = "Lyon · France";
-const SITE_HOST = "guillaume.ojardias.info";
-const NAME = "Guillaume Ojardias";
+const SITE_HOST = new URL(SITE.url).host;
+const NAME = SITE.name;
 
 const PROJECT_EYEBROW: Record<Locale, string> = {
   fr: "Étude de cas",

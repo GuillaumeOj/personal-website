@@ -55,16 +55,15 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
     const missing = "[non renseigné]";
     return {
       title: "Mentions légales",
-      metaDescription:
-        "Mentions légales du site de Guillaume Ojardias : éditeur, directeur de la publication, hébergement et propriété intellectuelle.",
+      metaDescription: `Mentions légales du site de ${SITE.name} : éditeur, directeur de la publication, hébergement et propriété intellectuelle.`,
       updated: "Dernière mise à jour : 1er octobre 2026",
       sections: [
         {
           h: "Éditeur du site",
           body: [
-            "Guillaume Ojardias, entrepreneur individuel (EI), exerçant sous le régime de la micro-entreprise.",
+            `${SITE.name}, entrepreneur individuel (EI), exerçant sous le régime de la micro-entreprise.`,
             `Adresse : ${contact.address ?? missing}.`,
-            "SIREN : 993 870 955 — immatriculé au Registre national des entreprises (RNE).",
+            `SIREN : ${SITE.siren} — immatriculé au Registre national des entreprises (RNE).`,
             "TVA non applicable, art. 293 B du CGI.",
             [
               `Téléphone : ${contact.phone ?? missing} — E-mail : `,
@@ -73,7 +72,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
             ],
           ],
         },
-        { h: "Directeur de la publication", body: ["Guillaume Ojardias."] },
+        { h: "Directeur de la publication", body: [`${SITE.name}.`] },
         {
           h: "Hébergement",
           body: [
@@ -86,7 +85,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
         {
           h: "Propriété intellectuelle",
           body: [
-            "Sauf mention contraire, les textes, photographies personnelles et éléments graphiques de ce site sont la propriété de Guillaume Ojardias et ne peuvent être reproduits sans autorisation (art. L.122-4 du Code de la propriété intellectuelle). Les photos de couverture des articles proviennent d’Unsplash, restent soumises à la licence Unsplash et sont créditées sous chaque image. Les captures d’écran de projets clients sont reproduites avec l’accord des clients concernés.",
+            `Sauf mention contraire, les textes, photographies personnelles et éléments graphiques de ce site sont la propriété de ${SITE.name} et ne peuvent être reproduits sans autorisation (art. L.122-4 du Code de la propriété intellectuelle). Les photos de couverture des articles proviennent d’Unsplash, restent soumises à la licence Unsplash et sont créditées sous chaque image. Les captures d’écran de projets clients sont reproduites avec l’accord des clients concernés.`,
             [
               "Le code source du site est publié sur GitHub (",
               repoLink,
@@ -111,16 +110,15 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
   const missing = "[not provided]";
   return {
     title: "Legal notice",
-    metaDescription:
-      "Legal notice for Guillaume Ojardias's website: publisher, publication director, hosting and intellectual property.",
+    metaDescription: `Legal notice for ${SITE.name}'s website: publisher, publication director, hosting and intellectual property.`,
     updated: "Last updated: October 1, 2026",
     sections: [
       {
         h: "Site publisher",
         body: [
-          "Guillaume Ojardias, sole trader (entrepreneur individuel, EI) operating under the French micro-enterprise scheme.",
+          `${SITE.name}, sole trader (entrepreneur individuel, EI) operating under the French micro-enterprise scheme.`,
           `Address: ${contact.address ?? missing}.`,
-          "Business ID (SIREN): 993 870 955 — registered with the French National Business Register (RNE).",
+          `Business ID (SIREN): ${SITE.siren} — registered with the French National Business Register (RNE).`,
           "VAT not applicable, article 293 B of the French General Tax Code (CGI).",
           [
             `Phone: ${contact.phone ?? missing} — Email: `,
@@ -129,7 +127,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
           ],
         ],
       },
-      { h: "Publication director", body: ["Guillaume Ojardias."] },
+      { h: "Publication director", body: [`${SITE.name}.`] },
       {
         h: "Hosting",
         body: [
@@ -142,7 +140,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
       {
         h: "Intellectual property",
         body: [
-          "Unless stated otherwise, the texts, personal photographs and graphic elements of this site are the property of Guillaume Ojardias and may not be reproduced without permission (article L.122-4 of the French Intellectual Property Code). Blog cover photos come from Unsplash, remain subject to the Unsplash licence and are credited under each image. Screenshots of client projects are reproduced with the agreement of the clients concerned.",
+          `Unless stated otherwise, the texts, personal photographs and graphic elements of this site are the property of ${SITE.name} and may not be reproduced without permission (article L.122-4 of the French Intellectual Property Code). Blog cover photos come from Unsplash, remain subject to the Unsplash licence and are credited under each image. Screenshots of client projects are reproduced with the agreement of the clients concerned.`,
           [
             "The site’s source code is published on GitHub (",
             repoLink,
@@ -159,7 +157,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
 }
 
 /** Address for exercising GDPR rights (privacy policy + form notice). */
-export const GDPR_EMAIL = "gdpr@ojardias.me";
+export const GDPR_EMAIL = SITE.gdprEmail;
 
 /**
  * Privacy policy: the GDPR art. 13 information for the contact form and the
@@ -178,15 +176,14 @@ export function privacyPolicy(
     const missing = "[non renseigné]";
     return {
       title: "Politique de confidentialité",
-      metaDescription:
-        "Politique de confidentialité du site de Guillaume Ojardias : responsable du traitement, données du formulaire de contact, bases légales, destinataires, durées de conservation et droits RGPD.",
+      metaDescription: `Politique de confidentialité du site de ${SITE.name} : responsable du traitement, données du formulaire de contact, bases légales, destinataires, durées de conservation et droits RGPD.`,
       updated: "Dernière mise à jour : 1er octobre 2026",
       sections: [
         {
           h: "Responsable du traitement",
           body: [
             [
-              `Guillaume Ojardias, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+              `${SITE.name}, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN ${SITE.siren} — `,
               gdprLink,
               ". Voir aussi les ",
               link("mentions légales", legalNoticeHref),
@@ -205,7 +202,7 @@ export function privacyPolicy(
         {
           h: "Destinataires",
           body: [
-            "Vos données sont destinées à Guillaume Ojardias uniquement. Elles transitent par les sous-traitants suivants :",
+            `Vos données sont destinées à ${SITE.name} uniquement. Elles transitent par les sous-traitants suivants :`,
             "Vercel Inc. (États-Unis) : hébergement du site et exécution du formulaire, dans la région de Paris ;",
             "Brevo / Sendinblue SAS (France) : acheminement de l’e-mail de notification ;",
             "Proton AG (Suisse) : messagerie de réception.",
@@ -261,15 +258,14 @@ export function privacyPolicy(
   const missing = "[not provided]";
   return {
     title: "Privacy policy",
-    metaDescription:
-      "Privacy policy for Guillaume Ojardias's website: data controller, contact-form data, legal bases, recipients, retention periods and your GDPR rights.",
+    metaDescription: `Privacy policy for ${SITE.name}'s website: data controller, contact-form data, legal bases, recipients, retention periods and your GDPR rights.`,
     updated: "Last updated: October 1, 2026",
     sections: [
       {
         h: "Data controller",
         body: [
           [
-            `Guillaume Ojardias, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+            `${SITE.name}, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN ${SITE.siren} — `,
             gdprLink,
             ". See also the ",
             link("legal notice", legalNoticeHref),
@@ -288,7 +284,7 @@ export function privacyPolicy(
       {
         h: "Recipients",
         body: [
-          "Your data is intended for Guillaume Ojardias only. It passes through the following processors:",
+          `Your data is intended for ${SITE.name} only. It passes through the following processors:`,
           "Vercel Inc. (United States): site hosting and running the form, in the Paris region;",
           "Brevo / Sendinblue SAS (France): delivery of the notification email;",
           "Proton AG (Switzerland): receiving mailbox.",
@@ -357,14 +353,13 @@ export function termsOfService(
     const missing = "[non renseigné]";
     return {
       title: "Conditions générales de prestation de services",
-      metaDescription:
-        "Conditions générales de prestation de services de Guillaume Ojardias EI : devis, prix, paiement, pénalités de retard, recette, propriété intellectuelle et responsabilité.",
+      metaDescription: `Conditions générales de prestation de services de ${SITE.name} EI : devis, prix, paiement, pénalités de retard, recette, propriété intellectuelle et responsabilité.`,
       updated: "Dernière mise à jour : 1er octobre 2026",
       sections: [
         {
           h: "Objet et champ d’application",
           body: [
-            "Les présentes conditions générales de prestation de services (CGPS) s’appliquent à toutes les prestations réalisées par Guillaume Ojardias EI : conception et développement de sites et d’applications, maintenance, accompagnement et conseil.",
+            `Les présentes conditions générales de prestation de services (CGPS) s’appliquent à toutes les prestations réalisées par ${SITE.name} EI : conception et développement de sites et d’applications, maintenance, accompagnement et conseil.`,
             "Les prestations s’adressent aux professionnels, associations et porteurs de projet agissant dans le cadre de leur activité, et non aux consommateurs.",
             "Toute commande emporte l’acceptation des présentes CGPS, qui prévalent sur les conditions d’achat du client, sauf accord écrit contraire. Elles sont communiquées à tout client professionnel qui en fait la demande (art. L.441-1 du Code de commerce).",
           ],
@@ -373,7 +368,7 @@ export function termsOfService(
           h: "Prestataire",
           body: [
             [
-              `Guillaume Ojardias, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+              `${SITE.name}, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN ${SITE.siren} — `,
               mail(SITE.email),
               ".",
             ],
@@ -481,14 +476,13 @@ export function termsOfService(
   const missing = "[not provided]";
   return {
     title: "General terms of service",
-    metaDescription:
-      "General terms of service of Guillaume Ojardias EI: quotes, prices, payment, late-payment penalties, acceptance, intellectual property and liability.",
+    metaDescription: `General terms of service of ${SITE.name} EI: quotes, prices, payment, late-payment penalties, acceptance, intellectual property and liability.`,
     updated: "Last updated: October 1, 2026",
     sections: [
       {
         h: "Purpose and scope",
         body: [
-          "These general terms of service (CGPS) apply to all services provided by Guillaume Ojardias EI: design and development of websites and applications, maintenance, support and consulting.",
+          `These general terms of service (CGPS) apply to all services provided by ${SITE.name} EI: design and development of websites and applications, maintenance, support and consulting.`,
           "The services are intended for professionals, associations and project owners acting for their activity, not for consumers.",
           "Any order implies acceptance of these terms, which prevail over the client’s purchase terms unless otherwise agreed in writing. They are sent to any professional client who asks for them (article L.441-1 of the French Commercial Code).",
         ],
@@ -497,7 +491,7 @@ export function termsOfService(
         h: "Provider",
         body: [
           [
-            `Guillaume Ojardias, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+            `${SITE.name}, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN ${SITE.siren} — `,
             mail(SITE.email),
             ".",
           ],
@@ -613,8 +607,7 @@ export function accessibilityStatement(locale: Locale): LegalDoc {
   if (locale === "fr") {
     return {
       title: "Déclaration d’accessibilité",
-      metaDescription:
-        "Engagement d’accessibilité du site de Guillaume Ojardias : objectif WCAG 2.2 niveau AA, mesures en place et signalement d’un problème.",
+      metaDescription: `Engagement d’accessibilité du site de ${SITE.name} : objectif WCAG 2.2 niveau AA, mesures en place et signalement d’un problème.`,
       updated: "Dernière mise à jour : 1er octobre 2026",
       sections: [
         {
@@ -653,8 +646,7 @@ export function accessibilityStatement(locale: Locale): LegalDoc {
   return {
     binding: false,
     title: "Accessibility statement",
-    metaDescription:
-      "Accessibility commitment for Guillaume Ojardias’ website: WCAG 2.2 level AA as the target, what is in place, and how to report a problem.",
+    metaDescription: `Accessibility commitment for ${SITE.name}’ website: WCAG 2.2 level AA as the target, what is in place, and how to report a problem.`,
     updated: "Last updated: October 1, 2026",
     sections: [
       {

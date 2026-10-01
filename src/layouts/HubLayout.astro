@@ -1,0 +1,58 @@
+---
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import type { Locale } from '@/config';
+import { absoluteUrl, localizedPath, t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { collectionPageJsonLd } from '@/lib/schema';
+
+// A section index (blog, projects): Home › Section breadcrumb, a
+// CollectionPage JSON-LD, the page heading and the list in the slot.
+interface Props {
+  locale: Locale;
+  /** Unlocalized section path, e.g. '/blog'. */
+  path: string;
+  /** Section name in the breadcrumb. */
+  crumb: string;
+  metaTitle: string;
+  metaDescription: string;
+  heading: string;
+  subtitle: string;
+}
+
+const { locale, path, crumb, metaTitle, metaDescription, heading, subtitle } =
+  Astro.props;
+
+const canonical = absoluteUrl(localizedPath(locale, path));
+const trail = [
+  { name: t(locale, 'nav.home'), url: absoluteUrl(localizedPath(locale, '/')) },
+  { name: crumb, url: canonical },
+];
+const jsonLd = collectionPageJsonLd(locale, {
+  url: canonical,
+  name: metaTitle,
+  description: metaDescription,
+  breadcrumbs: trail,
+});
+const crumbs = trail.map(({ name, url }) => ({ name, href: url }));
+---
+
+<BaseLayout
+  locale={locale}
+  title={metaTitle}
+  description={metaDescription}
+  jsonLd={jsonLd}
+  container="full"
+  hreflang
+>
+  <div class="mx-auto max-w-6xl px-6 pt-8">
+    <Breadcrumb locale={locale} items={crumbs} />
+  </div>
+  <div class="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+    <section class="max-w-2xl space-y-3">
+      <h1 class="page-title">{heading}</h1>
+      <p class="text-lg text-muted">{subtitle}</p>
+    </section>
+
+    <slot />
+  </div>
+</BaseLayout>

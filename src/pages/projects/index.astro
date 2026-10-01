@@ -1,61 +1,30 @@
 ---
-import Breadcrumb from '@/components/Breadcrumb.astro';
 import ProjectsExplorer from '@/components/ProjectsExplorer.astro';
-import { absoluteUrl, contactPath, localizedPath, t } from '@/i18n/ui';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import { contactPath, t } from '@/i18n/ui';
+import HubLayout from '@/layouts/HubLayout.astro';
 import { getProjects } from '@/lib/projects';
-import { collectionPageJsonLd } from '@/lib/schema';
 
 const locale = 'fr' as const;
 const projects = getProjects();
-
-const canonical = absoluteUrl(localizedPath(locale, '/projects'));
-const jsonLd = collectionPageJsonLd(locale, {
-  url: canonical,
-  name: t(locale, 'meta.projectsTitle'),
-  description: t(locale, 'meta.projectsDescription'),
-  breadcrumbs: [
-    { name: t(locale, 'nav.home'), url: absoluteUrl(localizedPath(locale, '/')) },
-    { name: t(locale, 'nav.projects'), url: canonical },
-  ],
-});
-
-// Visible trail (Home › Projects) mirroring the BreadcrumbList JSON-LD.
-const crumbs = [
-  {
-    name: t(locale, 'nav.home'),
-    href: absoluteUrl(localizedPath(locale, '/')),
-  },
-  { name: t(locale, 'nav.projects'), href: canonical },
-];
 ---
 
-<BaseLayout
+<HubLayout
   locale={locale}
-  title={t(locale, 'meta.projectsTitle')}
-  description={t(locale, 'meta.projectsDescription')}
-  jsonLd={jsonLd}
-  container="full"
-  hreflang
+  path="/projects"
+  crumb={t(locale, 'nav.projects')}
+  metaTitle={t(locale, 'meta.projectsTitle')}
+  metaDescription={t(locale, 'meta.projectsDescription')}
+  heading={t(locale, 'projects.title')}
+  subtitle={t(locale, 'projects.subtitle')}
 >
-  <div class="mx-auto max-w-6xl px-6 pt-8">
-    <Breadcrumb locale={locale} items={crumbs} />
+  <div class="mt-10">
+    <ProjectsExplorer projects={projects} locale={locale} />
   </div>
-  <div class="mx-auto max-w-6xl px-6 py-12 sm:py-16">
-    <section class="max-w-2xl space-y-3">
-      <h1 class="page-title">{t(locale, 'projects.title')}</h1>
-      <p class="text-lg text-muted">{t(locale, 'projects.subtitle')}</p>
-    </section>
 
-    <div class="mt-10">
-      <ProjectsExplorer projects={projects} locale={locale} />
-    </div>
-
-    <section class="mt-16 border-t border-line pt-10 text-center">
-      <p class="text-lg text-ink-strong">{t(locale, 'projects.listCta.title')}</p>
-      <a href={contactPath(locale)} class="btn btn-primary mt-5">
-        {t(locale, 'projects.listCta.link')}
-      </a>
-    </section>
-  </div>
-</BaseLayout>
+  <section class="mt-16 border-t border-line pt-10 text-center">
+    <p class="text-lg text-ink-strong">{t(locale, 'projects.listCta.title')}</p>
+    <a href={contactPath(locale)} class="btn btn-primary mt-5">
+      {t(locale, 'projects.listCta.link')}
+    </a>
+  </section>
+</HubLayout>

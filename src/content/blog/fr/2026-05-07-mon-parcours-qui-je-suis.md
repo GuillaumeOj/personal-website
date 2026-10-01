@@ -6,6 +6,10 @@ lang: fr
 slug: mon-parcours-qui-je-suis
 translationKey: mon-parcours
 cover: ../../../assets/blog/mon-parcours/cover.jpg
+coverCredit:
+  author: Tom Swinnen
+  authorUrl: https://unsplash.com/@shottrotter
+  url: https://unsplash.com/photos/-5M0spOZfc0
 tags: []
 ---
 

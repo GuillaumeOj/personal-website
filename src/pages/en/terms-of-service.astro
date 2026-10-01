@@ -3,15 +3,15 @@ import { LEGAL_ADDRESS } from 'astro:env/server';
 import LegalDocument from '../../components/legal/LegalDocument.astro';
 import { t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { privacyPolicy } from '../../lib/legal';
+import { termsOfService } from '../../lib/legal';
 
 const locale = 'en' as const;
-const doc = privacyPolicy(locale, { address: LEGAL_ADDRESS });
+const doc = termsOfService(locale, { address: LEGAL_ADDRESS });
 ---
 
 <BaseLayout
   locale={locale}
-  title={t(locale, 'footer.privacy')}
+  title={t(locale, 'footer.terms')}
   description={doc.metaDescription}
   noindex
 >

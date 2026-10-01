@@ -6,6 +6,10 @@ lang: fr
 slug: non-ia-ne-fait-pas-de-vous-un-developpeur
 translationKey: ia-developpeur
 cover: ../../../assets/blog/ia-developpeur/cover.jpg
+coverCredit:
+  author: Kristaps Grundsteins
+  authorUrl: https://unsplash.com/@grundsteins
+  url: https://unsplash.com/photos/Dzd-Xt3QWKw
 tags: []
 ---
 

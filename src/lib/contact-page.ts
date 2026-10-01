@@ -35,16 +35,33 @@ export const form = {
     { value: "other", label: { fr: "Autre", en: "Other" } },
   ] satisfies { value: ProjectType; label: L }[],
   message: { fr: "Votre projet", en: "Your project" },
-  // Compliance line under the submit button. The trailing fragment
-  // (`consentLink`) is rendered as an inline link to the privacy policy at the
-  // point of submission — see ContactForm.astro.
-  consent: {
-    fr: "En envoyant ce formulaire, vous acceptez que vos informations soient utilisées pour répondre à votre demande. Voir la ",
-    en: "By sending this form, you agree that your information may be used to respond to your request. See the ",
+  // GDPR art. 13 information notice under the submit button (not a consent
+  // request: the processing rests on pre-contractual steps and legitimate
+  // interest). `privacyNoticeRights` precedes a mailto link to the GDPR
+  // address and `privacyNoticeMore` a link to the privacy policy — see
+  // ContactForm.astro.
+  privacyNotice: {
+    fr: "Vos données (nom, e-mail, message) sont traitées par Guillaume Ojardias EI uniquement pour répondre à votre demande et, le cas échéant, établir un devis. Elles ne sont ni cédées ni utilisées à des fins de prospection.",
+    en: "Your data (name, email, message) is processed by Guillaume Ojardias EI solely to answer your request and, where relevant, prepare a quote. It is never shared or used for marketing.",
   },
-  consentLink: {
+  privacyNoticeRights: {
+    fr: "Vous pouvez exercer vos droits à ",
+    en: "Exercise your rights at ",
+  },
+  privacyNoticeMore: { fr: "En savoir plus : ", en: "Learn more: " },
+  privacyNoticeLink: {
     fr: "politique de confidentialité",
     en: "privacy policy",
+  },
+  // Quote form only: points to the general terms of service. `termsNotice`
+  // precedes the link — see ContactForm.astro.
+  termsNotice: {
+    fr: "Les prestations sont régies par les ",
+    en: "Services are governed by the ",
+  },
+  termsLink: {
+    fr: "conditions générales de prestation",
+    en: "general terms of service",
   },
   sending: { fr: "Envoi…", en: "Sending…" },
   success: {

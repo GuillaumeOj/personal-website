@@ -23,6 +23,8 @@ interface Props {
 const { locale, post, headings = [] } = Astro.props;
 const { author } = post.data;
 const authorName = author ?? SITE.name;
+const credit = post.data.coverCredit;
+const unsplashLink = (url: string) => `${url}?utm_source=guillaume_ojardias&utm_medium=referral`;
 
 // hreflang: blog slugs differ across locales, so pair this post with its
 // translated sibling (shared `translationKey`) and hand BaseLayout explicit
@@ -106,18 +108,32 @@ const jsonLd = blogPostJsonLd(locale, {
         Astro keeps the source aspect (the covers are portraits up to 1600×2400)
         and `object-cover` throws ~3/4 of every byte away in the browser — on the
         LCP element. */}
-    <Image
-      src={post.data.cover}
-      alt={post.data.title}
-      width={1600}
-      height={533}
-      fit="cover"
-      widths={[640, 960, 1280, 1600]}
-      sizes="(min-width: 768px) 768px, 100vw"
-      loading="eager"
-      fetchpriority="high"
-      class="aspect-[3/1] w-full rounded-2xl object-cover"
-    />
+    <figure class="space-y-2">
+      <Image
+        src={post.data.cover}
+        alt={post.data.title}
+        width={1600}
+        height={533}
+        fit="cover"
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 768px) 768px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[3/1] w-full rounded-2xl object-cover"
+      />
+      {/* Covers are third-party stock: credit the photographer, linked back
+          with the referral params Unsplash's attribution guidelines ask for. */}
+      <figcaption class="text-right text-xs text-muted">
+        {t(locale, 'blog.coverCredit.by')}{' '}
+        <a href={unsplashLink(credit.authorUrl)} class="underline underline-offset-2 hover:text-accent-ink">
+          {credit.author}
+        </a>{' '}
+        {t(locale, 'blog.coverCredit.on')}{' '}
+        <a href={unsplashLink(credit.url)} class="underline underline-offset-2 hover:text-accent-ink">
+          Unsplash
+        </a>
+      </figcaption>
+    </figure>
     <header class="space-y-2">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
         <p>

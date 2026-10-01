@@ -6,6 +6,10 @@ lang: en
 slug: i18n-django-react-native-user-content
 translationKey: i18n-django-react-native
 cover: ../../../assets/blog/i18n-django-react-native/cover.jpg
+coverCredit:
+  author: Brett Jordan
+  authorUrl: https://unsplash.com/@brett_jordan
+  url: https://unsplash.com/photos/hJjC2RhAG0s
 tags: []
 ---
 

@@ -6,6 +6,10 @@ lang: fr
 slug: dotcraft-generateur-qr-codes-open-source-claude-code
 translationKey: dotcraft
 cover: ../../../assets/blog/dotcraft/cover.jpg
+coverCredit:
+  author: Markus Winkler
+  authorUrl: https://unsplash.com/@markuswinkler
+  url: https://unsplash.com/photos/bgySUDeDCfI
 tags: []
 ---
 

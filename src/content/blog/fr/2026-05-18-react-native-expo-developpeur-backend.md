@@ -6,6 +6,10 @@ lang: fr
 slug: react-native-expo-developpeur-backend
 translationKey: react-native-expo
 cover: ../../../assets/blog/react-native-expo/cover.jpg
+coverCredit:
+  author: NSYS Group
+  authorUrl: https://unsplash.com/@nsys_group
+  url: https://unsplash.com/photos/etVWlVuiEaI
 tags: []
 ---
 

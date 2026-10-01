@@ -6,6 +6,10 @@ lang: en
 slug: vercel-hosting-generous-free-tier
 translationKey: vercel-free-tier
 cover: ../../../assets/blog/vercel-free-tier/cover.jpg
+coverCredit:
+  author: Sonny Mauricio
+  authorUrl: https://unsplash.com/@northernstatemedia
+  url: https://unsplash.com/photos/kIr8e-01eAw
 tags: []
 ---
 

@@ -1,26 +1,28 @@
 import { expect, type Page, test } from "@playwright/test";
 
 // The contact form lives only on /contact and /contact/quote (plus their /en
-// mirrors); every other page links there. T3 — a privacy/consent line sits at
-// the point of submission, with the trailing fragment linking to the privacy
-// policy.
+// mirrors); every other page links there. T3 — a GDPR information notice (not a
+// consent request) sits at the point of submission, naming the controller and
+// linking the GDPR address and the privacy policy.
 
 const LOCALES = [
   {
     path: "/contact/",
     quotePath: "/contact/quote/",
-    copy: "vous acceptez que vos informations",
+    copy: "traitées par Guillaume Ojardias EI",
     linkName: "politique de confidentialité",
     privacyHref: /^\/privacy-policy\/?$/,
+    termsHref: "/terms-of-service/",
     estimate: "Demander une estimation gratuite",
     note: "devis gratuit, aucun engagement",
   },
   {
     path: "/en/contact/",
     quotePath: "/en/contact/quote/",
-    copy: "you agree that your information",
+    copy: "processed by Guillaume Ojardias EI",
     linkName: "privacy policy",
     privacyHref: /^\/en\/privacy-policy\/?$/,
+    termsHref: "/en/terms-of-service/",
     estimate: "Request a free estimate",
     note: "free quote, no commitment",
   },
@@ -28,7 +30,7 @@ const LOCALES = [
 
 for (const l of LOCALES) {
   for (const path of [l.path, l.quotePath]) {
-    test(`contact (${path}): form with consent copy + privacy-policy link`, async ({
+    test(`contact (${path}): form with privacy notice + GDPR and privacy-policy links`, async ({
       page,
     }) => {
       await page.goto(path);
@@ -38,6 +40,9 @@ for (const l of LOCALES) {
       const link = form.getByRole("link", { name: l.linkName });
       await expect(link).toBeVisible();
       await expect(link).toHaveAttribute("href", l.privacyHref);
+      await expect(
+        form.getByRole("link", { name: "gdpr@ojardias.me" }),
+      ).toHaveAttribute("href", "mailto:gdpr@ojardias.me");
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     });
   }
@@ -50,6 +55,18 @@ for (const l of LOCALES) {
     await expect(page.locator('select[name="timeline"]')).toHaveCount(0);
     await expect(page.getByText(l.note)).toHaveCount(0);
     await expect(page.locator(`main a[href="${l.quotePath}"]`)).toBeVisible();
+  });
+
+  // Audit L7: the quote form points to the general terms of service; the
+  // general contact form doesn't.
+  test(`contact (${l.quotePath}): quote form links the terms of service`, async ({
+    page,
+  }) => {
+    const terms = `[data-contact-form] a[href="${l.termsHref}"]`;
+    await page.goto(l.quotePath);
+    await expect(page.locator(terms)).toBeVisible();
+    await page.goto(l.path);
+    await expect(page.locator(terms)).toHaveCount(0);
   });
 
   test(`contact (${l.quotePath}?type=mobile): preselects the project type`, async ({

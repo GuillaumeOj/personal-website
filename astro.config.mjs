@@ -1,7 +1,7 @@
 // @ts-check
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import { SITE } from "./src/config.ts";
 import { articlePath } from "./src/i18n/ui.ts";
 import { generateOgImages } from "./src/lib/og.ts";
@@ -25,8 +25,35 @@ for (const post of readPostFiles()) {
   );
 }
 
+// The legal notice must show the publisher's postal address and phone number,
+// but they stay out of this public repo: they are build-time env vars set on
+// Vercel (inlined into the static HTML via `astro:env`). Local, CI and preview
+// builds render a placeholder; a production build without them is refused so
+// an incomplete legal notice can never ship.
+const LEGAL_ENV = ["LEGAL_ADDRESS", "LEGAL_PHONE"];
+if (process.env.VERCEL_ENV === "production") {
+  const missing = LEGAL_ENV.filter((name) => !process.env[name]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing ${missing.join(", ")}: required by the legal notice in production builds.`,
+    );
+  }
+}
+
 export default defineConfig({
   site: SITE.url,
+  env: {
+    schema: Object.fromEntries(
+      LEGAL_ENV.map((name) => [
+        name,
+        envField.string({
+          context: "server",
+          access: "public",
+          optional: true,
+        }),
+      ]),
+    ),
+  },
   i18n: {
     defaultLocale: SITE.defaultLocale,
     locales: [...SITE.locales],
@@ -55,10 +82,12 @@ export default defineConfig({
       },
     },
     sitemap({
-      // Drop the legal notice + privacy policy: they're `noindex` (thin,
+      // Drop the legal pages (notice, privacy policy, terms): they're `noindex` (thin,
       // low-value), so they shouldn't advertise themselves for crawling.
       filter: (page) =>
-        !/\/(legal-notice|privacy-policy)\/?$/.test(new URL(page).pathname),
+        !/\/(legal-notice|privacy-policy|terms-of-service)\/?$/.test(
+          new URL(page).pathname,
+        ),
       // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both
       // locales under the same slug (home, /about, listings). Pages with
       // per-locale slugs (blog/project details) simply get no alternate.

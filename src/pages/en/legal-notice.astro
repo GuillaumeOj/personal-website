@@ -1,17 +1,19 @@
 ---
+import { LEGAL_ADDRESS, LEGAL_PHONE } from 'astro:env/server';
 import LegalDocument from '../../components/legal/LegalDocument.astro';
 import { t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { legalNotice } from '../../lib/legal';
 
 const locale = 'en' as const;
+const doc = legalNotice(locale, { address: LEGAL_ADDRESS, phone: LEGAL_PHONE });
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'footer.legalNotice')}
-  description={legalNotice[locale].metaDescription}
+  description={doc.metaDescription}
   noindex
 >
-  <LegalDocument doc={legalNotice[locale]} />
+  <LegalDocument doc={doc} />
 </BaseLayout>

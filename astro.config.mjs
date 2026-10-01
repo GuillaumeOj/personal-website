@@ -3,28 +3,14 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 import { SITE } from "./src/config.ts";
-import { articlePath, localizedPath } from "./src/i18n/ui.ts";
 import { readPostFiles } from "./src/lib/post-files.ts";
+import { isIndexable, lastmodByPath } from "./src/lib/sitemap.ts";
 
-// Sitemap freshness signal (<lastmod>), only where a real date exists: a
-// post's `updatedDate` (else its `pubDate`), and for each blog index the date
-// of its newest post. Other pages get none: a build timestamp changes on every
-// deploy, which teaches crawlers to ignore `<lastmod>` site-wide. Precomputed
-// once here (config load) as a pathname → ISO-date map, since
-// @astrojs/sitemap's `serialize` runs per URL.
-//
-// Dates are read straight off disk (`readPostFiles`) rather than through
-// `astro:content`: that virtual module does not exist in the config loader, so
-// querying the collection here always failed and silently yielded no dates.
-const lastmodByPath = new Map();
-for (const post of readPostFiles()) {
-  const date = (post.updatedDate ?? post.pubDate).toISOString();
-  lastmodByPath.set(articlePath(post.lang, post.slug), date);
-  const index = localizedPath(post.lang, "/blog");
-  if ((lastmodByPath.get(index) ?? "") < date) {
-    lastmodByPath.set(index, date);
-  }
-}
+// <lastmod> dates (see `lib/sitemap.ts`). Read straight off disk
+// (`readPostFiles`) rather than through `astro:content`: that virtual module
+// does not exist in the config loader, so querying the collection here always
+// failed and silently yielded no dates.
+const lastmods = lastmodByPath(readPostFiles());
 
 // The legal notice must show the publisher's postal address and phone number,
 // but they stay out of this public repo: they are build-time env vars set on
@@ -67,14 +53,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Drop the `noindex` pages: legal pages (notice, privacy policy, terms,
-      // accessibility statement)
-      // and the no-JS contact-form outcomes. They shouldn't advertise
-      // themselves for crawling.
-      filter: (page) =>
-        !/\/(legal-notice|privacy-policy|terms-of-service|accessibility|contact\/(thanks|error))\/?$/.test(
-          new URL(page).pathname,
-        ),
+      filter: isIndexable,
       // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both
       // locales under the same slug (home, /about, listings). Pages with
       // per-locale slugs (blog/project details) simply get no alternate.
@@ -83,9 +62,9 @@ export default defineConfig({
         locales: { fr: "fr", en: "en" },
       },
       // Attach <lastmod> where a real date exists (matched on the
-      // trailing-slash pathname); see `lastmodByPath` above.
+      // trailing-slash pathname).
       serialize(item) {
-        const lastmod = lastmodByPath.get(new URL(item.url).pathname);
+        const lastmod = lastmods.get(new URL(item.url).pathname);
         if (lastmod) item.lastmod = lastmod;
         return item;
       },

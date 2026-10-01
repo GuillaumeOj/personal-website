@@ -1,37 +1,60 @@
-import { expect, type Page, test } from "@playwright/test";
+import {
+  type APIRequestContext,
+  expect,
+  type Page,
+  test,
+} from "@playwright/test";
+import { readPostFiles } from "../../src/lib/post-files";
+import { SAMPLE_ARTICLE } from "./helpers";
 
 const sitemapHref = (page: Page) =>
   page.locator('head link[rel="sitemap"]').getAttribute("href");
+
+/** The child sitemap(s) the index points at, concatenated. */
+async function childSitemaps(request: APIRequestContext): Promise<string> {
+  const index = await request.get("/sitemap-index.xml");
+  expect(index.ok()).toBe(true);
+  // The chunk filename (`sitemap-0.xml`) is an entryLimit implementation detail.
+  const children = [...(await index.text()).matchAll(/<loc>([^<]+)<\/loc>/g)];
+  expect(children.length).toBeGreaterThan(0);
+  const xml = await Promise.all(
+    children.map(async ([, url]) => {
+      const res = await request.get(new URL(url).pathname);
+      expect(res.ok()).toBe(true);
+      return res.text();
+    }),
+  );
+  return xml.join("\n");
+}
 
 // T5 / audit E8 — <lastmod> only where a real date exists: a post's
 // updatedDate or pubDate, and the newest post's date for the blog indexes.
 test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
   request,
 }) => {
-  // The index points at the child sitemap; fetch the child directly.
-  const index = await request.get("/sitemap-index.xml");
-  expect(index.ok()).toBe(true);
-  expect(await index.text()).toContain("sitemap-0.xml");
-
-  const res = await request.get("/sitemap-0.xml");
-  expect(res.ok()).toBe(true);
-  const xml = await res.text();
+  const xml = await childSitemaps(request);
 
   // At least one URL carries a lastmod.
   expect(xml).toContain("<lastmod>");
 
-  // The known FR post "mon-parcours-qui-je-suis" (pubDate 2026-05-07) carries
-  // that date, not the build date — the dates are read from the article
-  // filenames at config load (see `src/lib/post-files.ts`).
-  const match = xml.match(
-    /<loc>[^<]*\/blog\/mon-parcours-qui-je-suis\/<\/loc><lastmod>([^<]+)<\/lastmod>/,
+  // A known post carries its own date (read from the post file, as the config
+  // does), not the build date.
+  const post = readPostFiles().find(
+    (p) => `/blog/${p.slug}/` === SAMPLE_ARTICLE.fr,
   );
-  expect(match, "mon-parcours-qui-je-suis url with a lastmod").toBeTruthy();
-  expect((match as RegExpMatchArray)[1]).toContain("2026-05-07");
+  expect(post, "sample article on disk").toBeTruthy();
+  const date = (post?.updatedDate ?? post?.pubDate)?.toISOString();
+  const match = xml.match(
+    new RegExp(
+      `<loc>[^<]*${SAMPLE_ARTICLE.fr}</loc><lastmod>([^<]+)</lastmod>`,
+    ),
+  );
+  expect(match, "sample article url with a lastmod").toBeTruthy();
+  expect((match as RegExpMatchArray)[1]).toBe(date);
 });
 
 test("sitemap: no build-time lastmod on static pages", async ({ request }) => {
-  const xml = await (await request.get("/sitemap-0.xml")).text();
+  const xml = await childSitemaps(request);
   // The home and services pages have no content date: no <lastmod> at all.
   for (const path of ["/", "/services/"]) {
     const entry = xml.match(
@@ -81,9 +104,8 @@ test("robots.txt advertises only the sitemap index", async ({ request }) => {
   expect(res.ok()).toBe(true);
   const body = await res.text();
   expect(body).toContain("sitemap-index.xml");
-  // The redundant child-sitemap Sitemap: line is gone — only the index is
-  // advertised.
-  expect(body).not.toContain("sitemap-0.xml");
+  // Only the index is advertised, never a child sitemap.
+  expect(body.match(/^Sitemap:/gm)?.length).toBe(1);
 });
 
 // Audit S9: a security.txt (RFC 9116) tells researchers where to report.
@@ -102,7 +124,7 @@ test("security.txt is served with a contact and a future expiry", async ({
 test("sitemap alternates use the same hreflang codes as the pages", async ({
   request,
 }) => {
-  const xml = await (await request.get("/sitemap-0.xml")).text();
+  const xml = await childSitemaps(request);
   expect(xml).toContain('hreflang="fr"');
   expect(xml).toContain('hreflang="en"');
   expect(xml).not.toContain('hreflang="fr-FR"');

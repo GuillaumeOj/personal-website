@@ -42,6 +42,8 @@ const dictionaries = {
     "blog.published": "Publié le",
     "blog.backToList": "← Tous les articles",
     "blog.tocLabel": "Sommaire",
+    "blog.coverCredit.by": "Photo\u00a0:",
+    "blog.coverCredit.on": "sur",
     // End-of-article conversion block (author card + CTAs).
     "blog.cta.bio":
       "Guillaume Ojardias, développeur web & mobile freelance à Lyon. J’accompagne PME, associations et porteurs de projet, de l’idée à la mise en ligne.",
@@ -126,6 +128,8 @@ const dictionaries = {
     "blog.published": "Published on",
     "blog.backToList": "← All posts",
     "blog.tocLabel": "On this page",
+    "blog.coverCredit.by": "Photo by",
+    "blog.coverCredit.on": "on",
     // End-of-article conversion block (author card + CTAs).
     "blog.cta.bio":
       "Guillaume Ojardias, freelance web & mobile developer in Lyon. I help SMEs, non-profits and project owners go from idea to launch.",

@@ -96,6 +96,26 @@ describe("blog content invariants", () => {
     }
   });
 
+  /**
+   * The credit is per photo, not per locale: both halves of a pair must name
+   * the same Unsplash page. The flat frontmatter parser skips nested keys, so
+   * read the `coverCredit.url` line straight off the file.
+   */
+  it("credits the same cover photo on both halves of a pair", () => {
+    const byKey = new Map<string, Set<string>>();
+    for (const { filePath, fileName, frontmatter } of articles) {
+      const url = /^coverCredit:\n(?: {2}.*\n)*? {2}url: (.+)$/m.exec(
+        readFileSync(filePath, "utf8"),
+      )?.[1];
+      expect(url, `${fileName} has a coverCredit.url`).toBeTruthy();
+      const key = frontmatter.translationKey;
+      byKey.set(key, (byKey.get(key) ?? new Set()).add(url as string));
+    }
+    for (const [key, urls] of byKey) {
+      expect([...urls], `pair "${key}" credits one photo`).toHaveLength(1);
+    }
+  });
+
   it("points every cover at a file that exists", () => {
     for (const { filePath, fileName, frontmatter } of articles) {
       const resolved = path.resolve(path.dirname(filePath), frontmatter.cover);

@@ -6,6 +6,10 @@ lang: en
 slug: ai-doesnt-make-you-a-developer
 translationKey: ia-developpeur
 cover: ../../../assets/blog/ia-developpeur/cover.jpg
+coverCredit:
+  author: Kristaps Grundsteins
+  authorUrl: https://unsplash.com/@grundsteins
+  url: https://unsplash.com/photos/Dzd-Xt3QWKw
 tags: []
 ---
 

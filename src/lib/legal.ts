@@ -83,7 +83,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
         {
           h: "Propriété intellectuelle",
           body: [
-            "Sauf mention contraire, les textes, photographies personnelles et éléments graphiques de ce site sont la propriété de Guillaume Ojardias et ne peuvent être reproduits sans autorisation (art. L.122-4 du Code de la propriété intellectuelle). Certaines illustrations proviennent de banques d’images et restent soumises aux licences de leurs auteurs. Les captures d’écran de projets clients sont reproduites avec l’accord des clients concernés.",
+            "Sauf mention contraire, les textes, photographies personnelles et éléments graphiques de ce site sont la propriété de Guillaume Ojardias et ne peuvent être reproduits sans autorisation (art. L.122-4 du Code de la propriété intellectuelle). Les photos de couverture des articles proviennent d’Unsplash, restent soumises à la licence Unsplash et sont créditées sous chaque image. Les captures d’écran de projets clients sont reproduites avec l’accord des clients concernés.",
             [
               "Le code source du site est publié sur GitHub (",
               repoLink,
@@ -139,7 +139,7 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
       {
         h: "Intellectual property",
         body: [
-          "Unless stated otherwise, the texts, personal photographs and graphic elements of this site are the property of Guillaume Ojardias and may not be reproduced without permission (article L.122-4 of the French Intellectual Property Code). Some illustrations come from stock image libraries and remain subject to their authors’ licences. Screenshots of client projects are reproduced with the agreement of the clients concerned.",
+          "Unless stated otherwise, the texts, personal photographs and graphic elements of this site are the property of Guillaume Ojardias and may not be reproduced without permission (article L.122-4 of the French Intellectual Property Code). Blog cover photos come from Unsplash, remain subject to the Unsplash licence and are credited under each image. Screenshots of client projects are reproduced with the agreement of the clients concerned.",
           [
             "The site’s source code is published on GitHub (",
             repoLink,

@@ -6,6 +6,10 @@ lang: en
 slug: how-i-built-my-personal-blog-nextjs-astro-notion-vercel
 translationKey: blog-stack
 cover: ../../../assets/blog/blog-stack/cover.jpg
+coverCredit:
+  author: AltumCode
+  authorUrl: https://unsplash.com/@altumcode
+  url: https://unsplash.com/photos/P2SkP_PXhlU
 tags: []
 ---
 

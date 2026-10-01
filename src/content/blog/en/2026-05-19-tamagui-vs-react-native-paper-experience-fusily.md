@@ -6,6 +6,10 @@ lang: en
 slug: tamagui-vs-react-native-paper-experience-fusily
 translationKey: tamagui-paper
 cover: ../../../assets/blog/tamagui-paper/cover.jpg
+coverCredit:
+  author: Gustavo Boaron
+  authorUrl: https://unsplash.com/@kreamytime
+  url: https://unsplash.com/photos/BDpEmeB8HUk
 tags: []
 ---
 

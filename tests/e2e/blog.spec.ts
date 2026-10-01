@@ -19,6 +19,32 @@ for (const path of [
   });
 }
 
+// Covers are Unsplash stock, not the site's own work: each hero carries a
+// visible credit linking the photographer and the photo, with the referral
+// params Unsplash's attribution guidelines ask for.
+for (const [path, by] of [
+  ["/blog/mon-parcours-qui-je-suis/", "Photo\u00a0:"],
+  ["/en/blog/my-journey-who-i-am/", "Photo by"],
+]) {
+  test(`blog (${path}): hero cover credits its Unsplash photographer`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const caption = page.locator("article figure figcaption").first();
+    await expect(caption).toContainText(by);
+    const links = caption.locator("a");
+    await expect(links).toHaveCount(2);
+    await expect(links.nth(0)).toHaveAttribute(
+      "href",
+      /^https:\/\/unsplash\.com\/@[^?]+\?utm_source=guillaume_ojardias&utm_medium=referral$/,
+    );
+    await expect(links.nth(1)).toHaveAttribute(
+      "href",
+      /^https:\/\/unsplash\.com\/photos\/[^?]+\?utm_source=guillaume_ojardias&utm_medium=referral$/,
+    );
+  });
+}
+
 // T3 — every article ends on a conversion block: a primary CTA to the home
 // contact page and a secondary link to the services page (internal links that
 // also help SEO), plus the visible author name reinforcing the author Person.

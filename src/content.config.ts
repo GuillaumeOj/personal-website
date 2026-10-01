@@ -32,6 +32,16 @@ const blog = defineCollection({
       // article title: covers are stock photography set for mood, and repeating
       // the title feeds image search without inventing a description.
       cover: image(),
+      /**
+       * Where the cover comes from. Required: covers are Unsplash photos, not
+       * the site's own work, so each one is credited under the post's hero
+       * image (the legal notice points readers there).
+       */
+      coverCredit: z.object({
+        author: z.string(),
+        authorUrl: z.string().startsWith("https://unsplash.com/@"),
+        url: z.string().startsWith("https://unsplash.com/photos/"),
+      }),
       /** Guest byline. Absent (the norm) means the site author. */
       author: z.string().optional(),
     }),

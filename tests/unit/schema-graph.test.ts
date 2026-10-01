@@ -247,6 +247,13 @@ describe("ProfessionalService properties", () => {
     }
   });
 
+  it("carries the contact details on every page (one shape per @id)", () => {
+    expect(professionalServiceNode()).toMatchObject({
+      email: SITE.email,
+      priceRange: "€€",
+    });
+  });
+
   it("lists its services as Offer → Service", () => {
     const offers = professionalServiceNode().makesOffer;
     expect(offers.map((o) => o.itemOffered.name)).toEqual(SERVICE_TYPES);

@@ -146,10 +146,16 @@ for (const path of ["/services/", "/en/services/"]) {
 }
 
 // T2 — the shared #business ProfessionalService is enriched with NAP (email)
-// and a coarse priceRange, and reads consistently from either page that defines
-// it (About, Services). Its offers are the real services, never a
+// and a coarse priceRange, and reads identically from every page that defines
+// it (Home, About, Services). Its offers are the real services, never a
 // person's job-title string.
-for (const path of ["/about/", "/en/about/", "/services/", "/en/services/"]) {
+for (const path of [
+  "/",
+  "/about/",
+  "/en/about/",
+  "/services/",
+  "/en/services/",
+]) {
   test(`business (${path}): email + priceRange, correct offers`, async ({
     page,
   }) => {

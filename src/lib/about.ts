@@ -8,7 +8,6 @@ import {
 } from "../i18n/ui";
 import {
   breadcrumbList,
-  businessContact,
   inLanguage,
   PERSON_ID,
   personNode,
@@ -362,7 +361,6 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   // so duplicating it on the service is dropped.
   const business = {
     ...professionalServiceNode(),
-    ...businessContact,
     description: doc.metaDescription,
     image,
   };

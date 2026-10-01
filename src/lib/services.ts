@@ -1,9 +1,8 @@
-import { type Locale, SITE } from "../config";
+import type { Locale } from "../config";
 import { absoluteUrl, localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
   breadcrumbList,
-  businessContact,
   inLanguage,
   professionalServiceNode,
   WEBSITE_ID,
@@ -365,11 +364,7 @@ export const contactNote = {
 export const servicesJsonLd = (locale: Locale) => {
   const homeUrl = absoluteUrl(localizedPath(locale, "/"));
 
-  // The shared #business node plus the contact details this page shows.
-  const service = {
-    ...professionalServiceNode(),
-    ...businessContact,
-  };
+  const service = professionalServiceNode();
 
   const faqPage = {
     "@type": "FAQPage",

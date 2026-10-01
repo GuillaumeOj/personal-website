@@ -97,6 +97,8 @@ export const websiteNode = (locale: Locale) => ({
  * only — the `@id` reference carries it — so it is NOT duplicated here. The node
  * is locale-invariant (name, area, service list and address don't translate), so
  * the same entity is emitted from every page — reinforcing the merge.
+ * `priceRange` is a coarse schema.org band: it signals a professional (not
+ * budget) tier without committing to a public figure.
  */
 export const professionalServiceNode = () => ({
   "@type": "ProfessionalService",
@@ -113,17 +115,9 @@ export const professionalServiceNode = () => ({
     itemOffered: { "@type": "Service", name },
   })),
   address: LYON_ADDRESS,
-});
-
-/**
- * Contact details the About and Services pages add to the #business node (the
- * pages that show them). `priceRange` is a coarse schema.org band: it signals
- * a professional (not budget) tier without committing to a public figure.
- */
-export const businessContact = {
   email: SITE.email,
   priceRange: "€€",
-} as const;
+});
 
 /** A breadcrumb crumb: a visible `name` and its absolute `url`. */
 export interface Crumb {

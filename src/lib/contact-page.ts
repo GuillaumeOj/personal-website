@@ -6,12 +6,13 @@ import {
   type TranslationKey,
   t,
 } from "../i18n/ui";
-import type {
-  Budget,
-  ContactOutcome,
-  Intent,
-  ProjectType,
-  Timeline,
+import {
+  type Budget,
+  type ContactOutcome,
+  type Intent,
+  PROJECT_TYPE_LABELS,
+  PROJECT_TYPES,
+  type Timeline,
 } from "./contact";
 import { contact } from "./home";
 import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
@@ -27,18 +28,10 @@ export const form = {
   name: { fr: "Nom", en: "Name" },
   email: { fr: "E-mail", en: "Email" },
   projectType: { fr: "Type de projet", en: "Project type" },
-  projectTypeOptions: [
-    {
-      value: "web",
-      label: { fr: "Site / application web", en: "Website / web app" },
-    },
-    { value: "saas", label: { fr: "SaaS", en: "SaaS" } },
-    {
-      value: "mobile",
-      label: { fr: "Application mobile", en: "Mobile app" },
-    },
-    { value: "other", label: { fr: "Autre", en: "Other" } },
-  ] satisfies { value: ProjectType; label: L }[],
+  projectTypeOptions: PROJECT_TYPES.map((value) => ({
+    value,
+    label: PROJECT_TYPE_LABELS[value],
+  })),
   message: { fr: "Votre projet", en: "Your project" },
   // GDPR art. 13 information notice under the submit button (not a consent
   // request: the processing rests on pre-contractual steps and legitimate

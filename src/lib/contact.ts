@@ -7,8 +7,22 @@
 import type { Locale } from "../config";
 import { escapeHtml } from "./html.js";
 
-export type ProjectType = "web" | "saas" | "mobile" | "other";
-const PROJECT_TYPES: ProjectType[] = ["web", "saas", "mobile", "other"];
+export const PROJECT_TYPES = ["web", "saas", "mobile", "other"] as const;
+export type ProjectType = (typeof PROJECT_TYPES)[number];
+
+/**
+ * Project-type labels: the form options (`lib/contact-page.ts`) and the
+ * notification email (French) both read them, so a new type needs one edit.
+ */
+export const PROJECT_TYPE_LABELS: Record<
+  ProjectType,
+  Record<Locale, string>
+> = {
+  web: { fr: "Site / application web", en: "Website / web app" },
+  saas: { fr: "SaaS", en: "SaaS" },
+  mobile: { fr: "Application mobile", en: "Mobile app" },
+  other: { fr: "Autre", en: "Other" },
+};
 
 /** Recipient of the notification email. */
 const CONTACT_TO = {
@@ -30,13 +44,6 @@ export const contactOutcomePath = (
   locale: Locale,
   outcome: ContactOutcome,
 ): string => `${locale === "en" ? "/en" : ""}/contact/${outcome}/`;
-
-const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
-  web: "Site / application web",
-  saas: "SaaS",
-  mobile: "Application mobile",
-  other: "Autre",
-};
 
 /**
  * Optional qualifying fields, only on the quote form (/contact/quote), which
@@ -135,7 +142,9 @@ export function validateSubmission(raw: unknown): ValidationResult {
   const name = singleLine(r.name);
   const email = singleLine(r.email);
   const message = multiLine(r.message);
-  const projectType = PROJECT_TYPES.includes(r.projectType as ProjectType)
+  const projectType = (PROJECT_TYPES as readonly unknown[]).includes(
+    r.projectType,
+  )
     ? (r.projectType as ProjectType)
     : "other";
 
@@ -159,7 +168,7 @@ export function validateSubmission(raw: unknown): ValidationResult {
 
 /** Build the Brevo `POST /v3/smtp/email` payload for a valid submission. */
 export function buildBrevoPayload(data: ContactSubmission) {
-  const typeLabel = PROJECT_TYPE_LABELS[data.projectType];
+  const typeLabel = PROJECT_TYPE_LABELS[data.projectType].fr;
   const fields: [string, string][] = [
     ["Nom", data.name],
     ["E-mail", data.email],

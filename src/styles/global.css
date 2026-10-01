@@ -386,23 +386,3 @@ html.snap-home footer {
 .prose code::after {
   content: none;
 }
-
-/*
- * ThemeToggle: show only the active mode's trigger icon and check mark. The
- * head script sets data-theme-mode on <html> before paint; without it (no JS)
- * the sun icon stays.
- */
-html[data-theme-mode]:not([data-theme-mode="light"]) [data-theme-icon="light"],
-html:not([data-theme-mode="dark"]) [data-theme-icon="dark"],
-html:not([data-theme-mode="system"]) [data-theme-icon="system"],
-html:not([data-theme-mode="light"])
-  [data-theme-option="light"]
-  [data-theme-check],
-html:not([data-theme-mode="dark"])
-  [data-theme-option="dark"]
-  [data-theme-check],
-html:not([data-theme-mode="system"])
-  [data-theme-option="system"]
-  [data-theme-check] {
-  display: none;
-}

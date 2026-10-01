@@ -5,20 +5,14 @@ import FeaturedProjects from '@/components/home/FeaturedProjects.astro';
 import Hero from '@/components/home/Hero.astro';
 import HowIWork from '@/components/home/HowIWork.astro';
 import WhatIDo from '@/components/home/WhatIDo.astro';
-import { getImage } from 'astro:assets';
-import portrait from '@/assets/portrait.jpg';
-import { SITE } from '@/config';
 import { t } from '@/i18n/ui';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { personImageUrl } from '@/lib/person-image';
 import { homeJsonLd } from '@/lib/schema';
 
 const locale = 'fr' as const;
 
-// A JPEG rendition of the portrait for the Person node's `image`.
-const personImage = new URL(
-  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
-  SITE.url,
-).toString();
+const personImage = await personImageUrl();
 ---
 
 <BaseLayout

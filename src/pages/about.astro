@@ -1,10 +1,8 @@
 ---
-import { getImage } from 'astro:assets';
-import portrait from '@/assets/portrait.jpg';
 import AboutContent from '@/components/about/AboutContent.astro';
 import Breadcrumb from '@/components/Breadcrumb.astro';
-import { SITE } from '@/config';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { personImageUrl } from '@/lib/person-image';
 import { about, aboutCrumbs, aboutJsonLd } from '@/lib/about';
 
 const locale = 'fr' as const;
@@ -13,12 +11,7 @@ const doc = about[locale];
 // Visible trail (Home › About) mirroring the BreadcrumbList JSON-LD.
 const crumbs = aboutCrumbs(locale);
 
-// A JPEG rendition of the portrait for the JSON-LD `image` (the share card is
-// the default /og/ card, set by BaseLayout).
-const personImage = new URL(
-  (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
-  SITE.url,
-).toString();
+const personImage = await personImageUrl();
 ---
 
 <BaseLayout

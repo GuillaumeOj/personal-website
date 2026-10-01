@@ -43,6 +43,20 @@ const modes = [
   }
 </Dropdown>
 
+<style>
+  /* Show only the active mode's trigger icon and check mark. The head script
+   * sets data-theme-mode on <html> before paint; without it (no JS) the sun
+   * icon stays. Global: the icons are rendered by the Icon component. */
+  :global(html[data-theme-mode]:not([data-theme-mode='light']) [data-theme-icon='light']),
+  :global(html:not([data-theme-mode='dark']) [data-theme-icon='dark']),
+  :global(html:not([data-theme-mode='system']) [data-theme-icon='system']),
+  :global(html:not([data-theme-mode='light']) [data-theme-option='light'] [data-theme-check]),
+  :global(html:not([data-theme-mode='dark']) [data-theme-option='dark'] [data-theme-check]),
+  :global(html:not([data-theme-mode='system']) [data-theme-option='system'] [data-theme-check]) {
+    display: none;
+  }
+</style>
+
 <script>
   type ThemeMode = 'light' | 'dark' | 'system';
   const STORAGE_KEY = 'theme';
@@ -73,7 +87,7 @@ const modes = [
       resolveAppliedTheme(mode) === 'dark',
     );
     // The trigger icon and the check marks follow data-theme-mode in CSS
-    // (global.css); only the pressed state is set here.
+    // (the <style> above); only the pressed state is set here.
     document.documentElement.dataset.themeMode = mode;
     document
       .querySelectorAll<HTMLElement>('[data-theme-option]')

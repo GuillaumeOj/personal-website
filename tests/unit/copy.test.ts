@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { t } from "../../src/i18n/ui";
-import { faq } from "../../src/lib/services";
+import { faq, servicesMeta } from "../../src/lib/services";
 
 // SEO copy guards for the fixes in the round-2 audit: a broken FR projects
 // sentence, stack-list meta descriptions, and missing local intent ("Lyon").
@@ -58,4 +58,18 @@ describe("services FAQ states the B2B scope (audit L6)", () => {
     expect(first.a.fr).toContain("dans le cadre de leur activité");
     expect(first.a.en).toContain("businesses");
   });
+});
+
+// Audit E7: the services page targets the local query in both languages.
+describe("services meta (local intent)", () => {
+  for (const locale of ["fr", "en"] as const) {
+    it(`${locale}: title ≤ 60 with Lyon + freelance, description with Lyon`, () => {
+      const { title, description } = servicesMeta;
+      expect(title[locale].length).toBeLessThanOrEqual(60);
+      expect(title[locale]).toMatch(/Lyon/);
+      expect(title[locale].toLowerCase()).toContain("freelance");
+      expect(description[locale]).toMatch(/Lyon/);
+      expect(description[locale].length).toBeLessThanOrEqual(160);
+    });
+  }
 });

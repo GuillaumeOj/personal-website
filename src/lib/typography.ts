@@ -6,7 +6,7 @@
  *   « ? », « : » or the « h » of « 24 h » never wraps onto its own line, and
  *   English curly quotes (from Markdown smartypants) become « guillemets ».
  */
-import type { Locale } from "../config";
+import { isLocale, type Locale } from "../config";
 
 const NBSP = "\u00a0";
 /** Narrow no-break space: before ; ! ? and inside « ». */
@@ -49,6 +49,9 @@ export function typeset(text: string, locale: Locale): string {
 /** Placeholder (private-use character) for a shielded raw block. */
 const SHIELD = "\ue000";
 const SHIELDED = /\ue000(\d+)\ue000/g;
+/** A `<template lang="…">` block: content in another locale. */
+const TEMPLATE =
+  /(<template\b[^>]*\blang="([a-z]{2})"[^>]*>)([\s\S]*?)<\/template>/gi;
 /**
  * Elements whose content is code or data, never prose. Only the content is
  * shielded: the opening tag stays, so its prose attributes (a textarea's
@@ -66,13 +69,23 @@ const PROSE_ATTR =
  */
 export function typesetHtml(html: string, locale: Locale): string {
   const raw: string[] = [];
-  const shielded = html.replace(
-    RAW,
-    (_, open: string, _tag: string, inner: string, close: string) => {
-      raw.push(inner);
-      return `${open}${SHIELD}${raw.length - 1}${SHIELD}${close}`;
-    },
-  );
+  const shield = (block: string): string => {
+    raw.push(block);
+    return `${SHIELD}${raw.length - 1}${SHIELD}`;
+  };
+  // A <template lang="…"> holds content in another locale (the 404 page's
+  // English block): typeset it in its own language, then keep it aside.
+  const shielded = html
+    .replace(TEMPLATE, (_, open: string, lang: string, inner: string) =>
+      shield(
+        `${open}${isLocale(lang) ? typesetHtml(inner, lang) : inner}</template>`,
+      ),
+    )
+    .replace(
+      RAW,
+      (_, open: string, _tag: string, inner: string, close: string) =>
+        `${open}${shield(inner)}${close}`,
+    );
 
   const done = shielded
     // Text between tags.

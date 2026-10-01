@@ -63,3 +63,36 @@ describe("rejectForeignRequest", () => {
     expect(rejectForeignRequest(req)?.status).toBe(415);
   });
 });
+
+describe("rejectForeignRequest for HTML form posts", () => {
+  const FORM = {
+    types: ["application/x-www-form-urlencoded"],
+    requireOrigin: true,
+  };
+
+  it("accepts a same-origin form post", () => {
+    const req = request({
+      origin: "https://guillaume.ojardias.info",
+      host: "guillaume.ojardias.info",
+      "content-type": "application/x-www-form-urlencoded",
+    });
+    expect(rejectForeignRequest(req, FORM)).toBeNull();
+  });
+
+  it("rejects a form post without Origin", () => {
+    const req = request({
+      host: "guillaume.ojardias.info",
+      "content-type": "application/x-www-form-urlencoded",
+    });
+    expect(rejectForeignRequest(req, FORM)?.status).toBe(403);
+  });
+
+  it("rejects a cross-site form post", () => {
+    const req = request({
+      origin: "https://evil.example",
+      host: "guillaume.ojardias.info",
+      "content-type": "application/x-www-form-urlencoded",
+    });
+    expect(rejectForeignRequest(req, FORM)?.status).toBe(403);
+  });
+});

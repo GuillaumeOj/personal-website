@@ -6,28 +6,37 @@ export function json(status: number, body: unknown): Response {
   });
 }
 
+/** The request's media type, lower-cased and without parameters. */
+export const mediaType = (req: Request): string =>
+  (req.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+
+/** `303 See Other` to a same-site path: where a no-JS form post lands. */
+export const redirect = (path: string): Response =>
+  new Response(null, { status: 303, headers: { location: path } });
+
 /**
  * Reject requests a third-party page could forge from a visitor's browser.
  * A cross-site page can't set a JSON content type without a CORS preflight
  * (which the API functions don't answer), and browsers always send `Origin`
- * on a cross-site POST. Allowed: no `Origin` (non-browser clients, which gain
- * nothing over calling the API directly), or an `Origin` whose host is the
- * request's own host (production, Vercel previews, local preview).
+ * on a cross-site POST. Allowed: an `Origin` whose host is the request's own
+ * host (production, Vercel previews, local preview), or no `Origin` at all
+ * (non-browser clients, which gain nothing over calling the API directly) —
+ * unless `requireOrigin` is set, as it must be for HTML form posts, which any
+ * site can send cross-site without a preflight.
  * Returns an error `Response`, or `null` when the request may proceed.
  */
 export function rejectForeignRequest(
   req: Request,
-  acceptedTypes: readonly string[] = ["application/json"],
+  {
+    types = ["application/json"],
+    requireOrigin = false,
+  }: { types?: readonly string[]; requireOrigin?: boolean } = {},
 ): Response | null {
   const origin = req.headers.get("origin");
-  if (origin !== null && !isSameHost(origin, req)) {
+  if (origin === null ? requireOrigin : !isSameHost(origin, req)) {
     return json(403, { ok: false, error: "forbidden" });
   }
-  const type = (req.headers.get("content-type") ?? "")
-    .split(";")[0]
-    .trim()
-    .toLowerCase();
-  if (!acceptedTypes.includes(type)) {
+  if (!types.includes(mediaType(req))) {
     return json(415, { ok: false, error: "unsupported media type" });
   }
   return null;

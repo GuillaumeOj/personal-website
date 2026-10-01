@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../../config';
+import { type Locale, SITE } from '../../config';
 import { ensureTrailingSlash, localizedPath } from '../../i18n/ui';
 import {
   type ContactMode,
@@ -18,10 +18,16 @@ const { locale, mode } = Astro.props;
 const cfg = contactModes[mode];
 
 const statusLabels = JSON.stringify({
-  success: f.success[locale],
   error: f.error[locale],
   sending: f.sending[locale],
+  email: SITE.email,
+  mailtoSubject: f.mailtoSubject[locale],
+  fields: Object.fromEntries(
+    Object.entries(f.fieldErrors).map(([field, msg]) => [field, msg[locale]]),
+  ),
 });
+const required = 'text-accent-ink';
+const fieldError = 'text-sm text-red-700 dark:text-red-400';
 
 const fieldLabel =
   'font-mono text-xs uppercase tracking-[0.14em] text-muted';
@@ -30,15 +36,24 @@ const fieldInput =
 const optionalHint = 'normal-case tracking-normal text-muted/80';
 ---
 
+<div class="reveal">
+{/* Without JS the browser posts the form itself (native validation, then a
+    303 to /contact/thanks/ or /contact/error/); the script below takes over
+    with JSON, inline field errors and an in-place confirmation. */}
 <form
-  class="reveal space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  class="space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  method="post"
+  action="/api/contact"
   data-contact-form
   data-labels={statusLabels}
-  novalidate
 >
+  <input type="hidden" name="locale" value={locale} />
+  <p class="text-sm text-muted">{f.requiredLegend[locale]}</p>
   <div class="grid gap-5 sm:grid-cols-2">
     <div class="space-y-1.5">
-      <label class={fieldLabel} for="contact-name">{f.name[locale]}</label>
+      <label class={fieldLabel} for="contact-name">
+        {f.name[locale]} <span class={required} aria-hidden="true">*</span>
+      </label>
       <input
         class={fieldInput}
         id="contact-name"
@@ -46,10 +61,14 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
         type="text"
         autocomplete="name"
         required
+        maxlength="100"
       />
+      <p class={fieldError} id="contact-name-error" data-field-error="name" hidden></p>
     </div>
     <div class="space-y-1.5">
-      <label class={fieldLabel} for="contact-email">{f.email[locale]}</label>
+      <label class={fieldLabel} for="contact-email">
+        {f.email[locale]} <span class={required} aria-hidden="true">*</span>
+      </label>
       <input
         class={fieldInput}
         id="contact-email"
@@ -57,7 +76,9 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
         type="email"
         autocomplete="email"
         required
+        maxlength="200"
       />
+      <p class={fieldError} id="contact-email-error" data-field-error="email" hidden></p>
     </div>
   </div>
 
@@ -107,14 +128,18 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
   }
 
   <div class="space-y-1.5">
-    <label class={fieldLabel} for="contact-message">{f.message[locale]}</label>
+    <label class={fieldLabel} for="contact-message">
+      {f.message[locale]} <span class={required} aria-hidden="true">*</span>
+    </label>
     <textarea
       class:list={[fieldInput, 'min-h-32 resize-y']}
       id="contact-message"
       name="message"
       rows="5"
       placeholder={cfg.messagePlaceholder[locale]}
-      required></textarea>
+      required
+      maxlength="5000"></textarea>
+    <p class={fieldError} id="contact-message-error" data-field-error="message" hidden></p>
   </div>
 
   {/* Honeypot: hidden from users, tempting to bots. */}
@@ -162,13 +187,24 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
   </p>
 </form>
 
+<div
+  class="space-y-3 rounded-2xl border border-line bg-surface p-6 sm:p-8"
+  data-contact-success
+  tabindex="-1"
+  hidden
+>
+  <h2 class="font-display text-2xl font-semibold text-ink">{f.successTitle[locale]}</h2>
+  <p class="text-lg leading-relaxed text-muted">{f.success[locale]}</p>
+</div>
+</div>
+
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   if (form) {
     const params = new URLSearchParams(window.location.search);
 
-    // `?type=mobile|web|saas` preselects the project type. Marked as the
-    // default too, so `form.reset()` after a send keeps the preselection.
+    // `?type=mobile|web|saas` preselects the project type (also as the
+    // default, so a form reset keeps it).
     const type = params.get('type');
     const typeSelect = form.querySelector<HTMLSelectElement>('select[name="projectType"]');
     const typeOption = type && [...(typeSelect?.options ?? [])].find((o) => o.value === type);
@@ -176,25 +212,71 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
       typeOption.selected = typeOption.defaultSelected = true;
     }
 
+    // Validation is ours from here on: inline messages instead of bubbles.
+    form.noValidate = true;
+
     const labels = JSON.parse(form.dataset.labels!);
     const status = form.querySelector<HTMLElement>('[data-contact-status]');
+    const success = document.querySelector<HTMLElement>('[data-contact-success]');
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const submitLabel = button?.textContent ?? '';
+    const fields = ['name', 'email', 'message'] as const;
+    type Field = (typeof fields)[number];
 
-    const setStatus = (message: string, ok: boolean) => {
+    const control = (field: Field) =>
+      form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${field}"]`);
+
+    const setFieldError = (field: Field, invalid: boolean) => {
+      const input = control(field);
+      const message = form.querySelector<HTMLElement>(`[data-field-error="${field}"]`);
+      if (!input || !message) return;
+      message.hidden = !invalid;
+      message.textContent = invalid ? labels.fields[field] : '';
+      if (invalid) {
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', message.id);
+      } else {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+      }
+    };
+
+    /** Flag invalid fields and focus the first one; true when all pass. */
+    const flagFields = (invalid: (field: Field) => boolean): boolean => {
+      let first: Field | undefined;
+      for (const field of fields) {
+        const bad = invalid(field);
+        setFieldError(field, bad);
+        if (bad && !first) first = field;
+      }
+      if (first) control(first)?.focus();
+      return !first;
+    };
+
+    // Clear a field's message as soon as it's fixed.
+    for (const field of fields) {
+      control(field)?.addEventListener('input', () => {
+        if (control(field)?.checkValidity()) setFieldError(field, false);
+      });
+    }
+
+    /** Error line with a mailto fallback that carries the typed message. */
+    const showError = () => {
       if (!status) return;
-      status.textContent = message;
-      status.className = `text-sm ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`;
+      const body = control('message')?.value ?? '';
+      const link = document.createElement('a');
+      link.href = `mailto:${labels.email}?subject=${encodeURIComponent(labels.mailtoSubject)}&body=${encodeURIComponent(body)}`;
+      link.textContent = labels.email;
+      link.className = 'font-medium underline';
+      status.replaceChildren(labels.error, link, '.');
+      status.className = 'text-sm text-red-700 dark:text-red-400';
     };
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
       if (status) status.textContent = '';
+      if (!flagFields((field) => !control(field)?.checkValidity())) return;
+
       if (button) {
         button.disabled = true;
         button.textContent = labels.sending;
@@ -207,11 +289,21 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        setStatus(labels.success, true);
-        form.reset();
+        if (res.ok) {
+          form.hidden = true;
+          if (success) {
+            success.hidden = false;
+            success.focus();
+          }
+          return;
+        }
+        // `invalid <field>` errors point at a field; anything else is ours.
+        const { error } = await res.json().catch(() => ({ error: '' }));
+        const field = fields.find((name) => error === `invalid ${name}`);
+        if (field) flagFields((name) => name === field);
+        else showError();
       } catch {
-        setStatus(labels.error, false);
+        showError();
       } finally {
         if (button) {
           button.disabled = false;

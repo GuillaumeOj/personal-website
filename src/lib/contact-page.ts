@@ -7,7 +7,13 @@ import {
   type TranslationKey,
   t,
 } from "../i18n/ui";
-import type { Budget, Intent, ProjectType, Timeline } from "./contact";
+import type {
+  Budget,
+  ContactOutcome,
+  Intent,
+  ProjectType,
+  Timeline,
+} from "./contact";
 import { contact } from "./home";
 import { BUSINESS_ID, type Crumb, webPageJsonLd } from "./schema";
 import { contactNote, cost } from "./services";
@@ -64,14 +70,34 @@ export const form = {
     en: "general terms of service",
   },
   sending: { fr: "Envoi…", en: "Sending…" },
+  // Legend for the `*` after required labels.
+  requiredLegend: {
+    fr: "Les champs marqués d’un astérisque (*) sont obligatoires.",
+    en: "Fields marked with an asterisk (*) are required.",
+  },
+  // Shown next to the field, keyed by the API's `invalid <field>` errors.
+  fieldErrors: {
+    name: { fr: "Indiquez votre nom.", en: "Please enter your name." },
+    email: {
+      fr: "Indiquez une adresse e-mail valide, par exemple nom@domaine.fr.",
+      en: "Enter a valid email address, for example name@example.com.",
+    },
+    message: {
+      fr: "Décrivez votre projet en quelques lignes.",
+      en: "Describe your project in a few lines.",
+    },
+  } satisfies Record<"name" | "email" | "message", L>,
+  successTitle: { fr: "Message envoyé", en: "Message sent" },
   success: {
     fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",
     en: "Thanks! Your message is on its way — you’ll get a reply within 24 h.",
   },
+  // Followed by a mailto link to SITE.email, pre-filled with the message.
   error: {
-    fr: "Une erreur est survenue, merci de réessayer.",
-    en: "Something went wrong, please try again.",
+    fr: "Votre message n’a pas pu être envoyé. Réessayez dans un instant, ou écrivez-moi directement à ",
+    en: "Your message couldn’t be sent. Try again in a moment, or email me directly at ",
   },
+  mailtoSubject: { fr: "Demande de contact", en: "Contact request" },
 };
 
 /** The optional budget/timeline fields, rendered only on the quote form. */
@@ -224,3 +250,31 @@ export const contactJsonLd = (locale: Locale, mode: ContactMode) => {
     extra: { about: { "@id": BUSINESS_ID } },
   });
 };
+
+/**
+ * The static pages a no-JS form post lands on (`303` from /api/contact):
+ * /contact/thanks/ and /contact/error/ (+ /en mirrors). Not indexed.
+ */
+export const contactOutcomes = {
+  // Same copy as the in-place (JS) success panel, so the reply-time promise
+  // lives in one place.
+  thanks: {
+    title: { fr: "Message envoyé", en: "Message sent" },
+    lead: {
+      fr: "Merci ! Votre message a bien été envoyé, je vous réponds sous 24 h.",
+      en: "Thanks! Your message has been sent. I’ll reply within 24 hours.",
+    },
+    back: { fr: "Retour à l’accueil", en: "Back to the home page" },
+  },
+  error: {
+    title: {
+      fr: "Votre message n’a pas pu être envoyé",
+      en: "Your message couldn’t be sent",
+    },
+    lead: {
+      fr: "Un champ était peut-être incomplet, ou l’envoi a échoué de mon côté. Revenez au formulaire pour réessayer, ou écrivez-moi directement à ",
+      en: "A field may have been incomplete, or sending failed on my side. Go back to the form to try again, or email me directly at ",
+    },
+    back: { fr: "Revenir au formulaire", en: "Back to the form" },
+  },
+} satisfies Record<ContactOutcome, { title: L; lead: L; back: L }>;

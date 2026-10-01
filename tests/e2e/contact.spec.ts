@@ -117,7 +117,10 @@ async function submitForm(
   await fillExtra?.();
   await page.locator("[data-contact-form] button[type=submit]").click();
 
-  await expect(page.locator("[data-contact-status]")).toContainText("Merci");
+  const success = page.locator("[data-contact-success]");
+  await expect(success).toContainText("Merci");
+  await expect(success).toBeFocused();
+  await expect(page.locator("[data-contact-form]")).toBeHidden();
   expect(body).toBeDefined();
   return body as Record<string, string>;
 }
@@ -170,5 +173,99 @@ for (const path of ["/services/", "/en/services/"]) {
     for (let i = 0; i < count; i++) {
       await expect(ctas.nth(i)).toHaveAttribute("href", quote);
     }
+  });
+}
+
+// Audit U1: without JS the browser posts the form itself (never a GET that
+// leaks fields into the URL) and lands on a static thank-you page.
+test("contact: form posts to /api/contact without JavaScript", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  let posted: string | undefined;
+  await page.route("**/api/contact", async (route) => {
+    posted = route.request().method();
+    await route.fulfill({
+      status: 303,
+      headers: { location: "/en/contact/thanks/" },
+    });
+  });
+  await page.goto("/en/contact/");
+  await page.fill('input[name="name"]', "Jane");
+  await page.fill('input[name="email"]', "jane@example.com");
+  await page.fill('textarea[name="message"]', "A booking app.");
+  await page.locator("[data-contact-form] button[type=submit]").click();
+  await expect(page).toHaveURL(/\/en\/contact\/thanks\/$/);
+  expect(posted).toBe("POST");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Message sent",
+  );
+  await context.close();
+});
+
+test("contact: empty required fields are flagged inline", async ({ page }) => {
+  await page.goto("/contact/");
+  await page.locator("[data-contact-form] button[type=submit]").click();
+  const name = page.locator('input[name="name"]');
+  await expect(name).toHaveAttribute("aria-invalid", "true");
+  await expect(name).toBeFocused();
+  await expect(page.locator("#contact-name-error")).toHaveText(
+    "Indiquez votre nom.",
+  );
+  await expect(page.locator('textarea[name="message"]')).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  await page.fill('input[name="name"]', "Jane");
+  await expect(name).not.toHaveAttribute("aria-invalid");
+});
+
+test("contact: a server-side field error points at the field", async ({
+  page,
+}) => {
+  await page.route("**/api/contact", (route) =>
+    route.fulfill({ status: 400, json: { ok: false, error: "invalid email" } }),
+  );
+  await page.goto("/en/contact/");
+  await page.fill('input[name="name"]', "Jane");
+  await page.fill('input[name="email"]', "jane@example.com");
+  await page.fill('textarea[name="message"]', "A booking app.");
+  await page.locator("[data-contact-form] button[type=submit]").click();
+  await expect(page.locator('input[name="email"]')).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  await expect(page.locator("#contact-email-error")).toContainText(
+    "valid email",
+  );
+});
+
+test("contact: a send failure offers a pre-filled mailto", async ({ page }) => {
+  await page.route("**/api/contact", (route) =>
+    route.fulfill({ status: 502, json: { ok: false, error: "send failed" } }),
+  );
+  await page.goto("/contact/");
+  await page.fill('input[name="name"]', "Jane");
+  await page.fill('input[name="email"]', "jane@example.com");
+  await page.fill('textarea[name="message"]', "Une appli de réservation.");
+  await page.locator("[data-contact-form] button[type=submit]").click();
+  const status = page.locator("[data-contact-status]");
+  await expect(status).toContainText("n’a pas pu être envoyé");
+  const mailto = status.getByRole("link", { name: "contact@ojardias.me" });
+  await expect(mailto).toHaveAttribute(
+    "href",
+    /^mailto:contact@ojardias\.me\?subject=.+&body=Une%20appli/,
+  );
+  await expect(page.locator("[data-contact-form]")).toBeVisible();
+});
+
+for (const path of ["/contact/thanks/", "/en/contact/error/"]) {
+  test(`${path}: outcome page is noindex`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      /noindex/,
+    );
   });
 }

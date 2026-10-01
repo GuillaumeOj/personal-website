@@ -57,7 +57,6 @@ const p = (...runs: Run[]): Block => ({ t: "p", runs });
 const ul = (...items: Run[][]): Block => ({ t: "list", items });
 
 const frDoc = (): AboutDoc => {
-  const home = localizedPath("fr", "/");
   return {
     // Brand-*forward*: the About page's subject is the person, so it owns the
     // "who is Guillaume Ojardias" query. Rendered verbatim (page sets `rawTitle`)
@@ -136,10 +135,10 @@ const frDoc = (): AboutDoc => {
             s("L’idée : que vous avanciez "),
             b("sereinement"),
             s(
-              ", en sachant toujours où vous en êtes. Vous trouverez le détail de ",
+              ", en sachant toujours où vous en êtes. Vous trouverez le détail de ce que je propose sur ",
             ),
-            link("ce que je propose", `${home}#services`),
-            s(" sur ma page services."),
+            link("la page Prestations", localizedPath("fr", "/services")),
+            s("."),
           ),
         ],
       },
@@ -194,7 +193,6 @@ const frDoc = (): AboutDoc => {
 };
 
 const enDoc = (): AboutDoc => {
-  const home = localizedPath("en", "/");
   return {
     metaTitle: "Guillaume Ojardias — Freelance Full-Stack Developer in Lyon",
     metaDescription:
@@ -263,9 +261,11 @@ const enDoc = (): AboutDoc => {
           p(
             s("The idea: that you move forward with "),
             b("peace of mind"),
-            s(", always knowing where you stand. You’ll find the details of "),
-            link("what I offer", `${home}#services`),
-            s(" on my services page."),
+            s(
+              ", always knowing where you stand. You’ll find the details of what I offer on ",
+            ),
+            link("the Services page", localizedPath("en", "/services")),
+            s("."),
           ),
         ],
       },

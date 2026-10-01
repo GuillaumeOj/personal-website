@@ -80,7 +80,7 @@ const jsonLd = projectJsonLd(locale, {
   hreflang
 >
   <article class="space-y-8">
-    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
 
     <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage

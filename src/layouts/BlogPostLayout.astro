@@ -103,7 +103,7 @@ const jsonLd = blogPostJsonLd(locale, {
     {t(locale, 'blog.backToList')}
   </a>
   <article class="space-y-6">
-    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
     {/* width/height pin the 3:1 crop so sharp does it at build. Without them
         Astro keeps the source aspect (the covers are portraits up to 1600×2400)
         and `object-cover` throws ~3/4 of every byte away in the browser — on the

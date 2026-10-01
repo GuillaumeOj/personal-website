@@ -80,12 +80,11 @@ export interface Project {
   /** 16:9 screenshot used on the summary card */
   cover: LocalizedImage;
   /**
-   * Optional per-locale descriptive `alt` for the screenshot, consumed as
-   * `project.imageAlt?.[locale]` (with a fallback to the generic
-   * "Capture d'écran de {name}"). Describe what the screenshot actually shows —
-   * factual, never invented — to help image search and screen readers.
+   * Per-locale descriptive `alt` for the screenshot, used by the card, the
+   * detail page and its social card. Describe what the screenshot actually
+   * shows — factual, never invented — to help image search and screen readers.
    */
-  imageAlt?: Record<Locale, string>;
+  imageAlt: Record<Locale, string>;
   /** Wide hero used on the detail view; falls back to `cover` */
   banner?: LocalizedImage;
   year?: number;

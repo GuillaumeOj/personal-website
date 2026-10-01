@@ -54,9 +54,9 @@ test("projects list: inherits the landscape default card, brand not doubled", as
 }) => {
   await page.goto("/projects/");
   await checkImage(page, "/og/default-fr.jpg");
-  expect(await ogTitle(page)).toBe("Projets & réalisations web");
+  expect(await ogTitle(page)).toBe("Projets et réalisations web & mobile");
   await expect(page).toHaveTitle(
-    "Projets & réalisations web — Guillaume Ojardias",
+    "Projets et réalisations web & mobile — Guillaume Ojardias",
   );
 });
 

@@ -36,12 +36,7 @@ const metaTitle = titleDescriptor ? `${name} — ${titleDescriptor}` : name;
 // link previews the work rather than a raw portrait phone screenshot.
 const og = projectSocialImage(project.slug, locale);
 
-// Per-project alt when authored, else a generic fallback (kept distinct for the
-// on-page screenshot vs. the social card, matching their prior fallbacks).
-const imageAlt =
-  project.imageAlt?.[locale] ??
-  (locale === 'fr' ? `Capture d’écran de ${name}` : `${name} screenshot`);
-const ogImageAlt = project.imageAlt?.[locale] ?? name;
+const imageAlt = project.imageAlt[locale];
 
 const canonical = absoluteUrl(projectPath(locale, project.slug));
 // Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
@@ -79,7 +74,7 @@ const jsonLd = projectJsonLd(locale, {
   title={metaTitle}
   description={metaDescription}
   ogImage={og.url}
-  ogImageAlt={ogImageAlt}
+  ogImageAlt={imageAlt}
   ogImageWidth={og.width}
   ogImageHeight={og.height}
   jsonLd={jsonLd}

@@ -1,3 +1,3 @@
-import { blogFeed } from "../lib/rss";
+import { blogFeed } from "@/lib/rss";
 
 export const GET = () => blogFeed("fr");

@@ -1,16 +1,16 @@
 ---
-import AboutTeaser from '../../components/home/AboutTeaser.astro';
-import ContactCta from '../../components/ContactCta.astro';
-import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
-import Hero from '../../components/home/Hero.astro';
-import HowIWork from '../../components/home/HowIWork.astro';
-import WhatIDo from '../../components/home/WhatIDo.astro';
+import AboutTeaser from '@/components/home/AboutTeaser.astro';
+import ContactCta from '@/components/ContactCta.astro';
+import FeaturedProjects from '@/components/home/FeaturedProjects.astro';
+import Hero from '@/components/home/Hero.astro';
+import HowIWork from '@/components/home/HowIWork.astro';
+import WhatIDo from '@/components/home/WhatIDo.astro';
 import { getImage } from 'astro:assets';
-import portrait from '../../assets/portrait.jpg';
-import { SITE } from '../../config';
-import { t } from '../../i18n/ui';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { homeJsonLd } from '../../lib/schema';
+import portrait from '@/assets/portrait.jpg';
+import { SITE } from '@/config';
+import { t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { homeJsonLd } from '@/lib/schema';
 
 const locale = 'en' as const;
 

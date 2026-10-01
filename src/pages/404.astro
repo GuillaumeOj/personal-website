@@ -1,10 +1,10 @@
 ---
-import ArticleCard from '../components/ArticleCard.astro';
-import { type Locale, SITE } from '../config';
-import { contactPath, localizedPath, t } from '../i18n/ui';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { hero } from '../lib/home';
-import { getPostsForLocale } from '../lib/posts';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { type Locale, SITE } from '@/config';
+import { contactPath, localizedPath, t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { hero } from '@/lib/home';
+import { getPostsForLocale } from '@/lib/posts';
 
 // One 404.html serves every missing URL, in both locales. It renders in
 // French; for /en/… URLs the script after the blocks swaps in the English block (kept in

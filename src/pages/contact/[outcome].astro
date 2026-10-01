@@ -1,8 +1,8 @@
 ---
-import ContactOutcome from '../../components/contact/ContactOutcome.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import type { ContactOutcome as Outcome } from '../../lib/contact';
-import { contactOutcomes } from '../../lib/contact-page';
+import ContactOutcome from '@/components/contact/ContactOutcome.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { ContactOutcome as Outcome } from '@/lib/contact';
+import { contactOutcomes } from '@/lib/contact-page';
 
 /** The no-JS form's landing pages: /thanks/ and /error/. */
 export function getStaticPaths() {

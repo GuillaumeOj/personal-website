@@ -1,17 +1,17 @@
 ---
-import '../styles/global.css';
+import '@/styles/global.css';
 // Preloaded: the display face of the LCP heading (600 for the home hero, 700
 // for every other page's `.page-title` H1) and the body text face, latin
 // subset. `?url` resolves to the same hashed file the @fontsource CSS uses.
 import bricolage600 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-600-normal.woff2?url';
 import bricolage700 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
-import { SITE, type Locale } from '../config';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { absoluteUrl, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
-import { portraitAlt } from '../lib/about';
-import { defaultSocialImage } from '../lib/og';
+import { SITE, type Locale } from '@/config';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import { absoluteUrl, ensureTrailingSlash, localizedPath, t } from '@/i18n/ui';
+import { portraitAlt } from '@/lib/about';
+import { defaultSocialImage } from '@/lib/og';
 
 interface Props {
   locale: Locale;

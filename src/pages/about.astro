@@ -1,12 +1,12 @@
 ---
 import { getImage } from 'astro:assets';
-import portrait from '../assets/portrait.jpg';
-import AboutContent from '../components/about/AboutContent.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import { SITE } from '../config';
-import { absoluteUrl, localizedPath, t } from '../i18n/ui';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { about, aboutJsonLd } from '../lib/about';
+import portrait from '@/assets/portrait.jpg';
+import AboutContent from '@/components/about/AboutContent.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import { SITE } from '@/config';
+import { absoluteUrl, localizedPath, t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { about, aboutJsonLd } from '@/lib/about';
 
 const locale = 'fr' as const;
 const doc = about[locale];

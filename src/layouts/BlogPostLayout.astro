@@ -1,20 +1,20 @@
 ---
 import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import Portrait from '../components/about/Portrait.astro';
-import AuthorByline from '../components/AuthorByline.astro';
-import ArticleCard from '../components/ArticleCard.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import TableOfContents from '../components/TableOfContents.astro';
-import { SITE, type Locale } from '../config';
-import { absoluteUrl, articlePath, contactPath, formatDate, localizedPath, otherLocale, projectPath, t } from '../i18n/ui';
-import { OG_HEIGHT, OG_WIDTH } from '../lib/og';
-import { articleAlternates } from '../lib/alternates';
-import { findSibling } from '../lib/posts';
-import { localizedName } from '../lib/projects';
-import { projectsForPost, relatedPosts } from '../lib/related';
-import { blogPostJsonLd } from '../lib/schema';
-import type { TocHeading } from '../lib/toc';
+import Portrait from '@/components/about/Portrait.astro';
+import AuthorByline from '@/components/AuthorByline.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import { SITE, type Locale } from '@/config';
+import { absoluteUrl, articlePath, contactPath, formatDate, localizedPath, otherLocale, projectPath, t } from '@/i18n/ui';
+import { OG_HEIGHT, OG_WIDTH } from '@/lib/og';
+import { articleAlternates } from '@/lib/alternates';
+import { findSibling } from '@/lib/posts';
+import { localizedName } from '@/lib/projects';
+import { projectsForPost, relatedPosts } from '@/lib/related';
+import { blogPostJsonLd } from '@/lib/schema';
+import type { TocHeading } from '@/lib/toc';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {

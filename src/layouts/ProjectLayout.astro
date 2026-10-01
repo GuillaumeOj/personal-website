@@ -1,13 +1,13 @@
 ---
-import Breadcrumb from '../components/Breadcrumb.astro';
-import ProjectImage from '../components/ProjectImage.astro';
-import { SITE, type Locale } from '../config';
-import { absoluteUrl, articlePath, contactPath, localizedPath, projectPath, t } from '../i18n/ui';
-import { projectSocialImage } from '../lib/og';
-import { localizedName, type Project, resolveImage } from '../lib/projects';
-import { caseStudyFor } from '../lib/case-studies';
-import { postsForProject } from '../lib/related';
-import { projectJsonLd } from '../lib/schema';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import ProjectImage from '@/components/ProjectImage.astro';
+import { SITE, type Locale } from '@/config';
+import { absoluteUrl, articlePath, contactPath, localizedPath, projectPath, t } from '@/i18n/ui';
+import { projectSocialImage } from '@/lib/og';
+import { localizedName, type Project, resolveImage } from '@/lib/projects';
+import { caseStudyFor } from '@/lib/case-studies';
+import { postsForProject } from '@/lib/related';
+import { projectJsonLd } from '@/lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {

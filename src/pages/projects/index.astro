@@ -1,10 +1,10 @@
 ---
-import Breadcrumb from '../../components/Breadcrumb.astro';
-import ProjectsExplorer from '../../components/ProjectsExplorer.astro';
-import { absoluteUrl, contactPath, localizedPath, t } from '../../i18n/ui';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getProjects } from '../../lib/projects';
-import { collectionPageJsonLd } from '../../lib/schema';
+import Breadcrumb from '@/components/Breadcrumb.astro';
+import ProjectsExplorer from '@/components/ProjectsExplorer.astro';
+import { absoluteUrl, contactPath, localizedPath, t } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getProjects } from '@/lib/projects';
+import { collectionPageJsonLd } from '@/lib/schema';
 
 const locale = 'fr' as const;
 const projects = getProjects();

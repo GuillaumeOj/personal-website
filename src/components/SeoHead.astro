@@ -1,0 +1,158 @@
+---
+// Everything a search engine or a share scraper reads from <head>: title,
+// description, canonical, robots, hreflang, Open Graph / Twitter cards and the
+// JSON-LD. BaseLayout renders it with the page's own props.
+import { LOCALE_TAG, type Locale, SITE } from '@/config';
+import { absoluteUrl, localizedPath, otherLocale } from '@/i18n/ui';
+import { portraitAlt } from '@/lib/about';
+import type { Alternates } from '@/lib/alternates';
+import { pageTitles, socialImage } from '@/lib/seo';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogType: 'website' | 'article';
+  articleMeta?: {
+    publishedTime: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+  noindex: boolean;
+  jsonLd?: unknown;
+  hreflang: boolean;
+  alternates: Alternates;
+  rawTitle: boolean;
+  errorPage: boolean;
+}
+// Each prop is documented on BaseLayout, which forwards them.
+
+const {
+  locale,
+  title,
+  description,
+  ogImage,
+  ogImageAlt,
+  ogImageWidth,
+  ogImageHeight,
+  ogType,
+  articleMeta,
+  noindex,
+  jsonLd,
+  hreflang,
+  alternates,
+  rawTitle,
+  errorPage,
+} = Astro.props;
+
+const titles = pageTitles(title, rawTitle);
+const canonicalURL = absoluteUrl(Astro.url.pathname);
+const frURL = absoluteUrl(alternates.fr);
+const enURL = absoluteUrl(alternates.en);
+// `og:locale` wants an underscore: fr_FR.
+const ogLocale = (l: Locale) => LOCALE_TAG[l].replace('-', '_');
+const image = socialImage(
+  locale,
+  ogImage
+    ? { url: ogImage, width: ogImageWidth, height: ogImageHeight }
+    : undefined,
+);
+const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
+---
+
+{
+  !errorPage && (
+    <>
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`${SITE.name} — RSS`}
+        href={localizedPath(locale, '/rss.xml')}
+      />
+      <link rel="canonical" href={canonicalURL} />
+    </>
+  )
+}
+{(noindex || errorPage) && <meta name="robots" content="noindex, follow" />}
+{
+  hreflang && (
+    <>
+      <link rel="alternate" hreflang="fr" href={frURL} />
+      <link rel="alternate" hreflang="en" href={enURL} />
+      <link rel="alternate" hreflang="x-default" href={frURL} />
+    </>
+  )
+}
+<meta name="generator" content={Astro.generator} />
+
+<title>{titles.full}</title>
+<meta name="description" content={description} />
+
+{/* The 404 has no URL of its own and its locale is only known client-side:
+    it keeps the default card image but no locale-specific card text. */}
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:image" content={image.url} />
+{image.width && <meta property="og:image:width" content={String(image.width)} />}
+{image.height && <meta property="og:image:height" content={String(image.height)} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={image.url} />
+{
+  !errorPage && (
+    <>
+      <meta property="og:title" content={titles.social} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={canonicalURL} />
+      <meta property="og:image:alt" content={socialImageAlt} />
+      <meta property="og:locale" content={ogLocale(locale)} />
+      <meta name="twitter:title" content={titles.social} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image:alt" content={socialImageAlt} />
+    </>
+  )
+}
+{
+  hreflang && (
+    <meta
+      property="og:locale:alternate"
+      content={ogLocale(otherLocale(locale))}
+    />
+  )
+}
+{
+  ogType === 'article' && articleMeta && (
+    <>
+      <meta
+        property="article:published_time"
+        content={articleMeta.publishedTime}
+      />
+      {articleMeta.modifiedTime && (
+        <meta
+          property="article:modified_time"
+          content={articleMeta.modifiedTime}
+        />
+      )}
+      {articleMeta.author && (
+        <meta property="article:author" content={articleMeta.author} />
+      )}
+      {articleMeta.tags?.map((tag) => (
+        <meta property="article:tag" content={tag} />
+      ))}
+    </>
+  )
+}
+
+{
+  jsonLd && (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jsonLd)}
+    />
+  )
+}

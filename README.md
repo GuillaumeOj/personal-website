@@ -130,16 +130,14 @@ production Vercel (`VERCEL_ENV=production`) échoue si elles manquent.
 
 ## CI
 
-Le workflow `.github/workflows/ci.yml` se lance sur chaque pull request et chaque push sur `main`. Il enchaîne :
+Le workflow `.github/workflows/ci.yml` se lance sur chaque pull request et chaque push sur `main`, en deux jobs parallèles :
 
-1. `bun install --frozen-lockfile`
-2. `bun run lint` (Biome)
-3. `bun run typecheck` (`astro check`)
-4. `bun run test:unit` (Vitest)
-5. `bun run build` (Astro)
-6. `bun run test:e2e` (Playwright)
+- `checks` : `bun run lint` (Biome), `bun run typecheck` (`astro check`), `bun run test:unit` (Vitest) ;
+- `build-e2e` : `bun run build` (Astro) puis `bun run test:e2e` (Playwright, 2 workers).
 
-À configurer côté GitHub : marquer `verify` comme **status check requis** sur la branche `main` (Settings → Branches → Branch protection rules).
+Les paquets Bun, les images optimisées par Astro et les navigateurs Playwright (clé : version de `@playwright/test`) sont mis en cache.
+
+À configurer côté GitHub : marquer `checks` et `build-e2e` comme **status checks requis** sur la branche `main` (Settings → Rules).
 
 ## Renovate
 

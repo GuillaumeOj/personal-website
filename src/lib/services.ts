@@ -1,5 +1,5 @@
 import { type Locale, SITE } from "../config";
-import { localizedPath, t } from "../i18n/ui";
+import { absoluteUrl, localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
   breadcrumbList,
@@ -341,8 +341,8 @@ export const faq = {
         en: "How much does a project cost?",
       },
       a: {
-        fr: "Devis gratuit après un cadrage court ; la logique de prix est détaillée plus haut.",
-        en: "A free quote after a short scoping; the pricing logic is detailed above.",
+        fr: `Un site vitrine démarre à ${FLOOR_PRICE.fr}, au forfait. Une application web ou mobile est estimée après un cadrage court et gratuit, et un SaaS se construit par lots. Le devis est gratuit et sans engagement.`,
+        en: `A business website starts at ${FLOOR_PRICE.en}, at a fixed price. A web or mobile app is estimated after a short, free scoping call, and a SaaS is built in phases. The quote is free, with no commitment.`,
       },
     },
   ],
@@ -363,7 +363,7 @@ export const contactNote = {
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
+  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
 
   // The shared #business node plus the contact details this page shows.
   const service = {
@@ -386,7 +386,7 @@ export const servicesJsonLd = (locale: Locale) => {
     { name: t(locale, "nav.home"), url: homeUrl },
     {
       name: t(locale, "nav.services"),
-      url: new URL(localizedPath(locale, "/services"), SITE.url).toString(),
+      url: absoluteUrl(localizedPath(locale, "/services")),
     },
   ]);
 

@@ -11,7 +11,7 @@ coverCredit:
   author: Sonny Mauricio
   authorUrl: https://unsplash.com/@northernstatemedia
   url: https://unsplash.com/photos/kIr8e-01eAw
-tags: []
+tags: ["Vercel", "Neon", "Django", "Hébergement"]
 ---
 
 À chaque nouveau projet, la même question revient : comment mettre en ligne quelque chose de propre, rapidement, sans payer un serveur qui tournera à vide 95 % du temps ? [Ce blog](/projects/personal-website/), [dotcraft](/projects/dotcraft/), [Ma Garde Sereine](/projects/ma-garde-sereine/), [Re-Source Et Moi](/projects/re-source-et-moi/), le [site de Maître Eva Biezunski](/projects/eva-biezunski-avocate/)… tous tournent aujourd'hui sur **Vercel**. Voici comment j'en suis arrivé là, et ce qu'il faut savoir avant de faire de même.

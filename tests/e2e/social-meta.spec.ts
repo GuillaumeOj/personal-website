@@ -33,7 +33,7 @@ test("home: landscape card, og mirrors the page title, per-page <title>", async 
   page,
 }) => {
   await page.goto("/");
-  await checkImage(page, "/og/default-fr.png");
+  await checkImage(page, "/og/default-fr.jpg");
   expect(await ogTitle(page)).toBe("Développeur web & mobile freelance à Lyon");
   await expect(page).toHaveTitle(
     "Développeur web & mobile freelance à Lyon — Guillaume Ojardias",
@@ -45,7 +45,7 @@ test("home: landscape card, og mirrors the page title, per-page <title>", async 
 
 test("EN home: localized og title", async ({ page }) => {
   await page.goto("/en/");
-  await checkImage(page, "/og/default-en.png");
+  await checkImage(page, "/og/default-en.jpg");
   expect(await ogTitle(page)).toBe("Freelance Web & Mobile Developer in Lyon");
 });
 
@@ -53,7 +53,7 @@ test("projects list: inherits the landscape default card, brand not doubled", as
   page,
 }) => {
   await page.goto("/projects/");
-  await checkImage(page, "/og/default-fr.png");
+  await checkImage(page, "/og/default-fr.jpg");
   expect(await ogTitle(page)).toBe("Projets & réalisations web");
   await expect(page).toHaveTitle(
     "Projets & réalisations web — Guillaume Ojardias",
@@ -82,7 +82,7 @@ test("blog list: inherits the landscape default card, brand not doubled", async 
   page,
 }) => {
   await page.goto("/blog/");
-  const img = await checkImage(page, "/og/default-fr.png");
+  const img = await checkImage(page, "/og/default-fr.jpg");
   expect(img).not.toContain("memoji");
   expect(await ogTitle(page)).toBe("Blog — Développement web & mobile");
   await expect(page).toHaveTitle(
@@ -148,7 +148,7 @@ test("home: og:locale + og:locale:alternate mirror the two locales", async ({
 test("404: inherits the landscape default card", async ({ page }) => {
   const res = await page.goto("/this-page-does-not-exist/");
   expect(res?.status()).toBe(404);
-  await checkImage(page, "/og/default-fr.png");
+  await checkImage(page, "/og/default-fr.jpg");
 });
 
 test("apple-touch-icon is served at the well-known root paths", async ({

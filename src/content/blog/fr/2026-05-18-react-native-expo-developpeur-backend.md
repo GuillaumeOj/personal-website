@@ -12,7 +12,7 @@ coverCredit:
   author: NSYS Group
   authorUrl: https://unsplash.com/@nsys_group
   url: https://unsplash.com/photos/etVWlVuiEaI
-tags: []
+tags: ["React Native", "Expo", "Mobile", "Django"]
 ---
 
 ## Soyons honnêtes

@@ -1,5 +1,11 @@
-import { type Locale, SITE } from "../config";
-import { contactPath, localizedPath, projectPath, t } from "../i18n/ui";
+import type { Locale } from "../config";
+import {
+  absoluteUrl,
+  contactPath,
+  localizedPath,
+  projectPath,
+  t,
+} from "../i18n/ui";
 import {
   breadcrumbList,
   businessContact,
@@ -346,11 +352,8 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
   // Canonical trailing-slash form so these JSON-LD URLs match the page
   // canonicals and the `@id`-based entity consolidation can't silently miss.
-  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
-  const aboutUrl = new URL(
-    localizedPath(locale, "/about"),
-    SITE.url,
-  ).toString();
+  const homeUrl = absoluteUrl(localizedPath(locale, "/"));
+  const aboutUrl = absoluteUrl(localizedPath(locale, "/about"));
 
   const person = personNode(locale, image);
   // The shared `#business` node (single source of truth in schema.ts), enriched

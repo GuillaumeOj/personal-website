@@ -26,11 +26,11 @@ async function expectLandscapeCard(page: Page, urlContains: string) {
 // The per-locale default card covers home, /about, the projects hub and the
 // blog list (none pass their own ogImage).
 const defaultCardPages: Array<{ path: string; card: string }> = [
-  { path: "/", card: "/og/default-fr.png" },
-  { path: "/en/", card: "/og/default-en.png" },
-  { path: "/about/", card: "/og/default-fr.png" },
-  { path: "/projects/", card: "/og/default-fr.png" },
-  { path: "/blog/", card: "/og/default-fr.png" },
+  { path: "/", card: "/og/default-fr.jpg" },
+  { path: "/en/", card: "/og/default-en.jpg" },
+  { path: "/about/", card: "/og/default-fr.jpg" },
+  { path: "/projects/", card: "/og/default-fr.jpg" },
+  { path: "/blog/", card: "/og/default-fr.jpg" },
 ];
 
 for (const { path, card } of defaultCardPages) {

@@ -69,3 +69,28 @@ for (const path of [
     await expect(foot).toContainText("Guillaume Ojardias");
   });
 }
+
+// Audit E-min: an updated post says so, visibly and in its structured data.
+test("updated post shows its update date and dateModified", async ({
+  page,
+}) => {
+  await page.goto(
+    "/blog/comment-jai-construit-mon-blog-nextjs-astro-notion-vercel/",
+  );
+  await expect(page.getByText("Mis à jour le")).toBeVisible();
+  const graph = await page
+    .locator('script[type="application/ld+json"]')
+    .evaluateAll((els) =>
+      els.flatMap((el) => JSON.parse(el.textContent ?? "{}")["@graph"] ?? []),
+    );
+  const posting = graph.find(
+    (n: { "@type": string }) => n["@type"] === "BlogPosting",
+  );
+  expect(posting.dateModified).toMatch(/^2026-10-01/);
+  await expect(
+    page.locator('meta[property="article:modified_time"]'),
+  ).toHaveAttribute("content", /^2026-10-01/);
+  await expect(
+    page.locator('meta[property="article:tag"]').first(),
+  ).toHaveAttribute("content", "Astro");
+});

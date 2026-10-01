@@ -1,9 +1,15 @@
 ---
 import '../styles/global.css';
+// Preloaded: the display face of the LCP heading (600 for the home hero, 700
+// for every other page's `.page-title` H1) and the body text face, latin
+// subset. `?url` resolves to the same hashed file the @fontsource CSS uses.
+import bricolage600 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-600-normal.woff2?url';
+import bricolage700 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-700-normal.woff2?url';
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import { SITE, type Locale } from '../config';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
+import { absoluteUrl, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
 import { portraitAlt } from '../lib/about';
 import { defaultSocialImage } from '../lib/og';
 
@@ -96,8 +102,8 @@ const frPath = locale === 'fr' ? path : path.replace(/^\/en/, '') || '/';
 const enPath = localizedPath('en', frPath);
 // Match the canonical trailing-slash form even if the request URL lacks it.
 // Blog posts override with explicit alternates.
-const frURL = altFrUrl ?? new URL(ensureTrailingSlash(frPath), SITE.url).toString();
-const enURL = altEnUrl ?? new URL(ensureTrailingSlash(enPath), SITE.url).toString();
+const frURL = altFrUrl ?? absoluteUrl(ensureTrailingSlash(frPath));
+const enURL = altEnUrl ?? absoluteUrl(enPath);
 const mainClass =
   container === 'full'
     ? 'flex-1'
@@ -119,10 +125,10 @@ const socialTitle = fullTitle.endsWith(brandSuffix)
   : fullTitle.startsWith(brandPrefix)
     ? fullTitle.slice(brandPrefix.length)
     : fullTitle;
-const canonicalURL = new URL(Astro.url.pathname, SITE.url).toString();
+const canonicalURL = absoluteUrl(Astro.url.pathname);
 // Social preview: pages without their own `ogImage` get the locale's landscape
 // 1200×630 card (branded canvas + portrait + tagline), built at build time by
-// the `og-cards` integration into `/og/default-{locale}.png`. Content pages
+// the `og-cards` integration into `/og/default-{locale}.jpg`. Content pages
 // (blog posts, project details) pass their own `ogImage` + dimensions.
 let ogImageUrl: string;
 // Dimensions let scrapers render the card without a fetch round-trip. Always
@@ -149,6 +155,14 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/png" sizes="any" href="/memoji.png" />
+    <link
+      rel="preload"
+      href={snap ? bricolage600 : bricolage700}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {

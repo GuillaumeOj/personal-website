@@ -17,13 +17,15 @@ const screenshot = (name: string) =>
   path.join(process.cwd(), "src", "assets", "projects", name);
 
 describe("composeDefaultCard", () => {
-  it("produces a 1200x630 PNG for each locale", async () => {
+  it("produces a 1200x630 JPEG under 300 KB for each locale", async () => {
     for (const locale of ["fr", "en"] as const) {
       const buf = await composeDefaultCard(locale);
       const meta = await sharp(buf).metadata();
       expect(meta.width).toBe(1200);
       expect(meta.height).toBe(630);
-      expect(meta.format).toBe("png");
+      expect(meta.format).toBe("jpeg");
+      // Some scrapers (WhatsApp) skip images much above 300 KB.
+      expect(buf.length).toBeLessThan(300_000);
     }
   });
 });
@@ -57,12 +59,12 @@ describe("composeProjectCard", () => {
 describe("defaultSocialImage", () => {
   it("returns the locale card URL at 1200x630", () => {
     expect(defaultSocialImage("fr")).toEqual({
-      url: "/og/default-fr.png",
+      url: "/og/default-fr.jpg",
       width: OG_WIDTH,
       height: OG_HEIGHT,
     });
     expect(defaultSocialImage("en")).toEqual({
-      url: "/og/default-en.png",
+      url: "/og/default-en.jpg",
       width: 1200,
       height: 630,
     });

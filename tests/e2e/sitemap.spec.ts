@@ -42,15 +42,13 @@ test("sitemap: no build-time lastmod on static pages", async ({ request }) => {
     expect(entry, path).toBeTruthy();
     expect((entry as RegExpMatchArray)[1]).not.toContain("<lastmod>");
   }
-  // The blog index carries its newest post's date, not today.
+  // The blog index carries its newest post's date (not the build time).
   const blog = xml.match(/<loc>[^<]*\/blog\/<\/loc><lastmod>([^<]+)</);
   expect(blog).toBeTruthy();
-  expect((blog as RegExpMatchArray)[1].slice(0, 10)).toMatch(
-    /^2026-\d\d-\d\d$/,
-  );
-  expect((blog as RegExpMatchArray)[1].slice(0, 10)).not.toBe(
-    new Date().toISOString().slice(0, 10),
-  );
+  const postDates = [
+    ...xml.matchAll(/<loc>[^<]*\/blog\/[^/<]+\/<\/loc><lastmod>([^<]+)</g),
+  ].map((m) => m[1]);
+  expect((blog as RegExpMatchArray)[1]).toBe(postDates.sort().at(-1));
 });
 
 // T1 — the on-page sitemap hint points at a file that actually exists. The
@@ -102,4 +100,14 @@ test("security.txt is served with a contact and a future expiry", async ({
   expect(text).toMatch(/^Contact: mailto:\S+@\S+$/m);
   const expires = /^Expires: (.+)$/m.exec(text)?.[1];
   expect(new Date(expires ?? "").getTime()).toBeGreaterThan(Date.now());
+});
+
+// Audit E-min: sitemap hreflang codes match the HTML (fr / en).
+test("sitemap alternates use the same hreflang codes as the pages", async ({
+  request,
+}) => {
+  const xml = await (await request.get("/sitemap-0.xml")).text();
+  expect(xml).toContain('hreflang="fr"');
+  expect(xml).toContain('hreflang="en"');
+  expect(xml).not.toContain('hreflang="fr-FR"');
 });

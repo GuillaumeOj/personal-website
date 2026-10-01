@@ -11,7 +11,7 @@ coverCredit:
   author: Brett Jordan
   authorUrl: https://unsplash.com/@brett_jordan
   url: https://unsplash.com/photos/hJjC2RhAG0s
-tags: []
+tags: ["i18n", "Django", "React Native"]
 ---
 
 Fusily est une application de recettes et de planification de repas où chacun partage ses plats et ses astuces. De par la nature même du produit — du contenu écrit, partagé, destiné à voyager — j'ai intégré la gestion de plusieurs langues dès les premiers jours. Certains diront que c'est inapproprié si tôt dans la vie d'une application. Ils ont raison. Mais au-delà du timing, il y avait une vraie curiosité technique à assouvir.

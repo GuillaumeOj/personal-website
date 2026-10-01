@@ -4,6 +4,7 @@ description: "A detailed look at the technical choices behind my personal blog: 
 seoTitle: "How I Built My Blog: Next.js, Astro, Notion and Vercel"
 seoDescription: "The technical choices behind my blog: Next.js and Astro, Notion as a bilingual headless CMS, automated Vercel deploys and images on Vercel Blob."
 pubDate: 2026-05-20
+updatedDate: 2026-10-01
 lang: en
 slug: how-i-built-my-personal-blog-nextjs-astro-notion-vercel
 translationKey: blog-stack
@@ -12,7 +13,7 @@ coverCredit:
   author: AltumCode
   authorUrl: https://unsplash.com/@altumcode
   url: https://unsplash.com/photos/P2SkP_PXhlU
-tags: []
+tags: ["Astro", "Next.js", "Notion", "Vercel"]
 ---
 
 > **Update (2026)**: the site now runs on Astro alone, with Markdown posts versioned in the repository. This post describes the previous version, built with Next.js and Notion.

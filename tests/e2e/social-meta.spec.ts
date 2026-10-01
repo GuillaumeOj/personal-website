@@ -69,7 +69,9 @@ test("project detail: own landscape card, descriptor title, same-slug hreflang",
   // The dedicated landscape card, not the raw portrait or the memoji.
   expect(img).not.toContain("/portrait");
   expect(img).not.toContain("memoji");
-  expect(await ogTitle(page)).toBe("Fusily — Application mobile de repas");
+  expect(await ogTitle(page)).toBe(
+    "Fusily — Recettes et planification de repas",
+  );
   expect(await ogImageAlt(page)).toContain("application mobile Fusily");
   // Same slug across locales — reciprocal hreflang.
   expect(await altHref(page, "fr")).toBe(`${ORIGIN}/projects/fusily/`);

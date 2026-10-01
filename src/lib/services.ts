@@ -108,8 +108,8 @@ export const mobile = {
     ),
     link("Fusily", "Fusily", "fusily"),
     text(
-      " — mon application de planification de repas, publiée sur l’App Store et Google Play.",
-      " — my meal-planning app, published on the App Store and Google Play.",
+      " — mon application de recettes et de planification de repas, publiée sur l’App Store et Google Play.",
+      " — my recipe and meal-planning app, published on the App Store and Google Play.",
     ),
   ] satisfies ServiceRun[],
 };

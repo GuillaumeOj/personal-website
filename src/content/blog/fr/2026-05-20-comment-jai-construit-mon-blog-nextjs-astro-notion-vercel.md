@@ -15,6 +15,8 @@ coverCredit:
 tags: []
 ---
 
+> **Mise à jour (2026)** : le site tourne désormais sur Astro seul, avec des articles Markdown versionnés dans le dépôt. Cet article décrit la version précédente, avec Next.js et Notion.
+
 Mon blog personnel est le projet technique que je reprends et améliore régulièrement. C'est aussi un terrain d'expérimentation idéal pour tester des stacks, des outils et des architectures. Voici un retour détaillé sur les choix techniques que j'ai faits et comment tout s'articule.
 
 ## La stack : pourquoi Next.js *et* Astro ?

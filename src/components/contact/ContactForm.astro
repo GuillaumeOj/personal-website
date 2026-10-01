@@ -146,6 +146,19 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
     >
       {f.privacyNoticeLink[locale]}
     </a>.
+    {
+      mode === 'quote' && (
+        <>
+          {' '}{f.termsNotice[locale]}
+          <a
+            href={ensureTrailingSlash(localizedPath(locale, '/terms-of-service'))}
+            class="text-accent-ink no-underline hover:underline"
+          >
+            {f.termsLink[locale]}
+          </a>.
+        </>
+      )
+    }
   </p>
 </form>
 

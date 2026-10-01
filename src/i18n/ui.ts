@@ -89,6 +89,7 @@ const dictionaries = {
     "footer.legal": "Légal",
     "footer.legalNotice": "Mentions légales",
     "footer.privacy": "Politique de confidentialité",
+    "footer.terms": "Conditions générales",
     "error.404.title": "404",
     "error.404.lead": "Cette page a pris un café…",
     "error.404.message":
@@ -174,6 +175,7 @@ const dictionaries = {
     "footer.legal": "Legal",
     "footer.legalNotice": "Legal notice",
     "footer.privacy": "Privacy policy",
+    "footer.terms": "Terms of service",
     "error.404.title": "404",
     "error.404.lead": "This page took a coffee break…",
     "error.404.message":

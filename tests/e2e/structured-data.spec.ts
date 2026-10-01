@@ -250,8 +250,10 @@ test("legal pages are noindex, follow", async ({ page }) => {
   for (const path of [
     "/legal-notice/",
     "/privacy-policy/",
+    "/terms-of-service/",
     "/en/legal-notice/",
     "/en/privacy-policy/",
+    "/en/terms-of-service/",
   ]) {
     await page.goto(path);
     expect(await metaContent(page, 'meta[name="robots"]')).toBe(
@@ -264,11 +266,19 @@ test("English legal pages state that the French version prevails", async ({
   page,
 }) => {
   const notice = "the French version prevails";
-  for (const path of ["/en/legal-notice/", "/en/privacy-policy/"]) {
+  for (const path of [
+    "/en/legal-notice/",
+    "/en/privacy-policy/",
+    "/en/terms-of-service/",
+  ]) {
     await page.goto(path);
     await expect(page.locator("main")).toContainText(notice);
   }
-  for (const path of ["/legal-notice/", "/privacy-policy/"]) {
+  for (const path of [
+    "/legal-notice/",
+    "/privacy-policy/",
+    "/terms-of-service/",
+  ]) {
     await page.goto(path);
     await expect(page.locator("main")).not.toContainText(notice);
   }

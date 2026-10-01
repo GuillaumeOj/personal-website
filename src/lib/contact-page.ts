@@ -53,6 +53,16 @@ export const form = {
     fr: "politique de confidentialité",
     en: "privacy policy",
   },
+  // Quote form only: points to the general terms of service. `termsNotice`
+  // precedes the link — see ContactForm.astro.
+  termsNotice: {
+    fr: "Les prestations sont régies par les ",
+    en: "Services are governed by the ",
+  },
+  termsLink: {
+    fr: "conditions générales de prestation",
+    en: "general terms of service",
+  },
   sending: { fr: "Envoi…", en: "Sending…" },
   success: {
     fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",

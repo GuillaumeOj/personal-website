@@ -339,3 +339,266 @@ export function privacyPolicy(
     ],
   };
 }
+
+/**
+ * General terms of service (CGPS) for professional clients. Not mandatory to
+ * publish, but they must be sent to any professional buyer who asks
+ * (Code de commerce L.441-1), so they live here next to the other legal
+ * pages. The provider's postal address is the env-provided legal address.
+ */
+export function termsOfService(
+  locale: Locale,
+  contact: Pick<LegalContact, "address">,
+): LegalDoc {
+  const privacyHref = ensureTrailingSlash(
+    localizedPath(locale, "/privacy-policy"),
+  );
+
+  if (locale === "fr") {
+    const missing = "[non renseigné]";
+    return {
+      title: "Conditions générales de prestation de services",
+      metaDescription:
+        "Conditions générales de prestation de services de Guillaume Ojardias EI : devis, prix, paiement, pénalités de retard, recette, propriété intellectuelle et responsabilité.",
+      updated: "Dernière mise à jour : 1er octobre 2026",
+      sections: [
+        {
+          h: "Objet et champ d’application",
+          body: [
+            "Les présentes conditions générales de prestation de services (CGPS) s’appliquent à toutes les prestations réalisées par Guillaume Ojardias EI : conception et développement de sites et d’applications, maintenance, accompagnement et conseil.",
+            "Les prestations s’adressent aux professionnels, associations et porteurs de projet agissant dans le cadre de leur activité, et non aux consommateurs.",
+            "Toute commande emporte l’acceptation des présentes CGPS, qui prévalent sur les conditions d’achat du client, sauf accord écrit contraire. Elles sont communiquées à tout client professionnel qui en fait la demande (art. L.441-1 du Code de commerce).",
+          ],
+        },
+        {
+          h: "Prestataire",
+          body: [
+            [
+              `Guillaume Ojardias, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+              mail(SITE.email),
+              ".",
+            ],
+          ],
+        },
+        {
+          h: "Devis et commande",
+          body: [
+            "Chaque prestation fait l’objet d’un devis gratuit, qui en décrit le périmètre, le prix et le calendrier prévisionnel. Le devis est valable 30 jours à compter de sa date d’émission.",
+            "La commande est ferme à réception du devis signé et de l’acompte. Toute modification du périmètre en cours de réalisation fait l’objet d’un devis complémentaire.",
+          ],
+        },
+        {
+          h: "Prix",
+          body: [
+            "Les prix sont exprimés en euros. TVA non applicable, art. 293 B du CGI.",
+          ],
+        },
+        {
+          h: "Modalités de paiement",
+          body: [
+            "Un acompte de 30 % du montant du devis est dû à la signature. Le solde est facturé à la livraison et payable dans un délai de 30 jours à compter de la date d’émission de la facture.",
+            "Le paiement s’effectue par virement bancaire. Aucun escompte n’est accordé pour paiement anticipé.",
+          ],
+        },
+        {
+          h: "Retard de paiement",
+          body: [
+            "Tout retard de paiement entraîne de plein droit, dès le lendemain de la date d’échéance, des pénalités calculées au taux de refinancement de la Banque centrale européenne majoré de 10 points (art. L.441-10 du Code de commerce), ainsi qu’une indemnité forfaitaire pour frais de recouvrement de 40 € (art. D.441-5 du Code de commerce).",
+            "En cas de retard de paiement, le prestataire peut suspendre l’exécution des prestations en cours jusqu’au règlement complet des sommes dues.",
+          ],
+        },
+        {
+          h: "Obligations du client et délais",
+          body: [
+            "Le client fournit en temps utile les contenus, accès et validations nécessaires à la réalisation de la prestation, et garantit disposer des droits sur les contenus qu’il fournit.",
+            "Les délais indiqués dans le devis sont donnés à titre indicatif. Tout retard imputable au client reporte d’autant les délais de réalisation. Le prestataire est tenu à une obligation de moyens.",
+          ],
+        },
+        {
+          h: "Livraison et recette",
+          body: [
+            "À la livraison, le client dispose de 15 jours pour prononcer la recette ou formuler par écrit des réserves précises. Les réserves justifiées sont levées dans un délai raisonnable.",
+            "À défaut de réserves dans ce délai, ou dès la mise en production par le client, la prestation est réputée acceptée.",
+          ],
+        },
+        {
+          h: "Propriété intellectuelle",
+          body: [
+            "Sous réserve du paiement intégral du prix, le prestataire cède au client les droits patrimoniaux d’auteur sur les livrables développés spécifiquement pour lui : droits de reproduction, de représentation et d’adaptation, pour le monde entier, pour toute la durée légale de protection, et pour l’exploitation prévue au devis (art. L.131-3 du Code de la propriété intellectuelle). Aucun droit n’est cédé avant le paiement intégral.",
+            "Les outils, composants et savoir-faire préexistants du prestataire, ainsi que les bibliothèques open source, restent soumis à leurs propres licences ; le client bénéficie d’un droit d’utilisation non exclusif de ces éléments, dans la mesure nécessaire à l’exploitation des livrables.",
+          ],
+        },
+        {
+          h: "Référence commerciale",
+          body: [
+            "Le prestataire est autorisé à citer le nom du client et à présenter des captures d’écran de la réalisation à titre de référence commerciale, sauf opposition écrite du client.",
+          ],
+        },
+        {
+          h: "Responsabilité",
+          body: [
+            "Le prestataire ne peut être tenu responsable des dommages indirects (perte de chiffre d’affaires, de données ou de clientèle). Sa responsabilité totale est limitée au montant effectivement payé par le client au titre de la prestation concernée.",
+            "Les services tiers utilisés pour le projet (hébergement, noms de domaine, API, services en ligne) relèvent des conditions de leurs fournisseurs respectifs.",
+          ],
+        },
+        {
+          h: "Confidentialité",
+          body: [
+            "Chaque partie s’engage à garder confidentielles les informations non publiques dont elle a connaissance à l’occasion de la prestation, pendant sa durée et 2 ans après son terme.",
+          ],
+        },
+        {
+          h: "Données personnelles",
+          body: [
+            [
+              "Les données des clients et prospects sont traitées conformément à la ",
+              link("politique de confidentialité", privacyHref),
+              ". Lorsque le prestataire traite des données personnelles pour le compte du client, les parties concluent un accord de sous-traitance conforme à l’article 28 du RGPD.",
+            ],
+          ],
+        },
+        {
+          h: "Résiliation",
+          body: [
+            "En cas de manquement grave de l’une des parties à ses obligations, non réparé dans les 15 jours suivant une mise en demeure par lettre recommandée ou e-mail avec accusé de réception, l’autre partie peut résilier la commande. Les travaux réalisés à la date de résiliation sont facturés et l’acompte reste acquis au prestataire.",
+          ],
+        },
+        {
+          h: "Force majeure",
+          body: [
+            "Aucune partie ne peut être tenue responsable d’un manquement résultant d’un cas de force majeure au sens de l’article 1218 du Code civil.",
+          ],
+        },
+        {
+          h: "Droit applicable et litiges",
+          body: [
+            "Les présentes CGPS sont soumises au droit français. En cas de litige, les parties recherchent d’abord une solution amiable. À défaut, le litige est porté devant les juridictions compétentes du ressort de la cour d’appel de Lyon.",
+          ],
+        },
+      ],
+    };
+  }
+
+  const missing = "[not provided]";
+  return {
+    title: "General terms of service",
+    metaDescription:
+      "General terms of service of Guillaume Ojardias EI: quotes, prices, payment, late-payment penalties, acceptance, intellectual property and liability.",
+    updated: "Last updated: October 1, 2026",
+    sections: [
+      {
+        h: "Purpose and scope",
+        body: [
+          "These general terms of service (CGPS) apply to all services provided by Guillaume Ojardias EI: design and development of websites and applications, maintenance, support and consulting.",
+          "The services are intended for professionals, associations and project owners acting for their activity, not for consumers.",
+          "Any order implies acceptance of these terms, which prevail over the client’s purchase terms unless otherwise agreed in writing. They are sent to any professional client who asks for them (article L.441-1 of the French Commercial Code).",
+        ],
+      },
+      {
+        h: "Provider",
+        body: [
+          [
+            `Guillaume Ojardias, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+            mail(SITE.email),
+            ".",
+          ],
+        ],
+      },
+      {
+        h: "Quotes and orders",
+        body: [
+          "Each service is covered by a free quote describing its scope, price and provisional schedule. A quote is valid for 30 days from its date of issue.",
+          "An order becomes firm once the signed quote and the deposit are received. Any change of scope during the project is covered by an additional quote.",
+        ],
+      },
+      {
+        h: "Prices",
+        body: [
+          "Prices are in euros. VAT not applicable, article 293 B of the French General Tax Code (CGI).",
+        ],
+      },
+      {
+        h: "Payment terms",
+        body: [
+          "A deposit of 30% of the quoted amount is due on signing. The balance is invoiced on delivery and payable within 30 days of the invoice date.",
+          "Payment is by bank transfer. No discount is granted for early payment.",
+        ],
+      },
+      {
+        h: "Late payment",
+        body: [
+          "Any late payment automatically incurs, from the day after the due date, penalties at the European Central Bank refinancing rate plus 10 percentage points (article L.441-10 of the French Commercial Code), as well as a fixed recovery fee of €40 (article D.441-5 of the French Commercial Code).",
+          "In case of late payment, the provider may suspend ongoing work until all sums due are paid in full.",
+        ],
+      },
+      {
+        h: "Client obligations and timelines",
+        body: [
+          "The client provides in good time the content, access and approvals needed for the service, and warrants that it holds the rights to the content it supplies.",
+          "Timelines in the quote are indicative. Any delay attributable to the client extends them accordingly. The provider is bound by a best-efforts obligation (obligation de moyens).",
+        ],
+      },
+      {
+        h: "Delivery and acceptance",
+        body: [
+          "On delivery, the client has 15 days to accept the work or send precise written reservations. Justified reservations are resolved within a reasonable time.",
+          "Without reservations within that period, or as soon as the client puts the work into production, the service is deemed accepted.",
+        ],
+      },
+      {
+        h: "Intellectual property",
+        body: [
+          "Subject to full payment of the price, the provider assigns to the client the economic copyright in the deliverables developed specifically for it: rights of reproduction, representation and adaptation, worldwide, for the full legal term of protection, for the use set out in the quote (article L.131-3 of the French Intellectual Property Code). No rights are assigned before full payment.",
+          "The provider’s pre-existing tools, components and know-how, as well as open-source libraries, remain under their own licences; the client receives a non-exclusive right to use them to the extent needed to use the deliverables.",
+        ],
+      },
+      {
+        h: "Commercial reference",
+        body: [
+          "The provider may cite the client’s name and show screenshots of the work as a commercial reference, unless the client objects in writing.",
+        ],
+      },
+      {
+        h: "Liability",
+        body: [
+          "The provider is not liable for indirect damage (loss of revenue, data or customers). Its total liability is limited to the amount actually paid by the client for the service concerned.",
+          "Third-party services used for the project (hosting, domain names, APIs, online services) are governed by their providers’ own terms.",
+        ],
+      },
+      {
+        h: "Confidentiality",
+        body: [
+          "Each party keeps confidential any non-public information it learns during the service, for its duration and 2 years after it ends.",
+        ],
+      },
+      {
+        h: "Personal data",
+        body: [
+          [
+            "Client and prospect data is processed in accordance with the ",
+            link("privacy policy", privacyHref),
+            ". Where the provider processes personal data on the client’s behalf, the parties sign a data processing agreement under article 28 of the GDPR.",
+          ],
+        ],
+      },
+      {
+        h: "Termination",
+        body: [
+          "If either party seriously breaches its obligations and fails to remedy the breach within 15 days of formal notice by registered letter or email with acknowledgement of receipt, the other party may terminate the order. Work completed at the termination date is invoiced and the deposit remains with the provider.",
+        ],
+      },
+      {
+        h: "Force majeure",
+        body: [
+          "Neither party is liable for a failure resulting from force majeure within the meaning of article 1218 of the French Civil Code.",
+        ],
+      },
+      {
+        h: "Governing law and disputes",
+        body: [
+          "These terms are governed by French law. In case of dispute, the parties first seek an amicable solution. Failing that, the dispute is brought before the competent courts within the jurisdiction of the Lyon Court of Appeal.",
+        ],
+      },
+    ],
+  };
+}

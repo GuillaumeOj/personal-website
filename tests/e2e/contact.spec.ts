@@ -12,6 +12,7 @@ const LOCALES = [
     copy: "traitées par Guillaume Ojardias EI",
     linkName: "politique de confidentialité",
     privacyHref: /^\/privacy-policy\/?$/,
+    termsHref: "/terms-of-service/",
     estimate: "Demander une estimation gratuite",
     note: "devis gratuit, aucun engagement",
   },
@@ -21,6 +22,7 @@ const LOCALES = [
     copy: "processed by Guillaume Ojardias EI",
     linkName: "privacy policy",
     privacyHref: /^\/en\/privacy-policy\/?$/,
+    termsHref: "/en/terms-of-service/",
     estimate: "Request a free estimate",
     note: "free quote, no commitment",
   },
@@ -53,6 +55,18 @@ for (const l of LOCALES) {
     await expect(page.locator('select[name="timeline"]')).toHaveCount(0);
     await expect(page.getByText(l.note)).toHaveCount(0);
     await expect(page.locator(`main a[href="${l.quotePath}"]`)).toBeVisible();
+  });
+
+  // Audit L7: the quote form points to the general terms of service; the
+  // general contact form doesn't.
+  test(`contact (${l.quotePath}): quote form links the terms of service`, async ({
+    page,
+  }) => {
+    const terms = `[data-contact-form] a[href="${l.termsHref}"]`;
+    await page.goto(l.quotePath);
+    await expect(page.locator(terms)).toBeVisible();
+    await page.goto(l.path);
+    await expect(page.locator(terms)).toHaveCount(0);
   });
 
   test(`contact (${l.quotePath}?type=mobile): preselects the project type`, async ({

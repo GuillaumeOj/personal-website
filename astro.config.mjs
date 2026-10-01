@@ -82,10 +82,12 @@ export default defineConfig({
       },
     },
     sitemap({
-      // Drop the legal notice + privacy policy: they're `noindex` (thin,
+      // Drop the legal pages (notice, privacy policy, terms): they're `noindex` (thin,
       // low-value), so they shouldn't advertise themselves for crawling.
       filter: (page) =>
-        !/\/(legal-notice|privacy-policy)\/?$/.test(new URL(page).pathname),
+        !/\/(legal-notice|privacy-policy|terms-of-service)\/?$/.test(
+          new URL(page).pathname,
+        ),
       // Emit <xhtml:link rel="alternate" hreflang> for pages that exist in both
       // locales under the same slug (home, /about, listings). Pages with
       // per-locale slugs (blog/project details) simply get no alternate.

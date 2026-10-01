@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { type LegalDoc, legalNotice, privacyPolicy } from "../../src/lib/legal";
+import {
+  type LegalDoc,
+  legalNotice,
+  privacyPolicy,
+  termsOfService,
+} from "../../src/lib/legal";
 
 // Flatten a legal doc to its visible text plus link targets, so assertions read
 // like "the page says X" regardless of how paragraphs are split into runs.
@@ -121,5 +126,87 @@ describe("privacyPolicy", () => {
   it("renders a visible placeholder when the address is missing", () => {
     expect(flatten(privacyPolicy("fr", {}))).toContain("[non renseigné]");
     expect(flatten(privacyPolicy("en", {}))).toContain("[not provided]");
+  });
+});
+
+// General terms of service for professional buyers (audit finding L7): the
+// mandatory invoicing mentions (L.441-9 / L.441-10, 293 B CGI), the payment
+// terms, IP assignment on full payment and the reference clause (L5).
+describe("termsOfService", () => {
+  const cases = {
+    fr: {
+      scope: "et non aux consommateurs",
+      vat: "TVA non applicable, art. 293 B du CGI",
+      deposit: "acompte de 30 %",
+      due: "30 jours à compter de la date d’émission de la facture",
+      discount: "Aucun escompte",
+      penalty: "majoré de 10 points",
+      fee: "40 €",
+      ip: "Sous réserve du paiement intégral du prix",
+      reference: "à titre de référence commerciale, sauf opposition écrite",
+    },
+    en: {
+      scope: "not for consumers",
+      vat: "VAT not applicable, article 293 B",
+      deposit: "deposit of 30%",
+      due: "within 30 days of the invoice date",
+      discount: "No discount",
+      penalty: "plus 10 percentage points",
+      fee: "€40",
+      ip: "Subject to full payment of the price",
+      reference:
+        "as a commercial reference, unless the client objects in writing",
+    },
+  } as const;
+
+  for (const locale of ["fr", "en"] as const) {
+    describe(locale, () => {
+      const text = flatten(termsOfService(locale, contact));
+      const c = cases[locale];
+
+      it("identifies the provider with the env-provided address", () => {
+        expect(text).toContain("Guillaume Ojardias");
+        expect(text).toContain(contact.address);
+        expect(text).toContain("993 870 955");
+      });
+
+      it("is limited to professional clients", () => {
+        expect(text).toContain(c.scope);
+      });
+
+      it("carries the mandatory invoicing mentions", () => {
+        expect(text).toContain(c.vat);
+        expect(text).toContain(c.discount);
+        expect(text).toContain(c.penalty);
+        expect(text).toContain("L.441-10");
+        expect(text).toContain(c.fee);
+        expect(text).toContain("D.441-5");
+      });
+
+      it("sets a 30% deposit and 30-day payment terms", () => {
+        expect(text).toContain(c.deposit);
+        expect(text).toContain(c.due);
+      });
+
+      it("assigns IP on full payment and allows client references", () => {
+        expect(text).toContain(c.ip);
+        expect(text).toContain("L.131-3");
+        expect(text).toContain(c.reference);
+      });
+    });
+  }
+
+  it("links the localized privacy policy", () => {
+    expect(flatten(termsOfService("fr", contact))).toContain(
+      "</privacy-policy/>",
+    );
+    expect(flatten(termsOfService("en", contact))).toContain(
+      "</en/privacy-policy/>",
+    );
+  });
+
+  it("renders a visible placeholder when the address is missing", () => {
+    expect(flatten(termsOfService("fr", {}))).toContain("[non renseigné]");
+    expect(flatten(termsOfService("en", {}))).toContain("[not provided]");
   });
 });

@@ -35,12 +35,12 @@ Vous avez vu la transition ? :)
 
 Deuxième cas : un professionnel qui veut refondre le site vitrine de son activité. L'ancien date de dix ans, tombe en décrépitude, n'est plus à jour, plus grand-chose ne fonctionne. Un cas classique. Il me contacte pour qu'on échange sur ce que je pourrais lui proposer.
 
-Le premier rendez-vous tombe à l'eau : il ne se présente pas, une urgence sur un dossier. Il n'a pas tort, rien de vital pour son site, son activité passe avant. Quelques jours plus tard, il me demande une fourchette tarifaire — que j'ai eu la maladresse de lui donner. Puis le couperet : « On va trouver une solution moins chère. » Traduction : « On va le faire nous-mêmes avec Claude Code. »
+Le premier rendez-vous tombe à l'eau : il est reporté à la dernière minute, une urgence dans son activité. Il n'a pas tort, rien de vital pour son site, son activité passe avant. Quelques jours plus tard, il me demande une fourchette tarifaire — que j'ai eu la maladresse de lui donner. Puis le couperet : « On va trouver une solution moins chère. » Traduction : « On va le faire nous-mêmes avec Claude Code. »
 
 Par curiosité, je vais voir le résultat quelque temps après. Au premier coup d'œil, c'est propre, ça fait le job. Et c'est bien là le piège : ce qui cloche est précisément ce qu'un non-initié ne peut pas voir. Dès qu'on regarde de plus près, on repère une série de choses qu'un développeur averti n'aurait jamais laissé passer :
 
 - des contrastes trop faibles entre les éléments et le fond à plusieurs endroits, y compris sur des boutons d'appel à l'action ;
-- les photos du trombinoscope non compressées, qui plombent le temps de chargement de la page ;
+- des photos non compressées, qui plombent le temps de chargement de la page ;
 - une structure de page brouillonne, qui rend la lecture pénible pour le visiteur ;
 - des mentions légales et une politique de confidentialité collées en plein milieu de la page, entre le formulaire de contact et les tarifs — ce qui, au-delà du désordre visuel, pose un vrai problème de conformité et de lisibilité ;
 - un menu mobile invisible quand on clique dessus ;
@@ -49,9 +49,11 @@ Par curiosité, je vais voir le résultat quelque temps après. Au premier coup 
 
 Et c'est là que ça fait mal. Prises isolément, ces erreurs semblent mineures. Mises bout à bout, elles sabordent le référencement du site : un temps de chargement trop long, une structure de page illisible pour un moteur de recherche, un affichage mobile cassé, aucune optimisation de base — ce sont exactement les critères que Google regarde pour décider s'il vous montre ou vous enterre. Résultat : un site quasiment introuvable. Et un site vitrine que personne ne trouve, c'est un site qui ne sert à rien. Je précise que je suis très loin d'être un expert du SEO — et c'est justement ce qui rend le constat parlant : si même moi je repère ces défauts au premier regard, l'algorithme, lui, ne les pardonne pas.
 
-Le bilan ? Il a dû y passer près d'une journée. Pour une activité facturée sans doute autour de 300 à 400 € de l'heure. Je vous laisse faire le calcul — l'« économie » n'en est plus vraiment une.
+Le bilan ? Il a dû y passer près d'une journée. Pour une activité facturée sans doute à plusieurs centaines d'euros de l'heure. Je vous laisse faire le calcul — l'« économie » n'en est plus vraiment une.
 
 Dans les deux cas, le même piège : ce qui compte vraiment est justement ce qui ne se voit pas. L'écran a beau paraître fonctionnel, l'essentiel se joue en dessous.
+
+*Les détails ont été modifiés pour préserver l'anonymat des personnes concernées.*
 
 ## Une objection honnête, avant d'aller plus loin
 

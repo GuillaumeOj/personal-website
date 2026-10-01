@@ -35,12 +35,12 @@ See what I did there? :)
 
 Second case: a professional who wants to rebuild the marketing website for their business. The old one is ten years old, falling apart, out of date, barely anything still works. A textbook case. They get in touch so we can discuss what I could offer.
 
-The first meeting falls through: they don't show up — an emergency on a file. Fair enough; nothing about the website is urgent, the business comes first. A few days later, they ask me for a ballpark price — which I made the mistake of giving. Then the verdict drops: "We're going to find something cheaper." Translation: "We'll do it ourselves with Claude Code."
+The first meeting falls through: it gets cancelled at the last minute — something urgent came up at work. Fair enough; nothing about the website is urgent, the business comes first. A few days later, they ask me for a ballpark price — which I made the mistake of giving. Then the verdict drops: "We're going to find something cheaper." Translation: "We'll do it ourselves with Claude Code."
 
 Out of curiosity, I check the result some time later. At first glance, it's clean, it does the job. And that's exactly the trap: what's wrong is precisely what an untrained eye can't see. Look a little closer and you spot a string of things a seasoned developer would never have let slide:
 
 - contrast too weak between elements and the background in several places, including on call-to-action buttons;
-- uncompressed team photos that drag down the page's load time;
+- uncompressed photos that drag down the page's load time;
 - a messy page structure that makes the site hard to read for visitors;
 - legal notices and a privacy policy dropped right in the middle of the page, between the contact form and the pricing — which, beyond the visual clutter, raises a real problem of compliance and readability;
 - a mobile menu that becomes invisible when you tap it;
@@ -49,9 +49,11 @@ Out of curiosity, I check the result some time later. At first glance, it's clea
 
 And that's where it hurts. Taken one by one, these mistakes look minor. Stacked together, they sink the site's SEO: a load time that's too long, a page structure a search engine can't read, a broken mobile display, no basic optimization at all — these are exactly the criteria Google uses to decide whether to show you or bury you. The result: a site that's practically impossible to find. And a marketing website nobody can find is a website that serves no purpose. I should say I'm very far from being an SEO expert — and that's precisely what makes the point land: if even I spot these flaws at first glance, the algorithm certainly won't forgive them.
 
-The bottom line? They must have spent close to a full day on it. For a business that likely bills somewhere around €300 to €400 an hour. I'll let you do the math — the "saving" isn't really one anymore.
+The bottom line? They must have spent close to a full day on it. For a business that likely bills several hundred euros an hour. I'll let you do the math — the "saving" isn't really one anymore.
 
 In both cases, the same trap: what truly matters is exactly what you can't see. The screen may look functional, but the essentials play out underneath.
+
+*Details have been changed to protect the anonymity of the people involved.*
 
 ## An honest objection, before we go on
 

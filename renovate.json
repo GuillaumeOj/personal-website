@@ -4,7 +4,8 @@
     "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":timezone(Europe/Paris)"
+    ":timezone(Europe/Paris)",
+    "helpers:pinGitHubActionDigests"
   ],
   "schedule": ["before 6am on monday"],
   "labels": ["dependencies"],
@@ -33,5 +34,6 @@
         "executionMode": "branch"
       }
     }
-  ]
+  ],
+  "minimumReleaseAge": "3 days"
 }

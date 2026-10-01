@@ -90,7 +90,7 @@ export const mobile = {
       en: "A backend that powers it: accounts, data, business logic, push notifications.",
     },
     {
-      fr: "Les mises à jour à distance (OTA) pour corriger et améliorer sans réattendre la validation des stores.",
+      fr: "Les mises à jour à distance (OTA) pour corriger et améliorer sans repasser par la validation des stores.",
       en: "Over-the-air (OTA) updates to fix and improve without waiting again for store review.",
     },
     {
@@ -231,7 +231,7 @@ export const cost = {
       en: "Landing site / PWA — from €1,500, a clear fixed price, scope defined upfront.",
     },
     {
-      fr: "Application mobile ou web sur mesure — estimé après un cadrage court et gratuit, selon les fonctionnalités.",
+      fr: "Application mobile ou web sur mesure — estimée après un cadrage court et gratuit, selon les fonctionnalités.",
       en: "Custom mobile or web app — estimated after a short, free scoping, based on the features.",
     },
     {

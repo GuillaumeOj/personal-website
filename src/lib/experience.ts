@@ -86,7 +86,7 @@ const experience: ExperienceEntry[] = [
     highlights: {
       fr: [
         "Intégration d’un système pour la prise en charge des mutuelles utilisant le même numéro AMC",
-        "Mises à jour et correction de bug sur l’outil dédié à la gestion de cabinets",
+        "Mises à jour et corrections de bugs sur l’outil dédié à la gestion de cabinets",
       ],
       en: [
         "Integration of a system to handle insurers sharing the same AMC number",

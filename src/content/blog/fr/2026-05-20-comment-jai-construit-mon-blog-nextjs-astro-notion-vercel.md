@@ -19,9 +19,9 @@ Mon blog personnel est le projet technique que je reprends et améliore réguli�
 
 ## La stack : pourquoi Next.js *et* Astro ?
 
-La première question que l'on me pose souvent c'est : pourquoi deux frameworks JavaScript ? La réponse tient à la nature même du projet.
+La première question que l'on me pose souvent, c'est : pourquoi deux frameworks JavaScript ? La réponse tient à la nature même du projet.
 
-**Astro** gère la partie blog au sens strict — les pages de listing, les articles, le layout éditorial. Astro est taillé pour ça : il génère du HTML statique par défaut, embarque très peu de JavaScript côté client, et son modèle de composants "islands" est parfait pour un site où 95% du contenu est purement statique. Les performances sont excellentes et le bundle est minimal.
+**Astro** gère la partie blog au sens strict — les pages de listing, les articles, le layout éditorial. Astro est taillé pour ça : il génère du HTML statique par défaut, embarque très peu de JavaScript côté client, et son modèle de composants "islands" est parfait pour un site où 95 % du contenu est purement statique. Les performances sont excellentes et le bundle est minimal.
 
 **Next.js** prend en charge le reste du site — en l'occurrence une page unique de présentation et d'expériences professionnelles. Cette partie a des besoins différents du blog : interactions potentiellement plus riches et une flexibilité de rendu (SSR, ISR) que Next.js gère très bien, tout en laissant la porte ouverte à une évolution future du site.
 
@@ -46,7 +46,7 @@ Notion joue donc le rôle d'un vrai CMS headless : interface d'édition agréabl
 
 ## Le pipeline de déploiement : de Notion à Vercel
 
-La mécanique de publication repose sur un webhook. Quand un article est modifié ou publié dans Notion, un événement est déclenché et intercepté côté Vercel. Vercel lance alors un rebuild du site, qui va ré-interroger l'API Notion pour récupérer le contenu à jour et regénérer les pages statiques correspondantes.
+La mécanique de publication repose sur un webhook. Quand un article est modifié ou publié dans Notion, un événement est déclenché et intercepté côté Vercel. Vercel lance alors un rebuild du site, qui va ré-interroger l'API Notion pour récupérer le contenu à jour et régénérer les pages statiques correspondantes.
 
 Le flow complet ressemble à ceci :
 

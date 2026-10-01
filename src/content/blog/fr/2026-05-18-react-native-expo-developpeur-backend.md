@@ -17,7 +17,7 @@ tags: []
 
 ## Soyons honnêtes
 
-Je suis développeur backend. J'ai passé la majorité de ma carrière de développeur à concevoir des APIs, à penser en termes de modèle de données, optimisation de requêtes SQL, de serialization de données. Le frontend m'a toujours semblé être un autre monde — pas inaccessible, mais suffisamment éloigné de mes habitudes pour que je n'aie jamais vraiment sauté le pas. Le mobile, encore plus.
+Je suis développeur backend. J'ai passé la majorité de ma carrière de développeur à concevoir des APIs, à penser en termes de modèle de données, d'optimisation de requêtes SQL, de sérialisation de données. Le frontend m'a toujours semblé être un autre monde — pas inaccessible, mais suffisamment éloigné de mes habitudes pour que je n'aie jamais vraiment sauté le pas. Le mobile, encore plus.
 
 Et puis est venu le moment de construire Fusily.
 
@@ -43,7 +43,7 @@ Mais React Native seul, c'est aussi une configuration qui peut vite devenir un t
 
 Expo n'est pas juste un outil de build. C'est une suite d'outils complète qui englobe le cycle de vie entier d'une application mobile, du premier `npx create-expo-app` jusqu'à la publication sur l'App Store et Google Play.
 
-Quand j'ai démarré Fusily, la promesse d'Expo était simple : te laisser te concentrer sur ton produit, pas sur la plomberie. En venant du backend, où j'ai l'habitude de passer du temps sur de l'infrastructure, cette proposition avait quelque chose de réjouissant.
+Quand j'ai démarré Fusily, la promesse d'Expo était simple : vous laisser vous concentrer sur votre produit, pas sur la plomberie. En venant du backend, où j'ai l'habitude de passer du temps sur de l'infrastructure, cette proposition avait quelque chose de réjouissant.
 
 Voilà comment ça s'est articulé en pratique.
 
@@ -134,10 +134,10 @@ Je ne vais pas prétendre qu'Expo est parfait. Il y a des moments de friction : 
 
 Mais si je prends du recul sur l'expérience globale — démarrer de zéro, livrer Fusily sur l'App Store et le Play Store, maintenir et faire évoluer l'app — Expo a tenu sa promesse fondamentale : me laisser me concentrer sur le produit.
 
-En tant que développeur backend, j'ai pu capitaliser sur mes habitudes (design d'API, design d'interface mobile, architecture des données) tout en apprenant un nouveau paradigme de rendu. React Native a ses propres idiomes, ses contraintes de performance liées au bridge JavaScript/natif, ses subtilités de layout — c'est un vrai apprentissage. Mais l'écosystème Expo a considérablement réduit la surface de friction sur tout ce qui n'est pas le code produit lui-même. Et au bout du compte, c'est bien cette combinaison — backend, API, et maintenant mobile de bout en bout — qui a fait de moi un développeur full-stack.
+En tant que développeur backend, j'ai pu capitaliser sur mes habitudes (design d'API, modélisation des données, architecture) tout en apprenant un nouveau paradigme de rendu. React Native a ses propres idiomes, ses contraintes de performance liées au bridge JavaScript/natif, ses subtilités de layout — c'est un vrai apprentissage. Mais l'écosystème Expo a considérablement réduit la surface de friction sur tout ce qui n'est pas le code produit lui-même. Et au bout du compte, c'est bien cette combinaison — backend, API, et maintenant mobile de bout en bout — qui a fait de moi un développeur full-stack.
 
-Si tu es développeur backend et que tu envisages de construire une application mobile, mon conseil est simple : ne sous-estime pas la courbe d'apprentissage de React Native, mais ne la surestime pas non plus. Et choisis Expo. Le temps que tu ne passeras pas à configurer des builds et à maintenir des dépendances natives est du temps que tu pourras consacrer à ce qui compte : ton produit.
+Si vous êtes développeur backend et que vous envisagez de construire une application mobile, mon conseil est simple : ne sous-estimez pas la courbe d'apprentissage de React Native, mais ne la surestimez pas non plus. Et choisissez Expo. Le temps que vous ne passerez pas à configurer des builds et à maintenir des dépendances natives est du temps que vous pourrez consacrer à ce qui compte : votre produit.
 
 ---
 
-*Fusily est disponible sur l'App Store et le Google Play Store. Si tu veux partager des recettes, planifier tes repas ou simplement mieux t'organiser en cuisine — [viens voir](https://fusily.com).*
+*Fusily est disponible sur l'App Store et le Google Play Store. Si vous voulez partager des recettes, planifier vos repas ou simplement mieux vous organiser en cuisine, [venez voir](https://fusily.com).*

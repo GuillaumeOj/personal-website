@@ -46,7 +46,7 @@ Par curiosité, je vais voir le résultat quelque temps après. Au premier coup 
 - des mentions légales et une politique de confidentialité collées en plein milieu de la page, entre le formulaire de contact et les tarifs — ce qui, au-delà du désordre visuel, pose un vrai problème de conformité et de lisibilité ;
 - un menu mobile invisible quand on clique dessus ;
 - aucune règle de base appliquée pour le référencement (SEO) ;
-- et quelques autres coquilles dont je vous épargne la liste.
+- et quelques autres problèmes dont je vous épargne la liste.
 
 Et c'est là que ça fait mal. Prises isolément, ces erreurs semblent mineures. Mises bout à bout, elles sabordent le référencement du site : un temps de chargement trop long, une structure de page illisible pour un moteur de recherche, un affichage mobile cassé, aucune optimisation de base — ce sont exactement les critères que Google regarde pour décider s'il vous montre ou vous enterre. Résultat : un site quasiment introuvable. Et un site vitrine que personne ne trouve, c'est un site qui ne sert à rien. Je précise que je suis très loin d'être un expert du SEO — et c'est justement ce qui rend le constat parlant : si même moi je repère ces défauts au premier regard, l'algorithme, lui, ne les pardonne pas.
 
@@ -62,7 +62,7 @@ Je vous entends venir : deux échecs ne font pas une démonstration. Vous avez r
 
 ## L'état de l'IA à l'instant T (parce que je ne suis pas un anti-IA)
 
-Qu'on soit clair : je ne crache pas dans la soupe. Partout sur les réseaux, des enthousiastes clament que l'IA leur a permis de mener des projets de A à Z en quelques heures, que les développeurs n'ont plus de valeur ajoutée en 2026, que le secteur va profondément se transformer. Et sur le fond, ils n'ont pas tort.
+Soyons clairs : je ne crache pas dans la soupe. Partout sur les réseaux, des enthousiastes clament que l'IA leur a permis de mener des projets de A à Z en quelques heures, que les développeurs n'ont plus de valeur ajoutée en 2026, que le secteur va profondément se transformer. Et sur le fond, ils n'ont pas tort.
 
 Personnellement, je n'ai pas écrit une ligne de code à la main depuis janvier 2026. Alors oui, le métier de développeur tel qu'on l'a connu a déjà fondamentalement changé — plus ou moins vite selon les entreprises. Les développeurs vont sans doute monter en niveau : se concentrer sur la logique métier, affiner l'expérience utilisateur, surveiller les performances. Fini les tunnels de code interminables pour livrer une fonctionnalité, finies les heures d'analyse pour traquer un bug.
 
@@ -70,7 +70,7 @@ Mais voilà le nœud de l'affaire, et c'est ce qui explique la différence entre
 
 ## Que faut-il en retenir ?
 
-Ne nous trompons pas de procès. L'IA est un outil formidable, au même titre que Google ou Wikipédia à leur arrivée. Mais c'est un outil. On ne met pas un tour d'usinage entre les mains de quelqu'un qui n'en a jamais touché en espérant qu'il vous sorte une pièce de moteur de Formule 1.
+Ne nous trompons pas de procès. L'IA est un outil formidable, au même titre que Google ou Wikipédia à leur arrivée. Mais c'est un outil. On ne met pas un tour d'usinage entre les mains de quelqu'un qui n'y a jamais touché en espérant qu'il vous sorte une pièce de moteur de Formule 1.
 
 Pour qui est loin du monde du développement, l'IA est une opportunité incroyable : donner forme à une idée de produit tech en un temps record, obtenir un visuel qui parle. Un excellent support, ensuite, pour échanger avec quelqu'un dont c'est le métier.
 

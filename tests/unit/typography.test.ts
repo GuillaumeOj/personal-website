@@ -89,4 +89,25 @@ describe("typesetHtml", () => {
         "<script>const x = a ? 'b' : 'c';</script><code>l'API ?</code>",
     );
   });
+
+  it("typesets a textarea's placeholder but not its content", () => {
+    expect(
+      typesetHtml(
+        '<textarea placeholder="En bref : quoi ?">a : b</textarea>',
+        "fr",
+      ),
+    ).toBe(
+      `<textarea placeholder="En bref${NBSP}: quoi${NNBSP}?">a : b</textarea>`,
+    );
+  });
+
+  it("typesets a <template lang> block in its own language", () => {
+    const html =
+      "<p>Vraiment ?</p>" +
+      '<template lang="en"><p>Really? It\'s “fine”</p></template>';
+    expect(typesetHtml(html, "fr")).toBe(
+      `<p>Vraiment${NNBSP}?</p>` +
+        '<template lang="en"><p>Really? It’s “fine”</p></template>',
+    );
+  });
 });

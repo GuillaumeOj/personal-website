@@ -1,77 +1,103 @@
 ---
 import ArticleCard from '../components/ArticleCard.astro';
 import { type Locale, SITE } from '../config';
-import { localizedPath, t } from '../i18n/ui';
+import { contactPath, localizedPath, t } from '../i18n/ui';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { hero } from '../lib/home';
 import { getPostsForLocale } from '../lib/posts';
 
-const [fr, en] = await Promise.all([
+// One 404.html serves every missing URL, in both locales. It renders in
+// French; for /en/… URLs the script below swaps in the English block (kept in
+// a <template>, so the document only ever has one h1) and localizes the
+// title, description, skip link and logo link.
+const [frPosts, enPosts] = await Promise.all([
   getPostsForLocale('fr', 3),
   getPostsForLocale('en', 3),
 ]);
-const postsByLocale: Record<Locale, typeof fr> = { fr, en };
+const postsByLocale: Record<Locale, typeof frPosts> = {
+  fr: frPosts,
+  en: enPosts,
+};
+// What the script swaps in on /en/… URLs (French is rendered server-side).
+const en = {
+  title: `${t('en', 'error.404.pageTitle')} — ${SITE.name}`,
+  description: t('en', 'error.404.message'),
+  skip: t('en', 'nav.skipToContent'),
+  home: localizedPath('en', '/'),
+};
 ---
 
 <BaseLayout
   locale="fr"
-  title={t('fr', 'error.404.title')}
+  title={t('fr', 'error.404.pageTitle')}
   description={t('fr', 'error.404.message')}
+  errorPage
 >
   {
-    SITE.locales.map((locale) => (
-      <section
-        data-locale={locale}
-        class:list={[
-          'locale-block space-y-10',
-          locale !== SITE.defaultLocale && 'hidden',
-        ]}
-      >
-        <header class="space-y-4 text-center">
-          <p class="inline-block origin-center animate-wobble font-display text-7xl font-bold tracking-tight text-accent-ink sm:text-8xl">
-            {t(locale, 'error.404.title')}
-          </p>
-          <h1 class="font-display text-2xl font-semibold tracking-tight text-ink-strong">
-            {t(locale, 'error.404.lead')}
-          </h1>
-          <p class="mx-auto max-w-xl text-muted">
-            {t(locale, 'error.404.message')}
-          </p>
-          <p>
-            <a
-              href={localizedPath(locale, '/')}
-              class="text-sm text-accent-ink"
+    SITE.locales.map((locale) => {
+      const block = (
+        <section data-locale-block class="space-y-10">
+          <header class="space-y-4 text-center">
+            <p
+              class="inline-block origin-center font-display text-7xl font-bold tracking-tight text-accent-ink motion-safe:animate-wobble sm:text-8xl"
+              aria-hidden="true"
             >
-              {t(locale, 'error.backHome')}
-            </a>
-          </p>
-        </header>
+              {t(locale, 'error.404.title')}
+            </p>
+            <h1 class="font-display text-2xl font-semibold tracking-tight text-ink-strong">
+              {t(locale, 'error.404.lead')}
+            </h1>
+            <p class="mx-auto max-w-xl text-muted">
+              {t(locale, 'error.404.message')}
+            </p>
+            <p class="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <a href={contactPath(locale)} class="btn btn-primary">
+                {hero.ctaPrimary[locale]}
+              </a>
+              <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
+                {t(locale, 'error.services')}
+              </a>
+              <a href={localizedPath(locale, '/')} class="text-sm text-accent-ink">
+                {t(locale, 'error.backHome')}
+              </a>
+            </p>
+          </header>
 
-        {postsByLocale[locale].length > 0 && (
-          <div class="space-y-4">
-            <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
-              {t(locale, 'error.recentArticles')}
-            </h2>
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {postsByLocale[locale].map((post) => (
-                <ArticleCard post={post} locale={locale} />
-              ))}
+          {postsByLocale[locale].length > 0 && (
+            <div class="space-y-4">
+              <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
+                {t(locale, 'error.recentArticles')}
+              </h2>
+              <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {postsByLocale[locale].map((post) => (
+                  <ArticleCard post={post} locale={locale} />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </section>
-    ))
+          )}
+        </section>
+      );
+      return locale === SITE.defaultLocale ? (
+        block
+      ) : (
+        <template data-locale-template={locale} lang={locale}>{block}</template>
+      );
+    })
   }
 </BaseLayout>
 
-<script is:inline>
+<script is:inline define:vars={{ en }}>
   (() => {
-    const target = location.pathname.startsWith('/en/') ? 'en' : 'fr';
-    document.documentElement.lang = target;
-    document.querySelectorAll('.locale-block').forEach((el) => {
-      el.classList.toggle(
-        'hidden',
-        el.getAttribute('data-locale') !== target,
-      );
-    });
+    if (!location.pathname.startsWith('/en/')) return;
+    const template = document.querySelector('[data-locale-template="en"]');
+    const current = document.querySelector('[data-locale-block]');
+    if (!template || !current) return;
+    current.replaceWith(template.content.cloneNode(true));
+    document.documentElement.lang = 'en';
+    document.title = en.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', en.description);
+    const skip = document.querySelector('a[href="#main"]');
+    if (skip) skip.textContent = en.skip;
+    document.querySelector('[data-home-link]')?.setAttribute('href', en.home);
   })();
 </script>

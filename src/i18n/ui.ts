@@ -97,6 +97,8 @@ const dictionaries = {
       "Elle n’existe pas (ou plus). Voici les derniers articles du blog en attendant.",
     "error.recentArticles": "Derniers articles",
     "error.backHome": "Retour à l’accueil",
+    "error.404.pageTitle": "Page introuvable",
+    "error.services": "Voir les prestations",
   },
   en: {
     "nav.home": "Home",
@@ -184,6 +186,8 @@ const dictionaries = {
       "It doesn’t exist (or not anymore). Here are the latest blog articles instead.",
     "error.recentArticles": "Latest articles",
     "error.backHome": "Back to home",
+    "error.404.pageTitle": "Page not found",
+    "error.services": "See all services",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

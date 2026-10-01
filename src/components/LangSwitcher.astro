@@ -66,6 +66,7 @@ const options = await Promise.all(
           hreflang={option.code}
           role="menuitem"
           class="menu-item"
+          data-lang-switch
         >
           <span class="flex-1">{option.label}</span>
         </a>
@@ -73,3 +74,30 @@ const options = await Promise.all(
     )
   }
 </Dropdown>
+
+<script>
+  // Carry the query string and hash over to the other locale (e.g. a
+  // preselected `?type=` on the contact form, or a section anchor). The hrefs
+  // are kept in sync up front so middle-click, "open in new tab" and "copy
+  // link" get them too; pointerdown/focus catch pushState hash updates.
+  const switches = document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]');
+  const sync = (): void => {
+    for (const link of switches) {
+      const url = new URL(link.href);
+      url.search = window.location.search;
+      url.hash = window.location.hash;
+      link.href = url.toString();
+    }
+  };
+  sync();
+  window.addEventListener('hashchange', sync);
+  for (const link of switches) {
+    link.addEventListener('pointerdown', sync);
+    link.addEventListener('focus', sync);
+  }
+  // The current language is a real link (aria-current) but following it would
+  // only reload the page and drop typed form input: keep it inert.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-lang-current]')) {
+    link.addEventListener('click', (event) => event.preventDefault());
+  }
+</script>

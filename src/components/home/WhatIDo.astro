@@ -3,6 +3,7 @@ import type { Locale } from '../../config';
 import { whatIDo, whatIDoMore } from '../../lib/home';
 import { localizedPath } from '../../i18n/ui';
 import Icon from '../Icon.astro';
+import NumberedCards from '../lists/NumberedCards.astro';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -22,25 +23,7 @@ const servicesHref = localizedPath(locale, '/services');
     lead={whatIDo.lead}
   />
 
-  <ol class="reveal mt-10 grid list-none gap-4 p-0 sm:grid-cols-3">
-    {
-      whatIDo.pillars.map((pillar, i) => (
-        <li class="rounded-2xl border border-line bg-surface p-6">
-          <div class="flex items-baseline gap-3">
-            <span class="font-mono text-sm text-accent-ink">
-              0{i + 1}
-            </span>
-            <h3 class="font-display text-lg font-semibold text-ink-strong">
-              {pillar.label[locale]}
-            </h3>
-          </div>
-          <p class="mt-3 text-sm leading-relaxed text-muted">
-            {pillar.desc[locale]}
-          </p>
-        </li>
-      ))
-    }
-  </ol>
+  <NumberedCards locale={locale} items={whatIDo.pillars} />
 
   <p class="reveal mt-10">
     <a href={servicesHref} class="btn btn-secondary">

@@ -3,6 +3,7 @@ import type { Locale } from '../../config';
 import { howIWork, methodology, processMore } from '../../lib/home';
 import { localizedPath } from '../../i18n/ui';
 import Icon from '../Icon.astro';
+import Timeline from '../lists/Timeline.astro';
 import Section from './Section.astro';
 import SectionHeader from './SectionHeader.astro';
 
@@ -47,23 +48,12 @@ const processHref = `${localizedPath(locale, '/services')}#process`;
       {methodology.lead[locale]}
     </p>
 
-    <ol class="reveal mt-10 ml-4 list-none border-l-2 border-line p-0">
-      {
-        methodology.phases.map((phase, i) => (
-          <li class="reveal relative pb-10 pl-10 last:pb-0">
-            <span
-              class="absolute left-0 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-surface-sunken font-mono text-sm font-medium text-accent-ink ring-2 ring-accent"
-              aria-hidden="true"
-            >
-              {i + 1}
-            </span>
-            <h4 class="font-display text-lg font-semibold text-ink-strong">
-              {phase.label[locale]}
-            </h4>
-          </li>
-        ))
-      }
-    </ol>
+    {/* Labels only: the services page carries the step descriptions. */}
+    <Timeline
+      locale={locale}
+      items={methodology.phases.map(({ label }) => ({ label }))}
+      headingLevel="h4"
+    />
 
     <p class="reveal mt-10">
       <a href={processHref} class="btn btn-secondary">

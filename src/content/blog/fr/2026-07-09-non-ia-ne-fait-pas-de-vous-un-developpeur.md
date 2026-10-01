@@ -32,7 +32,7 @@ Blanc. Elle avait « juste demandé à Gemini de se connecter à tel endroit ».
 
 ### Cas n°2 : le site vitrine
 
-Vous avez vu la transition ? :)
+Vous avez vu la transition ?
 
 Deuxième cas : un professionnel qui veut refondre le site vitrine de son activité. L'ancien date de dix ans, tombe en décrépitude, n'est plus à jour, plus grand-chose ne fonctionne. Un cas classique. Il me contacte pour qu'on échange sur ce que je pourrais lui proposer.
 

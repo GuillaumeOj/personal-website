@@ -17,7 +17,7 @@ tags: ["Open source", "React", "QR code", "Claude Code"]
 
 > **Update (October 2026)**: dotcraft now offers an optional free account to back up and sync your library across devices. Without an account, everything stays in the browser, as described below.
 
-I just needed a QR code. Styled, clean, with my logo in the center. A trivial request — except looking for one reminded me how the web is flooded with tools you don't really want to hand anything over to. Out of that frustration came [dotcraft](https://dotcraft.fr), a QR code editor I built from A to Z, open source, in a few hours. Here's how, and above all why.
+I just needed a QR code. Styled, clean, with my logo in the center. A trivial request — except looking for one reminded me how the web is flooded with tools you don't really want to hand anything over to. Out of that frustration came [dotcraft](https://dotcraft.fr), a QR code editor I built entirely, open source, in a few hours. Here's how, and above all why.
 
 ## The problem with online QR code generators
 
@@ -49,7 +49,7 @@ That left one classic downside of local storage: it's tied to a single browser. 
 
 I also wanted the tool to hold up when you have a lot of QR codes to manage. So you can **organize them by projects and subfolders**, the way you'd sort files — one project per client, per campaign, whatever fits. It's the kind of comfort you almost never find in free generators.
 
-## The making-of: A to Z in a few hours
+## Behind the scenes: from script to editor in a few hours
 
 The detail I care about most in this story is the speed of execution. dotcraft went from idea to a working online tool in a few hours, leaning on Claude Code.
 

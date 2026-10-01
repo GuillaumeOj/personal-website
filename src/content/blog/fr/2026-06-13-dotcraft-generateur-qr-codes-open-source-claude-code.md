@@ -17,7 +17,7 @@ tags: ["Open source", "React", "QR code", "Claude Code"]
 
 > **Mise à jour (octobre 2026)** : dotcraft propose désormais un compte gratuit, facultatif, pour sauvegarder et synchroniser sa bibliothèque entre plusieurs appareils. Sans compte, tout reste dans le navigateur, comme décrit ci-dessous.
 
-J'avais juste besoin d'un QR code. Stylé, propre, avec mon logo au centre. Une demande banale — sauf que le chercher m'a rappelé à quel point le web regorge d'outils auxquels on n'a pas vraiment envie de confier quoi que ce soit. De cette frustration est né [dotcraft](https://dotcraft.fr), un éditeur de QR codes que j'ai construit de A à Z, en open source, en quelques heures. Voici comment, et surtout pourquoi.
+J'avais juste besoin d'un QR code. Stylé, propre, avec mon logo au centre. Une demande banale — sauf que le chercher m'a rappelé à quel point le web regorge d'outils auxquels on n'a pas vraiment envie de confier quoi que ce soit. De cette frustration est né [dotcraft](https://dotcraft.fr), un éditeur de QR codes que j'ai construit entièrement, en open source, en quelques heures. Voici comment, et surtout pourquoi.
 
 ## Le problème avec les générateurs de QR codes en ligne
 
@@ -49,7 +49,7 @@ Restait un défaut classique du stockage local : il est lié à un navigateur. P
 
 J'ai aussi voulu que l'outil tienne la route quand on a beaucoup de QR codes à gérer. On peut donc les **organiser par projets et sous-dossiers**, comme on rangerait des fichiers — un projet par client, par campagne, peu importe. C'est le genre de confort qu'on ne trouve presque jamais dans les générateurs gratuits.
 
-## Le making-of : de A à Z en quelques heures
+## Les coulisses : du script à l'éditeur en quelques heures
 
 Le détail qui me tient à cœur dans cette histoire, c'est la vitesse d'exécution. dotcraft est passé de l'idée à un outil en ligne fonctionnel en quelques heures, en m'appuyant sur Claude Code.
 

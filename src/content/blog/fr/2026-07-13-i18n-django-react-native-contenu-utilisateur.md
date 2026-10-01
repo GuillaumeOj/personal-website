@@ -64,13 +64,13 @@ Retenez la distinction entre les deux versions : `gettext_lazy` s'utilise pour l
 
 ### Générer les fichiers de traduction
 
-Une fois les chaînes taguées, on génère les fichiers de messages. Django en manipule deux : les `message files` `.po` (paires valeur d'origine / traduction) et les fichiers binaires `.mo`, versions compilées utilisées à l'exécution.
+Une fois les chaînes marquées, on génère les fichiers de messages. Django en manipule deux : les `message files` `.po` (paires valeur d'origine / traduction) et les fichiers binaires `.mo`, versions compilées utilisées à l'exécution.
 
 ```shell
 django-admin makemessages
 ```
 
-Par défaut, les fichiers atterrissent dans `locale/{lang}/LC_MESSAGES/`. Pour chaque valeur taguée, `makemessages` crée une entrée `msgid` et une string vide `msgstr` à remplir. Il ne reste plus qu'à compiler :
+Par défaut, les fichiers atterrissent dans `locale/{lang}/LC_MESSAGES/`. Pour chaque valeur marquée, `makemessages` crée une entrée `msgid` et une string vide `msgstr` à remplir. Il ne reste plus qu'à compiler :
 
 ```shell
 django-admin compilemessages
@@ -101,7 +101,7 @@ plugins: [
 
 ### Traduire l'interface avec i18next
 
-Pour les traductions, j'utilise `i18next` ([i18next.com](https://www.i18next.com/)) — projet ancien, populaire et activement maintenu — couplé à `react-i18next` ([react.i18next.com](https://react.i18next.com/)). Comme ce sont des librairies 100 % JavaScript, un simple `bun add i18next react-i18next` suffit ; `expo install` n'est utile que pour les librairies à code natif comme `expo-localization`.
+Pour les traductions, j'utilise `i18next` ([i18next.com](https://www.i18next.com/)) — projet ancien, populaire et activement maintenu — couplé à `react-i18next` ([react.i18next.com](https://react.i18next.com/)). Comme ce sont des bibliothèques 100 % JavaScript, un simple `bun add i18next react-i18next` suffit ; `expo install` n'est utile que pour les bibliothèques à code natif comme `expo-localization`.
 
 On ajoute ensuite un fichier d'initialisation (j'ai créé un dossier `i18n` à la racine du frontend) :
 
@@ -132,7 +132,7 @@ i18n.use(initReactI18next).init({
 export default i18n;
 ```
 
-On note l'usage de `languageCode` (`"fr"`) plutôt que `languageTag` (`"fr-FR"`), pour rester cohérent avec `supportedLngs`. Il ne reste qu'à taguer les chaînes avec `useTranslation` :
+On note l'usage de `languageCode` (`"fr"`) plutôt que `languageTag` (`"fr-FR"`), pour rester cohérent avec `supportedLngs`. Il ne reste qu'à marquer les chaînes avec `useTranslation` :
 
 ```typescript
 const { t } = useTranslation();
@@ -160,7 +160,7 @@ Deuxièmement, la réactivité. `getLocales()` est lu une seule fois à l'initia
 
 Troisièmement, les pluriels. i18next s'appuie sur `Intl.PluralRules`, parfois incomplet sur certaines versions du moteur Hermes : les formes plurielles peuvent ne pas se résoudre en production. Un polyfill `Intl` ou l'option `compatibilityJSON` règle le problème.
 
-Jusqu'ici, tout est balisé : la documentation abonde et les librairies font le travail. À partir de maintenant, on quitte les sentiers battus.
+Jusqu'ici, tout est balisé : la documentation abonde et les bibliothèques font le travail. À partir de maintenant, on quitte les sentiers battus.
 
 ## Le vrai défi : le contenu utilisateur
 

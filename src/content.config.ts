@@ -29,6 +29,11 @@ const blog = defineCollection({
        */
       seoDescription: z.string().max(160).optional(),
       pubDate: z.coerce.date(),
+      /**
+       * Last substantive update (YYYY-MM-DD). Drives the sitemap `<lastmod>`;
+       * leave unset for typo fixes.
+       */
+      updatedDate: z.coerce.date().optional(),
       lang: z.enum(SITE.locales),
       /** URL segment. Differs per locale; must stay stable (SEO). */
       slug: z.string(),

@@ -3,26 +3,28 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 import { SITE } from "./src/config.ts";
-import { articlePath } from "./src/i18n/ui.ts";
+import { articlePath, localizedPath } from "./src/i18n/ui.ts";
 import { generateOgImages } from "./src/lib/og.ts";
 import { readPostFiles } from "./src/lib/post-files.ts";
 
-// Sitemap freshness signal (<lastmod>). Blog URLs carry their article's pubDate;
-// every other URL carries the build date. Precomputed once here (config load) as
-// a pathname → ISO-date map, since @astrojs/sitemap's `serialize` runs per URL.
-// Projects/static pages have no per-item date, so they get the build date
-// deliberately (the modified-date upgrade is a separate, later step).
+// Sitemap freshness signal (<lastmod>), only where a real date exists: a
+// post's `updatedDate` (else its `pubDate`), and for each blog index the date
+// of its newest post. Other pages get none: a build timestamp changes on every
+// deploy, which teaches crawlers to ignore `<lastmod>` site-wide. Precomputed
+// once here (config load) as a pathname → ISO-date map, since
+// @astrojs/sitemap's `serialize` runs per URL.
 //
 // Dates are read straight off disk (`readPostFiles`) rather than through
 // `astro:content`: that virtual module does not exist in the config loader, so
 // querying the collection here always failed and silently yielded no dates.
-const BUILD_DATE = new Date().toISOString();
-const blogLastmod = new Map();
+const lastmodByPath = new Map();
 for (const post of readPostFiles()) {
-  blogLastmod.set(
-    articlePath(post.lang, post.slug),
-    post.pubDate.toISOString(),
-  );
+  const date = (post.updatedDate ?? post.pubDate).toISOString();
+  lastmodByPath.set(articlePath(post.lang, post.slug), date);
+  const index = localizedPath(post.lang, "/blog");
+  if ((lastmodByPath.get(index) ?? "") < date) {
+    lastmodByPath.set(index, date);
+  }
 }
 
 // The legal notice must show the publisher's postal address and phone number,
@@ -99,11 +101,11 @@ export default defineConfig({
         defaultLocale: SITE.defaultLocale,
         locales: { fr: "fr-FR", en: "en-US" },
       },
-      // Attach <lastmod>: the article's pubDate for blog URLs, the build date
-      // for everything else (matched on the trailing-slash pathname).
+      // Attach <lastmod> where a real date exists (matched on the
+      // trailing-slash pathname); see `lastmodByPath` above.
       serialize(item) {
-        const { pathname } = new URL(item.url);
-        item.lastmod = blogLastmod.get(pathname) ?? BUILD_DATE;
+        const lastmod = lastmodByPath.get(new URL(item.url).pathname);
+        if (lastmod) item.lastmod = lastmod;
         return item;
       },
     }),

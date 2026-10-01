@@ -9,6 +9,8 @@ export interface PostFile {
   lang: Locale;
   slug: string;
   pubDate: Date;
+  /** Last substantive update, when the post sets `updatedDate`. */
+  updatedDate?: Date;
 }
 
 /**
@@ -33,6 +35,19 @@ function readFrontmatter(filePath: string): Record<string, string> {
 }
 
 /**
+ * A frontmatter `YYYY-MM-DD` as UTC midnight. Anything else (a datetime, an
+ * unpadded day) fails the build here, with the file named, rather than as a
+ * bare `RangeError: Invalid time value` from the sitemap config.
+ */
+const utcDay = (day: string, fileName: string): Date => {
+  const date = new Date(`${day}T00:00:00.000Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid date "${day}" in ${fileName}: use YYYY-MM-DD`);
+  }
+  return date;
+};
+
+/**
  * Read the published articles straight off disk, without `astro:content`.
  *
  * `astro.config.mjs` needs each post's `pubDate` to stamp `<lastmod>` on blog
@@ -53,8 +68,8 @@ export function readPostFiles(): PostFile[] {
   // Fail loudly if the content root itself is missing. This runs from
   // `astro.config.mjs`, where a mis-resolved `BLOG_DIR` (the config loader has
   // been known to rewrite `import.meta.url` — see the `assetUrl` note in
-  // `lib/og.ts`) would otherwise return an empty list and silently push every
-  // blog URL back onto the build date, which is the exact bug this replaced.
+  // `lib/og.ts`) would otherwise return an empty list and silently strip every
+  // blog URL of its `<lastmod>`.
   if (!existsSync(BLOG_DIR)) {
     throw new Error(`Blog content directory not found: ${BLOG_DIR}`);
   }
@@ -66,12 +81,17 @@ export function readPostFiles(): PostFile[] {
     if (!existsSync(dir)) continue;
     for (const fileName of readdirSync(dir)) {
       if (!fileName.endsWith(".md")) continue;
-      const { slug, pubDate, draft } = readFrontmatter(
+      const { slug, pubDate, updatedDate, draft } = readFrontmatter(
         path.join(dir, fileName),
       );
       // Drafts render no page, so a `<lastmod>` for one would point at a 404.
       if (!slug || !pubDate || draft === "true") continue;
-      posts.push({ lang, slug, pubDate: new Date(`${pubDate}T00:00:00.000Z`) });
+      posts.push({
+        lang,
+        slug,
+        pubDate: utcDay(pubDate, fileName),
+        ...(updatedDate ? { updatedDate: utcDay(updatedDate, fileName) } : {}),
+      });
     }
   }
   return posts;

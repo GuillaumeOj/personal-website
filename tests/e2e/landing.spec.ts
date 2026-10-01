@@ -154,3 +154,14 @@ test("home snapping is proximity, with no forced stops", async ({ page }) => {
   expect(snap.type).toMatch(/^y( proximity)?$/);
   expect(snap.stop).toBe("normal");
 });
+
+// Audit U8: the pricing section gives one concrete floor price.
+for (const [path, price] of [
+  ["/services/", "1 500 €"],
+  ["/en/services/", "€1,500"],
+]) {
+  test(`${path}: pricing shows a floor price`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.getByText(price)).toBeVisible();
+  });
+}

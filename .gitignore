@@ -13,9 +13,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 
-# environment variables
+# environment variables (vercel env pull writes .env.local)
 .env
-.env.production
+.env.*
 !.env.example
 
 # macOS-specific files

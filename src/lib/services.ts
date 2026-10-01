@@ -165,8 +165,8 @@ export const included = {
         en: "Polished interfaces (frontend)",
       },
       desc: {
-        fr: "responsives, accessibles et agréables, pensées pour vos utilisateurs, pas recyclées d’un template.",
-        en: "responsive, accessible and enjoyable, designed for your users, not recycled from a template.",
+        fr: "Responsives, accessibles et agréables, pensées pour vos utilisateurs, pas recyclées d’un template.",
+        en: "Responsive, accessible and enjoyable, designed for your users, not recycled from a template.",
       },
     },
     {
@@ -181,12 +181,12 @@ export const included = {
     },
     {
       label: {
-        fr: "En ligne, et qui le reste (devops)",
-        en: "Live, and staying live (devops)",
+        fr: "En ligne, et qui le reste (DevOps)",
+        en: "Live, and staying live (DevOps)",
       },
       desc: {
-        fr: "déploiement, hébergement et automatisation, pour que votre produit tourne sans surprise.",
-        en: "deployment, hosting and automation, so your product runs without surprises.",
+        fr: "Déploiement, hébergement et automatisation, pour que votre produit tourne sans surprise.",
+        en: "Deployment, hosting and automation, so your product runs without surprises.",
       },
     },
   ],
@@ -331,7 +331,7 @@ export const faq = {
   ],
 };
 
-/** Reassurance line added near the reused contact block. */
+/** Lead of /contact/quote and of the ContactCta band that links to it (see lib/contact-page.ts). */
 export const contactNote = {
   fr: "Décrivez votre idée en quelques mots — réponse sous 24 h, devis gratuit, aucun engagement.",
   en: "Tell me about your idea in a few words — reply within 24 h, free quote, no commitment.",

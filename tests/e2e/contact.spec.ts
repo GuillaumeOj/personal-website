@@ -269,3 +269,24 @@ for (const path of ["/contact/thanks/", "/en/contact/error/"]) {
     );
   });
 }
+
+// Audit W2: the quote page states its promise once, not twice in a row.
+for (const path of ["/contact/quote/", "/en/contact/quote/"]) {
+  test(`${path}: lead isn't repeated`, async ({ page }) => {
+    await page.goto(path);
+    const intro = page.locator("main p.text-lg, main p.leading-relaxed");
+    const texts = (await intro.allTextContents()).map((t) => t.slice(0, 20));
+    expect(new Set(texts).size).toBe(texts.length);
+  });
+}
+
+// Audit W2: the About page sends readers to the services page itself.
+for (const [path, href] of [
+  ["/about/", "/services/"],
+  ["/en/about/", "/en/services/"],
+]) {
+  test(`${path}: links the Services page`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible();
+  });
+}

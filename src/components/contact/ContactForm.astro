@@ -43,7 +43,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
 <form
   class="space-y-5 rounded-2xl border border-line bg-surface p-6 sm:p-8"
   method="post"
-  action="/api/contact"
+  action="/api/contact/"
   data-contact-form
   data-labels={statusLabels}
 >
@@ -284,7 +284,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
 
       const payload = Object.fromEntries(new FormData(form).entries());
       try {
-        const res = await fetch('/api/contact', {
+        const res = await fetch('/api/contact/', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify(payload),

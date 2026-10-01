@@ -3,12 +3,12 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/blog/:translationKey/:slug",
+      "source": "/blog/:translationKey/:slug/",
       "destination": "/blog/:slug/",
       "permanent": true
     },
     {
-      "source": "/en/blog/:translationKey/:slug",
+      "source": "/en/blog/:translationKey/:slug/",
       "destination": "/en/blog/:slug/",
       "permanent": true
     }

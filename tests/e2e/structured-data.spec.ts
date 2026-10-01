@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { BUSINESS_ID, PERSON_ID, WEBSITE_ID } from "../../src/lib/schema";
 import {
   HUBS,
   jsonLdNodes,
@@ -13,10 +14,6 @@ import {
 // shared entities by @id. The node properties themselves (offers, email,
 // priceRange, Person url, dropped LocalBusiness keys…) are unit-tested against
 // the builders in tests/unit/schema-graph.test.ts. Each page loads once.
-
-const PERSON_ID = `${ORIGIN}/#person`;
-const BUSINESS_ID = `${ORIGIN}/#business`;
-const WEBSITE_ID = `${ORIGIN}/#website`;
 
 /** The `@id` a node's reference property points at, e.g. `publisher`. */
 const refId = (node: LdNode, key: string) =>

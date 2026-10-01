@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { jsonLdNodes, jsonLdNodesFromHtml, nodeOfType } from "./helpers";
+import {
+  jsonLdNodes,
+  jsonLdNodesFromHtml,
+  nodeOfType,
+  SAMPLE_PROJECT,
+} from "./helpers";
 
 // Every BlogPosting must carry a non-empty `image`. Rather than pinning a couple
 // of slugs, sweep every article the sitemap advertises, so the check covers new
@@ -47,7 +52,7 @@ test("every BlogPosting has a non-empty image", async ({ request }) => {
 test("project detail: mobile app is SoftwareApplication with a free offer and a year date", async ({
   page,
 }) => {
-  await page.goto("/projects/fusily/");
+  await page.goto(SAMPLE_PROJECT);
   const app = nodeOfType(await jsonLdNodes(page), "SoftwareApplication");
   expect(app.offers).toMatchObject({ price: 0, priceCurrency: "EUR" });
   expect(app.datePublished).toMatch(/^\d{4}$/);

@@ -5,6 +5,7 @@ import {
   test,
 } from "@playwright/test";
 import { readPostFiles } from "../../src/lib/post-files";
+import { lastmodByPath } from "../../src/lib/sitemap";
 import { SAMPLE_ARTICLE } from "./helpers";
 
 const sitemapHref = (page: Page) =>
@@ -37,13 +38,10 @@ test("sitemap emits <lastmod>, with the pubDate on a known blog URL", async ({
   // At least one URL carries a lastmod.
   expect(xml).toContain("<lastmod>");
 
-  // A known post carries its own date (read from the post file, as the config
-  // does), not the build date.
-  const post = readPostFiles().find(
-    (p) => `/blog/${p.slug}/` === SAMPLE_ARTICLE.fr,
-  );
-  expect(post, "sample article on disk").toBeTruthy();
-  const date = (post?.updatedDate ?? post?.pubDate)?.toISOString();
+  // A known post carries its own date (from its file, through the same map
+  // the config uses; the rule itself is unit-tested), not the build date.
+  const date = lastmodByPath(readPostFiles()).get(SAMPLE_ARTICLE.fr);
+  expect(date, "sample article on disk").toBeTruthy();
   const match = xml.match(
     new RegExp(
       `<loc>[^<]*${SAMPLE_ARTICLE.fr}</loc><lastmod>([^<]+)</lastmod>`,

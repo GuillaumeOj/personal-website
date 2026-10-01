@@ -16,7 +16,7 @@ coverCredit:
 tags: ["Astro", "Next.js", "Notion", "Vercel"]
 ---
 
-> **Update (2026)**: the site now runs on Astro alone, with Markdown posts versioned in the repository. This post describes the previous version, built with Next.js and Notion.
+> **Update (2026)**: the site now runs on Astro alone, with Markdown posts versioned in the repository. This post describes the previous version, built with Next.js and Notion. I explain why I switched in [Markdown or Database: Two Paths for a Blog](/en/blog/markdown-or-database-two-paths-for-a-blog/).
 
 My personal blog is the technical project I keep coming back to and improving. It's also the perfect playground for testing stacks, tools, and architectures. Here's a detailed look at the technical choices I made and how everything fits together.
 

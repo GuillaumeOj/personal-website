@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { t } from "../../src/i18n/ui";
 import { faq, servicesMeta } from "../../src/lib/services";
@@ -72,4 +73,21 @@ describe("services meta (local intent)", () => {
       expect(description[locale].length).toBeLessThanOrEqual(160);
     });
   }
+});
+
+// Audit L10: no firm "24 h" reply commitment anywhere in the site copy.
+describe("reply-time promise", () => {
+  it("is always hedged (généralement… ouvrées / usually… business day)", () => {
+    const files = [
+      ...readdirSync("src/lib").map((f) => `src/lib/${f}`),
+      "src/i18n/ui.ts",
+    ].filter((f) => f.endsWith(".ts") && !f.endsWith("typography.ts"));
+    for (const file of files) {
+      const text = readFileSync(file, "utf8");
+      for (const match of text.matchAll(/[^"]*24 h[^"]*/g)) {
+        expect(match[0], file).toMatch(/généralement sous 24 h ouvrées/i);
+      }
+      expect(text, file).not.toMatch(/within 24 h/);
+    }
+  });
 });

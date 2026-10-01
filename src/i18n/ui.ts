@@ -51,7 +51,7 @@ const dictionaries = {
       "Guillaume Ojardias, développeur web & mobile freelance à Lyon. J’accompagne PME, associations et porteurs de projet, de l’idée à la mise en ligne.",
     "blog.cta.heading": "Un projet web ou mobile en tête ?",
     "blog.cta.lead":
-      "Décrivez votre idée en quelques mots : je vous réponds sous 24 h, devis gratuit et sans engagement.",
+      "Décrivez votre idée en quelques mots : je vous réponds généralement sous 24 h ouvrées, devis gratuit et sans engagement.",
     "blog.cta.primary": "Discutons de votre projet",
     "blog.cta.secondary": "Voir les prestations",
     "blog.related": "À lire aussi",
@@ -146,7 +146,7 @@ const dictionaries = {
       "Guillaume Ojardias, freelance web & mobile developer in Lyon. I help SMEs, non-profits and project owners go from idea to launch.",
     "blog.cta.heading": "A web or mobile project in mind?",
     "blog.cta.lead":
-      "Tell me about your idea in a few words: you’ll get a reply within 24 hours, a free quote, no commitment.",
+      "Tell me about your idea in a few words: I usually reply within one business day. Free quote, no commitment.",
     "blog.cta.primary": "Let’s talk about your project",
     "blog.cta.secondary": "See all services",
     "blog.related": "Keep reading",

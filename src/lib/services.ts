@@ -44,8 +44,8 @@ export const servicesMeta: { title: L; description: L } = {
     en: "Freelance Web & Mobile Development in Lyon: Pricing",
   },
   description: {
-    fr: "Applications web, mobiles et SaaS sur mesure par un développeur full-stack freelance à Lyon. Un seul interlocuteur, du design au déploiement. Réponse sous 24 h.",
-    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer in Lyon. Design, development, deployment: one point of contact. Reply within 24 hours.",
+    fr: "Applications web, mobiles et SaaS sur mesure par un développeur full-stack freelance à Lyon. Un seul interlocuteur, du design au déploiement.",
+    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer in Lyon. Design, development, deployment: one point of contact.",
   },
 };
 
@@ -60,8 +60,8 @@ export const hero = {
   },
   cta: { fr: "Discutons de votre projet", en: "Let’s talk about your project" },
   reassurance: {
-    fr: "Réponse sous 24 h · Devis gratuit",
-    en: "Reply within 24 hours · Free quote",
+    fr: "Réponse généralement sous 24 h ouvrées · Devis gratuit",
+    en: "Usually a reply within one business day · Free quote",
   },
   /** One-line proof strip shown under the hero, above the fold. Shared verbatim
    *  with the home hero via `heroCredibility` (single source of truth). */
@@ -331,8 +331,8 @@ export const faq = {
         en: "How fast do you reply?",
       },
       a: {
-        fr: "Sous 24 h après votre message.",
-        en: "Within 24 hours of your message.",
+        fr: "Généralement sous 24 h ouvrées après votre message.",
+        en: "Usually within one business day of your message.",
       },
     },
     {
@@ -350,8 +350,8 @@ export const faq = {
 
 /** Lead of /contact/quote and of the ContactCta band that links to it (see lib/contact-page.ts). */
 export const contactNote = {
-  fr: "Décrivez votre idée en quelques mots — réponse sous 24 h, devis gratuit, aucun engagement.",
-  en: "Tell me about your idea in a few words — reply within 24 hours, free quote, no commitment.",
+  fr: "Décrivez votre idée en quelques mots — réponse généralement sous 24 h ouvrées, devis gratuit, aucun engagement.",
+  en: "Tell me about your idea in a few words — usually a reply within one business day, free quote, no commitment.",
 };
 
 /**

@@ -88,8 +88,8 @@ export const form = {
   } satisfies Record<"name" | "email" | "message", L>,
   successTitle: { fr: "Message envoyé", en: "Message sent" },
   success: {
-    fr: "Merci ! Votre message a bien été envoyé, je vous réponds sous 24 h.",
-    en: "Thanks! Your message is on its way — you’ll get a reply within 24 hours.",
+    fr: "Merci ! Votre message a bien été envoyé, je vous réponds généralement sous 24 h ouvrées.",
+    en: "Thanks! Your message is on its way — you’ll usually get a reply within one business day.",
   },
   // Followed by a mailto link to SITE.email, pre-filled with the message.
   error: {
@@ -169,8 +169,8 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
     meta: {
       title: { fr: "Contact", en: "Contact" },
       description: {
-        fr: "Contactez un développeur web & mobile freelance à Lyon : décrivez votre projet en quelques lignes, réponse sous 24 h, devis gratuit et sans engagement.",
-        en: "Get in touch with a freelance web & mobile developer in Lyon: describe your project in a few lines, reply within 24 hours, free quote, no commitment.",
+        fr: "Contactez un développeur web & mobile freelance à Lyon : décrivez votre projet en quelques lignes pour un devis gratuit et sans engagement.",
+        en: "Get in touch with a freelance web & mobile developer in Lyon: describe your project in a few lines for a free, no-commitment quote.",
       },
     },
     // Deliberately the same heading as the Home band that links here.
@@ -192,8 +192,8 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
     meta: {
       title: { fr: "Demande de devis gratuit", en: "Request a Free Quote" },
       description: {
-        fr: "Demandez un devis gratuit pour votre application web, mobile ou SaaS : quelques lignes sur votre projet, un budget et un délai indicatifs, réponse sous 24 h.",
-        en: "Request a free quote for your web, mobile or SaaS app: a few lines about your project, an indicative budget and timeline, reply within 24 hours.",
+        fr: "Demandez un devis gratuit pour votre application web, mobile ou SaaS : quelques lignes sur votre projet, un budget et un délai indicatifs.",
+        en: "Request a free quote for your web, mobile or SaaS app: a few lines about your project, plus an indicative budget and timeline.",
       },
     },
     eyebrow: { fr: "Devis gratuit", en: "Free quote" },
@@ -259,11 +259,8 @@ export const contactOutcomes = {
   // Same copy as the in-place (JS) success panel, so the reply-time promise
   // lives in one place.
   thanks: {
-    title: { fr: "Message envoyé", en: "Message sent" },
-    lead: {
-      fr: "Merci ! Votre message a bien été envoyé, je vous réponds sous 24 h.",
-      en: "Thanks! Your message has been sent. I’ll reply within 24 hours.",
-    },
+    title: form.successTitle,
+    lead: form.success,
     back: { fr: "Retour à l’accueil", en: "Back to the home page" },
   },
   error: {

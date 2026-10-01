@@ -248,8 +248,8 @@ export const contact = {
   eyebrow: { fr: "Contact", en: "Contact" },
   title: { fr: "Parlons de votre projet", en: "Let’s talk about your project" },
   lead: {
-    fr: "Décrivez votre idée en quelques mots : je vous réponds sous 24 h.",
-    en: "Tell me about your idea in a few words — you’ll get a reply within 24 hours.",
+    fr: "Décrivez votre idée en quelques mots : je vous réponds généralement sous 24 h ouvrées.",
+    en: "Tell me about your idea in a few words — you’ll usually get a reply within one business day.",
   },
   cta: { fr: "Écrire un message", en: "Send a message" },
 };

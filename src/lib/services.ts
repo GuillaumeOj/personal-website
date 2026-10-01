@@ -31,7 +31,7 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
 
 /**
  * `<title>` segment and meta description. The layout appends ` — {SITE.name}`
- * only while the result fits BaseLayout's TITLE_MAX (these titles don't).
+ * only while the result fits TITLE_MAX (`pageTitles` in lib/seo.ts; these titles don't).
  * Services owns the offer/"prestations" query cluster — deliberately distinct
  * from Home's "développeur … à Lyon" head term to avoid cannibalization.
  */

@@ -9,92 +9,33 @@ import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import type { Locale } from '@/config';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
-import SeoHead from '@/components/SeoHead.astro';
+import SeoHead, { type Props as SeoProps } from '@/components/SeoHead.astro';
+import ScrollReveal from '@/components/ScrollReveal.astro';
 import SnapLanding from '@/components/SnapLanding.astro';
 import { t } from '@/i18n/ui';
 import { type Alternates, prefixAlternates } from '@/lib/alternates';
 
-interface Props {
-  locale: Locale;
-  title: string;
-  description: string;
-  ogImage?: string;
-  /** Alt text describing the OG/Twitter image. */
-  ogImageAlt?: string;
-  /** Intrinsic dimensions of a page-supplied `ogImage`, so scrapers can render
-   *  the card without a fetch round-trip. The landscape default card sets its
-   *  own (1200×630); omit unless you pass `ogImage`. */
-  ogImageWidth?: number;
-  ogImageHeight?: number;
-  /** `og:type`. Content pages (blog posts) set `article`; everything else is a
-   *  `website`. */
-  ogType?: 'website' | 'article';
-  /** Emitted as `article:*` meta when `ogType` is `article` (blog posts). */
-  articleMeta?: {
-    /** ISO 8601 publication date. */
-    publishedTime: string;
-    /** ISO 8601 last-modified date, when known. */
-    modifiedTime?: string;
-    author?: string;
-    tags?: string[];
-  };
-  /** Emit `<meta name="robots" content="noindex, follow">` — thin, low-value
-   *  pages (legal notice, privacy policy) that shouldn't rank but whose links
-   *  should still be followed. */
-  noindex?: boolean;
-  /** schema.org structured data rendered as a JSON-LD script. */
-  jsonLd?: unknown;
+interface Props extends Omit<SeoProps, 'alternates'> {
   /** `prose` keeps the readable max-w-3xl column (blog, project detail).
    *  `full` lets the page own its section widths (the home landing). */
   container?: 'prose' | 'full';
   /** Enables full-height scroll-snap between sections (the home landing). */
   snap?: boolean;
   /**
-   * Emit reciprocal fr/en + x-default hreflang alternates. Defaults to every
-   * indexable page; blog posts pass whether they have a translated sibling.
-   */
-  hreflang?: boolean;
-  /**
    * Site path of this page in each locale, for the hreflang links and the
    * language switcher. Same-slug pages omit it (the `/en` prefix swap); blog
    * posts pass their translated sibling (see `articleAlternates`).
    */
   alternates?: Alternates;
-  /**
-   * Use `title` verbatim as the `<title>` instead of appending ` — {SITE.name}`.
-   * For the one page whose title is brand-*forward* (About: "{SITE.name} — …"),
-   * where appending the brand again would duplicate it.
-   */
-  rawTitle?: boolean;
-  /**
-   * The 404 page: served for every missing URL in both locales, so it has no
-   * canonical or `og:url` (it has no URL of its own), is `noindex`, and swaps
-   * the French nav/footer for a logo-only header — the page script localizes
-   * the rest (see `src/pages/404.astro`).
-   */
-  errorPage?: boolean;
 }
 
 const {
-  locale,
-  title,
-  description,
-  ogImage,
-  ogImageAlt,
-  ogImageWidth,
-  ogImageHeight,
-  ogType = 'website',
-  articleMeta,
-  noindex = false,
-  jsonLd,
   container = 'prose',
   snap = false,
-  hreflang: hreflangProp,
-  alternates = prefixAlternates(locale, Astro.url.pathname),
-  rawTitle = false,
-  errorPage = false,
+  alternates = prefixAlternates(Astro.props.locale, Astro.url.pathname),
+  ...seo
 } = Astro.props;
-const hreflang = hreflangProp ?? (!noindex && !errorPage);
+const { locale, errorPage = false } = seo;
 const mainClass =
   container === 'full'
     ? 'flex-1'
@@ -118,23 +59,7 @@ const mainClass =
     <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <SeoHead
-      locale={locale}
-      title={title}
-      description={description}
-      ogImage={ogImage}
-      ogImageAlt={ogImageAlt}
-      ogImageWidth={ogImageWidth}
-      ogImageHeight={ogImageHeight}
-      ogType={ogType}
-      articleMeta={articleMeta}
-      noindex={noindex}
-      jsonLd={jsonLd}
-      hreflang={hreflang}
-      alternates={alternates}
-      rawTitle={rawTitle}
-      errorPage={errorPage}
-    />
+    <SeoHead {...seo} alternates={alternates} />
 
     <script is:inline>
       (() => {
@@ -172,8 +97,7 @@ const mainClass =
 
     <script>
       import '@/scripts/button-glow';
-      import '@/scripts/reveal';
     </script>
-    {snap && <SnapLanding />}
+    {snap ? <SnapLanding /> : <ScrollReveal />}
   </body>
 </html>

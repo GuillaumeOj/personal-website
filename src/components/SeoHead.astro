@@ -1,36 +1,65 @@
 ---
 // Everything a search engine or a share scraper reads from <head>: title,
 // description, canonical, robots, hreflang, Open Graph / Twitter cards and the
-// JSON-LD. BaseLayout renders it with the page's own props.
+// JSON-LD. BaseLayout forwards the page's props (`Props` below is its SEO
+// part).
 import { LOCALE_TAG, type Locale, SITE } from '@/config';
 import { absoluteUrl, localizedPath, otherLocale } from '@/i18n/ui';
 import { portraitAlt } from '@/lib/about';
 import type { Alternates } from '@/lib/alternates';
 import { pageTitles, socialImage } from '@/lib/seo';
 
-interface Props {
+export interface Props {
   locale: Locale;
   title: string;
   description: string;
   ogImage?: string;
+  /** Alt text describing the OG/Twitter image. */
   ogImageAlt?: string;
+  /** Intrinsic dimensions of a page-supplied `ogImage`, so scrapers can render
+   *  the card without a fetch round-trip. The landscape default card sets its
+   *  own (1200×630); omit unless you pass `ogImage`. */
   ogImageWidth?: number;
   ogImageHeight?: number;
-  ogType: 'website' | 'article';
+  /** `og:type`. Content pages (blog posts) set `article`; everything else is a
+   *  `website`. */
+  ogType?: 'website' | 'article';
+  /** Emitted as `article:*` meta when `ogType` is `article` (blog posts). */
   articleMeta?: {
+    /** ISO 8601 publication date. */
     publishedTime: string;
+    /** ISO 8601 last-modified date, when known. */
     modifiedTime?: string;
     author?: string;
     tags?: string[];
   };
-  noindex: boolean;
+  /** Emit `<meta name="robots" content="noindex, follow">` — thin, low-value
+   *  pages (legal notice, privacy policy) that shouldn't rank but whose links
+   *  should still be followed. */
+  noindex?: boolean;
+  /** schema.org structured data rendered as a JSON-LD script. */
   jsonLd?: unknown;
-  hreflang: boolean;
+  /**
+   * Emit reciprocal fr/en + x-default hreflang alternates. Defaults to every
+   * indexable page; blog posts pass whether they have a translated sibling.
+   */
+  hreflang?: boolean;
+  /** Site path of this page in each locale (resolved by BaseLayout). */
   alternates: Alternates;
-  rawTitle: boolean;
-  errorPage: boolean;
+  /**
+   * Use `title` verbatim as the `<title>` instead of appending ` — {SITE.name}`.
+   * For the one page whose title is brand-*forward* (About: "{SITE.name} — …"),
+   * where appending the brand again would duplicate it.
+   */
+  rawTitle?: boolean;
+  /**
+   * The 404 page: served for every missing URL in both locales, so it has no
+   * canonical or `og:url` (it has no URL of its own), is `noindex`, and swaps
+   * the French nav/footer for a logo-only header — the page script localizes
+   * the rest (see `src/pages/404.astro`).
+   */
+  errorPage?: boolean;
 }
-// Each prop is documented on BaseLayout, which forwards them.
 
 const {
   locale,
@@ -40,15 +69,15 @@ const {
   ogImageAlt,
   ogImageWidth,
   ogImageHeight,
-  ogType,
+  ogType = 'website',
   articleMeta,
-  noindex,
+  noindex = false,
   jsonLd,
-  hreflang,
   alternates,
-  rawTitle,
-  errorPage,
+  rawTitle = false,
+  errorPage = false,
 } = Astro.props;
+const hreflang = Astro.props.hreflang ?? (!noindex && !errorPage);
 
 const titles = pageTitles(title, rawTitle);
 const canonicalURL = absoluteUrl(Astro.url.pathname);

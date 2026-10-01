@@ -1,9 +1,7 @@
-import { prefersReducedMotion } from "./motion";
-
 const root = document.documentElement;
 const els = [...document.querySelectorAll<HTMLElement>(".reveal")];
 
-if (prefersReducedMotion()) {
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   for (const el of els) el.classList.add("is-visible");
 } else {
   armSnap();
@@ -76,3 +74,6 @@ function revealOnScroll(): void {
   window.addEventListener("scroll", onScroll, { passive: true });
   if ("onscrollend" in window) window.addEventListener("scrollend", reveal);
 }
+
+// A module (own scope), bundled by Astro.
+export {};

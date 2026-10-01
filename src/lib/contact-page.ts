@@ -129,7 +129,7 @@ interface ContactModeConfig {
   crumb: TranslationKey;
   /**
    * `<title>` segment (the layout appends ` — {SITE.name}` while the result
-   * fits BaseLayout's TITLE_MAX) and description.
+   * fits TITLE_MAX, see `pageTitles` in lib/seo.ts) and description.
    */
   meta: { title: Localized; description: Localized };
   eyebrow: Localized;

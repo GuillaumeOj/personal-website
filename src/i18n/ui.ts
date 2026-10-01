@@ -14,8 +14,8 @@ const dictionaries = {
     "nav.mainNav": "Navigation principale",
     "nav.skipToContent": "Aller au contenu",
     // SEO `<title>` for static pages. Each is the page-specific segment; the
-    // layout appends ` — Guillaume Ojardias` while the result fits BaseLayout's
-    // TITLE_MAX (65 chars). One page owns one query cluster:
+    // layout appends ` — Guillaume Ojardias` while the result fits TITLE_MAX
+    // (65 chars, `pageTitles` in lib/seo.ts). One page owns one query cluster:
     // Home owns the "développeur … à Lyon" head term (About leads with the name,
     // Services with "prestations") so no two titles share a leading phrase.
     "meta.homeTitle": "Développeur web & mobile freelance à Lyon",

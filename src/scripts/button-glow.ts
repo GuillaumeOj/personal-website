@@ -1,8 +1,9 @@
-import { prefersReducedMotion } from "./motion";
-
 // Point a button's amber glow at the cursor (CSS handles the rest). Skipped
 // without a real hover pointer or under reduced motion.
-if (window.matchMedia("(hover: hover)").matches && !prefersReducedMotion()) {
+if (
+  window.matchMedia("(hover: hover)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+) {
   document.addEventListener(
     "pointermove",
     (event) => {
@@ -16,3 +17,6 @@ if (window.matchMedia("(hover: hover)").matches && !prefersReducedMotion()) {
     { passive: true },
   );
 }
+
+// A module (own scope), bundled by Astro.
+export {};

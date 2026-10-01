@@ -1,7 +1,10 @@
 import { sendContactEmail, validateSubmission } from "../src/lib/contact.js";
-import { json } from "../src/lib/http.js";
+import { json, rejectForeignRequest } from "../src/lib/http.js";
 
 export async function POST(req: Request): Promise<Response> {
+  const rejected = rejectForeignRequest(req);
+  if (rejected) return rejected;
+
   let raw: unknown;
   try {
     raw = await req.json();

@@ -1,11 +1,11 @@
 ---
-import type { Locale } from '../../config';
+import type { Locale, Localized } from '../../config';
 
 // A vertical numbered timeline: the home methodology teaser (labels only, under
 // an h3) and the services project flow (with descriptions).
 interface Props {
   locale: Locale;
-  items: { label: Record<Locale, string>; desc?: Record<Locale, string> }[];
+  items: { label: Localized; desc?: Localized }[];
   /** Heading level of each step, one below the surrounding section heading. */
   headingLevel?: 'h3' | 'h4';
 }

@@ -1,11 +1,11 @@
 ---
-import type { Locale } from '../../config';
+import type { Locale, Localized } from '../../config';
 
 // A row of numbered cards (01, 02, …): the home "what I do" pillars and the
 // services "what's included" list.
 interface Props {
   locale: Locale;
-  items: { label: Record<Locale, string>; desc: Record<Locale, string> }[];
+  items: { label: Localized; desc: Localized }[];
 }
 
 const { locale, items } = Astro.props;

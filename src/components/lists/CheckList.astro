@@ -1,11 +1,11 @@
 ---
-import type { Locale } from '../../config';
+import type { Locale, Localized } from '../../config';
 import Icon from '../Icon.astro';
 
 // A list with an accent check mark before each item.
 interface Props {
   locale: Locale;
-  items: Record<Locale, string>[];
+  items: Localized[];
   class?: string;
 }
 

@@ -8,7 +8,7 @@ test("project page links its articles", async ({ page }) => {
   const section = page.locator("section", {
     has: page.getByRole("heading", { name: "À lire sur le blog" }),
   });
-  await expect(section.locator("a")).toHaveCount(3);
+  await expect(section.locator("a")).toHaveCount(4);
   await expect(
     section.locator('a[href="/blog/react-native-expo-developpeur-backend/"]'),
   ).toBeVisible();
@@ -36,10 +36,10 @@ test("article ends with related reading, same project first", async ({
     .locator("a")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")));
   expect(hrefs).toHaveLength(2);
-  // Both other Fusily articles, not the newest unrelated ones.
+  // The two newest other Fusily articles, not the newest unrelated ones.
   expect(hrefs).toEqual(
     expect.arrayContaining([
-      "/blog/react-native-expo-developpeur-backend/",
+      "/blog/developpeur-backend-figma-claude/",
       "/blog/i18n-django-react-native-contenu-utilisateur/",
     ]),
   );

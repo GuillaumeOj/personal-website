@@ -111,3 +111,19 @@ test("projects can be filtered by platform", async ({ page }) => {
   await page.getByRole("button", { name: "Tous" }).click();
   await expect(personalSite).toBeVisible();
 });
+
+// Audit U5: the home teaser shows client work, not only own products.
+for (const path of ["/", "/en/"]) {
+  test(`${path}: featured projects include both client sites`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const prefix = path === "/" ? "" : "/en";
+    const section = page.locator("#projects");
+    for (const slug of ["eva-biezunski-avocate", "re-source-et-moi"]) {
+      await expect(
+        section.locator(`a[href="${prefix}/projects/${slug}/"]`),
+      ).toHaveCount(1);
+    }
+  });
+}

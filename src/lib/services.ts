@@ -219,13 +219,15 @@ export const cost = {
     en: "How much does your project cost?",
   },
   intro: {
-    fr: "Chaque projet est unique. Plutôt qu’un prix au hasard, voici la logique, pour y voir clair avant même le premier échange :",
-    en: "Every project is unique. Rather than a random price, here’s the logic, so you have a clear picture before we even talk:",
+    fr: "Chaque projet est unique. Plutôt qu’un tarif unique, voici comment j’estime, pour y voir clair avant même le premier échange :",
+    en: "Every project is unique. Rather than a one-size-fits-all price, here’s how I estimate, so you have a clear picture before we even talk:",
   },
   list: [
     {
-      fr: "Site vitrine / PWA — un forfait clair, périmètre défini à l’avance.",
-      en: "Landing site / PWA — a clear fixed price, scope defined upfront.",
+      // The one public figure (audit U8): a floor price helps buyers judge
+      // fit before writing. Apps and SaaS vary too much for a useful floor.
+      fr: "Site vitrine / PWA — à partir de 1 500 €, un forfait clair, périmètre défini à l’avance.",
+      en: "Landing site / PWA — from €1,500, a clear fixed price, scope defined upfront.",
     },
     {
       fr: "Application mobile ou web sur mesure — estimé après un cadrage court et gratuit, selon les fonctionnalités.",

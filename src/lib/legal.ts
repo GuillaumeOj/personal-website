@@ -156,9 +156,6 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
   };
 }
 
-/** Address for exercising GDPR rights (privacy policy + form notice). */
-export const GDPR_EMAIL = SITE.gdprEmail;
-
 /**
  * Privacy policy: the GDPR art. 13 information for the contact form and the
  * host's technical logs. The controller's postal address is the same
@@ -169,7 +166,7 @@ export function privacyPolicy(
   contact: Pick<LegalContact, "address">,
 ): LegalDoc {
   const legalNoticeHref = localizedPath(locale, "/legal-notice");
-  const gdprLink = mail(GDPR_EMAIL);
+  const gdprLink = mail(SITE.gdprEmail);
   const cnilLink = link("www.cnil.fr", "https://www.cnil.fr");
 
   if (locale === "fr") {

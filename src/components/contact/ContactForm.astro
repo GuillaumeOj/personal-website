@@ -7,7 +7,6 @@ import {
   form as f,
   qualifying as q,
 } from '../../lib/contact-page';
-import { GDPR_EMAIL } from '../../lib/legal';
 import { typeset } from '../../lib/typography';
 
 interface Props {
@@ -165,8 +164,8 @@ const optionalHint = 'normal-case tracking-normal text-muted';
   <p class="text-xs leading-relaxed text-muted">
     {f.privacyNotice[locale]}{' '}
     {f.privacyNoticeRights[locale]}
-    <a href={`mailto:${GDPR_EMAIL}`} class="text-accent-ink no-underline hover:underline">
-      {GDPR_EMAIL}
+    <a href={`mailto:${SITE.gdprEmail}`} class="text-accent-ink no-underline hover:underline">
+      {SITE.gdprEmail}
     </a>. {f.privacyNoticeMore[locale]}
     <a
       href={localizedPath(locale, '/privacy-policy')}

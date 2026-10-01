@@ -249,6 +249,18 @@ export const cost = {
 export const faq = {
   title: { fr: "Questions fréquentes", en: "Frequently asked questions" },
   items: [
+    // B2B scope statement: keeps the offer outside consumer-law obligations
+    // (withdrawal right, consumer mediator). Keep it first and explicit.
+    {
+      q: {
+        fr: "À qui s’adressent vos prestations ?",
+        en: "Who are your services for?",
+      },
+      a: {
+        fr: "Les prestations proposées sur ce site s’adressent aux professionnels, associations et porteurs de projet agissant dans le cadre de leur activité professionnelle. Je ne travaille pas pour des particuliers.",
+        en: "The services offered on this site are for businesses, non-profits and project owners acting in the course of their activity. I don’t take on private individuals as clients.",
+      },
+    },
     {
       q: {
         fr: "Travaillez-vous seul ou en équipe ?",

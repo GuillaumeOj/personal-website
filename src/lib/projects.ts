@@ -107,6 +107,7 @@ export const projects: Project[] = [
       "react-native-expo",
       "tamagui-paper",
       "i18n-django-react-native",
+      "figma-backend-dev",
     ],
     name: "Fusily",
     titleDescriptor: {

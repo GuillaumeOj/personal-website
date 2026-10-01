@@ -22,7 +22,19 @@ const { doc } = Astro.props;
             {section.h}
           </h2>
           {section.body.map((p) => (
-            <p class="leading-relaxed text-muted">{p}</p>
+            <p class="leading-relaxed text-muted">
+              {typeof p === 'string'
+                ? p
+                : p.map((run) =>
+                    typeof run === 'string' ? (
+                      run
+                    ) : (
+                      <a href={run.href} class="text-accent-ink no-underline hover:underline">
+                        {run.text}
+                      </a>
+                    ),
+                  )}
+            </p>
           ))}
         </section>
       ))

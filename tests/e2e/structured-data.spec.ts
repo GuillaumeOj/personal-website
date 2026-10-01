@@ -259,3 +259,14 @@ test("legal pages are noindex, follow", async ({ page }) => {
     );
   }
 });
+
+test("legal notice links to the localized privacy policy", async ({ page }) => {
+  for (const [path, privacy] of [
+    ["/legal-notice/", "/privacy-policy/"],
+    ["/en/legal-notice/", "/en/privacy-policy/"],
+  ]) {
+    await page.goto(path);
+    await page.locator(`main a[href="${privacy}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`${privacy}$`));
+  }
+});

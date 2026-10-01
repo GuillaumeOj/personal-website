@@ -116,8 +116,11 @@ src/
 ```
 
 `api/` (hors `src/`) contient les fonctions serverless Vercel — aujourd'hui le seul
-`contact.ts`. Le build ne lit **aucune** variable d'environnement : il fonctionne hors
-ligne.
+`contact.ts`. Le build fonctionne hors ligne. Il ne lit que deux variables d'environnement
+facultatives, `LEGAL_ADDRESS` et `LEGAL_PHONE` (voir `.env.example`). Elles sont injectées
+dans les mentions légales pour garder l'adresse postale et le téléphone hors du dépôt
+public. Sans elles, la page affiche un texte de remplacement. Seul un build de
+production Vercel (`VERCEL_ENV=production`) échoue si elles manquent.
 
 ## CI
 
@@ -149,6 +152,15 @@ Le fichier `renovate.json` configure :
 2. Sur [vercel.com](https://vercel.com), `Add New Project` → importer le repo.
 3. Vercel détecte Astro + Bun automatiquement (présence de `bun.lock`). Aucun paramétrage requis.
 4. Chaque PR ouvre une preview, chaque merge sur `main` déploie en production.
+5. Variables d'environnement : `BREVO_API_KEY` (formulaire de contact), ainsi que
+   `LEGAL_ADDRESS` et `LEGAL_PHONE` (mentions légales, obligatoires en Production).
+
+## Licence
+
+Le code source est publié sous [licence MIT](LICENSE). Elle ne couvre pas le contenu
+éditorial : les textes, les photographies personnelles et les éléments graphiques
+(notamment sous `src/content/` et `src/assets/`) restent la propriété de Guillaume
+Ojardias. Voir les mentions légales du site.
 
 ## TODO (post-V1)
 

@@ -1,8 +1,15 @@
-import type { Locale } from "../config";
+import { type Locale, SITE } from "../config";
+import { ensureTrailingSlash, localizedPath } from "../i18n/ui";
+
+/** A run of text inside a paragraph, optionally a link. */
+export type LegalInline = string | { text: string; href: string };
+
+/** A paragraph: plain text, or a sequence of text/link runs. */
+export type LegalParagraph = string | LegalInline[];
 
 export interface LegalSection {
   h: string;
-  body: string[];
+  body: LegalParagraph[];
 }
 
 export interface LegalDoc {
@@ -13,68 +20,140 @@ export interface LegalDoc {
   sections: LegalSection[];
 }
 
-export const legalNotice: Record<Locale, LegalDoc> = {
-  fr: {
-    title: "Mentions légales",
-    metaDescription:
-      "Mentions légales du site de Guillaume Ojardias : éditeur, directeur de la publication, hébergement et propriété intellectuelle.",
-    updated: "Dernière mise à jour : 7 juillet 2026",
-    sections: [
-      {
-        h: "Éditeur du site",
-        body: [
-          "Ce site est édité par Guillaume Ojardias, développeur indépendant.",
-          "Statut : auto-entrepreneur. SIREN : 993 870 955. Contact : contact@ojardias.me.",
-        ],
-      },
-      { h: "Directeur de la publication", body: ["Guillaume Ojardias."] },
-      {
-        h: "Hébergement",
-        body: [
-          "Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis — vercel.com.",
-          "Pour toute question relative à la protection des données côté hébergeur : privacy@vercel.com.",
-        ],
-      },
-      {
-        h: "Propriété intellectuelle",
-        body: [
-          "Sauf mention contraire, le contenu éditorial de ce site (textes, images) est la propriété de Guillaume Ojardias.",
-          "Le code source de ce site est open source et disponible sur GitHub.",
-        ],
-      },
-    ],
-  },
-  en: {
+/**
+ * Publisher contact details the law requires on the legal notice but that stay
+ * out of the public repo: they come from the `LEGAL_ADDRESS` / `LEGAL_PHONE`
+ * build-time env vars (see `astro.config.mjs`). A missing value renders as a
+ * visible placeholder; production builds refuse to run without them.
+ */
+export interface LegalContact {
+  address?: string;
+  phone?: string;
+}
+
+const REPO_URL = `${SITE.social.github}/personal-website`;
+
+const link = (text: string, href: string): LegalInline => ({ text, href });
+const mail = (address: string) => link(address, `mailto:${address}`);
+
+export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
+  const privacyHref = ensureTrailingSlash(
+    localizedPath(locale, "/privacy-policy"),
+  );
+  const repoLink = link("github.com/GuillaumeOj/personal-website", REPO_URL);
+  const hostLinks: LegalInline[] = [
+    link("vercel.com", "https://vercel.com"),
+    " — ",
+    mail("privacy@vercel.com"),
+    ".",
+  ];
+
+  if (locale === "fr") {
+    const missing = "[non renseigné]";
+    return {
+      title: "Mentions légales",
+      metaDescription:
+        "Mentions légales du site de Guillaume Ojardias : éditeur, directeur de la publication, hébergement et propriété intellectuelle.",
+      updated: "Dernière mise à jour : 1er octobre 2026",
+      sections: [
+        {
+          h: "Éditeur du site",
+          body: [
+            "Guillaume Ojardias, entrepreneur individuel (EI), exerçant sous le régime de la micro-entreprise.",
+            `Adresse : ${contact.address ?? missing}.`,
+            "SIREN : 993 870 955 — immatriculé au Registre national des entreprises (RNE).",
+            "TVA non applicable, art. 293 B du CGI.",
+            [
+              `Téléphone : ${contact.phone ?? missing} — E-mail : `,
+              mail(SITE.email),
+              ".",
+            ],
+          ],
+        },
+        { h: "Directeur de la publication", body: ["Guillaume Ojardias."] },
+        {
+          h: "Hébergement",
+          body: [
+            [
+              "Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — ",
+              ...hostLinks,
+            ],
+          ],
+        },
+        {
+          h: "Propriété intellectuelle",
+          body: [
+            "Sauf mention contraire, les textes, photographies personnelles et éléments graphiques de ce site sont la propriété de Guillaume Ojardias et ne peuvent être reproduits sans autorisation (art. L.122-4 du Code de la propriété intellectuelle). Certaines illustrations proviennent de banques d’images et restent soumises aux licences de leurs auteurs. Les captures d’écran de projets clients sont reproduites avec l’accord des clients concernés.",
+            [
+              "Le code source du site est publié sur GitHub (",
+              repoLink,
+              ") sous licence MIT ; cette licence ne couvre pas le contenu éditorial. Les marques citées appartiennent à leurs titulaires respectifs.",
+            ],
+          ],
+        },
+        {
+          h: "Données personnelles",
+          body: [
+            [
+              "Voir la ",
+              link("politique de confidentialité", privacyHref),
+              ".",
+            ],
+          ],
+        },
+      ],
+    };
+  }
+
+  const missing = "[not provided]";
+  return {
     title: "Legal notice",
     metaDescription:
       "Legal notice for Guillaume Ojardias's website: publisher, publication director, hosting and intellectual property.",
-    updated: "Last updated: July 7, 2026",
+    updated: "Last updated: October 1, 2026",
     sections: [
       {
         h: "Site publisher",
         body: [
-          "This site is published by Guillaume Ojardias, independent developer.",
-          "Status: auto-entrepreneur (French sole trader). Business ID (SIREN): 993 870 955. Contact: contact@ojardias.me.",
+          "Guillaume Ojardias, sole trader (entrepreneur individuel, EI) operating under the French micro-enterprise scheme.",
+          `Address: ${contact.address ?? missing}.`,
+          "Business ID (SIREN): 993 870 955 — registered with the French National Business Register (RNE).",
+          "VAT not applicable, article 293 B of the French General Tax Code (CGI).",
+          [
+            `Phone: ${contact.phone ?? missing} — Email: `,
+            mail(SITE.email),
+            ".",
+          ],
         ],
       },
       { h: "Publication director", body: ["Guillaume Ojardias."] },
       {
         h: "Hosting",
         body: [
-          "The site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA — vercel.com.",
-          "For any data-protection question on the hosting side: privacy@vercel.com.",
+          [
+            "Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA — ",
+            ...hostLinks,
+          ],
         ],
       },
       {
         h: "Intellectual property",
         body: [
-          "Unless stated otherwise, the editorial content of this site (text, images) is the property of Guillaume Ojardias.",
-          "The source code of this site is open source and available on GitHub.",
+          "Unless stated otherwise, the texts, personal photographs and graphic elements of this site are the property of Guillaume Ojardias and may not be reproduced without permission (article L.122-4 of the French Intellectual Property Code). Some illustrations come from stock image libraries and remain subject to their authors’ licences. Screenshots of client projects are reproduced with the agreement of the clients concerned.",
+          [
+            "The site’s source code is published on GitHub (",
+            repoLink,
+            ") under the MIT licence; this licence does not cover the editorial content. Trademarks mentioned belong to their respective owners.",
+          ],
         ],
       },
+      {
+        h: "Personal data",
+        body: [["See the ", link("privacy policy", privacyHref), "."]],
+      },
     ],
-  },
-};
+  };
+}
 
 export const privacyPolicy: Record<Locale, LegalDoc> = {
   fr: {

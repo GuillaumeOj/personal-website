@@ -4,7 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 import { SITE } from "./src/config.ts";
 import { articlePath, localizedPath } from "./src/i18n/ui.ts";
-import { generateOgImages } from "./src/lib/og.ts";
 import { readPostFiles } from "./src/lib/post-files.ts";
 
 // Sitemap freshness signal (<lastmod>), only where a real date exists: a
@@ -67,25 +66,6 @@ export default defineConfig({
     },
   },
   integrations: [
-    // Build-time Open Graph cards. Composes real 1200×630 landscape share cards
-    // (branded canvas + portrait/screenshot + text) with `sharp` and writes them
-    // to `dist/og/` (JPEG default cards, PNG project cards), so LinkedIn/Slack/Twitter shares stop cropping the old
-    // vertical portrait. Only runs on `astro build` (never `astro dev`). The
-    // generator lives in `src/lib/og.ts`. It is imported statically (like the
-    // sitemap helpers above) rather than lazily inside the hook: by the time
-    // `astro:build:done` runs, Vite's module runner is torn down, so a dynamic
-    // `import()` of the TS module fails ("module runner has been closed"). The
-    // module is self-contained (no `.png`/`projects.ts` imports), so a top-level
-    // import resolves cleanly through the config loader.
-    {
-      name: "og-cards",
-      hooks: {
-        "astro:build:done": async ({ dir, logger }) => {
-          const written = await generateOgImages(dir);
-          logger.info(`Generated ${written.length} OG card(s) into /og/`);
-        },
-      },
-    },
     sitemap({
       // Drop the `noindex` pages: legal pages (notice, privacy policy, terms,
       // accessibility statement)

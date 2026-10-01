@@ -1,25 +1,24 @@
 import path from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { type Locale, SITE } from "../../src/config";
 import {
-  composeDefaultCard,
-  composeProjectCard,
   defaultSocialImage,
   OG_HEIGHT,
   OG_WIDTH,
-  PROJECT_CARDS,
   projectSocialImage,
 } from "../../src/lib/og";
-import { localizedName, type Project, projects } from "../../src/lib/projects";
+import {
+  composeDefaultCard,
+  composeProjectCard,
+} from "../../src/lib/og-compose";
 
-const screenshot = (name: string) =>
-  path.join(process.cwd(), "src", "assets", "projects", name);
+const asset = (name: string) => path.join(process.cwd(), "src", "assets", name);
+const screenshot = (name: string) => asset(path.join("projects", name));
 
 describe("composeDefaultCard", () => {
   it("produces a 1200x630 JPEG under 300 KB for each locale", async () => {
     for (const locale of ["fr", "en"] as const) {
-      const buf = await composeDefaultCard(locale);
+      const buf = await composeDefaultCard(asset("portrait.jpg"), locale);
       const meta = await sharp(buf).metadata();
       expect(meta.width).toBe(1200);
       expect(meta.height).toBe(630);
@@ -83,35 +82,5 @@ describe("projectSocialImage", () => {
       width: 1200,
       height: 630,
     });
-  });
-});
-
-// `PROJECT_CARDS` is a hand-kept mirror of `projects.ts` (the build hook can't
-// resolve its image imports). A project missing here gets no card, and its
-// `og:image` silently points at a 404 — so guard the mirror.
-describe("PROJECT_CARDS stays in sync with projects.ts", () => {
-  // Under vitest, image imports resolve to their `/src/assets/...` path string
-  // rather than `ImageMetadata` (so `resolveImage` can't be used): pick the
-  // locale's variant, then its light side, and keep the filename.
-  const lightCoverFile = (project: Project, locale: Locale): string => {
-    // biome-ignore lint/suspicious/noExplicitAny: path strings, see above
-    const cover = project.cover as any;
-    const image = cover[locale] ?? cover;
-    return path.basename(String(image.light ?? image));
-  };
-  const perLocale = (fn: (locale: Locale) => string) =>
-    Object.fromEntries(SITE.locales.map((l) => [l, fn(l)]));
-  const bySlug = (a: { slug: string }, b: { slug: string }) =>
-    a.slug.localeCompare(b.slug);
-
-  // A missing screenshot can't slip through: each expected filename comes from
-  // a cover import, which fails to resolve if the file is gone.
-  it("has one card per project, with its name and own light cover", () => {
-    const expected = projects.map((p) => ({
-      slug: p.slug,
-      name: perLocale((l) => localizedName(p, l)),
-      screenshot: perLocale((l) => lightCoverFile(p, l)),
-    }));
-    expect([...PROJECT_CARDS].sort(bySlug)).toEqual(expected.sort(bySlug));
   });
 });

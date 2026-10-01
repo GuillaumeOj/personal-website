@@ -1,0 +1,30 @@
+import type { APIRoute, GetStaticPaths } from "astro";
+import { SITE } from "@/config";
+import { composeProjectCard, sourcePath } from "@/lib/og-compose";
+import { localizedName, projects, resolveImage } from "@/lib/projects";
+
+// One share card per project and locale: /og/project-{slug}-{locale}.png (see
+// lib/og.ts), with the locale's light cover as the inset screenshot.
+export const getStaticPaths = (() =>
+  projects.flatMap((project) =>
+    SITE.locales.map((locale) => ({
+      params: { card: `${project.slug}-${locale}` },
+      props: {
+        locale,
+        name: localizedName(project, locale),
+        screenshot: sourcePath(resolveImage(project.cover, locale).light),
+      },
+    })),
+  )) satisfies GetStaticPaths;
+
+export const GET: APIRoute = async ({ props }) => {
+  const { locale, name, screenshot } = props as {
+    locale: (typeof SITE.locales)[number];
+    name: string;
+    screenshot: string;
+  };
+  const card = await composeProjectCard(screenshot, name, locale);
+  return new Response(new Uint8Array(card), {
+    headers: { "Content-Type": "image/png" },
+  });
+};

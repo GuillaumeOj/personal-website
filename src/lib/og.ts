@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import type { Locale } from "../config";
+import { escapeHtml as esc } from "./html";
 
 /**
  * Build-time Open Graph card generator + resolver.
@@ -157,14 +158,6 @@ export const PROJECT_CARDS: ProjectCard[] = [
 // ---------------------------------------------------------------------------
 // SVG helpers
 // ---------------------------------------------------------------------------
-
-const esc = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 
 /**
  * Greedy word-wrap tuned for the card fonts. `maxChars` is an approximate

@@ -120,6 +120,19 @@ describe("buildBrevoPayload", () => {
     expect(payload.subject).toContain("Application mobile");
   });
 
+  // Audit S6: safe in attribute values too, not only element text.
+  it("escapes quotes, single and double", () => {
+    const payload = buildBrevoPayload({
+      name: `O'Brien "Jo"`,
+      email: "a@b.com",
+      projectType: "web",
+      message: "it's",
+    });
+    expect(payload.htmlContent).toContain("O&#39;Brien &quot;Jo&quot;");
+    expect(payload.htmlContent).toContain("it&#39;s");
+    expect(payload.htmlContent).not.toMatch(/O'Brien/);
+  });
+
   it("flags quote requests and lists budget + timeline", () => {
     const payload = buildBrevoPayload({
       name: "Jane",

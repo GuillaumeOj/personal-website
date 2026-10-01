@@ -5,6 +5,7 @@
  */
 
 import type { Locale } from "../config";
+import { escapeHtml } from "./html.js";
 
 export type ProjectType = "web" | "saas" | "mobile" | "other";
 const PROJECT_TYPES: ProjectType[] = ["web", "saas", "mobile", "other"];
@@ -155,13 +156,6 @@ export function validateSubmission(raw: unknown): ValidationResult {
 
   return { ok: true, data };
 }
-
-const escapeHtml = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 
 /** Build the Brevo `POST /v3/smtp/email` payload for a valid submission. */
 export function buildBrevoPayload(data: ContactSubmission) {

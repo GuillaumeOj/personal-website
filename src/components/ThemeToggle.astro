@@ -21,8 +21,8 @@ const modes = [
 
 <Dropdown label={t(locale, 'theme.toggle')} id={`theme-${placement}`}>
   <Icon slot="trigger" name="sun" data-theme-icon="light" />
-  <Icon slot="trigger" name="moon" data-theme-icon="dark" class="hidden" />
-  <Icon slot="trigger" name="monitor" data-theme-icon="system" class="hidden" />
+  <Icon slot="trigger" name="moon" data-theme-icon="dark" />
+  <Icon slot="trigger" name="monitor" data-theme-icon="system" />
   <Icon slot="trigger" name="chevron-down" size={14} />
 
   {
@@ -36,7 +36,7 @@ const modes = [
         >
           <Icon name={m.icon} size={16} />
           <span class="flex-1">{m.label}</span>
-          <Icon name="check" size={16} data-theme-check class="hidden text-accent-ink" />
+          <Icon name="check" size={16} data-theme-check class="text-accent-ink" />
         </button>
       </li>
     ))
@@ -72,20 +72,13 @@ const modes = [
       'dark',
       resolveAppliedTheme(mode) === 'dark',
     );
+    // The trigger icon and the check marks follow data-theme-mode in CSS
+    // (global.css); only the pressed state is set here.
     document.documentElement.dataset.themeMode = mode;
-    document
-      .querySelectorAll<HTMLElement>('[data-theme-icon]')
-      .forEach((icon) => {
-        icon.classList.toggle('hidden', icon.dataset.themeIcon !== mode);
-      });
     document
       .querySelectorAll<HTMLElement>('[data-theme-option]')
       .forEach((btn) => {
-        const active = btn.dataset.themeOption === mode;
-        btn.setAttribute('aria-pressed', String(active));
-        btn
-          .querySelector<HTMLElement>('[data-theme-check]')
-          ?.classList.toggle('hidden', !active);
+        btn.setAttribute('aria-pressed', String(btn.dataset.themeOption === mode));
       });
   };
 

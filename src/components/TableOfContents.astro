@@ -116,16 +116,8 @@ const label = t(locale, 'blog.tocLabel');
       });
     };
 
-    entries.forEach((e) => {
-      e.link.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        // Same landing spot as a plain #anchor (the root scroll-padding-top),
-        // and the CSS scroll-behavior decides smooth vs instant (reduced motion).
-        e.heading.scrollIntoView({ block: 'start' });
-        history.pushState(null, '', `#${e.id}`);
-      });
-    });
-
+    // Links are plain #anchors: the root scroll-padding-top sets the landing
+    // spot and the CSS scroll-behavior picks smooth vs instant (reduced motion).
     update();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule, { passive: true });

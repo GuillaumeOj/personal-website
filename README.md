@@ -135,7 +135,7 @@ Le workflow `.github/workflows/ci.yml` se lance sur chaque pull request et chaqu
 - `checks` : `bun run lint` (Biome), `bun run typecheck` (`astro check`), `bun run test:unit` (Vitest) ;
 - `build-e2e` : `bun run build` (Astro) puis `bun run test:e2e` (Playwright, 2 workers).
 
-Les paquets Bun, les images optimisées par Astro et les navigateurs Playwright (clé : version de `@playwright/test`) sont mis en cache.
+L'installation commune (objets Git LFS, Node, Bun, dépendances) est l'action locale `.github/actions/setup`. Les objets LFS, les paquets Bun, les images optimisées par Astro et les navigateurs Playwright (clé : version de `@playwright/test`) sont mis en cache.
 
 À configurer côté GitHub : marquer `checks` et `build-e2e` comme **status checks requis** sur la branche `main` (Settings → Rules).
 

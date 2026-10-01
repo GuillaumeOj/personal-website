@@ -105,7 +105,7 @@ async function submitForm(
   fillExtra?: () => Promise<void>,
 ): Promise<Record<string, string>> {
   let body: Record<string, string> | undefined;
-  await page.route("**/api/contact", async (route) => {
+  await page.route("**/api/contact/", async (route) => {
     body = route.request().postDataJSON();
     await route.fulfill({ status: 200, json: { ok: true } });
   });
@@ -184,7 +184,7 @@ test("contact: form posts to /api/contact without JavaScript", async ({
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   let posted: string | undefined;
-  await page.route("**/api/contact", async (route) => {
+  await page.route("**/api/contact/", async (route) => {
     posted = route.request().method();
     await route.fulfill({
       status: 303,
@@ -224,7 +224,7 @@ test("contact: empty required fields are flagged inline", async ({ page }) => {
 test("contact: a server-side field error points at the field", async ({
   page,
 }) => {
-  await page.route("**/api/contact", (route) =>
+  await page.route("**/api/contact/", (route) =>
     route.fulfill({ status: 400, json: { ok: false, error: "invalid email" } }),
   );
   await page.goto("/en/contact/");
@@ -242,7 +242,7 @@ test("contact: a server-side field error points at the field", async ({
 });
 
 test("contact: a send failure offers a pre-filled mailto", async ({ page }) => {
-  await page.route("**/api/contact", (route) =>
+  await page.route("**/api/contact/", (route) =>
     route.fulfill({ status: 502, json: { ok: false, error: "send failed" } }),
   );
   await page.goto("/contact/");

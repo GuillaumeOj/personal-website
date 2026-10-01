@@ -1,14 +1,15 @@
 {
   "regions": ["cdg1"],
+  "trailingSlash": true,
   "redirects": [
     {
       "source": "/blog/:translationKey/:slug",
-      "destination": "/blog/:slug",
+      "destination": "/blog/:slug/",
       "permanent": true
     },
     {
       "source": "/en/blog/:translationKey/:slug",
-      "destination": "/en/blog/:slug",
+      "destination": "/en/blog/:slug/",
       "permanent": true
     }
   ],

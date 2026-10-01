@@ -50,17 +50,22 @@ describe("otherLocale", () => {
 
 describe("localizedPath", () => {
   it("keeps fr paths unchanged (default locale)", () => {
-    expect(localizedPath("fr", "/blog")).toBe("/blog");
+    expect(localizedPath("fr", "/blog")).toBe("/blog/");
     expect(localizedPath("fr", "/")).toBe("/");
   });
 
   it("prefixes en paths with /en", () => {
-    expect(localizedPath("en", "/blog")).toBe("/en/blog");
-    expect(localizedPath("en", "/")).toBe("/en");
+    expect(localizedPath("en", "/blog")).toBe("/en/blog/");
+    expect(localizedPath("en", "/")).toBe("/en/");
+  });
+
+  it("leaves file paths without a trailing slash", () => {
+    expect(localizedPath("fr", "/rss.xml")).toBe("/rss.xml");
+    expect(localizedPath("en", "/rss.xml")).toBe("/en/rss.xml");
   });
 
   it("normalizes paths missing a leading slash", () => {
-    expect(localizedPath("fr", "blog")).toBe("/blog");
-    expect(localizedPath("en", "blog")).toBe("/en/blog");
+    expect(localizedPath("fr", "blog")).toBe("/blog/");
+    expect(localizedPath("en", "blog")).toBe("/en/blog/");
   });
 });

@@ -1,5 +1,5 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash, localizedPath, t } from "../i18n/ui";
+import { localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
   BUSINESS_ID,
@@ -346,10 +346,7 @@ export const contactNote = {
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const homeUrl = new URL(
-    ensureTrailingSlash(localizedPath(locale, "/")),
-    SITE.url,
-  ).toString();
+  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
 
   const service = {
     "@type": "ProfessionalService",
@@ -386,10 +383,7 @@ export const servicesJsonLd = (locale: Locale) => {
     { name: t(locale, "nav.home"), url: homeUrl },
     {
       name: t(locale, "nav.services"),
-      url: new URL(
-        ensureTrailingSlash(localizedPath(locale, "/services")),
-        SITE.url,
-      ).toString(),
+      url: new URL(localizedPath(locale, "/services"), SITE.url).toString(),
     },
   ]);
 

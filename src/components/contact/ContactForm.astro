@@ -1,6 +1,6 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/ui';
 import {
   type ContactMode,
   contactModes,
@@ -166,7 +166,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
       {GDPR_EMAIL}
     </a>. {f.privacyNoticeMore[locale]}
     <a
-      href={ensureTrailingSlash(localizedPath(locale, '/privacy-policy'))}
+      href={localizedPath(locale, '/privacy-policy')}
       class="text-accent-ink no-underline hover:underline"
     >
       {f.privacyNoticeLink[locale]}
@@ -176,7 +176,7 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
         <>
           {' '}{f.termsNotice[locale]}
           <a
-            href={ensureTrailingSlash(localizedPath(locale, '/terms-of-service'))}
+            href={localizedPath(locale, '/terms-of-service')}
             class="text-accent-ink no-underline hover:underline"
           >
             {f.termsLink[locale]}

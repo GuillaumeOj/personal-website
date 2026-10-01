@@ -1,11 +1,5 @@
 import { type Locale, SITE } from "../config";
-import {
-  contactPath,
-  ensureTrailingSlash,
-  localizedPath,
-  projectPath,
-  t,
-} from "../i18n/ui";
+import { contactPath, localizedPath, projectPath, t } from "../i18n/ui";
 import {
   breadcrumbList,
   inLanguage,
@@ -350,12 +344,9 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   const doc = about[locale];
   // Canonical trailing-slash form so these JSON-LD URLs match the page
   // canonicals and the `@id`-based entity consolidation can't silently miss.
-  const homeUrl = new URL(
-    ensureTrailingSlash(localizedPath(locale, "/")),
-    SITE.url,
-  ).toString();
+  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
   const aboutUrl = new URL(
-    ensureTrailingSlash(localizedPath(locale, "/about")),
+    localizedPath(locale, "/about"),
     SITE.url,
   ).toString();
 

@@ -20,7 +20,7 @@ const dictionaries = {
     // Home owns the "développeur … à Lyon" head term (About leads with the name,
     // Services with "prestations") so no two titles share a leading phrase.
     "meta.homeTitle": "Développeur web & mobile freelance à Lyon",
-    "meta.projectsTitle": "Projets & réalisations web",
+    "meta.projectsTitle": "Projets et réalisations web & mobile",
     "meta.blogTitle": "Blog — Développement web & mobile",
     // SEO meta descriptions for hub pages — richer than the on-page subtitle
     // (`projects.subtitle` / `blog.subtitle`), which stays as the visible lead.

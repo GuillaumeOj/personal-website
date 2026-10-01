@@ -33,7 +33,7 @@ const tags = project.stack.slice(0, 4);
   <div class="relative aspect-[16/10] w-full overflow-hidden bg-surface-sunken">
     <ProjectImage
       variants={cover}
-      alt={locale === 'fr' ? `Aperçu du projet ${name}` : `${name} project preview`}
+      alt={project.imageAlt[locale]}
       priority={priority}
       sizes="(min-width: 1024px) 520px, (min-width: 640px) 50vw, 100vw"
       class="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"

@@ -29,45 +29,24 @@ const {
   quality = 72,
 } = Astro.props;
 const { light, dark } = variants;
-const loading = priority ? 'eager' : 'lazy';
-const fetchpriority = priority ? 'high' : 'auto';
-const sameImage = light === dark;
+// Both theme variants share the loading hints: only CSS knows which one is
+// visible, so a priority image must be eager in either theme (a lazy variant
+// is the visible one for half the visitors otherwise).
+const shared = {
+  alt,
+  widths,
+  sizes,
+  quality,
+  loading: priority ? 'eager' : 'lazy',
+  fetchpriority: priority ? 'high' : 'auto',
+} as const;
+const themed =
+  light === dark
+    ? [{ src: light, class: className }]
+    : [
+        { src: light, class: `${className} block dark:hidden` },
+        { src: dark, class: `${className} hidden dark:block` },
+      ];
 ---
 
-{
-  sameImage ? (
-    <Image
-      src={light}
-      alt={alt}
-      widths={widths}
-      sizes={sizes}
-      quality={quality}
-      loading={loading}
-      fetchpriority={fetchpriority}
-      class={className}
-    />
-  ) : (
-    <>
-      <Image
-        src={light}
-        alt={alt}
-        widths={widths}
-        sizes={sizes}
-        quality={quality}
-        loading={loading}
-        fetchpriority={fetchpriority}
-        class={`${className} block dark:hidden`}
-      />
-      <Image
-        src={dark}
-        alt={alt}
-        widths={widths}
-        sizes={sizes}
-        quality={quality}
-        loading="lazy"
-        fetchpriority="auto"
-        class={`${className} hidden dark:block`}
-      />
-    </>
-  )
-}
+{themed.map((variant) => <Image {...shared} {...variant} />)}

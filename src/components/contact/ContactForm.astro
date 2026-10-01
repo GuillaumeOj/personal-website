@@ -8,6 +8,7 @@ import {
   qualifying as q,
 } from '../../lib/contact-page';
 import { GDPR_EMAIL } from '../../lib/legal';
+import { typeset } from '../../lib/typography';
 
 interface Props {
   locale: Locale;
@@ -17,13 +18,15 @@ interface Props {
 const { locale, mode } = Astro.props;
 const cfg = contactModes[mode];
 
+// Shown by the script, so the page-wide typesetting (middleware) can't reach
+// them: typeset here.
 const statusLabels = JSON.stringify({
-  error: f.error[locale],
+  error: typeset(f.error[locale], locale),
   sending: f.sending[locale],
   email: SITE.email,
   mailtoSubject: f.mailtoSubject[locale],
   fields: Object.fromEntries(
-    Object.entries(f.fieldErrors).map(([field, msg]) => [field, msg[locale]]),
+    Object.entries(f.fieldErrors).map(([field, msg]) => [field, typeset(msg[locale], locale)]),
   ),
 });
 const required = 'text-accent-ink';

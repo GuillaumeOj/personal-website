@@ -6,12 +6,21 @@ interface Props {
 }
 
 const { doc } = Astro.props;
+// The French text is the legally binding one; English pages say so up front.
+const isTranslation = Astro.currentLocale === 'en';
 ---
 
 <article class="space-y-8">
   <header class="space-y-2">
     <h1 class="page-title">{doc.title}</h1>
     <p class="text-sm text-muted">{doc.updated}</p>
+    {
+      isTranslation && (
+        <p class="text-sm text-muted">
+          This English version is provided for convenience; the French version prevails.
+        </p>
+      )
+    }
   </header>
 
   <div class="space-y-8">

@@ -260,6 +260,20 @@ test("legal pages are noindex, follow", async ({ page }) => {
   }
 });
 
+test("English legal pages state that the French version prevails", async ({
+  page,
+}) => {
+  const notice = "the French version prevails";
+  for (const path of ["/en/legal-notice/", "/en/privacy-policy/"]) {
+    await page.goto(path);
+    await expect(page.locator("main")).toContainText(notice);
+  }
+  for (const path of ["/legal-notice/", "/privacy-policy/"]) {
+    await page.goto(path);
+    await expect(page.locator("main")).not.toContainText(notice);
+  }
+});
+
 test("legal notice links to the localized privacy policy", async ({ page }) => {
   for (const [path, privacy] of [
     ["/legal-notice/", "/privacy-policy/"],

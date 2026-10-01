@@ -28,6 +28,41 @@ describe("validateSubmission", () => {
     }
   });
 
+  // Audit S5: name/email feed the subject and Reply-To headers.
+  it("collapses control characters in single-line fields", () => {
+    const result = validateSubmission({
+      ...valid,
+      name: "Jane\r\nBcc: victim@example.com",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(result.data.name).toBe("Jane Bcc: victim@example.com");
+    expect(
+      validateSubmission({ ...valid, email: "ja\u0001ne@example.com" }).ok,
+    ).toBe(false);
+    const nel = validateSubmission({
+      ...valid,
+      name: "Jane\u0085Bcc: x\u2028y",
+    });
+    expect(nel.ok).toBe(true);
+    if (nel.ok) expect(nel.data.name).toBe("Jane Bcc: x y");
+  });
+
+  it("rejects a message made only of control characters", () => {
+    expect(validateSubmission({ ...valid, message: "\u0001\n\u0001" }).ok).toBe(
+      false,
+    );
+  });
+
+  it("keeps line breaks in the message but drops other control chars", () => {
+    const result = validateSubmission({
+      ...valid,
+      message: "Line one\r\nLine two\u0007\tend",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.data.message).toBe("Line one\nLine two\tend");
+  });
+
   it("rejects a missing name, bad email, or empty message", () => {
     expect(validateSubmission({ ...valid, name: "" }).ok).toBe(false);
     expect(validateSubmission({ ...valid, email: "not-an-email" }).ok).toBe(

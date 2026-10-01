@@ -75,14 +75,20 @@ test("every BlogPosting has a non-empty image", async ({ request }) => {
   }
 });
 
-// A live mobile app is a SoftwareApplication; a web project stays a generic
-// CreativeWork (the portfolio mixes apps and showcase sites).
-test("project detail: mobile app is SoftwareApplication", async ({ page }) => {
-  await page.goto("/projects/fusily/");
-  nodeOfType(await jsonLdNodes(page), "SoftwareApplication");
-});
-
 test("project detail: web project is CreativeWork", async ({ page }) => {
   await page.goto("/projects/dotcraft/");
   nodeOfType(await jsonLdNodes(page), "CreativeWork");
+});
+
+// A live mobile app is a SoftwareApplication; a web project stays a generic
+// CreativeWork (the portfolio mixes apps and showcase sites). Audit E3: the app
+// node carries a free offer (app rich results also need a rating, which we
+// don't fabricate) and project dates aren't invented (year only).
+test("project detail: mobile app is SoftwareApplication with a free offer and a year date", async ({
+  page,
+}) => {
+  await page.goto("/projects/fusily/");
+  const app = nodeOfType(await jsonLdNodes(page), "SoftwareApplication");
+  expect(app.offers).toMatchObject({ price: 0, priceCurrency: "EUR" });
+  expect(app.datePublished).toMatch(/^\d{4}$/);
 });

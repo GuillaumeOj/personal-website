@@ -90,6 +90,12 @@ export interface Project {
   banner?: LocalizedImage;
   year?: number;
   /**
+   * Store price in EUR for an installable app (0 = free), emitted as the
+   * SoftwareApplication `offers` (one of the properties Google requires for app
+   * rich results; aggregateRating/review, the other, is deliberately not emitted).
+   */
+  price?: number;
+  /**
    * Optional factual outcome/result line, shown on the card (under the
    * description) and on the detail page (as a `<dl>` entry). Only verifiable
    * facts already known about the project — never invented metrics.
@@ -126,6 +132,7 @@ export const projects: Project[] = [
       en: "Fusily mobile app home screen",
     },
     year: 2024,
+    price: 0,
     result: {
       fr: "Publiée sur l’App Store et Google Play, en ligne depuis 2024.",
       en: "Published on the App Store and Google Play, live since 2024.",

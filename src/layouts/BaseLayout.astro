@@ -246,7 +246,12 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     <script is:inline>
       (() => {
         document.documentElement.classList.add('js');
-        const stored = localStorage.getItem('theme');
+        let stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch {
+          // Storage blocked: fall back to the system preference.
+        }
         const mode = stored === 'light' || stored === 'dark' || stored === 'system'
           ? stored
           : 'system';
@@ -266,23 +271,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
     >
       {t(locale, 'nav.skipToContent')}
     </a>
-    {
-      errorPage ? (
-        <header class="border-b border-line" data-header>
-          <div class="mx-auto max-w-6xl px-6 py-4">
-            <a
-              href={localizedPath(locale, '/')}
-              data-home-link
-              class="font-display text-base font-semibold tracking-tight text-ink-strong no-underline"
-            >
-              {SITE.name}
-            </a>
-          </div>
-        </header>
-      ) : (
-        <Header locale={locale} />
-      )
-    }
+    <Header locale={locale} minimal={errorPage} />
     <main id="main" class={mainClass}>
       <slot />
     </main>

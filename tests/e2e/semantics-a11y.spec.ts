@@ -111,3 +111,55 @@ for (const path of ["/blog/", "/en/blog/"]) {
     }
   });
 }
+
+// Audit U-min: smaller accessibility polish.
+test("nav marks the current section with aria-current", async ({ page }) => {
+  await page.goto("/services/");
+  const current = page.locator('[data-header] nav a[aria-current="page"]');
+  await expect(current.first()).toHaveAttribute("href", "/services/");
+});
+
+test("home project cards are h3 under the section h2, named by title", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const cards = page.locator("#projects a[aria-label]");
+  await expect(cards.first()).toBeVisible();
+  await expect(page.locator("#projects h3").first()).toBeVisible();
+  await expect(page.locator("#projects a h2")).toHaveCount(0);
+});
+
+test("mobile menu: Escape returns focus, outside tap closes", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/about/");
+  const toggle = page.locator("[data-menu-toggle]");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Escape");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(toggle).toBeFocused();
+
+  await toggle.click();
+  await page.mouse.click(200, 700);
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+});
+
+test("theme still works when storage is blocked", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      get() {
+        throw new Error("blocked");
+      },
+    });
+  });
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(String(e)));
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-theme-mode",
+    "system",
+  );
+  expect(errors).toEqual([]);
+});

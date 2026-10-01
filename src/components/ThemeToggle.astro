@@ -51,7 +51,12 @@ const modes = [
     value === 'light' || value === 'dark' || value === 'system';
 
   const getStoredMode = (): ThemeMode => {
-    const value = localStorage.getItem(STORAGE_KEY);
+    let value: string | null = null;
+    try {
+      value = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      // Storage blocked: behave as "system".
+    }
     return isThemeMode(value) ? value : 'system';
   };
 
@@ -85,7 +90,11 @@ const modes = [
   };
 
   const setMode = (mode: ThemeMode): void => {
-    localStorage.setItem(STORAGE_KEY, mode);
+    try {
+      localStorage.setItem(STORAGE_KEY, mode);
+    } catch {
+      // Storage blocked: the choice still applies for this page view.
+    }
     applyMode(mode);
   };
 
@@ -103,7 +112,11 @@ const modes = [
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', () => {
-        if (getStoredMode() === 'system') applyMode('system');
+        // The live mode, not storage: with storage blocked, an explicit
+        // choice still holds for this page view.
+        if ((document.documentElement.dataset.themeMode ?? 'system') === 'system') {
+          applyMode('system');
+        }
       });
   };
 

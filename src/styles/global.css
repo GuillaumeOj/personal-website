@@ -2,7 +2,6 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 @import "@fontsource/bricolage-grotesque/600.css";
 @import "@fontsource/bricolage-grotesque/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
@@ -229,12 +228,18 @@
 
 @layer base {
   html {
-    @apply scroll-smooth;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     /* Room for the sticky header (~4.25rem): anchors and snap points land
        below it, and the mobile menu fits under it. */
     --header-h: 4.5rem;
     scroll-padding-top: var(--header-h);
+  }
+
+  /* Smooth anchor scrolling, unless the visitor asked for less motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   /* One visible keyboard-focus ring everywhere (WCAG 2.4.7). */

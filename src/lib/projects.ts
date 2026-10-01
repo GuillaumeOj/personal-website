@@ -202,7 +202,7 @@ export const projects: Project[] = [
           "Web app to manage shared in-home childcare for your children.",
         aim: "Help families manage their in-home nanny’s contract and prepare their monthly Pajemploi declaration, including shared care between two families.",
         longDescription:
-          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It frames the contract (net rate, weekly schedule, paid leave, public holidays) and calmly prepares the monthly Pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
+          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It sets up the contract terms (net rate, weekly schedule, paid leave, public holidays) and takes the stress out of the monthly Pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
       },
     },
   },
@@ -336,10 +336,10 @@ export const projects: Project[] = [
       },
       en: {
         description:
-          "Website for a companies-law practice, with a publications space.",
-        aim: "Present the practice and its areas of expertise — companies law (contracts, company formation, etc.), with a focus on liberal professions (lawyers, doctors, dentists…).",
+          "Website for a corporate-law practice, with a publications space.",
+        aim: "Present the practice and its areas of expertise — corporate law (contracts, company formation, etc.), with a focus on self-employed professionals (lawyers, doctors, dentists…).",
         longDescription:
-          "The client, a lawyer specialized in companies law, needed a website to clearly present her practice, build trust and make getting in touch easy. Live since June 2026, the site pairs a Next.js / React / TypeScript / Tailwind CSS front end with a Django / DRF backend and a PostgreSQL database hosted on Neon, all deployed on Vercel. It includes a publications space with a dedicated admin interface, friendlier than the Django admin: Eva writes her articles there and manages the categories of the /publications page. I also added an /mcp endpoint so articles can be created from any compatible AI chat, such as Claude Desktop. The code and hosting remain the client’s property.",
+          "The client, a lawyer specialized in corporate law, needed a website to clearly present her practice, build trust and make getting in touch easy. Live since June 2026, the site pairs a Next.js / React / TypeScript / Tailwind CSS front end with a Django / DRF backend and a PostgreSQL database hosted on Neon, all deployed on Vercel. It includes a publications space with a dedicated admin interface, friendlier than the Django admin: Eva writes her articles there and manages the categories of the /publications page. I also added an /mcp endpoint so articles can be created from any compatible AI chat, such as Claude Desktop. The code and hosting remain the client’s property.",
       },
     },
   },
@@ -359,7 +359,7 @@ export const projects: Project[] = [
     cover: reSourceEtMoiCover,
     imageAlt: {
       fr: "Page d’accueil du site de l’association Re-Source Et Moi",
-      en: "Home page of the Re-Source Et Moi association website",
+      en: "Home page of the Re-Source Et Moi non-profit website",
     },
     year: 2026,
     result: {

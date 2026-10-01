@@ -22,7 +22,7 @@ If you've ever searched "QR code generator" on Google, you know the drill. A doz
 
 Three things bothered me in particular:
 
-First, trust. A QR code encodes a URL, sometimes more sensitive data. Generating it on some obscure site means handing over that information without knowing what's done with it. For such a simple tool, that's a lot of grey area.
+First, trust. A QR code encodes a URL, sometimes more sensitive data. Generating it on some obscure site means handing over that information without knowing what's done with it. For such a simple tool, that's a lot of gray area.
 
 Second, the mandatory account. On most of these services, the moment you want to keep your QR codes or find them again later, you have to sign up. You trade your data for a feature that, technically, needs no server at all.
 

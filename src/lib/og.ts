@@ -37,9 +37,13 @@ export function defaultSocialImage(locale: Locale): SocialImage {
  * The per-project landscape card (project screenshot inset on the branded
  * canvas). Resolves to `/og/project-{slug}-{locale}.png` at 1200×630.
  */
+/** The project card's id in its URL, the `[card]` param of its endpoint. */
+export const projectCardId = (slug: string, locale: Locale): string =>
+  `${slug}-${locale}`;
+
 export function projectSocialImage(slug: string, locale: Locale): SocialImage {
   return {
-    url: `/og/project-${slug}-${locale}.png`,
+    url: `/og/project-${projectCardId(slug, locale)}.png`,
     width: OG_WIDTH,
     height: OG_HEIGHT,
   };

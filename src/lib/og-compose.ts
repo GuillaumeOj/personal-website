@@ -2,6 +2,14 @@ import sharp from "sharp";
 import { type Locale, SITE } from "../config";
 import { escapeHtml as esc } from "./html";
 import { OG_HEIGHT, OG_WIDTH } from "./og";
+import { jobTitle } from "./schema";
+
+/** The endpoint response for a composed card. */
+export const imageResponse = (
+  card: Buffer,
+  type: "image/jpeg" | "image/png",
+): Response =>
+  new Response(new Uint8Array(card), { headers: { "Content-Type": type } });
 
 /**
  * The source file of an imported image. Astro sets `fsPath` on every local
@@ -34,12 +42,6 @@ const FONT_STACK =
 // ---------------------------------------------------------------------------
 // Card copy
 // ---------------------------------------------------------------------------
-
-/** Role tagline per locale (the localized "· Lyon" marker is rendered separately). */
-const TAGLINE: Record<Locale, string> = {
-  fr: "Développeur web & mobile freelance",
-  en: "Freelance web & mobile developer",
-};
 
 const LOCATION = "Lyon · France";
 const SITE_HOST = new URL(SITE.url).host;
@@ -86,16 +88,13 @@ function textLines(
     lineHeight: number;
     weight: number;
     fill: string;
-    spacing?: number;
   },
 ): string {
-  const { x, y, size, lineHeight, weight, fill, spacing } = opts;
+  const { x, y, size, lineHeight, weight, fill } = opts;
   return lines
     .map(
       (line, i) =>
-        `<text x="${x}" y="${y + i * lineHeight}" font-family="${FONT_STACK}" font-size="${size}" font-weight="${weight}" fill="${fill}"${
-          spacing ? ` letter-spacing="${spacing}"` : ""
-        }>${esc(line)}</text>`,
+        `<text x="${x}" y="${y + i * lineHeight}" font-family="${FONT_STACK}" font-size="${size}" font-weight="${weight}" fill="${fill}">${esc(line)}</text>`,
     )
     .join("");
 }
@@ -151,7 +150,7 @@ export async function composeDefaultCard(
     <rect x="${panelX - 4}" y="0" width="4" height="${OG_HEIGHT}" fill="${LINE}" />
     ${eyebrow(textX, 196, LOCATION)}
     ${textLines([NAME], { x: textX, y: 300, size: 70, lineHeight: 78, weight: 800, fill: INK_STRONG })}
-    ${textLines(wrap(TAGLINE[locale], 26, 2), { x: textX, y: 372, size: 36, lineHeight: 48, weight: 500, fill: MUTED })}
+    ${textLines(wrap(jobTitle[locale], 26, 2), { x: textX, y: 372, size: 36, lineHeight: 48, weight: 500, fill: MUTED })}
     ${textLines([SITE_HOST], { x: textX, y: 556, size: 24, lineHeight: 30, weight: 600, fill: ACCENT_INK })}
   </svg>`;
 

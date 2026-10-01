@@ -1,6 +1,11 @@
 import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { SITE } from "@/config";
-import { composeProjectCard, sourcePath } from "@/lib/og-compose";
+import { projectCardId } from "@/lib/og";
+import {
+  composeProjectCard,
+  imageResponse,
+  sourcePath,
+} from "@/lib/og-compose";
 import { localizedName, projects, resolveImage } from "@/lib/projects";
 
 // One share card per project and locale: /og/project-{slug}-{locale}.png (see
@@ -8,7 +13,7 @@ import { localizedName, projects, resolveImage } from "@/lib/projects";
 export const getStaticPaths = (() =>
   projects.flatMap((project) =>
     SITE.locales.map((locale) => ({
-      params: { card: `${project.slug}-${locale}` },
+      params: { card: projectCardId(project.slug, locale) },
       props: {
         locale,
         name: localizedName(project, locale),
@@ -19,10 +24,8 @@ export const getStaticPaths = (() =>
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-export const GET: APIRoute<Props> = async ({ props }) => {
-  const { locale, name, screenshot } = props;
-  const card = await composeProjectCard(screenshot, name, locale);
-  return new Response(new Uint8Array(card), {
-    headers: { "Content-Type": "image/png" },
-  });
-};
+export const GET: APIRoute<Props> = async ({ props }) =>
+  imageResponse(
+    await composeProjectCard(props.screenshot, props.name, props.locale),
+    "image/png",
+  );

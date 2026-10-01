@@ -1,6 +1,8 @@
 ---
 title: "Comment j'ai construit mon blog personnel : Next.js, Astro, Notion et Vercel"
 description: "Retour détaillé sur les choix techniques de mon blog personnel : une stack Next.js + Astro avec Notion comme CMS headless bilingue, un pipeline de déploiement automatisé via Vercel et la gestion des images avec Vercel Blob."
+seoTitle: "Mon blog : Next.js, Astro, Notion et Vercel"
+seoDescription: "Les choix techniques de mon blog : Next.js et Astro, Notion en CMS headless bilingue, déploiement automatisé sur Vercel et images sur Vercel Blob."
 pubDate: 2026-05-20
 lang: fr
 slug: comment-jai-construit-mon-blog-nextjs-astro-notion-vercel

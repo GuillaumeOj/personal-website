@@ -78,8 +78,8 @@ const jsonLd = blogPostJsonLd(locale, {
 
 <BaseLayout
   locale={locale}
-  title={post.data.title}
-  description={post.data.description}
+  title={post.data.seoTitle ?? post.data.title}
+  description={post.data.seoDescription ?? post.data.description}
   ogImage={card.src}
   ogImageWidth={OG_WIDTH}
   ogImageHeight={OG_HEIGHT}

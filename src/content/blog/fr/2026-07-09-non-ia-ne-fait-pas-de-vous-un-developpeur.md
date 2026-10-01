@@ -1,6 +1,7 @@
 ---
 title: "Non, l'IA ne fait pas de vous un développeur"
 description: "Deux personnes, deux métiers sans aucun rapport avec le code, une même idée : « pourquoi payer un développeur alors que l'IA peut le faire ? » L'une voulait un outil sur mesure pour gérer son activité, l'autre refaire le site de la sienne. Toutes deux se sont lancées seules, portées par les promesses de l'IA. Spoiler : ça ne s'est pas bien terminé. Récit de deux échecs — et de ce qu'ils révèlent."
+seoDescription: "Deux non-développeurs ont confié à l'IA la création de leur logiciel, un outil métier et un site d'entreprise. Aucun n'a abouti : voici pourquoi."
 pubDate: 2026-07-09
 lang: fr
 slug: non-ia-ne-fait-pas-de-vous-un-developpeur

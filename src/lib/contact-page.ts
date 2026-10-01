@@ -141,7 +141,10 @@ interface ContactModeConfig {
   path: (locale: Locale) => string;
   /** Breadcrumb label for this page. */
   crumb: TranslationKey;
-  /** `<title>` segment (the layout appends ` — {SITE.name}`) and description. */
+  /**
+   * `<title>` segment (the layout appends ` — {SITE.name}` while the result
+   * fits BaseLayout's TITLE_MAX) and description.
+   */
   meta: { title: L; description: L };
   eyebrow: L;
   title: L;

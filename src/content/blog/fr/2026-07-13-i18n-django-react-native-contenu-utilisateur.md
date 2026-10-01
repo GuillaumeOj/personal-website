@@ -1,6 +1,7 @@
 ---
 title: "i18n Django et React Native : traduire jusqu'au contenu de vos utilisateurs"
 description: "Internationaliser une app Django et React Native : gettext, i18next, et surtout traduire le contenu généré par les utilisateurs (Google Translate + Celery)."
+seoTitle: "i18n Django & React Native : traduire le contenu utilisateur"
 pubDate: 2026-07-13
 lang: fr
 slug: i18n-django-react-native-contenu-utilisateur

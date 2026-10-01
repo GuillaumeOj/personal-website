@@ -1,6 +1,7 @@
 ---
 title: "Dotcraft: Building an Open-Source QR Code Generator in a Few Hours with Claude Code"
 description: "How I built Dotcraft, an open-source, privacy-first styled QR code editor, in a few hours with Claude Code — and why it stores everything in the browser."
+seoTitle: "dotcraft: A QR Code Generator Built in Hours with Claude"
 pubDate: 2026-06-13
 lang: en
 slug: dotcraft-open-source-qr-code-generator-claude-code

@@ -1,6 +1,8 @@
 ---
 title: "De développeur backend à Full-Stack : comment Expo m'a (presque) transformé en développeur React Native"
 description: "Retour d'expérience sur la construction de Fusily, une application mobile de recettes, en tant que développeur backend — et comment React Native + Expo ont rendu le mobile accessible."
+seoTitle: "De développeur backend à React Native grâce à Expo"
+seoDescription: "Construire Fusily, une application mobile de recettes, en venant du backend : comment React Native et Expo m'ont ouvert le développement mobile."
 pubDate: 2026-05-18
 lang: fr
 slug: react-native-expo-developpeur-backend

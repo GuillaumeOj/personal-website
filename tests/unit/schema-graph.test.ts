@@ -131,13 +131,19 @@ describe("projectJsonLd type & datePublished", () => {
       projectJsonLd("fr", {
         ...base,
         platform: ["mobile"],
-        datePublished: "2024-01-01",
+        datePublished: "2024",
+        price: 0,
       }),
     );
     expect(work["@type"]).toBe("SoftwareApplication");
     expect(work.operatingSystem).toBe("iOS, Android");
     expect(work.applicationCategory).toBeTruthy();
-    expect(work.datePublished).toBe("2024-01-01");
+    expect(work.datePublished).toBe("2024");
+    expect(work.offers).toEqual({
+      "@type": "Offer",
+      price: 0,
+      priceCurrency: "EUR",
+    });
     // Keeps the CreativeWork properties.
     expect(work.creator["@id"]).toBe(PERSON_ID);
     expect(work.keywords).toEqual(["Django"]);

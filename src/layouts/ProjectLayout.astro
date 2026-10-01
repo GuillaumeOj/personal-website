@@ -63,7 +63,9 @@ const jsonLd = projectJsonLd(locale, {
   sameAs: project.url,
   keywords: project.stack,
   platform: project.platform,
-  datePublished: project.year ? `${project.year}-01-01` : undefined,
+  // Only the year is known: don't invent a January 1st.
+  datePublished: project.year ? String(project.year) : undefined,
+  price: project.price,
   breadcrumbs: crumbs,
 });
 ---

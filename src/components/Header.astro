@@ -43,8 +43,8 @@ const linkClass =
         ))}
       </nav>
       <div class="flex items-center gap-1.5">
-        <LangSwitcher locale={locale} />
-        <ThemeToggle locale={locale} />
+        <LangSwitcher locale={locale} placement="desktop" />
+        <ThemeToggle locale={locale} placement="desktop" />
       </div>
       {cta && (
         <a href={cta.href} class="btn btn-primary px-4 py-2">{cta.label}</a>
@@ -83,8 +83,8 @@ const linkClass =
       )}
     </nav>
     <div class="mx-auto flex max-w-6xl items-center gap-2 px-6 pb-4">
-      <LangSwitcher locale={locale} />
-      <ThemeToggle locale={locale} />
+      <LangSwitcher locale={locale} placement="mobile" />
+      <ThemeToggle locale={locale} placement="mobile" />
     </div>
   </div>
 </header>

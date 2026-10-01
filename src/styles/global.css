@@ -154,9 +154,8 @@
   /*
    * Amber glow behind the button (z-index -2, under the surface). It's blurred
    * so it bleeds onto the page around the button and tracks the pointer via
-   * --glow-x / --glow-y (set in BaseLayout). Same accent as the hero memoji
-   * glow. Because it's behind the opaque surface it haloes the button rather
-   * than tinting the fill.
+   * --glow-x / --glow-y (set by scripts/button-glow.ts). Because it's behind
+   * the opaque surface it haloes the button rather than tinting the fill.
    */
   .btn::before {
     content: "";
@@ -175,7 +174,7 @@
   }
 
   /* Match the site's motion policy: the hover glow only appears (and fades)
-   * when motion is allowed. BaseLayout's pointer script is gated the same way. */
+   * when motion is allowed. The pointer script is gated the same way. */
   @media (prefers-reduced-motion: no-preference) {
     .btn:hover::before {
       opacity: 1;
@@ -282,8 +281,9 @@
 /*
  * Scroll-reveal. Elements start hidden only when JS is available and the user
  * has not asked to reduce motion, so no-JS and reduced-motion visitors always
- * see fully-rendered content. BaseLayout adds `is-visible` and staggers via
- * `--reveal-delay` (on scroll-rest for the snap landing, on intersection else).
+ * see fully-rendered content. scripts/reveal.ts adds `is-visible` on
+ * intersection; on the snap landing, scripts/snap-landing.ts adds it as each
+ * element scrolls in, staggered via `--reveal-delay`.
  */
 @media (prefers-reduced-motion: no-preference) {
   html.js .reveal {
@@ -325,8 +325,9 @@ html.snap-home footer {
 
 @media (prefers-reduced-motion: no-preference) {
   /*
-   * `scroll-snap-type` is *armed* (via `.snap-armed`, added by BaseLayout on the
-   * first user scroll intent) rather than set on load. Snapping on the root
+   * `scroll-snap-type` is *armed* (via `.snap-armed`, added by
+   * scripts/snap-landing.ts on the first user scroll intent) rather than set
+   * on load. Snapping on the root
    * scroller makes the browser re-snap as sections lay out, which scrolls
    * the page during load and repeatedly invalidates the Largest Contentful Paint
    * candidate — Lighthouse's trace engine then finds no LCP and throws NO_LCP.

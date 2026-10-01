@@ -13,9 +13,9 @@ const doc = about[locale];
 // Visible trail (Home › About) mirroring the BreadcrumbList JSON-LD.
 const crumbs = aboutCrumbs(locale);
 
-// A JPEG rendition of the portrait for social sharing (JPEG for broad
-// compatibility, e.g. LinkedIn). Reused for og:image and the JSON-LD image.
-const ogImage = new URL(
+// A JPEG rendition of the portrait for the JSON-LD `image` (the share card is
+// the default /og/ card, set by BaseLayout).
+const personImage = new URL(
   (await getImage({ src: portrait, format: 'jpeg', quality: 80 })).src,
   SITE.url,
 ).toString();
@@ -25,7 +25,7 @@ const ogImage = new URL(
   locale={locale}
   title={doc.metaTitle}
   description={doc.metaDescription}
-  jsonLd={aboutJsonLd(locale, ogImage)}
+  jsonLd={aboutJsonLd(locale, personImage)}
   container="full"
   rawTitle
 >

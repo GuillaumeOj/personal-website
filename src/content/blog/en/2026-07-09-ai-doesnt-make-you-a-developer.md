@@ -1,6 +1,7 @@
 ---
 title: "No, AI Doesn't Make You a Developer"
 description: 'Two people, two jobs with nothing to do with code, one shared idea: "why pay a developer when AI can do it?" One wanted a custom tool to run their business; the other, to rebuild their company''s website. Both went it alone, carried along by the promises of AI. Spoiler: it didn''t end well. Two stories of failure — and what they reveal.'
+seoDescription: "Two non-developers trusted AI to build their software alone: a custom business tool and a company website. Neither ended well. What their failures reveal."
 pubDate: 2026-07-09
 lang: en
 slug: ai-doesnt-make-you-a-developer

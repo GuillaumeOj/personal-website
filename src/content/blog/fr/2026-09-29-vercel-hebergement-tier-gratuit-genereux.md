@@ -1,6 +1,7 @@
 ---
 title: "Vercel : un hébergement avec un tier gratuit généreux"
 description: "Retour d'expérience sur Vercel et Neon pour héberger gratuitement des sites statiques, des applications Django et leur base PostgreSQL : ce que ça permet, et les limites à connaître."
+seoDescription: "Ce que les offres gratuites de Vercel et Neon permettent d'héberger (sites statiques, applis Django, base PostgreSQL) et les limites à connaître."
 pubDate: 2026-09-29
 lang: fr
 slug: vercel-hebergement-tier-gratuit-genereux

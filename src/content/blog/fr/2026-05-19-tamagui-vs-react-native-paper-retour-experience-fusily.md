@@ -1,6 +1,7 @@
 ---
 title: "Tamagui vs React Native Paper : pourquoi j'ai changé de framework UI sur Fusily"
 description: "Retour d'expérience sur le choix du framework UI sur Fusily : de Tamagui à React Native Paper, et pourquoi j'ai finalement séparé mobile et web."
+seoTitle: "Tamagui vs React Native Paper : pourquoi j'en ai changé"
 pubDate: 2026-05-19
 lang: fr
 slug: tamagui-vs-react-native-paper-retour-experience-fusily

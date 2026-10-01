@@ -18,6 +18,16 @@ const blog = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      /**
+       * Shorter `<title>` / social title (≤ 60 characters) when `title` is too
+       * long for search results. The visible H1 keeps `title`.
+       */
+      seoTitle: z.string().max(60).optional(),
+      /**
+       * Meta / social description (≤ 160 characters) when `description`, the
+       * visible lead, is longer than search results show.
+       */
+      seoDescription: z.string().max(160).optional(),
       pubDate: z.coerce.date(),
       lang: z.enum(SITE.locales),
       /** URL segment. Differs per locale; must stay stable (SEO). */

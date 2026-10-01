@@ -1,6 +1,7 @@
 ---
 title: "Vercel: hosting with a generous free tier"
 description: "What I learned using Vercel and Neon to host static sites, Django apps and their PostgreSQL database for free: what it makes possible, and the limits to know about."
+seoDescription: "What Vercel and Neon's free tiers let me host (static sites, Django apps and their PostgreSQL database) and the limits to know before relying on them."
 pubDate: 2026-09-29
 lang: en
 slug: vercel-hosting-generous-free-tier

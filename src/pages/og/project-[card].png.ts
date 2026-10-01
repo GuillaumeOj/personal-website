@@ -1,4 +1,4 @@
-import type { APIRoute, GetStaticPaths } from "astro";
+import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { SITE } from "@/config";
 import { composeProjectCard, sourcePath } from "@/lib/og-compose";
 import { localizedName, projects, resolveImage } from "@/lib/projects";
@@ -17,12 +17,10 @@ export const getStaticPaths = (() =>
     })),
   )) satisfies GetStaticPaths;
 
-export const GET: APIRoute = async ({ props }) => {
-  const { locale, name, screenshot } = props as {
-    locale: (typeof SITE.locales)[number];
-    name: string;
-    screenshot: string;
-  };
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+export const GET: APIRoute<Props> = async ({ props }) => {
+  const { locale, name, screenshot } = props;
   const card = await composeProjectCard(screenshot, name, locale);
   return new Response(new Uint8Array(card), {
     headers: { "Content-Type": "image/png" },

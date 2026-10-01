@@ -14,11 +14,11 @@ coverCredit:
 tags: []
 ---
 
-For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [Dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. Here's how I got there, and what you should know before doing the same.
+For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. Here's how I got there, and what you should know before doing the same.
 
 ## Static sites first
 
-At first, I saw Vercel the way many people do: a front-end host. You connect a GitHub repository, you push, and a few dozen seconds later the site is live, with HTTPS and a domain name set up without a second thought.
+At first, I saw Vercel the way many people do: a frontend host. You connect a GitHub repository, you push, and a few dozen seconds later the site is live, with HTTPS and a domain name set up without a second thought.
 
 That's exactly what I needed for this blog (Astro, version-controlled Markdown) or for Maître Biezunski's business website (Next.js). No server to maintain, no Nginx configuration, no certificate to renew.
 

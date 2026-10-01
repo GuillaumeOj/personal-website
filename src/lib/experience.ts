@@ -38,7 +38,7 @@ const experience: ExperienceEntry[] = [
     logo: "/logos/fusily.png",
     alt: "Logo Fusily",
     role: {
-      fr: "Fondateur & Développeur Full-Stack",
+      fr: "Fondateur et développeur full-stack",
       en: "Founder & Full-Stack Developer",
     },
     org: "Fusily",

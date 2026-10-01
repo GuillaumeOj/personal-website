@@ -76,7 +76,7 @@ export const mobile = {
     en: "Custom iOS & Android mobile applications",
   },
   intro: {
-    fr: "Une application native dans le ressenti, sur iPhone et Android, à partir d’une seule base de code React Native / Expo — pas deux développements séparés, pas deux factures.",
+    fr: "Une application au ressenti natif, sur iPhone et Android, à partir d’une seule base de code React Native / Expo — pas deux développements séparés, pas deux factures.",
     en: "An app that feels native, on iPhone and Android, from a single React Native / Expo codebase — not two separate builds, not two invoices.",
   },
   leadIn: {
@@ -126,7 +126,7 @@ export const web = {
   leadIn: { fr: "Ce que je construis :", en: "What I build:" },
   list: [
     {
-      fr: "Sites vitrines & corporate — rapides, soignés, bien référencés.",
+      fr: "Sites vitrines et sites d’entreprise — rapides, soignés, bien référencés.",
       en: "Business websites — fast, polished, well ranked.",
     },
     {
@@ -134,7 +134,7 @@ export const web = {
       en: "SaaS & business apps — accounts, subscriptions, dashboards, the logic at the heart of your business.",
     },
     {
-      fr: "Dashboards & back-offices — pour piloter votre produit ou votre équipe.",
+      fr: "Tableaux de bord et back-offices — pour piloter votre produit ou votre équipe.",
       en: "Dashboards & back-offices — to steer your product or your team.",
     },
     {
@@ -212,7 +212,7 @@ export const projectFlow = {
   },
   steps: methodology.phases,
   reassurance: {
-    fr: "Code propre, testé et documenté ; maintenance après livraison ; aucune dépendance ni enfermement.",
+    fr: "Code propre, testé et documenté ; maintenance après livraison ; libre de changer de prestataire à tout moment.",
     en: "Clean, tested and documented code; maintenance after launch; no lock-in, no dependency.",
   },
 };
@@ -301,7 +301,7 @@ export const faq = {
     {
       q: { fr: "À qui appartient le code ?", en: "Who owns the code?" },
       a: {
-        fr: "À vous, entièrement — code et infrastructure. Aucune dépendance, aucun enfermement.",
+        fr: "À vous, entièrement : code et infrastructure. Vous restez libre de changer de prestataire à tout moment, moi compris.",
         en: "You do, entirely — code and infrastructure. No dependency, no lock-in.",
       },
     },

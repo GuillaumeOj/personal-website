@@ -230,7 +230,7 @@ export const projects: Project[] = [
     },
     year: 2025,
     result: {
-      fr: "En production sur Vercel, pensé pour la perf, l’accessibilité et le SEO.",
+      fr: "En production sur Vercel, pensé pour les performances, l’accessibilité et le référencement.",
       en: "In production on Vercel, tuned for performance, accessibility and SEO.",
     },
     content: {
@@ -329,7 +329,7 @@ export const projects: Project[] = [
       fr: {
         description:
           "Site d’un cabinet d’avocate en droit des sociétés, avec un espace de publications.",
-        aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), avec un focus sur les professions libérales (avocats, médecins, dentistes…).",
+        aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), en particulier pour les professions libérales (avocats, médecins, dentistes…).",
         longDescription:
           "La cliente, avocate en droit des sociétés, avait besoin d’un site pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site, en ligne depuis juin 2026, associe un front Next.js / React / TypeScript / Tailwind CSS à un backend Django / DRF et une base PostgreSQL hébergée sur Neon, le tout déployé sur Vercel. Il intègre un espace de publications doté d’une interface d’administration dédiée, plus simple à prendre en main que l’admin Django : Eva y rédige ses articles et gère les catégories de la page /publications. J’y ai aussi ajouté un endpoint /mcp qui permet de créer des articles depuis n’importe quel chat IA compatible, comme Claude Desktop. Le code et l’hébergement restent la propriété de la cliente.",
       },

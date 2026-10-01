@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../config';
 import { projectPath, t } from '../i18n/ui';
-import { localizedName, type Project, resolveImage } from '../lib/projects';
+import { localizedName, type Project } from '../lib/projects';
 import ProjectImage from './ProjectImage.astro';
 
 interface Props {
@@ -17,7 +17,7 @@ const Heading = `h${headingLevel}` as const;
 const href = projectPath(locale, project.slug);
 const { description } = project.content[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
-const cover = resolveImage(project.cover, locale);
+const cover = project.cover[locale];
 const name = localizedName(project, locale);
 const result = project.result?.[locale];
 const resultLabel = t(locale, 'projects.result');

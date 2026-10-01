@@ -6,7 +6,7 @@ import {
   imageResponse,
   sourcePath,
 } from "@/lib/og-compose";
-import { localizedName, projects, resolveImage } from "@/lib/projects";
+import { localizedName, projects } from "@/lib/projects";
 
 // One share card per project and locale: /og/project-{slug}-{locale}.png (see
 // lib/og.ts), with the locale's light cover as the inset screenshot.
@@ -17,7 +17,7 @@ export const getStaticPaths = (() =>
       props: {
         locale,
         name: localizedName(project, locale),
-        screenshot: sourcePath(resolveImage(project.cover, locale).light),
+        screenshot: sourcePath(project.cover[locale].light),
       },
     })),
   )) satisfies GetStaticPaths;

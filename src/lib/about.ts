@@ -2,6 +2,7 @@ import { type Locale, SITE } from "../config";
 import { contactPath, localizedPath, projectPath, t } from "../i18n/ui";
 import {
   breadcrumbList,
+  businessContact,
   inLanguage,
   PERSON_ID,
   personNode,
@@ -357,14 +358,9 @@ export const aboutJsonLd = (locale: Locale, image: string) => {
   // so duplicating it on the service is dropped.
   const business = {
     ...professionalServiceNode(),
+    ...businessContact,
     description: doc.metaDescription,
-    email: SITE.email,
     image,
-    founder: { "@id": PERSON_ID },
-    // Coarse, machine-readable schema.org band — signals a professional (not
-    // budget) tier to local-business consumers without committing to a public
-    // numeric figure.
-    priceRange: "€€",
   };
   const webPage = {
     "@type": "AboutPage",

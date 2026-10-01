@@ -40,8 +40,15 @@ const BUSINESS_ID = `${ORIGIN}/#business`;
 const WEBSITE_ID = `${ORIGIN}/#website`;
 const SITE_NAME = "Guillaume Ojardias";
 const EMAIL = "contact@ojardias.me";
-// The Person job-title strings — semantically wrong as a ProfessionalService
-// serviceType, so they must never appear there (the real service array does).
+
+/** Names of the services a business node offers (`makesOffer`). */
+const offerNames = (node: LdNode): string[] =>
+  ((node.makesOffer as { itemOffered: { name: string } }[]) ?? []).map(
+    (offer) => offer.itemOffered.name,
+  );
+
+// The Person job-title strings — never one of the business's offered services
+// (makesOffer lists the real service array).
 const JOB_TITLES = [
   "Développeur web & mobile freelance",
   "Freelance web & mobile developer",
@@ -124,7 +131,7 @@ for (const path of ["/services/", "/en/services/"]) {
     };
     expect(address["@type"]).toBe("PostalAddress");
     expect(address.addressLocality).toBe("Lyon");
-    expect(refId(service, "isPartOf")).toBe(WEBSITE_ID);
+    expect(refId(service, "founder")).toBe(PERSON_ID);
     // The FAQPage is also anchored to the WebSite.
     const faq = nodeOfType(nodes, "FAQPage");
     expect(refId(faq, "isPartOf")).toBe(WEBSITE_ID);
@@ -140,10 +147,10 @@ for (const path of ["/services/", "/en/services/"]) {
 
 // T2 — the shared #business ProfessionalService is enriched with NAP (email)
 // and a coarse priceRange, and reads consistently from either page that defines
-// it (About, Services). Its serviceType is the real service array, never a
+// it (About, Services). Its offers are the real services, never a
 // person's job-title string.
 for (const path of ["/about/", "/en/about/", "/services/", "/en/services/"]) {
-  test(`business (${path}): email + priceRange, correct serviceType`, async ({
+  test(`business (${path}): email + priceRange, correct offers`, async ({
     page,
   }) => {
     await page.goto(path);
@@ -159,33 +166,35 @@ for (const path of ["/about/", "/en/about/", "/services/", "/en/services/"]) {
     expect(business.email).toBe(EMAIL);
     expect(business.priceRange).toBeTruthy();
 
-    // serviceType is never the person's job-title marketing string.
-    expect(JOB_TITLES).not.toContain(business.serviceType);
+    // Offers are services, never the person's job-title marketing string.
+    const offered = offerNames(business);
+    for (const title of JOB_TITLES) expect(offered).not.toContain(title);
   });
 }
 
-// The correct serviceType array lives on the Services node (the About node
-// carries none — a person's job title doesn't belong on a service).
-for (const path of ["/services/", "/en/services/"]) {
-  test(`business (${path}): serviceType is the service array`, async ({
-    page,
-  }) => {
+// Audit E2: the services are `makesOffer` → Offer → Service (schema.org has
+// no `serviceType` on a LocalBusiness), identical from every page.
+for (const path of ["/", "/about/", "/services/", "/en/services/"]) {
+  test(`business (${path}): offers the service list`, async ({ page }) => {
     await page.goto(path);
     const service = nodeOfType(await jsonLdNodes(page), "ProfessionalService");
-    expect(service.serviceType).toEqual(SERVICE_TYPES);
+    expect(offerNames(service)).toEqual(SERVICE_TYPES);
+    expect(service).not.toHaveProperty("serviceType");
+    expect(service).not.toHaveProperty("provider");
+    expect(service).not.toHaveProperty("isPartOf");
   });
 }
 
-// About's #business is anchored to the WebSite (parity with the Services node),
+// About's #business is founded by the Person (the shared node's founder link),
 // and the Person node on the same page exposes the public email.
 for (const path of ["/about/", "/en/about/"]) {
-  test(`about (${path}): #business isPartOf WebSite, Person has email`, async ({
+  test(`about (${path}): #business founded by Person, Person has email`, async ({
     page,
   }) => {
     await page.goto(path);
     const nodes = await jsonLdNodes(page);
     const business = nodeOfType(nodes, "ProfessionalService");
-    expect(refId(business, "isPartOf")).toBe(WEBSITE_ID);
+    expect(refId(business, "founder")).toBe(PERSON_ID);
     const person = nodeOfType(nodes, "Person");
     expect(person.email).toBe(EMAIL);
   });

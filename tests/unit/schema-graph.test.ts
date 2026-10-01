@@ -10,6 +10,7 @@ import {
   personNode,
   professionalServiceNode,
   projectJsonLd,
+  SERVICE_TYPES,
   WEBSITE_ID,
   websiteNode,
 } from "../../src/lib/schema";
@@ -72,7 +73,7 @@ describe("homeJsonLd graph", () => {
     );
     expect(service).toBeDefined();
     expect(service["@id"]).toBe(BUSINESS_ID);
-    expect(service.provider["@id"]).toBe(PERSON_ID);
+    expect(service.founder["@id"]).toBe(PERSON_ID);
   });
 
   it("still carries WebSite + Person (no regression)", () => {
@@ -204,29 +205,47 @@ describe("knowsAbout deduplication", () => {
   });
 });
 
-// Finding 8 — the experience timeline gets a structured-data view.
-describe("Person.hasOccupation", () => {
-  it("is a non-empty array of Occupation nodes", () => {
-    const occ = personNode("fr", IMG).hasOccupation;
-    expect(Array.isArray(occ)).toBe(true);
-    expect(occ.length).toBeGreaterThan(0);
-    for (const o of occ) {
-      expect(o["@type"]).toBe("Occupation");
-      expect(o.name).toBeTruthy();
+// Finding 8 / audit E2 — the experience timeline as OrganizationRoles under
+// worksFor (Occupation has no startDate/endDate).
+describe("Person.worksFor", () => {
+  it("is a non-empty array of OrganizationRoles naming the employer", () => {
+    const roles = personNode("fr", IMG).worksFor;
+    expect(roles.length).toBeGreaterThan(0);
+    for (const role of roles) {
+      expect(role["@type"]).toBe("OrganizationRole");
+      expect(role.roleName).toBeTruthy();
+      expect(role.worksFor["@type"]).toBe("Organization");
+      expect(role.worksFor.name).toBeTruthy();
     }
   });
 
   it("carries ISO start/end dates for a past role", () => {
-    const occ = personNode("en", IMG).hasOccupation;
-    const dated = occ.find((o: { startDate?: string }) => o.startDate);
-    expect(dated).toBeDefined();
+    const dated = personNode("en", IMG).worksFor.find((r) => r.endDate);
     expect(dated?.startDate).toMatch(/^\d{4}-\d{2}$/);
+    expect(dated?.endDate).toMatch(/^\d{4}-\d{2}$/);
   });
 
-  it("localizes the occupation name", () => {
-    expect(personNode("fr", IMG).hasOccupation[0].name).not.toBe(
-      personNode("en", IMG).hasOccupation[0].name,
+  it("localizes the role name", () => {
+    expect(personNode("fr", IMG).worksFor[0].roleName).not.toBe(
+      personNode("en", IMG).worksFor[0].roleName,
     );
+  });
+});
+
+// Audit E2 — only properties schema.org defines for a LocalBusiness.
+describe("ProfessionalService properties", () => {
+  it("drops provider/serviceType/isPartOf/inLanguage", () => {
+    const node: Record<string, unknown> = professionalServiceNode();
+    for (const key of ["provider", "serviceType", "isPartOf", "inLanguage"]) {
+      expect(key in node).toBe(false);
+    }
+  });
+
+  it("lists its services as Offer → Service", () => {
+    const offers = professionalServiceNode().makesOffer;
+    expect(offers.map((o) => o.itemOffered.name)).toEqual(SERVICE_TYPES);
+    expect(offers[0]["@type"]).toBe("Offer");
+    expect(offers[0].itemOffered["@type"]).toBe("Service");
   });
 });
 
@@ -242,6 +261,6 @@ describe("@id consolidation (regression guard)", () => {
     expect(personNode("fr", IMG)["@id"]).toBe(PERSON_ID);
     expect(personNode("en", IMG)["@id"]).toBe(PERSON_ID);
     expect(websiteNode("fr").publisher["@id"]).toBe(PERSON_ID);
-    expect(professionalServiceNode().provider["@id"]).toBe(PERSON_ID);
+    expect(professionalServiceNode().founder["@id"]).toBe(PERSON_ID);
   });
 });

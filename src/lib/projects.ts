@@ -96,6 +96,11 @@ export interface Project {
    */
   price?: number;
   /**
+   * Blog posts about this project, by `translationKey` (so one list serves
+   * both locales). The project page links them and each post links back.
+   */
+  relatedPosts?: string[];
+  /**
    * Optional factual outcome/result line, shown on the card (under the
    * description) and on the detail page (as a `<dl>` entry). Only verifiable
    * facts already known about the project — never invented metrics.
@@ -114,6 +119,11 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: "fusily",
+    relatedPosts: [
+      "react-native-expo",
+      "tamagui-paper",
+      "i18n-django-react-native",
+    ],
     name: "Fusily",
     titleDescriptor: {
       fr: "Application mobile de repas",
@@ -156,6 +166,7 @@ export const projects: Project[] = [
   },
   {
     slug: "ma-garde-sereine",
+    relatedPosts: ["vercel-free-tier"],
     name: "Ma Garde Sereine",
     titleDescriptor: {
       fr: "Garde partagée à domicile",
@@ -197,6 +208,7 @@ export const projects: Project[] = [
   },
   {
     slug: "personal-website",
+    relatedPosts: ["blog-stack"],
     name: { fr: "Site personnel", en: "Personal website" },
     // Steer clear of "blog" here — the blog list and articles already own that
     // query; naming the stack keeps this a build/case-study, not a competitor.
@@ -241,6 +253,7 @@ export const projects: Project[] = [
   },
   {
     slug: "dotcraft",
+    relatedPosts: ["dotcraft"],
     name: "dotcraft",
     titleDescriptor: {
       fr: "Générateur de QR codes",
@@ -280,6 +293,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eva-biezunski-avocate",
+    relatedPosts: ["vercel-free-tier"],
     name: "Eva Biezunski Avocate",
     // Short descriptor: the name already carries "Avocate", and the full
     // three-part title must clear ~60 chars without clipping.
@@ -331,6 +345,7 @@ export const projects: Project[] = [
   },
   {
     slug: "re-source-et-moi",
+    relatedPosts: ["vercel-free-tier"],
     name: "Re-Source Et Moi",
     titleDescriptor: {
       fr: "Site associatif",

@@ -94,6 +94,20 @@ for (const path of ["/", "/en/"]) {
       path === "/" ? "/contact/" : "/en/contact/",
     );
   });
+
+  // Audit U5: the home teaser shows client work, not only own products.
+  test(`home (${path}): featured projects include both client sites`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+    const prefix = path.slice(0, -1); // "/" → "", "/en/" → "/en"
+    const section = page.locator("#projects");
+    for (const slug of ["eva-biezunski-avocate", "re-source-et-moi"]) {
+      await expect(
+        section.locator(`a[href="${prefix}/projects/${slug}/"]`),
+      ).toHaveCount(1);
+    }
+  });
 }
 
 test("projects can be filtered by platform", async ({ page }) => {
@@ -112,18 +126,31 @@ test("projects can be filtered by platform", async ({ page }) => {
   await expect(personalSite).toBeVisible();
 });
 
-// Audit U5: the home teaser shows client work, not only own products.
-for (const path of ["/", "/en/"]) {
-  test(`${path}: featured projects include both client sites`, async ({
-    page,
-  }) => {
-    await page.goto(path);
-    const prefix = path === "/" ? "" : "/en";
-    const section = page.locator("#projects");
-    for (const slug of ["eva-biezunski-avocate", "re-source-et-moi"]) {
-      await expect(
-        section.locator(`a[href="${prefix}/projects/${slug}/"]`),
-      ).toHaveCount(1);
-    }
-  });
-}
+// Audit U6: anchors land below the sticky header, not under it.
+test("an anchor target clears the sticky header", async ({ page }) => {
+  await page.goto("/services/#faq");
+  const headerBottom = await page
+    .locator("[data-header]")
+    .evaluate((el) => el.getBoundingClientRect().bottom);
+  await expect
+    .poll(() =>
+      page.locator("#faq").evaluate((el) => el.getBoundingClientRect().top),
+    )
+    .toBeGreaterThanOrEqual(headerBottom - 1);
+});
+
+// Audit U6: proximity snapping, so tall sections can be scrolled through.
+test("home snapping is proximity, with no forced stops", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.mouse.wheel(0, 200);
+  await expect(page.locator("html")).toHaveClass(/snap-armed/);
+  const snap = await page.evaluate(() => ({
+    type: getComputedStyle(document.documentElement).scrollSnapType,
+    stop: getComputedStyle(document.querySelector("main > section")!)
+      .scrollSnapStop,
+  }));
+  // `proximity` is the default strictness, so it serializes as plain "y".
+  expect(snap.type).toMatch(/^y( proximity)?$/);
+  expect(snap.stop).toBe("normal");
+});

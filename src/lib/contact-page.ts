@@ -88,7 +88,7 @@ export const form = {
   } satisfies Record<"name" | "email" | "message", L>,
   successTitle: { fr: "Message envoyé", en: "Message sent" },
   success: {
-    fr: "Merci ! Votre message est parti, vous avez une réponse sous 24 h.",
+    fr: "Merci ! Votre message a bien été envoyé, je vous réponds sous 24 h.",
     en: "Thanks! Your message is on its way — you’ll get a reply within 24 h.",
   },
   // Followed by a mailto link to SITE.email, pre-filled with the message.

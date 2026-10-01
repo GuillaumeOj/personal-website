@@ -193,16 +193,16 @@ export const projects: Project[] = [
       fr: {
         description:
           "Application web pour gérer la garde partagée à domicile de son enfant.",
-        aim: "Aider les familles à gérer le contrat de leur garde à domicile et à préparer leur déclaration pajemploi chaque mois, y compris en garde partagée entre deux familles.",
+        aim: "Aider les familles à gérer le contrat de leur garde à domicile et à préparer leur déclaration Pajemploi chaque mois, y compris en garde partagée entre deux familles.",
         longDescription:
-          "Ma Garde Sereine est une application web, actuellement en bêta, qui accompagne les familles employant une garde d’enfants à domicile — notamment en garde partagée entre deux familles. Elle permet de cadrer le contrat (taux net, planning hebdomadaire, congés payés, jours fériés) et de préparer sereinement la déclaration pajemploi chaque mois : les heures normales, majorées et les jours fériés sont suivis au fil du mois, puis répartis entre les familles pour que chacune déclare sa part. Conçue pour la garde à domicile relevant de la convention IDCC 3239, elle vise à alléger la charge administrative pour laisser plus de place à la relation avec la personne qui veille sur les enfants.",
+          "Ma Garde Sereine est une application web, actuellement en bêta, qui accompagne les familles employant une garde d’enfants à domicile — notamment en garde partagée entre deux familles. Elle permet de cadrer le contrat (taux net, planning hebdomadaire, congés payés, jours fériés) et de préparer sereinement la déclaration Pajemploi chaque mois : les heures normales, majorées et les jours fériés sont suivis au fil du mois, puis répartis entre les familles pour que chacune déclare sa part. Conçue pour la garde à domicile relevant de la convention IDCC 3239, elle vise à alléger la charge administrative pour laisser plus de place à la relation avec la personne qui veille sur les enfants.",
       },
       en: {
         description:
           "Web app to manage shared in-home childcare for your children.",
-        aim: "Help families manage their in-home nanny’s contract and prepare their monthly pajemploi declaration, including shared care between two families.",
+        aim: "Help families manage their in-home nanny’s contract and prepare their monthly Pajemploi declaration, including shared care between two families.",
         longDescription:
-          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It frames the contract (net rate, weekly schedule, paid leave, public holidays) and calmly prepares the monthly pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
+          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It frames the contract (net rate, weekly schedule, paid leave, public holidays) and calmly prepares the monthly Pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
       },
     },
   },
@@ -271,7 +271,7 @@ export const projects: Project[] = [
     },
     year: 2025,
     result: {
-      fr: "En production, 100% côté client, sans compte ni serveur.",
+      fr: "En production, 100 % côté client, sans compte ni serveur.",
       en: "In production, fully client-side, no account or server.",
     },
     content: {

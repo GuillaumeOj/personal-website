@@ -14,7 +14,7 @@ coverCredit:
 tags: []
 ---
 
-J'avais juste besoin d'un QR code. Stylé, propre, avec mon logo au centre. Une demande banale — sauf que la chercher m'a rappelé à quel point le web regorge d'outils auxquels on n'a pas vraiment envie de confier quoi que ce soit. De cette frustration est né [Dotcraft](https://dotcraft.fr), un éditeur de QR codes que j'ai construit de A à Z, en open source, en quelques heures. Voici comment, et surtout pourquoi.
+J'avais juste besoin d'un QR code. Stylé, propre, avec mon logo au centre. Une demande banale — sauf que le chercher m'a rappelé à quel point le web regorge d'outils auxquels on n'a pas vraiment envie de confier quoi que ce soit. De cette frustration est né [Dotcraft](https://dotcraft.fr), un éditeur de QR codes que j'ai construit de A à Z, en open source, en quelques heures. Voici comment, et surtout pourquoi.
 
 ## Le problème avec les générateurs de QR codes en ligne
 
@@ -54,7 +54,7 @@ La stack est volontairement légère : **Vite + React + TypeScript**, déployé 
 
 En réalité, la toute première version de Dotcraft n'avait rien d'une application web : c'était un simple script Python en ligne de commande. Développeur backend Python, c'était mon réflexe naturel — et techniquement, ça marchait très bien. Le problème, c'est qu'un QR code est avant tout un objet **visuel**. Ajuster une couleur, tester une forme de module, déplacer un logo de quelques pixels… tout cela en éditant des arguments puis en relançant la commande pour aller ouvrir l'image générée, c'est d'une lenteur frustrante. Aussi puissant soit-il, un CLI n'est pas le bon support pour itérer sur du design : on a besoin de voir le résultat changer en temps réel.
 
-C'est précisément ce qui a motivé le passage au web — et là, Claude Code a changé mon rapport au projet. Le front n'est pas mon terrain le plus naturel, et transformer ce script en véritable éditeur visuel aurait été un chantier que j'aurais sans doute repoussé indéfiniment. Pouvoir décrire ce que je voulais, itérer sur la géométrie des formes, déboguer un export SVG récalcitrant, le tout en conversation, m'a permis de rester concentré sur les décisions de produit plutôt que de m'enliser dans l'implémentation. Le passage du CLI Python à une vraie application web s'est fait en l'affaire d'un après-midi.
+C'est précisément ce qui a motivé le passage au web — et là, Claude Code a changé mon rapport au projet. Le front n'est pas mon terrain le plus naturel, et transformer ce script en véritable éditeur visuel aurait été un chantier que j'aurais sans doute repoussé indéfiniment. Pouvoir décrire ce que je voulais, itérer sur la géométrie des formes, déboguer un export SVG récalcitrant, le tout en conversation, m'a permis de rester concentré sur les décisions de produit plutôt que de m'enliser dans l'implémentation. Le passage du CLI Python à une vraie application web a été l'affaire d'un après-midi.
 
 ## Un projet open source de bout en bout
 

@@ -1,0 +1,4 @@
+Contact: mailto:contact@ojardias.me
+Expires: 2027-09-30T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://guillaume.ojardias.info/.well-known/security.txt

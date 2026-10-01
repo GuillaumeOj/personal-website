@@ -91,3 +91,15 @@ test("robots.txt advertises only the sitemap index", async ({ request }) => {
   // advertised.
   expect(body).not.toContain("sitemap-0.xml");
 });
+
+// Audit S9: a security.txt (RFC 9116) tells researchers where to report.
+test("security.txt is served with a contact and a future expiry", async ({
+  request,
+}) => {
+  const res = await request.get("/.well-known/security.txt");
+  expect(res.ok()).toBe(true);
+  const text = await res.text();
+  expect(text).toMatch(/^Contact: mailto:\S+@\S+$/m);
+  const expires = /^Expires: (.+)$/m.exec(text)?.[1];
+  expect(new Date(expires ?? "").getTime()).toBeGreaterThan(Date.now());
+});

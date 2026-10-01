@@ -1,17 +1,19 @@
 ---
+import { LEGAL_ADDRESS } from 'astro:env/server';
 import LegalDocument from '../../components/legal/LegalDocument.astro';
 import { t } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { privacyPolicy } from '../../lib/legal';
 
 const locale = 'en' as const;
+const doc = privacyPolicy(locale, { address: LEGAL_ADDRESS });
 ---
 
 <BaseLayout
   locale={locale}
   title={t(locale, 'footer.privacy')}
-  description={privacyPolicy[locale].metaDescription}
+  description={doc.metaDescription}
   noindex
 >
-  <LegalDocument doc={privacyPolicy[locale]} />
+  <LegalDocument doc={doc} />
 </BaseLayout>

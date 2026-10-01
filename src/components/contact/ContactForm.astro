@@ -1,12 +1,13 @@
 ---
 import type { Locale } from '../../config';
-import { localizedPath } from '../../i18n/ui';
+import { ensureTrailingSlash, localizedPath } from '../../i18n/ui';
 import {
   type ContactMode,
   contactModes,
   form as f,
   qualifying as q,
 } from '../../lib/contact-page';
+import { GDPR_EMAIL } from '../../lib/legal';
 
 interface Props {
   locale: Locale;
@@ -131,15 +132,19 @@ const optionalHint = 'normal-case tracking-normal text-muted/80';
     <p class="text-sm text-muted" data-contact-status role="status" aria-live="polite"></p>
   </div>
 
-  {/* Compliance: a consent line with a link to the privacy policy, right at
-      the point of submission. */}
+  {/* GDPR art. 13 information notice at the point of submission, linking
+      the GDPR address and the privacy policy. Not a consent request. */}
   <p class="text-xs leading-relaxed text-muted">
-    {f.consent[locale]}
+    {f.privacyNotice[locale]}{' '}
+    {f.privacyNoticeRights[locale]}
+    <a href={`mailto:${GDPR_EMAIL}`} class="text-accent-ink no-underline hover:underline">
+      {GDPR_EMAIL}
+    </a>. {f.privacyNoticeMore[locale]}
     <a
-      href={localizedPath(locale, '/privacy-policy')}
+      href={ensureTrailingSlash(localizedPath(locale, '/privacy-policy'))}
       class="text-accent-ink no-underline hover:underline"
     >
-      {f.consentLink[locale]}
+      {f.privacyNoticeLink[locale]}
     </a>.
   </p>
 </form>

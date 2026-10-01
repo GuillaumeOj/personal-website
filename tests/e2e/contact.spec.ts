@@ -1,15 +1,15 @@
 import { expect, type Page, test } from "@playwright/test";
 
 // The contact form lives only on /contact and /contact/quote (plus their /en
-// mirrors); every other page links there. T3 — a privacy/consent line sits at
-// the point of submission, with the trailing fragment linking to the privacy
-// policy.
+// mirrors); every other page links there. T3 — a GDPR information notice (not a
+// consent request) sits at the point of submission, naming the controller and
+// linking the GDPR address and the privacy policy.
 
 const LOCALES = [
   {
     path: "/contact/",
     quotePath: "/contact/quote/",
-    copy: "vous acceptez que vos informations",
+    copy: "traitées par Guillaume Ojardias EI",
     linkName: "politique de confidentialité",
     privacyHref: /^\/privacy-policy\/?$/,
     estimate: "Demander une estimation gratuite",
@@ -18,7 +18,7 @@ const LOCALES = [
   {
     path: "/en/contact/",
     quotePath: "/en/contact/quote/",
-    copy: "you agree that your information",
+    copy: "processed by Guillaume Ojardias EI",
     linkName: "privacy policy",
     privacyHref: /^\/en\/privacy-policy\/?$/,
     estimate: "Request a free estimate",
@@ -28,7 +28,7 @@ const LOCALES = [
 
 for (const l of LOCALES) {
   for (const path of [l.path, l.quotePath]) {
-    test(`contact (${path}): form with consent copy + privacy-policy link`, async ({
+    test(`contact (${path}): form with privacy notice + GDPR and privacy-policy links`, async ({
       page,
     }) => {
       await page.goto(path);
@@ -38,6 +38,9 @@ for (const l of LOCALES) {
       const link = form.getByRole("link", { name: l.linkName });
       await expect(link).toBeVisible();
       await expect(link).toHaveAttribute("href", l.privacyHref);
+      await expect(
+        form.getByRole("link", { name: "gdpr@ojardias.me" }),
+      ).toHaveAttribute("href", "mailto:gdpr@ojardias.me");
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     });
   }

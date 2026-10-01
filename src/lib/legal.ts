@@ -155,93 +155,187 @@ export function legalNotice(locale: Locale, contact: LegalContact): LegalDoc {
   };
 }
 
-export const privacyPolicy: Record<Locale, LegalDoc> = {
-  fr: {
-    title: "Politique de confidentialité",
-    metaDescription:
-      "Politique de confidentialité du site de Guillaume Ojardias : quelles données le formulaire de contact collecte, leur usage, leur conservation et vos droits RGPD.",
-    updated: "Dernière mise à jour : 29 septembre 2026",
-    sections: [
-      {
-        h: "Introduction",
-        body: [
-          "Cette politique explique quelles données personnelles sont collectées sur ce site et comment elles sont utilisées.",
-        ],
-      },
-      {
-        h: "Données collectées",
-        body: [
-          "Le formulaire de contact recueille votre nom, votre adresse e-mail, le type de projet et votre message, ainsi que, si vous les renseignez lors d’une demande de devis, votre budget et votre délai envisagés. Ces informations servent uniquement à répondre à votre demande.",
-        ],
-      },
-      {
-        h: "Finalité et base légale",
-        body: [
-          "Vos données sont traitées dans le seul but de répondre à votre demande, sur la base de votre consentement.",
-        ],
-      },
-      {
-        h: "Durée de conservation",
-        body: [
-          "Vos messages sont conservés le temps nécessaire au traitement de votre demande, puis supprimés.",
-        ],
-      },
-      {
-        h: "Cookies et mesure d’audience",
-        body: [
-          "Ce site n’utilise pas de cookies de suivi ni d’outil de mesure d’audience.",
-        ],
-      },
-      {
-        h: "Vos droits",
-        body: [
-          "Conformément au RGPD, vous disposez d’un droit d’accès, de rectification et de suppression de vos données. Pour l’exercer, contactez : gdpr@ojardias.me.",
-        ],
-      },
-    ],
-  },
-  en: {
+/** Address for exercising GDPR rights (privacy policy + form notice). */
+export const GDPR_EMAIL = "gdpr@ojardias.me";
+
+/**
+ * Privacy policy: the GDPR art. 13 information for the contact form and the
+ * host's technical logs. The controller's postal address is the same
+ * env-provided value as on the legal notice.
+ */
+export function privacyPolicy(
+  locale: Locale,
+  contact: Pick<LegalContact, "address">,
+): LegalDoc {
+  const legalNoticeHref = ensureTrailingSlash(
+    localizedPath(locale, "/legal-notice"),
+  );
+  const gdprLink = mail(GDPR_EMAIL);
+  const cnilLink = link("www.cnil.fr", "https://www.cnil.fr");
+
+  if (locale === "fr") {
+    const missing = "[non renseigné]";
+    return {
+      title: "Politique de confidentialité",
+      metaDescription:
+        "Politique de confidentialité du site de Guillaume Ojardias : responsable du traitement, données du formulaire de contact, bases légales, destinataires, durées de conservation et droits RGPD.",
+      updated: "Dernière mise à jour : 1er octobre 2026",
+      sections: [
+        {
+          h: "Responsable du traitement",
+          body: [
+            [
+              `Guillaume Ojardias, entrepreneur individuel (EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+              gdprLink,
+              ". Voir aussi les ",
+              link("mentions légales", legalNoticeHref),
+              ".",
+            ],
+          ],
+        },
+        {
+          h: "Données collectées et finalités",
+          body: [
+            "Formulaire de contact : nom, adresse e-mail, type de projet, message et, si vous les indiquez lors d’une demande de devis, budget et délai envisagés. Finalité : répondre à votre demande et, le cas échéant, établir un devis. Base légale : mesures précontractuelles prises à votre demande (art. 6.1.b du RGPD) et intérêt légitime à répondre aux messages reçus (art. 6.1.f). Le nom, l’e-mail et le message sont nécessaires pour vous répondre ; sans eux, la demande ne peut pas être traitée.",
+            "Journaux techniques : lors de chaque visite, l’hébergeur enregistre des données techniques (adresse IP, date, page demandée, navigateur) pour assurer la sécurité et le bon fonctionnement du site. Base légale : intérêt légitime (art. 6.1.f).",
+            "Vos données ne sont ni vendues, ni cédées, ni utilisées à des fins de prospection.",
+          ],
+        },
+        {
+          h: "Destinataires",
+          body: [
+            "Vos données sont destinées à Guillaume Ojardias uniquement. Elles transitent par les sous-traitants suivants :",
+            "Vercel Inc. (États-Unis) : hébergement du site et exécution du formulaire, dans la région de Paris ;",
+            "Brevo / Sendinblue SAS (France) : acheminement de l’e-mail de notification ;",
+            "Proton AG (Suisse) : messagerie de réception.",
+          ],
+        },
+        {
+          h: "Transferts hors Union européenne",
+          body: [
+            "Le formulaire est exécuté dans la région de Paris, mais Vercel Inc. est une société américaine. Elle est certifiée au titre du cadre de protection des données UE–États-Unis (Data Privacy Framework, décision d’adéquation de la Commission européenne du 10 juillet 2023) ; son accord de traitement prévoit en outre les clauses contractuelles types de la Commission européenne.",
+            "La Suisse bénéficie d’une décision d’adéquation de la Commission européenne.",
+          ],
+        },
+        {
+          h: "Durées de conservation",
+          body: [
+            "Demandes de contact sans suite : 3 ans à compter du dernier échange, puis suppression.",
+            "Si une prestation est conclue : durée de la relation, puis 5 ans (prescription) ; les factures sont conservées 10 ans (art. L.123-22 du Code de commerce).",
+            "Journaux techniques : durée courte fixée par la politique de l’hébergeur, puis suppression automatique.",
+          ],
+        },
+        {
+          h: "Cookies et stockage local",
+          body: [
+            "Ce site ne dépose aucun cookie et n’utilise aucun outil de mesure d’audience ni de publicité.",
+            "Seule votre préférence d’affichage (thème clair ou sombre), si vous la choisissez, est enregistrée dans le stockage local de votre navigateur ; elle n’est jamais transmise et vous pouvez l’effacer à tout moment via les réglages de votre navigateur. Ce stockage, strictement nécessaire à la fonctionnalité demandée, est exempté de consentement (art. 82 de la loi Informatique et Libertés).",
+          ],
+        },
+        {
+          h: "Vos droits",
+          body: [
+            [
+              "Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation, d’opposition et, le cas échéant, de portabilité de vos données, ainsi que du droit de définir des directives relatives à leur sort après votre décès. Pour les exercer : ",
+              gdprLink,
+              ". Une réponse vous est apportée dans un délai d’un mois.",
+            ],
+            [
+              "Si vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (",
+              cnilLink,
+              ", 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07).",
+            ],
+          ],
+        },
+        {
+          h: "Délégué à la protection des données",
+          body: [
+            "Aucun délégué à la protection des données n’a été désigné, cette désignation n’étant pas obligatoire (art. 37 du RGPD).",
+          ],
+        },
+      ],
+    };
+  }
+
+  const missing = "[not provided]";
+  return {
     title: "Privacy policy",
     metaDescription:
-      "Privacy policy for Guillaume Ojardias's website: what data the contact form collects, how it is used and retained, and your GDPR rights.",
-    updated: "Last updated: September 29, 2026",
+      "Privacy policy for Guillaume Ojardias's website: data controller, contact-form data, legal bases, recipients, retention periods and your GDPR rights.",
+    updated: "Last updated: October 1, 2026",
     sections: [
       {
-        h: "Introduction",
+        h: "Data controller",
         body: [
-          "This policy explains what personal data is collected on this site and how it is used.",
+          [
+            `Guillaume Ojardias, sole trader (entrepreneur individuel, EI), ${contact.address ?? missing}, SIREN 993 870 955 — `,
+            gdprLink,
+            ". See also the ",
+            link("legal notice", legalNoticeHref),
+            ".",
+          ],
         ],
       },
       {
-        h: "Data collected",
+        h: "Data collected and purposes",
         body: [
-          "The contact form collects your name, email address, project type and message, plus, if you provide them with a quote request, your estimated budget and timeline. This information is used solely to respond to your request.",
+          "Contact form: name, email address, project type, message and, if you provide them with a quote request, estimated budget and timeline. Purpose: to answer your request and, where relevant, prepare a quote. Legal basis: steps taken at your request prior to entering into a contract (GDPR art. 6.1.b) and legitimate interest in answering the messages received (art. 6.1.f). Your name, email and message are needed to reply; without them, the request cannot be handled.",
+          "Technical logs: on each visit, the host records technical data (IP address, date, requested page, browser) to keep the site secure and working. Legal basis: legitimate interest (art. 6.1.f).",
+          "Your data is never sold, shared or used for marketing.",
         ],
       },
       {
-        h: "Purpose and legal basis",
+        h: "Recipients",
         body: [
-          "Your data is processed for the sole purpose of responding to your request, on the basis of your consent.",
+          "Your data is intended for Guillaume Ojardias only. It passes through the following processors:",
+          "Vercel Inc. (United States): site hosting and running the form, in the Paris region;",
+          "Brevo / Sendinblue SAS (France): delivery of the notification email;",
+          "Proton AG (Switzerland): receiving mailbox.",
         ],
       },
       {
-        h: "Retention period",
+        h: "Transfers outside the European Union",
         body: [
-          "Your messages are kept for as long as needed to handle your request, then deleted.",
+          "The form runs in the Paris region, but Vercel Inc. is a US company. It is certified under the EU–US Data Privacy Framework (European Commission adequacy decision of 10 July 2023), and its data processing agreement also includes the European Commission’s standard contractual clauses.",
+          "Switzerland benefits from a European Commission adequacy decision.",
         ],
       },
       {
-        h: "Cookies and analytics",
+        h: "Retention periods",
         body: [
-          "This site does not use tracking cookies or any analytics tool.",
+          "Contact requests that lead nowhere: 3 years from the last exchange, then deleted.",
+          "If a contract is concluded: the length of the relationship, then 5 years (limitation period); invoices are kept for 10 years (article L.123-22 of the French Commercial Code).",
+          "Technical logs: a short period set by the host’s policy, then deleted automatically.",
+        ],
+      },
+      {
+        h: "Cookies and local storage",
+        body: [
+          "This site sets no cookies and uses no analytics or advertising tools.",
+          "Only your display preference (light or dark theme), if you choose one, is saved in your browser’s local storage; it is never transmitted and you can clear it at any time in your browser settings. This storage is strictly necessary for the feature you requested, so it is exempt from consent (article 82 of the French Data Protection Act).",
         ],
       },
       {
         h: "Your rights",
         body: [
-          "Under the GDPR, you have the right to access, rectify and erase your data. To exercise it, contact: gdpr@ojardias.me.",
+          [
+            "You have the right to access, rectify, erase, restrict and object to the processing of your data, the right to data portability where applicable, and the right to set instructions for what happens to your data after your death. To exercise them: ",
+            gdprLink,
+            ". You will receive an answer within one month.",
+          ],
+          [
+            "If, after contacting us, you believe your rights are not being respected, you can lodge a complaint with the CNIL, the French data protection authority (",
+            cnilLink,
+            ", 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07, France).",
+          ],
+        ],
+      },
+      {
+        h: "Data protection officer",
+        body: [
+          "No data protection officer has been appointed, as this is not mandatory (GDPR art. 37).",
         ],
       },
     ],
-  },
-};
+  };
+}

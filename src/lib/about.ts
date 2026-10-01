@@ -4,6 +4,7 @@ import {
   localizedPath,
   localizedUrl,
   projectPath,
+  t,
 } from "../i18n/ui";
 import {
   breadcrumbList,
@@ -194,7 +195,7 @@ const frDoc = (): AboutDoc => {
     cta: {
       h: "Un projet web ou mobile en tête ?",
       lead: "Que vous ayez une idée précise ou juste une intuition à creuser, la première étape est toujours la même : un échange gratuit et sans engagement pour comprendre ce dont vous avez besoin. Réponse généralement sous 24 h ouvrées.",
-      linkLabel: "Discutons de votre projet",
+      linkLabel: t("fr", "cta.talk"),
       href: contactPath("fr"),
     },
   };
@@ -317,7 +318,7 @@ const enDoc = (): AboutDoc => {
     cta: {
       h: "Have a web or mobile project in mind?",
       lead: "Whether you have a clear idea or just a hunch to explore, the first step is always the same: a free, no-obligation conversation to understand what you need. I’ll usually get back to you within one business day.",
-      linkLabel: "Let’s talk about your project",
+      linkLabel: t("en", "cta.talk"),
       href: contactPath("en"),
     },
   };

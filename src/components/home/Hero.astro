@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../../config';
 import { hero, heroCredibility } from '../../lib/home';
-import { contactPath, localizedPath } from '../../i18n/ui';
+import { contactPath, localizedPath, t } from '../../i18n/ui';
 import Icon from '../Icon.astro';
 
 interface Props {
@@ -50,7 +50,7 @@ const defaultSentence = `${lead} ${phrases[0]}`;
       <p class="text-sm text-muted" data-hero-credibility>{heroCredibility[locale]}</p>
 
       <div class="flex flex-wrap gap-3 pt-1">
-        <a href={contactPath(locale)} class="btn btn-primary">{hero.ctaPrimary[locale]}</a>
+        <a href={contactPath(locale)} class="btn btn-primary">{t(locale, 'cta.talk')}</a>
         <a href={projectsHref} class="btn btn-secondary">
           {hero.ctaSecondary[locale]}
           <Icon name="arrow-right" size={15} />

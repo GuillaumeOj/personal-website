@@ -3,7 +3,6 @@ import ArticleCard from '@/components/ArticleCard.astro';
 import { type Locale, SITE } from '@/config';
 import { contactPath, localizedPath, t } from '@/i18n/ui';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { hero } from '@/lib/home';
 import { getPostsForLocale } from '@/lib/posts';
 
 // One 404.html serves every missing URL, in both locales. It renders in
@@ -52,7 +51,7 @@ const en = {
             </p>
             <p class="flex flex-wrap items-center justify-center gap-3 pt-2">
               <a href={contactPath(locale)} class="btn btn-primary">
-                {hero.ctaPrimary[locale]}
+                {t(locale, 'cta.talk')}
               </a>
               <a href={localizedPath(locale, '/services')} class="btn btn-secondary">
                 {t(locale, 'error.services')}

@@ -57,7 +57,6 @@ export const hero = {
     fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin. Basé à Lyon, je travaille avec des entreprises et associations de la métropole lyonnaise et, à distance, de toute la France.",
     en: "From the first screen to production: design, development, database, APIs and deployment. You get a clear process, full ownership, and one person to talk to from start to finish. Based in Lyon, I work with businesses and non-profits across the Lyon area and, remotely, all over France.",
   },
-  cta: { fr: "Discutons de votre projet", en: "Let’s talk about your project" },
   reassurance: {
     fr: "Réponse généralement sous 24 h ouvrées · Devis gratuit",
     en: "Usually a reply within one business day · Free quote",

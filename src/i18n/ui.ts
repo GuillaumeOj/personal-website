@@ -1,5 +1,4 @@
-import { type Locale, SITE } from "../config";
-import { hero } from "../lib/home";
+import { LOCALE_TAG, type Locale, SITE } from "../config";
 
 const dictionaries = {
   fr: {
@@ -53,7 +52,7 @@ const dictionaries = {
     "blog.cta.heading": "Un projet web ou mobile en tête ?",
     "blog.cta.lead":
       "Décrivez votre idée en quelques mots : je vous réponds généralement sous 24 h ouvrées, devis gratuit et sans engagement.",
-    "blog.cta.primary": "Discutons de votre projet",
+    "cta.talk": "Discutons de votre projet",
     "blog.cta.secondary": "Voir les prestations",
     "blog.related": "À lire aussi",
     "blog.latest": "Derniers articles",
@@ -63,11 +62,9 @@ const dictionaries = {
     "projects.subtitle":
       "Des applications web et mobiles conçues et livrées de bout en bout, en freelance à Lyon, pour des PME, des associations et des porteurs de projet.",
     "projects.similarCta.title": "Un projet similaire en tête ? Discutons-en.",
-    "projects.similarCta.primary": "Discutons de votre projet",
     "projects.similarCta.secondary": "Voir les prestations",
     "projects.listCta.title":
       "Votre projet peut être le prochain — parlons-en.",
-    "projects.listCta.link": "Discutons de votre projet",
     "projects.empty": "Aucun projet pour le moment.",
     "projects.filter.all": "Tous",
     "projects.filter.web": "Web",
@@ -150,7 +147,7 @@ const dictionaries = {
     "blog.cta.heading": "A web or mobile project in mind?",
     "blog.cta.lead":
       "Tell me about your idea in a few words: I usually reply within one business day. Free quote, no commitment.",
-    "blog.cta.primary": "Let’s talk about your project",
+    "cta.talk": "Let’s talk about your project",
     "blog.cta.secondary": "See all services",
     "blog.related": "Keep reading",
     "blog.latest": "Latest articles",
@@ -160,10 +157,8 @@ const dictionaries = {
     "projects.subtitle":
       "Web and mobile apps designed and delivered end to end, freelance from Lyon, for SMEs, non-profits and project owners.",
     "projects.similarCta.title": "A similar project in mind? Let’s talk.",
-    "projects.similarCta.primary": "Let’s talk about your project",
     "projects.similarCta.secondary": "See all services",
     "projects.listCta.title": "Your project could be next — let’s talk.",
-    "projects.listCta.link": "Let’s talk about your project",
     "projects.empty": "No projects yet.",
     "projects.filter.all": "All",
     "projects.filter.web": "Web",
@@ -215,7 +210,7 @@ export const t = (locale: Locale, key: TranslationKey): string => {
 };
 
 export const formatDate = (date: Date, locale: Locale): string =>
-  date.toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
+  date.toLocaleDateString(LOCALE_TAG[locale], {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -272,7 +267,7 @@ export interface NavItem {
 
 /**
  * Primary navigation, shared by Header and Footer. Top-level pages plus a
- * contact CTA (reusing the hero CTA copy so the nav stays in sync).
+ * contact CTA (the shared `cta.talk` copy).
  */
 export const navItems = (locale: Locale): NavItem[] => {
   const home = localizedPath(locale, "/");
@@ -290,7 +285,7 @@ export const navItems = (locale: Locale): NavItem[] => {
     { href: localizedPath(locale, "/blog"), label: t(locale, "nav.blog") },
     {
       href: contactPath(locale),
-      label: hero.ctaPrimary[locale],
+      label: t(locale, "cta.talk"),
       cta: true,
     },
   ];

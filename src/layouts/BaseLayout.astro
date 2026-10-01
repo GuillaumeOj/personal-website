@@ -6,10 +6,10 @@ import '@/styles/global.css';
 import bricolage600 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-600-normal.woff2?url';
 import bricolage700 from '@fontsource/bricolage-grotesque/files/bricolage-grotesque-latin-700-normal.woff2?url';
 import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
-import { SITE, type Locale } from '@/config';
+import { LOCALE_TAG, SITE, type Locale } from '@/config';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
-import { absoluteUrl, localizedPath, t } from '@/i18n/ui';
+import { absoluteUrl, localizedPath, otherLocale, t } from '@/i18n/ui';
 import { type Alternates, prefixAlternates } from '@/lib/alternates';
 import { portraitAlt } from '@/lib/about';
 import { defaultSocialImage } from '@/lib/og';
@@ -91,6 +91,8 @@ const {
   rawTitle = false,
   errorPage = false,
 } = Astro.props;
+// `og:locale` wants an underscore: fr_FR.
+const ogLocale = (l: Locale) => LOCALE_TAG[l].replace('-', '_');
 const frURL = absoluteUrl(alternates.fr);
 const enURL = absoluteUrl(alternates.en);
 const mainClass =
@@ -198,7 +200,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
           <meta property="og:description" content={description} />
           <meta property="og:url" content={canonicalURL} />
           <meta property="og:image:alt" content={socialImageAlt} />
-          <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
+          <meta property="og:locale" content={ogLocale(locale)} />
           <meta name="twitter:title" content={socialTitle} />
           <meta name="twitter:description" content={description} />
           <meta name="twitter:image:alt" content={socialImageAlt} />
@@ -209,7 +211,7 @@ const socialImageAlt = ogImageAlt ?? portraitAlt[locale];
       hreflang && (
         <meta
           property="og:locale:alternate"
-          content={locale === 'fr' ? 'en_US' : 'fr_FR'}
+          content={ogLocale(otherLocale(locale))}
         />
       )
     }

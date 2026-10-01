@@ -1,4 +1,4 @@
-import { type Locale, SITE } from "../config";
+import { LOCALE_TAG, type Locale, SITE } from "../config";
 import {
   ensureTrailingSlash,
   localizedUrl,
@@ -22,8 +22,7 @@ export const BUSINESS_ID = `${SITE.url}/#business`;
 export const WEBSITE_ID = `${SITE.url}/#website`;
 
 /** schema.org `inLanguage` (IETF BCP 47) for a locale. */
-export const inLanguage = (locale: Locale): string =>
-  locale === "fr" ? "fr-FR" : "en-US";
+export const inLanguage = (locale: Locale): string => LOCALE_TAG[locale];
 
 /** Job title — the Person's role (never one of the business's offers). */
 export const jobTitle: Record<Locale, string> = {

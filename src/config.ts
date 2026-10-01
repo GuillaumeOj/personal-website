@@ -26,5 +26,11 @@ export type Locale = (typeof SITE.locales)[number];
 /** A string in every locale. */
 export type Localized = Record<Locale, string>;
 
+/** BCP 47 tag per locale: JSON-LD `inLanguage`, date formatting, `og:locale`. */
+export const LOCALE_TAG: Record<Locale, string> = {
+  fr: "fr-FR",
+  en: "en-US",
+};
+
 export const isLocale = (value: string): value is Locale =>
   (SITE.locales as readonly string[]).includes(value);

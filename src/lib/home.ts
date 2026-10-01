@@ -29,10 +29,6 @@ export const hero = {
     fr: "Pour les PME, associations et porteurs de projet, à Lyon et partout en France.",
     en: "For SMEs, non-profits and project owners, in Lyon and across France.",
   },
-  ctaPrimary: {
-    fr: "Discutons de votre projet",
-    en: "Let’s talk about your project",
-  },
   ctaSecondary: { fr: "Voir des réalisations", en: "See recent work" },
   // Kinetic closing line: "<lead> <rotating word>". The rotating word types
   // in, holds, deletes and swaps on a calm loop (see Hero.astro). Index 0 is

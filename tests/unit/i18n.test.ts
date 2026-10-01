@@ -20,7 +20,6 @@ describe("blog CTA translations", () => {
     "blog.cta.bio",
     "blog.cta.heading",
     "blog.cta.lead",
-    "blog.cta.primary",
     "blog.cta.secondary",
   ] as const;
 

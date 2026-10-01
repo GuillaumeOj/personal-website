@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../config';
-import { projectPath, quotePath } from '../../i18n/ui';
+import { projectPath, quotePath, t } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -55,7 +55,7 @@ const linkClass =
       </h1>
       <p class="text-lg leading-relaxed text-muted">{hero.subtitle[locale]}</p>
       <div class="flex flex-wrap gap-3 pt-1">
-        <a href={quoteHref} class="btn btn-primary">{hero.cta[locale]}</a>
+        <a href={quoteHref} class="btn btn-primary">{t(locale, 'cta.talk')}</a>
         <a href="#mobile" class="btn btn-secondary">
           {hero.anchorMobile[locale]}
           <Icon name="arrow-right" size={15} />

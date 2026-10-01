@@ -1,6 +1,5 @@
 ---
 import PostList from '@/components/PostList.astro';
-import { t } from '@/i18n/ui';
 import HubLayout from '@/layouts/HubLayout.astro';
 import { getPostsForLocale } from '@/lib/posts';
 
@@ -8,16 +7,6 @@ const locale = 'en' as const;
 const posts = await getPostsForLocale(locale);
 ---
 
-<HubLayout
-  locale={locale}
-  path="/blog"
-  navKey="nav.blog"
-  metaTitle={t(locale, 'meta.blogTitle')}
-  metaDescription={t(locale, 'meta.blogDescription')}
-  heading={t(locale, 'blog.title')}
-  subtitle={t(locale, 'blog.subtitle')}
->
-  <div class="mt-10">
-    <PostList posts={posts} locale={locale} />
-  </div>
+<HubLayout locale={locale} section="blog">
+  <PostList posts={posts} locale={locale} />
 </HubLayout>

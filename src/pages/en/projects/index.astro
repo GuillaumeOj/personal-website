@@ -8,20 +8,10 @@ const locale = 'en' as const;
 const projects = getProjects();
 ---
 
-<HubLayout
-  locale={locale}
-  path="/projects"
-  navKey="nav.projects"
-  metaTitle={t(locale, 'meta.projectsTitle')}
-  metaDescription={t(locale, 'meta.projectsDescription')}
-  heading={t(locale, 'projects.title')}
-  subtitle={t(locale, 'projects.subtitle')}
->
-  <div class="mt-10">
-    <ProjectsExplorer projects={projects} locale={locale} />
-  </div>
+<HubLayout locale={locale} section="projects">
+  <ProjectsExplorer projects={projects} locale={locale} />
 
-  <section class="mt-16 border-t border-line pt-10 text-center">
+  <section slot="after" class="mt-16 border-t border-line pt-10 text-center">
     <p class="text-lg text-ink-strong">{t(locale, 'projects.listCta.title')}</p>
     <a href={contactPath(locale)} class="btn btn-primary mt-5">
       {t(locale, 'cta.talk')}

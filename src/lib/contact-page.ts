@@ -1,11 +1,5 @@
 import type { Locale, Localized } from "../config";
-import {
-  absoluteUrl,
-  contactPath,
-  quotePath,
-  type TranslationKey,
-  t,
-} from "../i18n/ui";
+import type { TranslationKey } from "../i18n/ui";
 import {
   type Budget,
   type ContactOutcome,
@@ -129,7 +123,8 @@ export const quoteCrossLink = {
 };
 
 interface ContactModeConfig {
-  path: (locale: Locale) => string;
+  /** Unlocalized page path (see `localizedPath`). */
+  path: string;
   /** Breadcrumb label for this page. */
   crumb: TranslationKey;
   /**
@@ -155,7 +150,7 @@ interface ContactModeConfig {
  */
 export const contactModes: Record<ContactMode, ContactModeConfig> = {
   general: {
-    path: contactPath,
+    path: "/contact",
     crumb: "nav.contact",
     meta: {
       title: { fr: "Contact", en: "Contact" },
@@ -178,7 +173,7 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
   // Linked from the services page. Owns the "devis" query cluster, leaving
   // /contact the generic one.
   quote: {
-    path: quotePath,
+    path: "/contact/quote",
     crumb: "nav.quote",
     meta: {
       title: { fr: "Demande de devis gratuit", en: "Request a Free Quote" },
@@ -209,20 +204,14 @@ export const contactModes: Record<ContactMode, ContactModeConfig> = {
  * The last crumb is the current page.
  */
 export const contactCrumbs = (locale: Locale, mode: ContactMode): Crumb[] => {
-  const crumb = (key: TranslationKey, path: string): Crumb => ({
-    name: t(locale, key),
-    url: absoluteUrl(path),
-  });
-  const { general } = contactModes;
-  const crumbs = [
-    ...navTrail(locale),
-    crumb(general.crumb, general.path(locale)),
-  ];
-  if (mode !== "general") {
-    const cfg = contactModes[mode];
-    crumbs.push(crumb(cfg.crumb, cfg.path(locale)));
-  }
-  return crumbs;
+  const pages: ContactMode[] = mode === "general" ? [mode] : ["general", mode];
+  return navTrail(
+    locale,
+    ...pages.map((m): [TranslationKey, string] => [
+      contactModes[m].crumb,
+      contactModes[m].path,
+    ]),
+  );
 };
 
 /**

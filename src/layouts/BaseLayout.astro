@@ -49,7 +49,10 @@ interface Props {
   container?: 'prose' | 'full';
   /** Enables full-height scroll-snap between sections (the home landing). */
   snap?: boolean;
-  /** Emit reciprocal fr/en + x-default hreflang alternates. */
+  /**
+   * Emit reciprocal fr/en + x-default hreflang alternates. Defaults to every
+   * indexable page; blog posts pass whether they have a translated sibling.
+   */
   hreflang?: boolean;
   /**
    * Site path of this page in each locale, for the hreflang links and the
@@ -86,11 +89,12 @@ const {
   jsonLd,
   container = 'prose',
   snap = false,
-  hreflang = false,
+  hreflang: hreflangProp,
   alternates = prefixAlternates(locale, Astro.url.pathname),
   rawTitle = false,
   errorPage = false,
 } = Astro.props;
+const hreflang = hreflangProp ?? (!noindex && !errorPage);
 // `og:locale` wants an underscore: fr_FR.
 const ogLocale = (l: Locale) => LOCALE_TAG[l].replace('-', '_');
 const frURL = absoluteUrl(alternates.fr);

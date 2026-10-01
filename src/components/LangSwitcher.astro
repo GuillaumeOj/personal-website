@@ -23,7 +23,7 @@ const options = LOCALES.map(({ code, label }) => ({
   code,
   label,
   // The current locale links to this very page, marked aria-current.
-  href: code === locale ? Astro.url.pathname : alternates[code],
+  href: alternates[code],
 }));
 ---
 

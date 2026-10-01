@@ -202,7 +202,7 @@ const enDoc = (): AboutDoc => {
     eyebrow: "Introduction",
     title: "About Guillaume Ojardias, web & mobile developer in Lyon",
     intro: [
-      "Hi, I’m Guillaume Ojardias, a freelance web and mobile developer based in Lyon. In the Lyon area, I’m happy to come to your offices to talk things through in person; anywhere else in France, I work remotely. I help SMEs and non-profits bring their web & mobile projects to life: showcase websites, online booking, business applications, or consumer mobile apps.",
+      "Hi, I’m Guillaume Ojardias, a freelance web and mobile developer based in Lyon. In the Lyon area, I’m happy to come to your offices to talk things through in person; anywhere else in France, I work remotely. I help SMEs and non-profits bring their web & mobile projects to life: business websites, online booking, business applications, or consumer mobile apps.",
     ],
     sections: [
       {
@@ -221,7 +221,7 @@ const enDoc = (): AboutDoc => {
           ),
           p(
             s(
-              "What this means for you: your project, however modest, is built to the same standards of quality, performance and rigor as a platform running at massive scale. You get the benefit of that exacting standard without the overhead that usually comes with it.",
+              "What this means for you: your project, however small, is built to the same standards of quality, performance and rigor as a platform running at massive scale. You get the benefit of that exacting standard without the overhead that usually comes with it.",
             ),
           ),
         ],

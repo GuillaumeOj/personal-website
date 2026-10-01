@@ -34,7 +34,7 @@ Silence. They had "just asked Gemini to connect to such-and-such endpoint." The 
 
 See what I did there? :)
 
-Second case: a professional who wants to rebuild the marketing website for their business. The old one is ten years old, falling apart, out of date, barely anything still works. A textbook case. They get in touch so we can discuss what I could offer.
+Second case: a professional who wants to rebuild the business website for their company. The old one is ten years old, falling apart, out of date, barely anything still works. A textbook case. They get in touch so we can discuss what I could offer.
 
 The first meeting falls through: it gets cancelled at the last minute — something urgent came up at work. Fair enough; nothing about the website is urgent, the business comes first. A few days later, they ask me for a ballpark price — which I made the mistake of giving. Then the verdict drops: "We're going to find something cheaper." Translation: "We'll do it ourselves with Claude Code."
 
@@ -48,7 +48,7 @@ Out of curiosity, I check the result some time later. At first glance, it's clea
 - not a single basic rule applied to help with search-engine ranking (SEO);
 - and a few other slip-ups I'll spare you.
 
-And that's where it hurts. Taken one by one, these mistakes look minor. Stacked together, they sink the site's SEO: a load time that's too long, a page structure a search engine can't read, a broken mobile display, no basic optimization at all — these are exactly the criteria Google uses to decide whether to show you or bury you. The result: a site that's practically impossible to find. And a marketing website nobody can find is a website that serves no purpose. I should say I'm very far from being an SEO expert — and that's precisely what makes the point land: if even I spot these flaws at first glance, the algorithm certainly won't forgive them.
+And that's where it hurts. Taken one by one, these mistakes look minor. Stacked together, they sink the site's SEO: a load time that's too long, a page structure a search engine can't read, a broken mobile display, no basic optimization at all — these are exactly the criteria Google uses to decide whether to show you or bury you. The result: a site that's practically impossible to find. And a business website nobody can find is a website that serves no purpose. I should say I'm very far from being an SEO expert — and that's precisely what makes the point land: if even I spot these flaws at first glance, the algorithm certainly won't forgive them.
 
 The bottom line? They must have spent close to a full day on it. For a business that likely bills several hundred euros an hour. I'll let you do the math — the "saving" isn't really one anymore.
 

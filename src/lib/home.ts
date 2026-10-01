@@ -143,7 +143,7 @@ export const howIWork = {
   },
   points: [
     {
-      label: { fr: "Design sur mesure", en: "Design from scratch" },
+      label: { fr: "Design sur mesure", en: "Custom design" },
       desc: {
         fr: "Une interface pensée pour votre besoin et vos utilisateurs, pas un template recyclé.",
         en: "An interface designed for your need and your users, not a recycled template.",
@@ -249,7 +249,7 @@ export const contact = {
   title: { fr: "Parlons de votre projet", en: "Let’s talk about your project" },
   lead: {
     fr: "Décrivez votre idée en quelques mots : je vous réponds sous 24 h.",
-    en: "Tell me about your idea in a few words — you’ll get a reply within 24 h.",
+    en: "Tell me about your idea in a few words — you’ll get a reply within 24 hours.",
   },
   cta: { fr: "Écrire un message", en: "Send a message" },
 };

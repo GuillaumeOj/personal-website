@@ -11,16 +11,16 @@ export const heroCredibility = {
 
 export const hero = {
   eyebrow: {
-    fr: "Développeur Full-Stack Web & Mobile · freelance",
-    en: "Full-Stack Web & Mobile Developer · freelance",
+    fr: "Développeur full-stack web et mobile · freelance",
+    en: "Full-stack web & mobile developer · freelance",
   },
   title: {
     fr: "Votre application web ou mobile, de l’idée à la mise en ligne.",
     en: "Your web or mobile app, from idea to launch.",
   },
   lead: {
-    fr: "Confiez tout votre projet à un seul partenaire — design, développement, déploiement et suivi — et restez concentré sur votre activité.",
-    en: "Hand your whole project to a single partner — design, development, deployment and follow-up — and stay focused on your business.",
+    fr: "Confiez tout votre projet à un seul partenaire — design, développement, déploiement et suivi — et consacrez-vous à votre activité.",
+    en: "Hand your whole project to a single partner — design, development, deployment and follow-up — and get on with running your business.",
   },
   // "Who I work with" cue on the first screen: lets a visitor self-identify as
   // the intended client, and carries the "Lyon" local keyword naturally on the
@@ -46,7 +46,7 @@ export const hero = {
   closingRotating: {
     fr: [
       "concentré sur votre métier",
-      "focus sur vos clients",
+      "tourné vers vos clients",
       "serein",
       "maître de votre temps",
       "propriétaire de votre produit",
@@ -143,7 +143,7 @@ export const howIWork = {
   },
   points: [
     {
-      label: { fr: "Design sur mesure", en: "Design from scratch" },
+      label: { fr: "Design sur mesure", en: "Custom design" },
       desc: {
         fr: "Une interface pensée pour votre besoin et vos utilisateurs, pas un template recyclé.",
         en: "An interface designed for your need and your users, not a recycled template.",
@@ -155,8 +155,8 @@ export const howIWork = {
         en: "Clean, maintainable code",
       },
       desc: {
-        fr: "Un code lisible, testé (tests unitaires et e2e) et documenté, qui évolue sans mauvaises surprises.",
-        en: "Readable, tested (unit and e2e) and documented code that evolves without nasty surprises.",
+        fr: "Un code lisible, documenté et couvert par des tests automatisés, qui évolue sans mauvaises surprises.",
+        en: "Readable, documented code covered by automated tests, which evolves without nasty surprises.",
       },
     },
     {
@@ -169,7 +169,7 @@ export const howIWork = {
     {
       label: { fr: "Vous êtes propriétaire", en: "You own everything" },
       desc: {
-        fr: "Vous restez seul propriétaire de votre code et de votre infrastructure — pas de dépendance, pas d’enfermement.",
+        fr: "Vous restez seul propriétaire de votre code et de votre infrastructure — vous restez libre de changer de prestataire, moi compris.",
         en: "You remain the sole owner of your code and infrastructure — no lock-in, no dependency.",
       },
     },
@@ -234,8 +234,8 @@ export const about = {
     en: "Who will build your project",
   },
   teaser: {
-    fr: "Ancien développeur backend chez Sketchfab (racheté par Epic Games), je suis aujourd’hui développeur web et mobile freelance à Lyon. Je construis aussi Fusily, mon application de recettes, de bout en bout — la meilleure preuve que je sais mener un projet de l’idée jusqu’au store.",
-    en: "A former backend developer at Sketchfab (acquired by Epic Games), I’m now a freelance web and mobile developer in Lyon. I also build Fusily, my own recipe app, end to end — the best proof I can carry a project from idea to app store.",
+    fr: "Ancien développeur backend chez Sketchfab (racheté par Epic Games), je suis aujourd’hui développeur web et mobile freelance à Lyon. Je construis aussi Fusily, mon application de recettes et de planification de repas, de bout en bout : de quoi montrer que je sais mener un projet de l’idée jusqu’au store.",
+    en: "A former backend developer at Sketchfab (acquired by Epic Games), I’m now a freelance web and mobile developer in Lyon. I also build Fusily, my own recipe and meal-planning app, end to end: proof that I can carry a project from idea to app store.",
   },
   teaserCta: {
     fr: "En savoir plus sur mon parcours",
@@ -248,8 +248,8 @@ export const contact = {
   eyebrow: { fr: "Contact", en: "Contact" },
   title: { fr: "Parlons de votre projet", en: "Let’s talk about your project" },
   lead: {
-    fr: "Décrivez votre idée en quelques mots, vous avez une réponse sous 24 h.",
-    en: "Tell me about your idea in a few words — you’ll get a reply within 24 h.",
+    fr: "Décrivez votre idée en quelques mots : je vous réponds généralement sous 24 h ouvrées.",
+    en: "Tell me about your idea in a few words — you’ll usually get a reply within one business day.",
   },
   cta: { fr: "Écrire un message", en: "Send a message" },
 };

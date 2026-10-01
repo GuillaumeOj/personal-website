@@ -90,6 +90,17 @@ export interface Project {
   banner?: LocalizedImage;
   year?: number;
   /**
+   * Store price in EUR for an installable app (0 = free), emitted as the
+   * SoftwareApplication `offers` (one of the properties Google requires for app
+   * rich results; aggregateRating/review, the other, is deliberately not emitted).
+   */
+  price?: number;
+  /**
+   * Blog posts about this project, by `translationKey` (so one list serves
+   * both locales). The project page links them and each post links back.
+   */
+  relatedPosts?: string[];
+  /**
    * Optional factual outcome/result line, shown on the card (under the
    * description) and on the detail page (as a `<dl>` entry). Only verifiable
    * facts already known about the project — never invented metrics.
@@ -108,10 +119,15 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: "fusily",
+    relatedPosts: [
+      "react-native-expo",
+      "tamagui-paper",
+      "i18n-django-react-native",
+    ],
     name: "Fusily",
     titleDescriptor: {
-      fr: "Application mobile de repas",
-      en: "Meal-planning mobile app",
+      fr: "Recettes et planification de repas",
+      en: "Recipe & Meal-Planning App",
     },
     url: "https://fusily.com",
     context: "personal",
@@ -126,6 +142,7 @@ export const projects: Project[] = [
       en: "Fusily mobile app home screen",
     },
     year: 2024,
+    price: 0,
     result: {
       fr: "Publiée sur l’App Store et Google Play, en ligne depuis 2024.",
       en: "Published on the App Store and Google Play, live since 2024.",
@@ -133,14 +150,13 @@ export const projects: Project[] = [
     content: {
       fr: {
         description:
-          "Application mobile (iOS et Android) pour organiser les repas de la semaine.",
+          "Application mobile (iOS et Android) de recettes et de planification de repas.",
         aim: "Aider à planifier les repas de la semaine, n’acheter que le nécessaire, varier les plats à chaque fois et découvrir de nouvelles recettes.",
         longDescription:
           "Fusily est un produit complet que je construis de bout en bout : une application mobile React Native / Expo publiée sur iOS et Android, adossée à un backend Django / DRF et une base PostgreSQL. On y crée, partage et planifie des recettes, on génère sa liste de courses, et on réduit le gaspillage en n’achetant que le nécessaire. Du modèle de données au déploiement des stores, chaque brique — API, authentification, notifications, mise en production — est pensée pour durer.",
       },
       en: {
-        description:
-          "Mobile app (iOS and Android) to organize your week’s meals.",
+        description: "Recipe and meal-planning mobile app for iOS and Android.",
         aim: "Help people plan their week’s meals, buy only what they need, eat something different each time and discover new recipes.",
         longDescription:
           "Fusily is a full product I build end to end: a React Native / Expo mobile app shipped on iOS and Android, backed by a Django / DRF backend and a PostgreSQL database. You create, share and plan recipes, generate your shopping list, and cut waste by buying only what you need. From the data model to store deployment, every piece — API, authentication, notifications, going to production — is built to last.",
@@ -149,6 +165,7 @@ export const projects: Project[] = [
   },
   {
     slug: "ma-garde-sereine",
+    relatedPosts: ["vercel-free-tier"],
     name: "Ma Garde Sereine",
     titleDescriptor: {
       fr: "Garde partagée à domicile",
@@ -175,21 +192,22 @@ export const projects: Project[] = [
       fr: {
         description:
           "Application web pour gérer la garde partagée à domicile de son enfant.",
-        aim: "Aider les familles à gérer le contrat de leur garde à domicile et à préparer leur déclaration pajemploi chaque mois, y compris en garde partagée entre deux familles.",
+        aim: "Aider les familles à gérer le contrat de leur garde à domicile et à préparer leur déclaration Pajemploi chaque mois, y compris en garde partagée entre deux familles.",
         longDescription:
-          "Ma Garde Sereine est une application web, actuellement en bêta, qui accompagne les familles employant une garde d’enfants à domicile — notamment en garde partagée entre deux familles. Elle permet de cadrer le contrat (taux net, planning hebdomadaire, congés payés, jours fériés) et de préparer sereinement la déclaration pajemploi chaque mois : les heures normales, majorées et les jours fériés sont suivis au fil du mois, puis répartis entre les familles pour que chacune déclare sa part. Conçue pour la garde à domicile relevant de la convention IDCC 3239, elle vise à alléger la charge administrative pour laisser plus de place à la relation avec la personne qui veille sur les enfants.",
+          "Ma Garde Sereine est une application web, actuellement en bêta, qui accompagne les familles employant une garde d’enfants à domicile — notamment en garde partagée entre deux familles. Elle permet de cadrer le contrat (taux net, planning hebdomadaire, congés payés, jours fériés) et de préparer sereinement la déclaration Pajemploi chaque mois : les heures normales, majorées et les jours fériés sont suivis au fil du mois, puis répartis entre les familles pour que chacune déclare sa part. Conçue pour la garde à domicile relevant de la convention IDCC 3239, elle vise à alléger la charge administrative pour laisser plus de place à la relation avec la personne qui veille sur les enfants.",
       },
       en: {
         description:
           "Web app to manage shared in-home childcare for your children.",
-        aim: "Help families manage their in-home nanny’s contract and prepare their monthly pajemploi declaration, including shared care between two families.",
+        aim: "Help families manage their in-home nanny’s contract and prepare their monthly Pajemploi declaration, including shared care between two families.",
         longDescription:
-          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It frames the contract (net rate, weekly schedule, paid leave, public holidays) and calmly prepares the monthly pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
+          "Ma Garde Sereine is a web app, currently in beta, that helps families employing an in-home nanny — especially in shared care between two families. It sets up the contract terms (net rate, weekly schedule, paid leave, public holidays) and takes the stress out of the monthly Pajemploi declaration: regular, overtime and public-holiday hours are tracked through the month, then split between families so each declares its own share. Built for in-home childcare under the IDCC 3239 collective agreement, it aims to lighten the administrative load so families can focus on the relationship with the person who cares for their children.",
       },
     },
   },
   {
     slug: "personal-website",
+    relatedPosts: ["blog-stack"],
     name: { fr: "Site personnel", en: "Personal website" },
     // Steer clear of "blog" here — the blog list and articles already own that
     // query; naming the stack keeps this a build/case-study, not a competitor.
@@ -212,7 +230,7 @@ export const projects: Project[] = [
     },
     year: 2025,
     result: {
-      fr: "En production sur Vercel, pensé pour la perf, l’accessibilité et le SEO.",
+      fr: "En production sur Vercel, pensé pour les performances, l’accessibilité et le référencement.",
       en: "In production on Vercel, tuned for performance, accessibility and SEO.",
     },
     content: {
@@ -234,6 +252,7 @@ export const projects: Project[] = [
   },
   {
     slug: "dotcraft",
+    relatedPosts: ["dotcraft"],
     name: "dotcraft",
     titleDescriptor: {
       fr: "Générateur de QR codes",
@@ -243,7 +262,7 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/GuillaumeOj/dotcraft",
     context: "side",
     platform: ["web"],
-    stack: ["React", "TypeScript", "Vite"],
+    stack: ["React", "TypeScript", "Vite", "Django", "DRF", "PostgreSQL"],
     cover: { fr: dotcraftFr, en: dotcraftEn },
     imageAlt: {
       fr: "Interface du générateur de QR codes dotcraft",
@@ -251,28 +270,29 @@ export const projects: Project[] = [
     },
     year: 2025,
     result: {
-      fr: "En production, 100% côté client, sans compte ni serveur.",
-      en: "In production, fully client-side, no account or server.",
+      fr: "En production sur dotcraft.fr, utilisable sans compte, avec une synchronisation facultative entre appareils.",
+      en: "Live at dotcraft.fr, usable without an account, with optional sync across devices.",
     },
     content: {
       fr: {
         description:
-          "Générateur de QR codes directement dans le navigateur, sans serveur.",
-        aim: "Créer et conserver ses QR codes entièrement côté client, en utilisant uniquement le localStorage du navigateur — pas de compte, pas de backend.",
+          "Éditeur de QR codes stylisés dans le navigateur, utilisable sans compte.",
+        aim: "Créer des QR codes soignés et les conserver sans avoir à créer de compte : la bibliothèque vit dans le navigateur (localStorage et IndexedDB), et un compte gratuit facultatif la synchronise entre vos appareils.",
         longDescription:
-          "dotcraft est une application web React / TypeScript qui génère des QR codes entièrement côté client. Aucun serveur, aucun compte : les codes sont créés et conservés dans le localStorage du navigateur. Un exemple d’application rapide et respectueuse de la vie privée, où toute la logique vit dans le navigateur.",
+          "dotcraft est une application web React / TypeScript qui génère des QR codes directement dans le navigateur. Sans compte, la bibliothèque est enregistrée localement (localStorage et IndexedDB) et s’exporte dans un fichier ; avec un compte gratuit, elle est sauvegardée et synchronisée entre vos appareils grâce à une API Django / DRF. Le rendu des QR codes reste entièrement côté client.",
       },
       en: {
         description:
-          "QR code generator that runs entirely in the browser, with no server.",
-        aim: "Create and keep your QR codes fully client-side, using only the browser’s localStorage — no account, no backend.",
+          "Styled QR code editor in the browser, usable without an account.",
+        aim: "Create polished QR codes and keep them without signing up: the library lives in the browser (localStorage and IndexedDB), and an optional free account syncs it across your devices.",
         longDescription:
-          "dotcraft is a React / TypeScript web app that generates QR codes entirely client-side. No server, no account: codes are created and kept in the browser’s localStorage. An example of a fast, privacy-friendly app where all the logic lives in the browser.",
+          "dotcraft is a React / TypeScript web app that generates QR codes right in the browser. Without an account, the library is saved locally (localStorage and IndexedDB) and can be exported to a file; with a free account, it is backed up and synced across your devices through a Django / DRF API. QR code rendering stays fully client-side.",
       },
     },
   },
   {
     slug: "eva-biezunski-avocate",
+    relatedPosts: ["vercel-free-tier"],
     name: "Eva Biezunski Avocate",
     // Short descriptor: the name already carries "Avocate", and the full
     // three-part title must clear ~60 chars without clipping.
@@ -309,21 +329,22 @@ export const projects: Project[] = [
       fr: {
         description:
           "Site d’un cabinet d’avocate en droit des sociétés, avec un espace de publications.",
-        aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), avec un focus sur les professions libérales (avocats, médecins, dentistes…).",
+        aim: "Présenter le cabinet et ses domaines d’intervention — droit des sociétés (contrats, créations de sociétés, etc.), en particulier pour les professions libérales (avocats, médecins, dentistes…).",
         longDescription:
           "La cliente, avocate en droit des sociétés, avait besoin d’un site pour présenter clairement son cabinet, inspirer confiance et faciliter la prise de contact. Le site, en ligne depuis juin 2026, associe un front Next.js / React / TypeScript / Tailwind CSS à un backend Django / DRF et une base PostgreSQL hébergée sur Neon, le tout déployé sur Vercel. Il intègre un espace de publications doté d’une interface d’administration dédiée, plus simple à prendre en main que l’admin Django : Eva y rédige ses articles et gère les catégories de la page /publications. J’y ai aussi ajouté un endpoint /mcp qui permet de créer des articles depuis n’importe quel chat IA compatible, comme Claude Desktop. Le code et l’hébergement restent la propriété de la cliente.",
       },
       en: {
         description:
-          "Website for a companies-law practice, with a publications space.",
-        aim: "Present the practice and its areas of expertise — companies law (contracts, company formation, etc.), with a focus on liberal professions (lawyers, doctors, dentists…).",
+          "Website for a corporate-law practice, with a publications space.",
+        aim: "Present the practice and its areas of expertise — corporate law (contracts, company formation, etc.), with a focus on self-employed professionals (lawyers, doctors, dentists…).",
         longDescription:
-          "The client, a lawyer specialized in companies law, needed a website to clearly present her practice, build trust and make getting in touch easy. Live since June 2026, the site pairs a Next.js / React / TypeScript / Tailwind CSS front end with a Django / DRF backend and a PostgreSQL database hosted on Neon, all deployed on Vercel. It includes a publications space with a dedicated admin interface, friendlier than the Django admin: Eva writes her articles there and manages the categories of the /publications page. I also added an /mcp endpoint so articles can be created from any compatible AI chat, such as Claude Desktop. The code and hosting remain the client’s property.",
+          "The client, a lawyer specialized in corporate law, needed a website to clearly present her practice, build trust and make getting in touch easy. Live since June 2026, the site pairs a Next.js / React / TypeScript / Tailwind CSS front end with a Django / DRF backend and a PostgreSQL database hosted on Neon, all deployed on Vercel. It includes a publications space with a dedicated admin interface, friendlier than the Django admin: Eva writes her articles there and manages the categories of the /publications page. I also added an /mcp endpoint so articles can be created from any compatible AI chat, such as Claude Desktop. The code and hosting remain the client’s property.",
       },
     },
   },
   {
     slug: "re-source-et-moi",
+    relatedPosts: ["vercel-free-tier"],
     name: "Re-Source Et Moi",
     titleDescriptor: {
       fr: "Site associatif",
@@ -337,7 +358,7 @@ export const projects: Project[] = [
     cover: reSourceEtMoiCover,
     imageAlt: {
       fr: "Page d’accueil du site de l’association Re-Source Et Moi",
-      en: "Home page of the Re-Source Et Moi association website",
+      en: "Home page of the Re-Source Et Moi non-profit website",
     },
     year: 2026,
     result: {

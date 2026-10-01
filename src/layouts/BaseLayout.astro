@@ -102,13 +102,17 @@ const mainClass =
   container === 'full'
     ? 'flex-1'
     : 'mx-auto w-full max-w-3xl flex-1 px-6 py-12';
-const fullTitle = rawTitle ? title : `${title} — ${SITE.name}`;
+// The brand suffix only when it still fits in what search results show
+// (~60–65 characters); a long title keeps its own words instead.
+const TITLE_MAX = 65;
+const brandSuffix = ` — ${SITE.name}`;
+const branded = `${title}${brandSuffix}`;
+const fullTitle = rawTitle || branded.length > TITLE_MAX ? title : branded;
 // The social card (og/twitter) title mirrors the page's own descriptive
 // headline with the brand stripped — whether it sits as a suffix (most pages)
 // or a prefix (About). `og:site_name` below already carries "Guillaume
 // Ojardias" and the card renders the name + portrait, so repeating it here just
 // wastes the most valuable line of the share.
-const brandSuffix = ` — ${SITE.name}`;
 const brandPrefix = `${SITE.name} — `;
 const socialTitle = fullTitle.endsWith(brandSuffix)
   ? fullTitle.slice(0, -brandSuffix.length)

@@ -56,3 +56,15 @@ for (const path of ["/projects/", "/en/projects/"]) {
     await expect(cta.first()).toBeVisible();
   });
 }
+
+// Audit E5: project pages carry the case study sections.
+test("project page renders its case study", async ({ page }) => {
+  await page.goto("/en/projects/re-source-et-moi/");
+  await expect(
+    page.getByRole("heading", { level: 2, name: "The stack and why" }),
+  ).toBeVisible();
+  const meta = await page
+    .locator('meta[name="description"]')
+    .getAttribute("content");
+  expect(meta?.length).toBeGreaterThanOrEqual(130);
+});

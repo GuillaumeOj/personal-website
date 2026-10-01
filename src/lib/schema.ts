@@ -219,8 +219,10 @@ export interface ProjectSchemaInput {
    * `SoftwareApplication` (an installable app) rather than a `CreativeWork`.
    */
   platform?: string[];
-  /** ISO 8601 publication date (e.g. `${year}-01-01`), when known. */
+  /** ISO 8601 publication date, as precise as known (a bare year is valid). */
   datePublished?: string;
+  /** App store price in EUR (0 = free); emitted as `offers` on apps only. */
+  price?: number;
   breadcrumbs: Crumb[];
 }
 
@@ -249,6 +251,15 @@ export const projectJsonLd = (locale: Locale, input: ProjectSchemaInput) => {
       ? {
           applicationCategory: "LifestyleApplication",
           operatingSystem: "iOS, Android",
+          ...(input.price !== undefined
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  price: input.price,
+                  priceCurrency: "EUR",
+                },
+              }
+            : {}),
         }
       : {}),
     ...(input.datePublished ? { datePublished: input.datePublished } : {}),

@@ -38,7 +38,7 @@ const experience: ExperienceEntry[] = [
     logo: "/logos/fusily.png",
     alt: "Logo Fusily",
     role: {
-      fr: "Fondateur & Développeur Full-Stack",
+      fr: "Fondateur et développeur full-stack",
       en: "Founder & Full-Stack Developer",
     },
     org: "Fusily",
@@ -86,7 +86,7 @@ const experience: ExperienceEntry[] = [
     highlights: {
       fr: [
         "Intégration d’un système pour la prise en charge des mutuelles utilisant le même numéro AMC",
-        "Mises à jour et correction de bug sur l’outil dédié à la gestion de cabinets",
+        "Mises à jour et corrections de bugs sur l’outil dédié à la gestion de cabinets",
       ],
       en: [
         "Integration of a system to handle insurers sharing the same AMC number",
@@ -131,7 +131,7 @@ const experience: ExperienceEntry[] = [
     end: "2024-02",
     description: {
       fr: "Développement du backend Django / DRF de Sketchfab, la plateforme collaborative de publication et de visualisation de modèles 3D, utilisée par des millions de créateurs.",
-      en: "Development of Sketchfab’s Django / DRF backend, the collaborative platform to publish and view 3D models, used by millions of creators.",
+      en: "Development of the Django / DRF backend for Sketchfab, the collaborative platform to publish and view 3D models, used by millions of creators.",
     },
     highlights: {
       fr: [
@@ -181,7 +181,7 @@ const experience: ExperienceEntry[] = [
     },
     note: {
       fr: "Une expérience formatrice, alliant pratique intensive et transmission de savoir-faire par des fondateurs expérimentés. Idéal pour consolider mes compétences en développement et comprendre les enjeux d’un produit technique B2B.",
-      en: "A formative experience, combining intensive practice and knowledge transfer from experienced founders. Ideal for consolidating my development skills and understanding the stakes of a B2B technical product.",
+      en: "A formative experience, combining intensive practice and knowledge transfer from experienced founders. Ideal for consolidating my development skills and understanding what it takes to build a B2B technical product.",
     },
   },
 ];

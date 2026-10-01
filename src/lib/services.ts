@@ -12,6 +12,9 @@ import {
 /** A localized string. */
 type L = Record<Locale, string>;
 
+/** The one public price (audit U8), shared by the cost list and the FAQ. */
+const FLOOR_PRICE: L = { fr: "1 500 €", en: "€1,500" };
+
 /** An inline run inside a "proof" sentence: plain text, or a link to a project. */
 export type ServiceRun =
   | { t: "text"; v: L }
@@ -28,18 +31,21 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
 });
 
 /**
- * `<title>` segment (the layout appends ` — {SITE.name}`) and meta description.
+ * `<title>` segment and meta description. The layout appends ` — {SITE.name}`
+ * only while the result fits BaseLayout's TITLE_MAX (these titles don't).
  * Services owns the offer/"prestations" query cluster — deliberately distinct
  * from Home's "développeur … à Lyon" head term to avoid cannibalization.
  */
 export const servicesMeta: { title: L; description: L } = {
   title: {
-    fr: "Prestations de développement web & mobile",
-    en: "Custom Web & Mobile Development Services",
+    // "Développement", not "Développeur": the home page owns the person query
+    // ("Développeur web & mobile freelance à Lyon"); this page owns the offer.
+    fr: "Développement web & mobile freelance à Lyon : tarifs",
+    en: "Freelance Web & Mobile Development in Lyon: Pricing",
   },
   description: {
-    fr: "Applications web, mobiles et SaaS sur mesure par un développeur freelance à Lyon. Un seul interlocuteur, du design au déploiement. Réponse sous 24 h.",
-    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer. Design, development, deployment: a single point of contact. Reply within 24 h.",
+    fr: "Applications web, mobiles et SaaS sur mesure par un développeur full-stack freelance à Lyon. Un seul interlocuteur, du design au déploiement.",
+    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer in Lyon. Design, development, deployment: one point of contact.",
   },
 };
 
@@ -49,13 +55,13 @@ export const hero = {
     en: "Your web or mobile app, designed and delivered by a single point of contact",
   },
   subtitle: {
-    fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin.",
-    en: "From the first screen to production: design, development, database, APIs and deployment. You follow a clear project, you stay its owner, and you talk to one person from start to finish.",
+    fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin. Basé à Lyon, je travaille avec des entreprises et associations de la métropole lyonnaise et, à distance, de toute la France.",
+    en: "From the first screen to production: design, development, database, APIs and deployment. You get a clear process, full ownership, and one person to talk to from start to finish. Based in Lyon, I work with businesses and non-profits across the Lyon area and, remotely, all over France.",
   },
   cta: { fr: "Discutons de votre projet", en: "Let’s talk about your project" },
   reassurance: {
-    fr: "Réponse sous 24 h · Devis gratuit",
-    en: "Reply within 24 h · Free quote",
+    fr: "Réponse généralement sous 24 h ouvrées · Devis gratuit",
+    en: "Usually a reply within one business day · Free quote",
   },
   /** One-line proof strip shown under the hero, above the fold. Shared verbatim
    *  with the home hero via `heroCredibility` (single source of truth). */
@@ -70,12 +76,12 @@ export const mobile = {
     en: "Custom iOS & Android mobile applications",
   },
   intro: {
-    fr: "Une application native dans le ressenti, sur iPhone et Android, à partir d’une seule base de code React Native / Expo — pas deux développements séparés, pas deux factures.",
+    fr: "Une application au ressenti natif, sur iPhone et Android, à partir d’une seule base de code React Native / Expo — pas deux développements séparés, pas deux factures.",
     en: "An app that feels native, on iPhone and Android, from a single React Native / Expo codebase — not two separate builds, not two invoices.",
   },
   leadIn: {
     fr: "Ce que vous obtenez concrètement :",
-    en: "What you get, concretely:",
+    en: "Here’s what you get:",
   },
   list: [
     {
@@ -87,7 +93,7 @@ export const mobile = {
       en: "A backend that powers it: accounts, data, business logic, push notifications.",
     },
     {
-      fr: "Les mises à jour à distance (OTA) pour corriger et améliorer sans réattendre la validation des stores.",
+      fr: "Les mises à jour à distance (OTA) pour corriger et améliorer sans repasser par la validation des stores.",
       en: "Over-the-air (OTA) updates to fix and improve without waiting again for store review.",
     },
     {
@@ -98,12 +104,12 @@ export const mobile = {
   proof: [
     text(
       "C’est exactement la chaîne que j’ai menée de bout en bout, seul, pour ",
-      "This is exactly the chain I ran end to end, on my own, for ",
+      "I ran this exact process end to end, on my own, for ",
     ),
     link("Fusily", "Fusily", "fusily"),
     text(
-      " — mon application de planification de repas, publiée sur l’App Store et Google Play.",
-      " — my meal-planning app, published on the App Store and Google Play.",
+      " — mon application de recettes et de planification de repas, publiée sur l’App Store et Google Play.",
+      " — my recipe and meal-planning app, published on the App Store and Google Play.",
     ),
   ] satisfies ServiceRun[],
 };
@@ -115,20 +121,20 @@ export const web = {
   },
   intro: {
     fr: "Des sites et applications web rapides et sur mesure, du site vitrine qui convertit au SaaS complet que vos clients utilisent tous les jours.",
-    en: "Fast, tailor-made websites and web apps, from the landing page that converts to the full SaaS your customers use every day.",
+    en: "Fast, tailor-made websites and web apps, from a business website that converts to the full SaaS your customers use every day.",
   },
   leadIn: { fr: "Ce que je construis :", en: "What I build:" },
   list: [
     {
-      fr: "Sites vitrines & corporate — rapides, soignés, bien référencés.",
-      en: "Landing & corporate sites — fast, polished, well ranked.",
+      fr: "Sites vitrines et sites d’entreprise — rapides, soignés, bien référencés.",
+      en: "Business websites — fast, polished, well ranked.",
     },
     {
       fr: "SaaS & applications métier — comptes, abonnements, tableaux de bord, la logique au cœur de votre activité.",
       en: "SaaS & business apps — accounts, subscriptions, dashboards, the logic at the heart of your business.",
     },
     {
-      fr: "Dashboards & back-offices — pour piloter votre produit ou votre équipe.",
+      fr: "Tableaux de bord et back-offices — pour piloter votre produit ou votre équipe.",
       en: "Dashboards & back-offices — to steer your product or your team.",
     },
     {
@@ -206,7 +212,7 @@ export const projectFlow = {
   },
   steps: methodology.phases,
   reassurance: {
-    fr: "Code propre, testé et documenté ; maintenance après livraison ; aucune dépendance ni enfermement.",
+    fr: "Code propre, testé et documenté ; maintenance après livraison ; libre de changer de prestataire à tout moment.",
     en: "Clean, tested and documented code; maintenance after launch; no lock-in, no dependency.",
   },
 };
@@ -224,16 +230,16 @@ export const cost = {
     {
       // The one public figure (audit U8): a floor price helps buyers judge
       // fit before writing. Apps and SaaS vary too much for a useful floor.
-      fr: "Site vitrine / PWA — à partir de 1 500 €, un forfait clair, périmètre défini à l’avance.",
-      en: "Landing site / PWA — from €1,500, a clear fixed price, scope defined upfront.",
+      fr: `Site vitrine / PWA — à partir de ${FLOOR_PRICE.fr}, un forfait clair, périmètre défini à l’avance.`,
+      en: `Business website / PWA — from ${FLOOR_PRICE.en}, a clear fixed price, scope defined upfront.`,
     },
     {
-      fr: "Application mobile ou web sur mesure — estimé après un cadrage court et gratuit, selon les fonctionnalités.",
-      en: "Custom mobile or web app — estimated after a short, free scoping, based on the features.",
+      fr: "Application mobile ou web sur mesure — estimée après un cadrage court et gratuit, selon les fonctionnalités.",
+      en: "Custom mobile or web app — estimated after a short, free scoping call, based on the features.",
     },
     {
       fr: "SaaS complet — construit par lots, pour étaler l’investissement et livrer de la valeur tôt.",
-      en: "Full SaaS — built in batches, to spread the investment and deliver value early.",
+      en: "Full SaaS — built in phases, to spread the investment and deliver value early.",
     },
   ] satisfies L[],
   closing: {
@@ -261,6 +267,17 @@ export const faq = {
         en: "The services offered on this site are for businesses, non-profits and project owners acting in the course of their activity. I don’t take on private individuals as clients.",
       },
     },
+    // Local intent: says where the work happens without a public address.
+    {
+      q: {
+        fr: "Travaillez-vous uniquement à Lyon ?",
+        en: "Do you only work in Lyon?",
+      },
+      a: {
+        fr: "Non. Je suis basé à Lyon : dans la métropole lyonnaise, je me déplace volontiers dans vos locaux pour les moments clés du projet. Partout ailleurs en France, je travaille à distance, en visio, avec le même suivi.",
+        en: "No. I'm based in Lyon: across the Lyon area, I'm happy to come to your offices for the key moments of the project. Anywhere else in France, I work remotely over video calls, with the same follow-up.",
+      },
+    },
     {
       q: {
         fr: "Travaillez-vous seul ou en équipe ?",
@@ -284,7 +301,7 @@ export const faq = {
     {
       q: { fr: "À qui appartient le code ?", en: "Who owns the code?" },
       a: {
-        fr: "À vous, entièrement — code et infrastructure. Aucune dépendance, aucun enfermement.",
+        fr: "À vous, entièrement : code et infrastructure. Vous restez libre de changer de prestataire à tout moment, moi compris.",
         en: "You do, entirely — code and infrastructure. No dependency, no lock-in.",
       },
     },
@@ -314,8 +331,8 @@ export const faq = {
         en: "How fast do you reply?",
       },
       a: {
-        fr: "Sous 24 h après votre message.",
-        en: "Within 24 h of your message.",
+        fr: "Généralement sous 24 h ouvrées après votre message.",
+        en: "Usually within one business day of your message.",
       },
     },
     {
@@ -333,8 +350,8 @@ export const faq = {
 
 /** Lead of /contact/quote and of the ContactCta band that links to it (see lib/contact-page.ts). */
 export const contactNote = {
-  fr: "Décrivez votre idée en quelques mots — réponse sous 24 h, devis gratuit, aucun engagement.",
-  en: "Tell me about your idea in a few words — reply within 24 h, free quote, no commitment.",
+  fr: "Décrivez votre idée en quelques mots — réponse généralement sous 24 h ouvrées, devis gratuit, aucun engagement.",
+  en: "Tell me about your idea in a few words — usually a reply within one business day, free quote, no commitment.",
 };
 
 /**

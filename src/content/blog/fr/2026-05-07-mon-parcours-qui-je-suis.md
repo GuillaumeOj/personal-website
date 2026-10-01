@@ -1,5 +1,5 @@
 ---
-title: "Mon parcours — Qui je suis"
+title: "Mon parcours : qui je suis"
 description: "Une présentation authentique de mon parcours — de développeur à entrepreneur, et pourquoi j'ai créé Fusily."
 pubDate: 2026-05-07
 lang: fr

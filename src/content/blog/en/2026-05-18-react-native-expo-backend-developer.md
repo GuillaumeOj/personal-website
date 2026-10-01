@@ -1,6 +1,7 @@
 ---
 title: "From Backend Developer to Full-Stack: How Expo (Almost) Turned Me Into a React Native Developer"
-description: "A first-hand account of building Fusily, a mobile recipe app, as a backend developer — and how React Native + Expo made mobile development accessible."
+description: "Building Fusily, a recipe and meal-planning mobile app, as a backend developer — and how React Native + Expo made mobile development accessible."
+seoTitle: "Backend to Full-Stack: How Expo Got Me Into React Native"
 pubDate: 2026-05-18
 lang: en
 slug: react-native-expo-backend-developer
@@ -132,7 +133,7 @@ I won't pretend Expo is perfect. There's real friction at times: SDK upgrades th
 
 But stepping back and looking at the whole experience — starting from zero, shipping Fusily on the App Store and the Play Store, maintaining and evolving the app — Expo delivered on its core promise: letting me focus on the product.
 
-As a backend developer, I was able to build on my existing habits (API design, mobile interface design, data architecture) while learning a new rendering paradigm. React Native has its own idioms, its own performance constraints tied to the JavaScript/native bridge, its own layout quirks — it's a real learning curve. But the Expo ecosystem considerably reduced the friction on everything that isn't the actual product code. And ultimately, it's that combination — backend, API design, and now mobile end to end — that made me a full-stack developer.
+As a backend developer, I was able to build on my existing habits (API design, data modeling, architecture) while learning a new rendering paradigm. React Native has its own idioms, its own performance constraints tied to the JavaScript/native bridge, its own layout quirks — it's a real learning curve. But the Expo ecosystem considerably reduced the friction on everything that isn't the actual product code. And ultimately, it's that combination — backend, API design, and now mobile end to end — that made me a full-stack developer.
 
 If you're a backend developer considering building a mobile app, my advice is simple: don't underestimate React Native's learning curve, but don't overestimate it either. And choose Expo. The time you won't spend configuring builds and maintaining native dependencies is time you'll get to spend on what actually matters: your product.
 

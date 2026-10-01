@@ -1,6 +1,7 @@
 ---
 title: "Vercel : un hébergement avec un tier gratuit généreux"
 description: "Retour d'expérience sur Vercel et Neon pour héberger gratuitement des sites statiques, des applications Django et leur base PostgreSQL : ce que ça permet, et les limites à connaître."
+seoDescription: "Ce que les offres gratuites de Vercel et Neon permettent d'héberger (sites statiques, applis Django, base PostgreSQL) et les limites à connaître."
 pubDate: 2026-09-29
 lang: fr
 slug: vercel-hebergement-tier-gratuit-genereux
@@ -13,11 +14,11 @@ coverCredit:
 tags: []
 ---
 
-À chaque nouveau projet, la même question revient : comment mettre en ligne quelque chose de propre, rapidement, sans payer un serveur qui tournera à vide 95 % du temps ? [Ce blog](/projects/personal-website/), [Dotcraft](/projects/dotcraft/), [Ma Garde Sereine](/projects/ma-garde-sereine/), [Re-Source Et Moi](/projects/re-source-et-moi/), le [site de Maître Eva Biezunski](/projects/eva-biezunski-avocate/)… tous tournent aujourd'hui sur **Vercel**, et la plupart ne me coûtent rien. Voici comment j'en suis arrivé là, et ce qu'il faut savoir avant de faire de même.
+À chaque nouveau projet, la même question revient : comment mettre en ligne quelque chose de propre, rapidement, sans payer un serveur qui tournera à vide 95 % du temps ? [Ce blog](/projects/personal-website/), [dotcraft](/projects/dotcraft/), [Ma Garde Sereine](/projects/ma-garde-sereine/), [Re-Source Et Moi](/projects/re-source-et-moi/), le [site de Maître Eva Biezunski](/projects/eva-biezunski-avocate/)… tous tournent aujourd'hui sur **Vercel**. Voici comment j'en suis arrivé là, et ce qu'il faut savoir avant de faire de même.
 
 ## D'abord, des sites statiques
 
-Au départ, je voyais Vercel comme beaucoup de monde : un hébergeur pour le front-end. On connecte un dépôt GitHub, on pousse son code, et quelques dizaines de secondes plus tard le site est en ligne, HTTPS et nom de domaine compris, sans même y penser.
+Au départ, je voyais Vercel comme beaucoup de monde : un hébergeur pour le frontend. On connecte un dépôt GitHub, on pousse son code, et quelques dizaines de secondes plus tard le site est en ligne, HTTPS et nom de domaine compris, sans même y penser.
 
 C'est exactement ce qu'il me fallait pour ce blog (Astro et des articles en Markdown versionnés) ou pour le site vitrine de Maître Biezunski (Next.js). Pas de serveur à maintenir, pas de configuration Nginx, pas de certificat à renouveler.
 
@@ -30,9 +31,9 @@ C'est exactement ce qu'il me fallait pour ce blog (Astro et des articles en Mark
 
 ## La découverte : Vercel sait aussi faire tourner Django
 
-Pendant longtemps, j'ai cru que Vercel s'arrêtait au front-end. Pour mes projets avec un backend Django, je cherchais donc un autre hébergeur… jusqu'à ce que je découvre que Vercel exécute aussi du **Python**. Une application Django s'y déploie comme n'importe quel autre projet : Vercel détecte l'application WSGI et la sert au travers de ses fonctions serverless.
+Pendant longtemps, j'ai cru que Vercel s'arrêtait au frontend. Pour mes projets avec un backend Django, je cherchais donc un autre hébergeur… jusqu'à ce que je découvre que Vercel exécute aussi du **Python**. Une application Django s'y déploie comme n'importe quel autre projet : Vercel détecte l'application WSGI et la sert au travers de ses fonctions serverless.
 
-C'est ainsi que tourne le backend Django / DRF de Re-Source Et Moi et de Ma Garde Sereine, aux côtés d'un front-end au choix (React, Next.js…). Un seul fournisseur et une seule façon de déployer, pour le front-end comme pour l'API.
+C'est ainsi que tourne le backend Django / DRF de Re-Source Et Moi et de Ma Garde Sereine, aux côtés d'un frontend au choix (React, Next.js…). Un seul fournisseur et une seule façon de déployer, pour le frontend comme pour l'API.
 
 Django impose tout de même quelques précautions dans ce contexte.
 
@@ -64,7 +65,7 @@ DATABASES = {
 
 Autre avantage : Neon peut créer une **branche de la base de données** pour chaque déploiement de prévisualisation. On teste ainsi les migrations de chaque pull request sur une copie des données, sans toucher à la production.
 
-Au final : un front-end, une API Django et une base PostgreSQL, déployés automatiquement depuis GitHub… sans débourser un centime.
+Au final : un frontend, une API Django et une base PostgreSQL, déployés automatiquement depuis GitHub et, pour un projet personnel, sans débourser un centime grâce aux offres gratuites.
 
 ## Les limites à connaître
 
@@ -78,10 +79,10 @@ Gratuit ne veut pas dire illimité, et mieux vaut le savoir avant de se lancer.
 
 ## À qui s'adresse cette solution ?
 
-Pour un blog, un site vitrine, le site d'une association, un MVP ou un projet personnel, c'est à mon sens l'une des meilleures options du moment : on consacre son temps au produit, pas à l'infrastructure. Pour une application à fort trafic ou qui manipule beaucoup de données, l'offre gratuite deviendra vite trop juste, mais le passage aux offres payantes se fait sans toucher une ligne de code.
+Pour un blog, un MVP ou un projet personnel, l'offre gratuite est à mon sens l'une des meilleures options du moment : on consacre son temps au produit, pas à l'infrastructure. Pour un site vitrine ou tout projet commercial, il faut prévoir l'offre Pro : la plateforme et le code restent les mêmes. Pour une application à fort trafic ou qui manipule beaucoup de données, l'offre gratuite deviendra vite trop juste, mais le passage aux offres payantes se fait sans toucher une ligne de code.
 
 ## En résumé
 
-Vercel pour le front-end et le backend Django, Neon pour PostgreSQL : ce duo me permet de lancer une application complète en un après-midi, sans sortir la carte bancaire. Les limites existent (ressources de la base, mise en veille, usage non commercial), mais pour le type de projets que je mène, je ne les ressens quasiment jamais.
+Vercel pour le frontend et le backend Django, Neon pour PostgreSQL : ce duo me permet de lancer une application complète en un après-midi, sans sortir la carte bancaire. Les limites existent (ressources de la base, mise en veille, usage non commercial), mais pour mes projets personnels, je ne les ressens quasiment jamais.
 
 Vous avez un projet à mettre en ligne et hésitez sur l'hébergement ? [Parlons-en](/contact/).

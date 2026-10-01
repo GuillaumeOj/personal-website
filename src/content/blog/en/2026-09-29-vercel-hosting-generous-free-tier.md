@@ -1,6 +1,7 @@
 ---
 title: "Vercel: hosting with a generous free tier"
 description: "What I learned using Vercel and Neon to host static sites, Django apps and their PostgreSQL database for free: what it makes possible, and the limits to know about."
+seoDescription: "What Vercel and Neon's free tiers let me host (static sites, Django apps and their PostgreSQL database) and the limits to know before relying on them."
 pubDate: 2026-09-29
 lang: en
 slug: vercel-hosting-generous-free-tier
@@ -13,11 +14,11 @@ coverCredit:
 tags: []
 ---
 
-For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [Dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. And most of them cost me nothing. Here's how I got there, and what you should know before doing the same.
+For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. Here's how I got there, and what you should know before doing the same.
 
 ## Static sites first
 
-At first, I saw Vercel the way many people do: a front-end host. You connect a GitHub repository, you push, and a few dozen seconds later the site is live, with HTTPS and a domain name set up without a second thought.
+At first, I saw Vercel the way many people do: a frontend host. You connect a GitHub repository, you push, and a few dozen seconds later the site is live, with HTTPS and a domain name set up without a second thought.
 
 That's exactly what I needed for this blog (Astro, version-controlled Markdown) or for Maître Biezunski's business website (Next.js). No server to maintain, no Nginx configuration, no certificate to renew.
 
@@ -64,7 +65,7 @@ DATABASES = {
 
 Another bonus: Neon can create a **database branch** for every preview deployment. You can test each pull request's migrations on a copy of the data without touching production.
 
-The result: front end, Django API and PostgreSQL database, deployed automatically from GitHub… for **$0**.
+The result: front end, Django API and PostgreSQL database, deployed automatically from GitHub, and for a personal project on the free tiers, all of it for **$0**.
 
 ## The limits to know about
 
@@ -78,10 +79,10 @@ Free doesn't mean unlimited, and it's better to know that before you start.
 
 ## Who is it for?
 
-For a blog, a business website, a non-profit's website, an MVP or a side project, it's in my view one of the best options right now: you spend your time on the product, not on the infrastructure. For a high-traffic or data-heavy application, the free tier will quickly be too tight, but moving to the paid plans doesn't require changing any code.
+For a blog, an MVP or a side project, the free tier is in my view one of the best options right now: you spend your time on the product, not on the infrastructure. For a business website or any commercial project, budget for the Pro plan: the platform and the code stay the same. For a high-traffic or data-heavy application, the free tier will quickly be too tight, but moving to the paid plans doesn't require changing any code.
 
 ## In short
 
-Vercel for the front end and the Django backend, Neon for PostgreSQL: this combination lets me launch a complete application in an afternoon, without a credit card. The limits are real (database resources, sleep, non-commercial use) but, for the projects I work on, I almost never run into them.
+Vercel for the front end and the Django backend, Neon for PostgreSQL: this combination lets me launch a complete application in an afternoon, without a credit card. The limits are real (database resources, sleep, non-commercial use) but, for my own side projects, I almost never run into them.
 
 Have a project to put online and unsure about hosting? [Let's talk](/en/contact/).

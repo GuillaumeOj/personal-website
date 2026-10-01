@@ -60,15 +60,16 @@ const ul = (...items: Run[][]): Block => ({ t: "list", items });
 const frDoc = (): AboutDoc => {
   return {
     // Brand-*forward*: the About page's subject is the person, so it owns the
-    // "who is Guillaume Ojardias" query. Rendered verbatim (page sets `rawTitle`)
-    // — do not append the brand again.
-    metaTitle: "Guillaume Ojardias — Développeur full-stack freelance à Lyon",
+    // "who is Guillaume Ojardias" query, angled on the career rather than on
+    // "freelance à Lyon", which the home page owns. Rendered verbatim (page
+    // sets `rawTitle`) — do not append the brand again.
+    metaTitle: "Guillaume Ojardias — développeur ex-Sketchfab et Epic Games",
     metaDescription:
-      "Développeur web et mobile freelance à Lyon, j’accompagne PME et associations de l’idée à la mise en ligne. Discutons de votre projet.",
+      "Développeur web et mobile freelance à Lyon, j’accompagne PME, associations et porteurs de projet de l’idée à la mise en ligne. Discutons de votre projet.",
     eyebrow: "Présentation",
     title: "À propos de Guillaume Ojardias, développeur web & mobile à Lyon",
     intro: [
-      "Moi, c’est Guillaume Ojardias, développeur web et mobile freelance basé à Lyon. Dans la région lyonnaise, je me déplace volontiers dans vos locaux pour échanger de vive voix ; partout ailleurs en France, je travaille à distance. J’accompagne les PME et les associations dans la création de leurs projets web & mobile : site vitrine, prise de rendez-vous en ligne, application métier ou application mobile grand public.",
+      "Moi, c’est Guillaume Ojardias, développeur web et mobile freelance basé à Lyon. Dans la région lyonnaise, je me déplace volontiers dans vos locaux pour échanger de vive voix ; partout ailleurs en France, je travaille à distance. J’accompagne les PME, les associations et les porteurs de projet dans la création de leurs projets web & mobile : site vitrine, prise de rendez-vous en ligne, application métier ou application mobile grand public.",
     ],
     sections: [
       {
@@ -185,9 +186,9 @@ const frDoc = (): AboutDoc => {
       },
     ],
     cta: {
-      h: "Parlons de votre projet",
-      lead: "Que vous ayez une idée précise ou juste une intuition à creuser, la première étape est toujours la même : un échange gratuit et sans engagement pour comprendre ce dont vous avez besoin. Réponse sous 24 h.",
-      linkLabel: "Contactez-moi",
+      h: "Un projet web ou mobile en tête ?",
+      lead: "Que vous ayez une idée précise ou juste une intuition à creuser, la première étape est toujours la même : un échange gratuit et sans engagement pour comprendre ce dont vous avez besoin. Réponse généralement sous 24 h ouvrées.",
+      linkLabel: "Discutons de votre projet",
       href: contactPath("fr"),
     },
   };
@@ -195,13 +196,13 @@ const frDoc = (): AboutDoc => {
 
 const enDoc = (): AboutDoc => {
   return {
-    metaTitle: "Guillaume Ojardias — Freelance Full-Stack Developer in Lyon",
+    metaTitle: "Guillaume Ojardias — Ex-Sketchfab and Epic Games Developer",
     metaDescription:
-      "Freelance web and mobile developer in Lyon, helping SMEs and non-profits go from idea to launch. Let’s talk about your project.",
+      "Freelance web and mobile developer in Lyon, helping SMEs, non-profits and project owners go from idea to launch. Let’s talk about your project.",
     eyebrow: "Introduction",
     title: "About Guillaume Ojardias, web & mobile developer in Lyon",
     intro: [
-      "Hi, I’m Guillaume Ojardias, a freelance web and mobile developer based in Lyon. In the Lyon area, I’m happy to come to your offices to talk things through in person; anywhere else in France, I work remotely. I help SMEs and non-profits bring their web & mobile projects to life: showcase websites, online booking, business applications, or consumer mobile apps.",
+      "Hi, I’m Guillaume Ojardias, a freelance web and mobile developer based in Lyon. In the Lyon area, I’m happy to come to your offices to talk things through in person; anywhere else in France, I work remotely. I help SMEs, non-profits and project owners bring their web & mobile projects to life: business websites, online booking, custom business software, or consumer mobile apps.",
     ],
     sections: [
       {
@@ -220,7 +221,7 @@ const enDoc = (): AboutDoc => {
           ),
           p(
             s(
-              "What this means for you: your project, however modest, is built to the same standards of quality, performance and rigor as a platform running at massive scale. You get the benefit of that exacting standard without the overhead that usually comes with it.",
+              "What this means for you: your project, however small, is built to the same standards of quality, performance and rigor as a platform running at massive scale. You get the benefit of that exacting standard without the overhead that usually comes with it.",
             ),
           ),
         ],
@@ -308,9 +309,9 @@ const enDoc = (): AboutDoc => {
       },
     ],
     cta: {
-      h: "Let’s talk about your project",
-      lead: "Whether you have a clear idea or just a hunch to explore, the first step is always the same: a free, no-obligation conversation to understand what you need. I’ll get back to you within 24 hours.",
-      linkLabel: "Get in touch",
+      h: "Have a web or mobile project in mind?",
+      lead: "Whether you have a clear idea or just a hunch to explore, the first step is always the same: a free, no-obligation conversation to understand what you need. I’ll usually get back to you within one business day.",
+      linkLabel: "Let’s talk about your project",
       href: contactPath("en"),
     },
   };

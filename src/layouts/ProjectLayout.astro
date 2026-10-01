@@ -2,9 +2,11 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { contactPath, localizedPath, t } from '../i18n/ui';
+import { articlePath, contactPath, localizedPath, t } from '../i18n/ui';
 import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
+import { caseStudyFor } from '../lib/case-studies';
+import { postsForProject } from '../lib/related';
 import { projectJsonLd } from '../lib/schema';
 import BaseLayout from './BaseLayout.astro';
 
@@ -19,7 +21,12 @@ const result = project.result?.[locale];
 const contextLabel = t(locale, `projects.context.${project.context}`);
 const screenshot = resolveImage(project.banner ?? project.cover, locale);
 const name = localizedName(project, locale);
-// `<title>` = `{name} — {descriptor} — Brand`, so a bare project name isn't
+const posts = await postsForProject(project, locale);
+const caseStudy = caseStudyFor(project.slug, locale);
+// Search snippet: the case study's search-length summary.
+const metaDescription = caseStudy.metaDescription;
+// `<title>` = `{name} — {descriptor} — Brand` (brand dropped past BaseLayout's
+// TITLE_MAX), so a bare project name isn't
 // stranded in search results. The descriptor is a short (2–4 word) stored
 // field; without one, the title falls back to just the name.
 const titleDescriptor = project.titleDescriptor?.[locale];
@@ -58,12 +65,14 @@ const crumbs = [
 const jsonLd = projectJsonLd(locale, {
   url: canonical,
   name,
-  description,
+  description: metaDescription,
   image: new URL(og.url, SITE.url).toString(),
   sameAs: project.url,
   keywords: project.stack,
   platform: project.platform,
-  datePublished: project.year ? `${project.year}-01-01` : undefined,
+  // Only the year is known: don't invent a January 1st.
+  datePublished: project.year ? String(project.year) : undefined,
+  price: project.price,
   breadcrumbs: crumbs,
 });
 ---
@@ -71,7 +80,7 @@ const jsonLd = projectJsonLd(locale, {
 <BaseLayout
   locale={locale}
   title={metaTitle}
-  description={description}
+  description={metaDescription}
   ogImage={og.url}
   ogImageAlt={ogImageAlt}
   ogImageWidth={og.width}
@@ -167,7 +176,36 @@ const jsonLd = projectJsonLd(locale, {
 
     <div class="space-y-6 border-t border-line pt-6 leading-relaxed text-ink">
       <p>{longDescription}</p>
+      {
+        caseStudy.sections.map((section) => (
+          <section class="space-y-3 pt-2">
+            <h2 class="font-display text-xl font-semibold tracking-tight text-ink-strong">
+              {section.heading}
+            </h2>
+            {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </section>
+        ))
+      }
     </div>
+
+    {
+      posts.length > 0 && (
+        <section class="space-y-3 border-t border-line pt-6">
+          <h2 class="font-display text-xl font-semibold tracking-tight text-ink-strong">
+            {t(locale, 'projects.relatedPosts')}
+          </h2>
+          <ul class="space-y-2">
+            {posts.map((post) => (
+              <li>
+                <a href={articlePath(locale, post.data.slug)} class="font-medium text-accent-ink">
+                  {post.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     <aside
       class="rounded-2xl border border-line bg-surface-sunken p-6 text-center sm:p-8"

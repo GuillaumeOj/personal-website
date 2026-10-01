@@ -15,7 +15,8 @@ const dictionaries = {
     "nav.mainNav": "Navigation principale",
     "nav.skipToContent": "Aller au contenu",
     // SEO `<title>` for static pages. Each is the page-specific segment; the
-    // layout appends ` — Guillaume Ojardias`. One page owns one query cluster:
+    // layout appends ` — Guillaume Ojardias` while the result fits BaseLayout's
+    // TITLE_MAX (65 chars). One page owns one query cluster:
     // Home owns the "développeur … à Lyon" head term (About leads with the name,
     // Services with "prestations") so no two titles share a leading phrase.
     "meta.homeTitle": "Développeur web & mobile freelance à Lyon",
@@ -50,9 +51,13 @@ const dictionaries = {
       "Guillaume Ojardias, développeur web & mobile freelance à Lyon. J’accompagne PME, associations et porteurs de projet, de l’idée à la mise en ligne.",
     "blog.cta.heading": "Un projet web ou mobile en tête ?",
     "blog.cta.lead":
-      "Décrivez votre idée en quelques mots : vous avez une réponse sous 24 h, devis gratuit et sans engagement.",
+      "Décrivez votre idée en quelques mots : je vous réponds généralement sous 24 h ouvrées, devis gratuit et sans engagement.",
     "blog.cta.primary": "Discutons de votre projet",
     "blog.cta.secondary": "Voir les prestations",
+    "blog.related": "À lire aussi",
+    "blog.latest": "Derniers articles",
+    "blog.aboutProject": "Le projet dont parle cet article :",
+    "blog.aboutProjects": "Les projets dont parle cet article :",
     "projects.title": "Projets",
     "projects.subtitle":
       "Des applications web et mobiles conçues et livrées de bout en bout, en freelance à Lyon, pour des PME, des associations et des porteurs de projet.",
@@ -75,9 +80,10 @@ const dictionaries = {
     "projects.result": "Résultat",
     "projects.stack": "Stack technique",
     "projects.backToList": "← Tous les projets",
-    "projects.context.personal": "Personnel",
+    "projects.relatedPosts": "À lire sur le blog",
+    "projects.context.personal": "Produit personnel",
     "projects.context.client": "Client",
-    "projects.context.side": "Projet perso",
+    "projects.context.side": "Projet parallèle",
     "projects.context.oss": "Open source",
     "theme.toggle": "Changer le thème",
     "theme.light": "Clair",
@@ -140,9 +146,13 @@ const dictionaries = {
       "Guillaume Ojardias, freelance web & mobile developer in Lyon. I help SMEs, non-profits and project owners go from idea to launch.",
     "blog.cta.heading": "A web or mobile project in mind?",
     "blog.cta.lead":
-      "Tell me about your idea in a few words: you’ll get a reply within 24 h, a free quote, no commitment.",
+      "Tell me about your idea in a few words: I usually reply within one business day. Free quote, no commitment.",
     "blog.cta.primary": "Let’s talk about your project",
     "blog.cta.secondary": "See all services",
+    "blog.related": "Keep reading",
+    "blog.latest": "Latest articles",
+    "blog.aboutProject": "The project this article is about:",
+    "blog.aboutProjects": "The projects this article is about:",
     "projects.title": "Projects",
     "projects.subtitle":
       "Web and mobile apps designed and delivered end to end, freelance from Lyon, for SMEs, non-profits and project owners.",
@@ -164,7 +174,8 @@ const dictionaries = {
     "projects.result": "Result",
     "projects.stack": "Tech stack",
     "projects.backToList": "← All projects",
-    "projects.context.personal": "Personal",
+    "projects.relatedPosts": "On the blog",
+    "projects.context.personal": "Own product",
     "projects.context.client": "Client",
     "projects.context.side": "Side project",
     "projects.context.oss": "Open source",

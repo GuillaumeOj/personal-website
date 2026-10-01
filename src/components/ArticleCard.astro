@@ -9,17 +9,28 @@ interface Props {
   post: CollectionEntry<'blog'>;
   locale: Locale;
   priority?: boolean;
+  /** 3 when the card sits under its own section heading (related, latest). */
+  headingLevel?: 2 | 3;
+  /** `sizes` for the cover; defaults to the blog index's 2-column grid. */
+  sizes?: string;
 }
-
-const { post, locale, priority = false } = Astro.props;
-const href = articlePath(locale, post.data.slug);
-const { author } = post.data;
 
 // The list is a 2-column grid (`sm:grid-cols-2`, `gap-6`) inside `max-w-6xl
 // px-6`, so a card tops out at (1152 - 48 - 24) / 2 = 540 CSS px. Declaring a
 // narrower box would make the browser pick a candidate smaller than the slot
 // and upscale it.
 const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
+
+const {
+  post,
+  locale,
+  priority = false,
+  headingLevel = 2,
+  sizes = COVER_SIZES,
+} = Astro.props;
+const Heading = headingLevel === 3 ? 'h3' : 'h2';
+const href = articlePath(locale, post.data.slug);
+const { author } = post.data;
 ---
 
 <a
@@ -37,16 +48,16 @@ const COVER_SIZES = '(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw';
       height={608}
       fit="cover"
       widths={[540, 800, 1080]}
-      sizes={COVER_SIZES}
+      sizes={sizes}
       loading={priority ? 'eager' : 'lazy'}
       fetchpriority={priority ? 'high' : 'auto'}
       class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
     />
   </div>
   <div class="flex flex-1 flex-col gap-2 p-5">
-    <h2 class="font-display text-lg font-semibold tracking-tight text-ink-strong">
+    <Heading class="font-display text-lg font-semibold tracking-tight text-ink-strong">
       {post.data.title}
-    </h2>
+    </Heading>
     <p class="line-clamp-3 text-sm leading-relaxed text-muted">
       {post.data.description}
     </p>

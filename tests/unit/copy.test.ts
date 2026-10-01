@@ -1,6 +1,7 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { t } from "../../src/i18n/ui";
-import { faq } from "../../src/lib/services";
+import { faq, servicesMeta } from "../../src/lib/services";
 
 // SEO copy guards for the fixes in the round-2 audit: a broken FR projects
 // sentence, stack-list meta descriptions, and missing local intent ("Lyon").
@@ -57,5 +58,36 @@ describe("services FAQ states the B2B scope (audit L6)", () => {
     expect(first.a.fr).toContain("professionnels");
     expect(first.a.fr).toContain("dans le cadre de leur activité");
     expect(first.a.en).toContain("businesses");
+  });
+});
+
+// Audit E7: the services page targets the local query in both languages.
+describe("services meta (local intent)", () => {
+  for (const locale of ["fr", "en"] as const) {
+    it(`${locale}: title ≤ 60 with Lyon + freelance, description with Lyon`, () => {
+      const { title, description } = servicesMeta;
+      expect(title[locale].length).toBeLessThanOrEqual(60);
+      expect(title[locale]).toMatch(/Lyon/);
+      expect(title[locale].toLowerCase()).toContain("freelance");
+      expect(description[locale]).toMatch(/Lyon/);
+      expect(description[locale].length).toBeLessThanOrEqual(160);
+    });
+  }
+});
+
+// Audit L10: no firm "24 h" reply commitment anywhere in the site copy.
+describe("reply-time promise", () => {
+  it("is always hedged (généralement… ouvrées / usually… business day)", () => {
+    const files = [
+      ...readdirSync("src/lib").map((f) => `src/lib/${f}`),
+      "src/i18n/ui.ts",
+    ].filter((f) => f.endsWith(".ts") && !f.endsWith("typography.ts"));
+    for (const file of files) {
+      const text = readFileSync(file, "utf8");
+      for (const match of text.matchAll(/[^"]*24 h[^"]*/g)) {
+        expect(match[0], file).toMatch(/généralement sous 24 h ouvrées/i);
+      }
+      expect(text, file).not.toMatch(/within 24 h/);
+    }
   });
 });

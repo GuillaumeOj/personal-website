@@ -13,7 +13,7 @@ coverCredit:
 tags: []
 ---
 
-Fusily is a cooking app where users publish their recipes and tips. By the very nature of the product — written content, meant to be shared and to travel — I built in multi-language support from the earliest days. Some will say that's premature so early in an app's life. They're right. But beyond the timing, there was a genuine technical curiosity to satisfy.
+Fusily is a recipe and meal-planning app where users share their own dishes and tips. By the very nature of the product — written content, meant to be shared and to travel — I built in multi-language support from the earliest days. Some will say that's premature so early in an app's life. They're right. But beyond the timing, there was a genuine technical curiosity to satisfy.
 
 Internationalizing an interface is a solved, well-documented problem. Automatically translating a recipe a user just wrote — without knowing which language they wrote it in, and without making them wait — is far less so. That's where the documentation stops, and that's exactly what kept me busy. This article walks the whole path: internationalization (i18n) on the server with Django, on the client with React Native, and then the real challenge — translating user-generated content.
 

@@ -9,9 +9,9 @@ slug: developpeur-backend-figma-claude
 translationKey: figma-backend-dev
 cover: ../../../assets/blog/figma-backend-dev/cover.jpg
 coverCredit:
-  author: Compagnons
-  authorUrl: https://unsplash.com/@sigmund
-  url: https://unsplash.com/photos/4UGmm3WRUoQ
+  author: Kelly Sikkema
+  authorUrl: https://unsplash.com/@kellysikkema
+  url: https://unsplash.com/photos/v9FQR4tbIq8
 tags: ["Figma", "Design", "Claude", "Fusily"]
 ---
 

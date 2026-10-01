@@ -60,9 +60,10 @@ const ul = (...items: Run[][]): Block => ({ t: "list", items });
 const frDoc = (): AboutDoc => {
   return {
     // Brand-*forward*: the About page's subject is the person, so it owns the
-    // "who is Guillaume Ojardias" query. Rendered verbatim (page sets `rawTitle`)
-    // — do not append the brand again.
-    metaTitle: "Guillaume Ojardias — Développeur full-stack freelance à Lyon",
+    // "who is Guillaume Ojardias" query, angled on the career rather than on
+    // "freelance à Lyon", which the home page owns. Rendered verbatim (page
+    // sets `rawTitle`) — do not append the brand again.
+    metaTitle: "Guillaume Ojardias — développeur ex-Sketchfab et Epic Games",
     metaDescription:
       "Développeur web et mobile freelance à Lyon, j’accompagne PME et associations de l’idée à la mise en ligne. Discutons de votre projet.",
     eyebrow: "Présentation",
@@ -195,7 +196,7 @@ const frDoc = (): AboutDoc => {
 
 const enDoc = (): AboutDoc => {
   return {
-    metaTitle: "Guillaume Ojardias — Freelance Full-Stack Developer in Lyon",
+    metaTitle: "Guillaume Ojardias — Ex-Sketchfab and Epic Games Developer",
     metaDescription:
       "Freelance web and mobile developer in Lyon, helping SMEs and non-profits go from idea to launch. Let’s talk about your project.",
     eyebrow: "Introduction",

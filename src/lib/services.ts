@@ -28,18 +28,21 @@ const link = (fr: string, en: string, slug: string): ServiceRun => ({
 });
 
 /**
- * `<title>` segment (the layout appends ` — {SITE.name}`) and meta description.
+ * `<title>` segment and meta description. The layout appends ` — {SITE.name}`
+ * only while the result fits BaseLayout's TITLE_MAX (these titles don't).
  * Services owns the offer/"prestations" query cluster — deliberately distinct
  * from Home's "développeur … à Lyon" head term to avoid cannibalization.
  */
 export const servicesMeta: { title: L; description: L } = {
   title: {
-    fr: "Prestations de développement web & mobile",
-    en: "Custom Web & Mobile Development Services",
+    // "Développement", not "Développeur": the home page owns the person query
+    // ("Développeur web & mobile freelance à Lyon"); this page owns the offer.
+    fr: "Développement web & mobile freelance à Lyon : tarifs",
+    en: "Freelance Web & Mobile Development in Lyon: Pricing",
   },
   description: {
-    fr: "Applications web, mobiles et SaaS sur mesure par un développeur freelance à Lyon. Un seul interlocuteur, du design au déploiement. Réponse sous 24 h.",
-    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer. Design, development, deployment: a single point of contact. Reply within 24 h.",
+    fr: "Applications web, mobiles et SaaS sur mesure par un développeur full-stack freelance à Lyon. Un seul interlocuteur, du design au déploiement. Réponse sous 24 h.",
+    en: "Custom web, mobile and SaaS apps by a freelance full-stack developer in Lyon. Design, development, deployment: one point of contact. Reply within 24 h.",
   },
 };
 
@@ -49,8 +52,8 @@ export const hero = {
     en: "Your web or mobile app, designed and delivered by a single point of contact",
   },
   subtitle: {
-    fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin.",
-    en: "From the first screen to production: design, development, database, APIs and deployment. You follow a clear project, you stay its owner, and you talk to one person from start to finish.",
+    fr: "Du premier écran à la mise en production : design, développement, base de données, API et déploiement. Vous suivez un projet clair, vous en restez propriétaire, et vous parlez à une seule personne du début à la fin. Basé à Lyon, je travaille avec des entreprises de la métropole lyonnaise et, à distance, de toute la France.",
+    en: "From the first screen to production: design, development, database, APIs and deployment. You follow a clear project, you stay its owner, and you talk to one person from start to finish. Based in Lyon, I work with businesses across the Lyon area and, remotely, all over France.",
   },
   cta: { fr: "Discutons de votre projet", en: "Let’s talk about your project" },
   reassurance: {
@@ -259,6 +262,17 @@ export const faq = {
       a: {
         fr: "Les prestations proposées sur ce site s’adressent aux professionnels, associations et porteurs de projet agissant dans le cadre de leur activité professionnelle. Je ne travaille pas pour des particuliers.",
         en: "The services offered on this site are for businesses, non-profits and project owners acting in the course of their activity. I don’t take on private individuals as clients.",
+      },
+    },
+    // Local intent: says where the work happens without a public address.
+    {
+      q: {
+        fr: "Travaillez-vous uniquement à Lyon ?",
+        en: "Do you only work in Lyon?",
+      },
+      a: {
+        fr: "Non. Je suis basé à Lyon : dans la métropole lyonnaise, je me déplace volontiers dans vos locaux pour les moments clés du projet. Partout ailleurs en France, je travaille à distance, en visio, avec le même suivi.",
+        en: "No. I'm based in Lyon: across the Lyon area, I'm happy to come to your offices for the key moments of the project. Anywhere else in France, I work remotely over video calls, with the same follow-up.",
       },
     },
     {

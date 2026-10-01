@@ -2,7 +2,7 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ProjectImage from '../components/ProjectImage.astro';
 import { SITE, type Locale } from '../config';
-import { contactPath, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
+import { contactPath, localizedPath, t } from '../i18n/ui';
 import { projectSocialImage } from '../lib/og';
 import { localizedName, type Project, resolveImage } from '../lib/projects';
 import { projectJsonLd } from '../lib/schema';
@@ -37,7 +37,7 @@ const imageAlt =
 const ogImageAlt = project.imageAlt?.[locale] ?? name;
 
 const canonical = new URL(
-  `${localizedPath(locale, `/projects/${project.slug}`)}/`,
+  localizedPath(locale, `/projects/${project.slug}`),
   SITE.url,
 ).toString();
 // Breadcrumb trail (Home › Projects › {name}), shared by the visible <nav> and
@@ -45,11 +45,11 @@ const canonical = new URL(
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   {
     name: t(locale, 'nav.projects'),
-    url: new URL(ensureTrailingSlash(localizedPath(locale, '/projects')), SITE.url).toString(),
+    url: new URL(localizedPath(locale, '/projects'), SITE.url).toString(),
   },
   { name, url: canonical },
 ];
@@ -80,7 +80,7 @@ const jsonLd = projectJsonLd(locale, {
   hreflang
 >
   <article class="space-y-8">
-    <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
+    <Breadcrumb locale={locale} items={crumbs.map((c) => ({ name: c.name, href: c.url }))} />
 
     <div class="flex justify-center overflow-hidden rounded-2xl border border-line bg-surface-sunken">
       <ProjectImage

@@ -1,15 +1,17 @@
 ---
 import type { Locale } from '../config';
-import { articlePath, ensureTrailingSlash, localizedPath, t } from '../i18n/ui';
+import { articlePath, localizedPath, t } from '../i18n/ui';
 import { findBySlug, findSibling } from '../lib/posts';
 import Dropdown from './Dropdown.astro';
 import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
+  /** Which copy of the switcher this is, for unique ids. */
+  placement: 'desktop' | 'mobile';
 }
 
-const { locale } = Astro.props;
+const { locale, placement } = Astro.props;
 
 const currentPath = Astro.url.pathname;
 const articleMatch = currentPath.match(/^(?:\/en)?\/blog\/([^/]+)\/?$/);
@@ -23,13 +25,11 @@ const pathFor = async (target: Locale): Promise<string> => {
       current && (await findSibling(current.data.translationKey, target));
     return sibling
       ? articlePath(target, sibling.data.slug)
-      : `${localizedPath(target, '/blog')}/`;
+      : localizedPath(target, '/blog');
   }
   const stripped =
     locale === 'en' ? currentPath.replace(/^\/en(\/|$)/, '/') : currentPath;
-  const targetPath =
-    target === 'fr' ? stripped : `/en${stripped === '/' ? '' : stripped}`;
-  return ensureTrailingSlash(targetPath);
+  return localizedPath(target, stripped);
 };
 
 const LOCALES: { code: Locale; label: string }[] = [
@@ -40,38 +40,62 @@ const options = await Promise.all(
   LOCALES.map(async ({ code, label }) => ({
     code,
     label,
-    // Only the other locale needs a link; the current one renders inert.
-    href: code === locale ? null : await pathFor(code),
+    // The current locale links to this very page, marked aria-current.
+    href: code === locale ? Astro.url.pathname : await pathFor(code),
   })),
 );
 ---
 
-<Dropdown label={t(locale, 'lang.menu')}>
+<Dropdown label={t(locale, 'lang.menu')} id={`lang-${placement}`}>
   <Icon slot="trigger" name="globe" size={16} />
   <span slot="trigger" class="uppercase tracking-wide">{locale}</span>
   <Icon slot="trigger" name="chevron-down" size={14} />
 
   {
-    options.map((option) =>
-      option.code === locale ? (
-        <span
-          role="menuitem"
-          aria-current="true"
-          class="menu-item font-medium text-ink-strong"
-        >
-          <span class="flex-1">{option.label}</span>
-          <Icon name="check" size={16} class="text-accent-ink" />
-        </span>
-      ) : (
-        <a
-          href={option.href}
-          hreflang={option.code}
-          role="menuitem"
-          class="menu-item"
-        >
-          <span class="flex-1">{option.label}</span>
-        </a>
-      ),
-    )
+    options.map((option) => {
+      const current = option.code === locale;
+      return (
+        <li>
+          <a
+            href={option.href}
+            hreflang={option.code}
+            aria-current={current ? 'true' : undefined}
+            class:list={['menu-item', current && 'font-medium text-ink-strong']}
+            data-lang-current={current || undefined}
+            data-lang-switch={!current || undefined}
+          >
+            <span class="flex-1">{option.label}</span>
+            {current && <Icon name="check" size={16} class="text-accent-ink" />}
+          </a>
+        </li>
+      );
+    })
   }
 </Dropdown>
+
+<script>
+  // Carry the query string and hash over to the other locale (e.g. a
+  // preselected `?type=` on the contact form, or a section anchor). The hrefs
+  // are kept in sync up front so middle-click, "open in new tab" and "copy
+  // link" get them too; pointerdown/focus catch pushState hash updates.
+  const switches = document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]');
+  const sync = (): void => {
+    for (const link of switches) {
+      const url = new URL(link.href);
+      url.search = window.location.search;
+      url.hash = window.location.hash;
+      link.href = url.toString();
+    }
+  };
+  sync();
+  window.addEventListener('hashchange', sync);
+  for (const link of switches) {
+    link.addEventListener('pointerdown', sync);
+    link.addEventListener('focus', sync);
+  }
+  // The current language is a real link (aria-current) but following it would
+  // only reload the page and drop typed form input: keep it inert.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-lang-current]')) {
+    link.addEventListener('click', (event) => event.preventDefault());
+  }
+</script>

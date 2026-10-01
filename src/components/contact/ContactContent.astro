@@ -26,14 +26,13 @@ const crumbs = contactCrumbs(locale, mode).map((c) => ({ name: c.name, href: c.u
 ---
 
 <div class="mx-auto max-w-6xl px-6 pb-24 pt-8">
-  <Breadcrumb items={crumbs} />
+  <Breadcrumb locale={locale} items={crumbs} />
 
   <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
     <div class="reveal space-y-6 lg:sticky lg:top-24 lg:self-start">
       <p class="eyebrow">{cfg.eyebrow[locale]}</p>
       <h1 class="page-title">{cfg.title[locale]}</h1>
       <p class="text-lg leading-relaxed text-muted">{cfg.lead[locale]}</p>
-      {cfg.note && <p class="leading-relaxed text-muted">{cfg.note[locale]}</p>}
       {
         mode === 'general' && (
           <p>

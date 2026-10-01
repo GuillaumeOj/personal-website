@@ -51,10 +51,11 @@
   --surface-sunken: #f3efe8; /* recessed wells, tags */
   --ink: #292524; /* body text — charcoal */
   --ink-strong: #1c1917; /* headings */
-  --muted: #78716c; /* secondary text */
-  --line: #e7e2d9; /* hairlines / borders */
+  --muted: #6b645f; /* secondary text — AA (≥5:1) on every light surface */
+  --line: #e7e2d9; /* hairlines / borders (decorative) */
+  --field-line: #8a8279; /* form-field borders — 3:1 non-text contrast */
   --accent: #ea7317; /* amber — fills, marks, timeline */
-  --accent-ink: #b45309; /* amber, darkened for AA text/links on paper */
+  --accent-ink: #9a4a0c; /* amber, darkened for AA text/links on every light surface */
   --accent-contrast: #ffffff; /* text sitting on an accent/button fill */
   --btn-bg: #b45309; /* solid button fill — darkened for AA against white text */
 }
@@ -67,6 +68,7 @@
   --ink-strong: #fafaf9;
   --muted: #a8a29e;
   --line: #37322e;
+  --field-line: #7a716a;
   --accent: #fb923c; /* brighter amber holds up on dark */
   --accent-ink: #fdba74;
   --accent-contrast: #1c1917;
@@ -115,6 +117,7 @@
   --color-ink-strong: var(--ink-strong);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-field-line: var(--field-line);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-contrast: var(--accent-contrast);
@@ -228,6 +231,16 @@
   html {
     @apply scroll-smooth;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* Room for the sticky header (~4.25rem): anchors and snap points land
+       below it, and the mobile menu fits under it. */
+    --header-h: 4.5rem;
+    scroll-padding-top: var(--header-h);
+  }
+
+  /* One visible keyboard-focus ring everywhere (WCAG 2.4.7). */
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
   }
 
   body {
@@ -280,18 +293,19 @@
 /*
  * Full-height scroll-snap for the home landing (`snap-home` on <html>, set by
  * BaseLayout's `snap` prop). Every direct section of <main> becomes a
- * viewport-tall slide and the root scroller snaps one slide per scroll — the
- * slide contract lives here, so Section and Hero only own their inner layout.
+ * viewport-tall slide and the root scroller snaps to slide starts — the slide
+ * contract lives here, so Section and Hero only own their inner layout.
+ * Snapping is `proximity`, without `scroll-snap-stop`: sections taller than
+ * the screen (projects, contact on a 768px-high laptop) must stay scrollable
+ * through, which mandatory snapping with momentum scrolling can skip.
  * The short footer gets `snap-align: end` (a reachable snap point at the very
- * bottom, else mandatory snapping traps the last section) and `margin-top: 0`
- * (drops the paper band under the sunken About slide). Snapping is disabled
- * under reduced-motion; the full-height layout is not.
+ * bottom) and `margin-top: 0` (drops the paper band under the sunken About
+ * slide). Snapping is disabled under reduced-motion; the full-height layout
+ * is not. Slides clear the sticky header through the root `scroll-padding-top`.
  */
 html.snap-home main > section {
   min-height: 100svh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
-  scroll-margin-top: 4rem;
 }
 
 html.snap-home footer {
@@ -301,20 +315,20 @@ html.snap-home footer {
 @media (prefers-reduced-motion: no-preference) {
   /*
    * `scroll-snap-type` is *armed* (via `.snap-armed`, added by BaseLayout on the
-   * first user scroll intent) rather than set on load. Mandatory snapping on the
-   * root scroller makes the browser re-snap as sections lay out, which scrolls
+   * first user scroll intent) rather than set on load. Snapping on the root
+   * scroller makes the browser re-snap as sections lay out, which scrolls
    * the page during load and repeatedly invalidates the Largest Contentful Paint
    * candidate — Lighthouse's trace engine then finds no LCP and throws NO_LCP.
    * Deferring to first interaction keeps snapping for real users while leaving
    * automated audits (which never scroll) free to record an LCP.
    *
-   * Mandatory snapping is also limited to >= md (768px): on phones the taller,
+   * Snapping is also limited to >= md (768px): on phones the taller,
    * content-dense sections fight the snap, so mobile keeps the full-height
    * layout (min-height: 100svh) with ordinary scrolling.
    */
   @media (min-width: 768px) {
     html.snap-home.snap-armed {
-      scroll-snap-type: y mandatory;
+      scroll-snap-type: y proximity;
     }
   }
 

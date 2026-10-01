@@ -34,7 +34,7 @@ const SURFACE = "#ffffff";
 const INK_STRONG = "#1c1917";
 const MUTED = "#57534e";
 const ACCENT = "#ea7317";
-const ACCENT_INK = "#b45309";
+const ACCENT_INK = "#9a4a0c";
 const LINE = "#e7e2d9";
 
 const FONT_STACK =

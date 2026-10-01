@@ -20,7 +20,7 @@ export interface ExperienceEntry {
   /**
    * Machine-readable ISO 8601 (`YYYY-MM`) bounds for the role, parallel to the
    * display-only `period`. `end` is omitted for the current, ongoing role.
-   * Consumed by the Person `hasOccupation` JSON-LD (see `occupations()`) and by
+   * Consumed by the Person `worksFor` JSON-LD (see `workRoles()`) and by
    * the ExperienceShowcase `<time datetime>` markup.
    */
   start?: string;
@@ -189,16 +189,17 @@ const experience: ExperienceEntry[] = [
 export const getExperience = (): ExperienceEntry[] => experience;
 
 /**
- * schema.org `Occupation` nodes derived from the experience timeline, for the
- * Person's `hasOccupation`. `name` is the localized role; `startDate`/`endDate`
- * carry the ISO (`YYYY-MM`) bounds when known (`endDate` omitted for the current
- * role). This gives the Person node a structured-data view of the career the
- * About page shows only as prose.
+ * schema.org `OrganizationRole` nodes derived from the experience timeline,
+ * for the Person's `worksFor` (the Role pattern: the role wraps the
+ * organization). `roleName` is the localized role; `startDate`/`endDate`
+ * carry the ISO (`YYYY-MM`) bounds when known (`endDate` omitted for the
+ * current role).
  */
-export const occupations = (locale: Locale) =>
+export const workRoles = (locale: Locale) =>
   experience.map((entry) => ({
-    "@type": "Occupation",
-    name: entry.role[locale],
+    "@type": "OrganizationRole",
+    roleName: entry.role[locale],
     ...(entry.start ? { startDate: entry.start } : {}),
     ...(entry.end ? { endDate: entry.end } : {}),
+    worksFor: { "@type": "Organization", name: entry.org, url: entry.url },
   }));

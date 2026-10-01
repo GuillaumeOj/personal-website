@@ -2,7 +2,7 @@
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import ProjectsExplorer from '../../../components/ProjectsExplorer.astro';
 import { SITE } from '../../../config';
-import { contactPath, ensureTrailingSlash, localizedPath, t } from '../../../i18n/ui';
+import { contactPath, localizedPath, t } from '../../../i18n/ui';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getProjects } from '../../../lib/projects';
 import { collectionPageJsonLd } from '../../../lib/schema';
@@ -11,7 +11,7 @@ const locale = 'en' as const;
 const projects = getProjects();
 
 const canonical = new URL(
-  ensureTrailingSlash(localizedPath(locale, '/projects')),
+  localizedPath(locale, '/projects'),
   SITE.url,
 ).toString();
 const jsonLd = collectionPageJsonLd(locale, {
@@ -19,7 +19,7 @@ const jsonLd = collectionPageJsonLd(locale, {
   name: t(locale, 'meta.projectsTitle'),
   description: t(locale, 'meta.projectsDescription'),
   breadcrumbs: [
-    { name: t(locale, 'nav.home'), url: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString() },
+    { name: t(locale, 'nav.home'), url: new URL(localizedPath(locale, '/'), SITE.url).toString() },
     { name: t(locale, 'nav.projects'), url: canonical },
   ],
 });
@@ -28,7 +28,7 @@ const jsonLd = collectionPageJsonLd(locale, {
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   { name: t(locale, 'nav.projects'), href: canonical },
 ];
@@ -43,7 +43,7 @@ const crumbs = [
   hreflang
 >
   <div class="mx-auto max-w-6xl px-6 pt-8">
-    <Breadcrumb items={crumbs} />
+    <Breadcrumb locale={locale} items={crumbs} />
   </div>
   <div class="mx-auto max-w-6xl px-6 py-12 sm:py-16">
     <section class="max-w-2xl space-y-3">

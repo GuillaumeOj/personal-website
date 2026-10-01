@@ -1,13 +1,11 @@
 import { type Locale, SITE } from "../config";
-import { ensureTrailingSlash, localizedPath, t } from "../i18n/ui";
+import { localizedPath, t } from "../i18n/ui";
 import { heroCredibility, methodology } from "./home";
 import {
-  BUSINESS_ID,
   breadcrumbList,
+  businessContact,
   inLanguage,
-  LYON_ADDRESS,
-  PERSON_ID,
-  SERVICE_TYPES,
+  professionalServiceNode,
   WEBSITE_ID,
 } from "./schema";
 
@@ -165,8 +163,8 @@ export const included = {
         en: "Polished interfaces (frontend)",
       },
       desc: {
-        fr: "responsives, accessibles et agréables, pensées pour vos utilisateurs, pas recyclées d’un template.",
-        en: "responsive, accessible and enjoyable, designed for your users, not recycled from a template.",
+        fr: "Responsives, accessibles et agréables, pensées pour vos utilisateurs, pas recyclées d’un template.",
+        en: "Responsive, accessible and enjoyable, designed for your users, not recycled from a template.",
       },
     },
     {
@@ -181,12 +179,12 @@ export const included = {
     },
     {
       label: {
-        fr: "En ligne, et qui le reste (devops)",
-        en: "Live, and staying live (devops)",
+        fr: "En ligne, et qui le reste (DevOps)",
+        en: "Live, and staying live (DevOps)",
       },
       desc: {
-        fr: "déploiement, hébergement et automatisation, pour que votre produit tourne sans surprise.",
-        en: "deployment, hosting and automation, so your product runs without surprises.",
+        fr: "Déploiement, hébergement et automatisation, pour que votre produit tourne sans surprise.",
+        en: "Deployment, hosting and automation, so your product runs without surprises.",
       },
     },
   ],
@@ -219,13 +217,15 @@ export const cost = {
     en: "How much does your project cost?",
   },
   intro: {
-    fr: "Chaque projet est unique. Plutôt qu’un prix au hasard, voici la logique, pour y voir clair avant même le premier échange :",
-    en: "Every project is unique. Rather than a random price, here’s the logic, so you have a clear picture before we even talk:",
+    fr: "Chaque projet est unique. Plutôt qu’un tarif unique, voici comment j’estime, pour y voir clair avant même le premier échange :",
+    en: "Every project is unique. Rather than a one-size-fits-all price, here’s how I estimate, so you have a clear picture before we even talk:",
   },
   list: [
     {
-      fr: "Site vitrine / PWA — un forfait clair, périmètre défini à l’avance.",
-      en: "Landing site / PWA — a clear fixed price, scope defined upfront.",
+      // The one public figure (audit U8): a floor price helps buyers judge
+      // fit before writing. Apps and SaaS vary too much for a useful floor.
+      fr: "Site vitrine / PWA — à partir de 1 500 €, un forfait clair, périmètre défini à l’avance.",
+      en: "Landing site / PWA — from €1,500, a clear fixed price, scope defined upfront.",
     },
     {
       fr: "Application mobile ou web sur mesure — estimé après un cadrage court et gratuit, selon les fonctionnalités.",
@@ -331,7 +331,7 @@ export const faq = {
   ],
 };
 
-/** Reassurance line added near the reused contact block. */
+/** Lead of /contact/quote and of the ContactCta band that links to it (see lib/contact-page.ts). */
 export const contactNote = {
   fr: "Décrivez votre idée en quelques mots — réponse sous 24 h, devis gratuit, aucun engagement.",
   en: "Tell me about your idea in a few words — reply within 24 h, free quote, no commitment.",
@@ -339,36 +339,19 @@ export const contactNote = {
 
 /**
  * schema.org JSON-LD for the services page: the canonical `#business`
- * ProfessionalService node (the *same* entity defined on About — same `@id`,
- * name, address and `WebSite`) enriched here with the offer's `serviceType`s and
- * `areaServed`, plus a FAQPage built from the visible FAQ. Sharing the `@id`
+ * ProfessionalService node (the *same* entity defined on About and Home — same
+ * `@id`, name, address and offers) plus contact details, and a FAQPage built
+ * from the visible FAQ. Sharing the `@id`
  * (rather than minting a second businessless node) lets Google merge both pages
  * into one local business instead of reading two competing ones.
  */
 export const servicesJsonLd = (locale: Locale) => {
-  const homeUrl = new URL(
-    ensureTrailingSlash(localizedPath(locale, "/")),
-    SITE.url,
-  ).toString();
+  const homeUrl = new URL(localizedPath(locale, "/"), SITE.url).toString();
 
+  // The shared #business node plus the contact details this page shows.
   const service = {
-    "@type": "ProfessionalService",
-    "@id": BUSINESS_ID,
-    name: SITE.name,
-    url: homeUrl,
-    email: SITE.email,
-    inLanguage: inLanguage(locale),
-    isPartOf: { "@id": WEBSITE_ID },
-    address: LYON_ADDRESS,
-    // Same coarse band as the About #business node so the merged entity reads
-    // consistently from either page.
-    priceRange: "€€",
-    areaServed: [
-      { "@type": "City", name: "Lyon" },
-      { "@type": "Country", name: "France" },
-    ],
-    serviceType: SERVICE_TYPES,
-    provider: { "@id": PERSON_ID },
+    ...professionalServiceNode(),
+    ...businessContact,
   };
 
   const faqPage = {
@@ -386,10 +369,7 @@ export const servicesJsonLd = (locale: Locale) => {
     { name: t(locale, "nav.home"), url: homeUrl },
     {
       name: t(locale, "nav.services"),
-      url: new URL(
-        ensureTrailingSlash(localizedPath(locale, "/services")),
-        SITE.url,
-      ).toString(),
+      url: new URL(localizedPath(locale, "/services"), SITE.url).toString(),
     },
   ]);
 

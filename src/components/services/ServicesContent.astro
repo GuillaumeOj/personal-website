@@ -1,6 +1,6 @@
 ---
 import { type Locale, SITE } from '../../config';
-import { ensureTrailingSlash, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
+import { localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -28,11 +28,11 @@ const { locale } = Astro.props;
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
   },
   {
     name: t(locale, 'nav.services'),
-    href: new URL(ensureTrailingSlash(localizedPath(locale, '/services')), SITE.url).toString(),
+    href: new URL(localizedPath(locale, '/services'), SITE.url).toString(),
   },
 ];
 
@@ -51,7 +51,7 @@ const linkClass =
 
 <section class="flex min-h-svh flex-col bg-surface-sunken px-6 pb-24 pt-8">
   <div class="mx-auto w-full max-w-6xl">
-    <Breadcrumb items={crumbs} />
+    <Breadcrumb locale={locale} items={crumbs} />
   </div>
   <div class="flex flex-1 items-center">
     <div class="mx-auto w-full max-w-6xl">

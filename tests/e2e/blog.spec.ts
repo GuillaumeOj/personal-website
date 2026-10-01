@@ -62,7 +62,7 @@ for (const path of [
     const contact = foot.locator('a[href$="/contact/"]');
     await expect(contact).toBeVisible();
 
-    const services = foot.locator('a[href$="/services"]');
+    const services = foot.locator('a[href$="/services/"]');
     await expect(services).toBeVisible();
 
     // The author card names the person behind the BlogPosting author.

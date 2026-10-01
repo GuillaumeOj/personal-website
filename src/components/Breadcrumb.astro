@@ -1,4 +1,7 @@
 ---
+import type { Locale } from '../config';
+import { t } from '../i18n/ui';
+
 /**
  * A visible breadcrumb trail mirroring the page's `BreadcrumbList` JSON-LD.
  * Root first, current page last: the last crumb is marked `aria-current="page"`
@@ -10,14 +13,15 @@ interface Item {
 }
 
 interface Props {
+  locale: Locale;
   items: Item[];
   class?: string;
 }
 
-const { items, class: className } = Astro.props;
+const { locale, items, class: className } = Astro.props;
 ---
 
-<nav aria-label="Breadcrumb" class:list={['text-sm text-muted', className]}>
+<nav aria-label={t(locale, 'nav.breadcrumb')} class:list={['text-sm text-muted', className]}>
   <ol class="flex flex-wrap items-center gap-1.5">
     {
       items.map((item, i) => {

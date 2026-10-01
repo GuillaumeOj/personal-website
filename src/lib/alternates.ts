@@ -1,5 +1,5 @@
 import type { Locale } from "../config";
-import { articlePath, localizedPath } from "../i18n/ui";
+import { articlePath, localizedPath, otherLocale } from "../i18n/ui";
 
 /** The site path of a page's version in each locale. */
 export type Alternates = Record<Locale, string>;
@@ -34,12 +34,12 @@ export function articleAlternates(opts: {
   siblingSlug?: string;
 }): { alternates: Alternates; paired: boolean } {
   const { locale, slug, siblingSlug } = opts;
-  const other: Locale = locale === "fr" ? "en" : "fr";
-  const alternates = {
-    [locale]: articlePath(locale, slug),
-    [other]: siblingSlug
-      ? articlePath(other, siblingSlug)
-      : localizedPath(other, "/blog"),
-  } as Alternates;
+  const other = otherLocale(locale);
+  const own = articlePath(locale, slug);
+  const sibling = siblingSlug
+    ? articlePath(other, siblingSlug)
+    : localizedPath(other, "/blog");
+  const alternates: Alternates =
+    locale === "fr" ? { fr: own, en: sibling } : { fr: sibling, en: own };
   return { alternates, paired: Boolean(siblingSlug) };
 }

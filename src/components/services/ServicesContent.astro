@@ -1,6 +1,6 @@
 ---
-import { type Locale, SITE } from '../../config';
-import { localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
+import type { Locale } from '../../config';
+import { absoluteUrl, localizedPath, projectPath, quotePath, t } from '../../i18n/ui';
 import {
   cost,
   faq,
@@ -28,11 +28,11 @@ const { locale } = Astro.props;
 const crumbs = [
   {
     name: t(locale, 'nav.home'),
-    href: new URL(localizedPath(locale, '/'), SITE.url).toString(),
+    href: absoluteUrl(localizedPath(locale, '/')),
   },
   {
     name: t(locale, 'nav.services'),
-    href: new URL(localizedPath(locale, '/services'), SITE.url).toString(),
+    href: absoluteUrl(localizedPath(locale, '/services')),
   },
 ];
 

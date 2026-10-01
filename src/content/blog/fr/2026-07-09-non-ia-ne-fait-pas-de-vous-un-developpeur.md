@@ -11,7 +11,7 @@ coverCredit:
   author: Kristaps Grundsteins
   authorUrl: https://unsplash.com/@grundsteins
   url: https://unsplash.com/photos/Dzd-Xt3QWKw
-tags: []
+tags: ["IA", "Développement logiciel", "Freelance"]
 ---
 
 Avant de commencer, autant le dire franchement : je suis développeur. Vous pouvez donc me lire avec cet œil-là, et c'est légitime. Mais ce n'est pas un plaidoyer pour mon gagne-pain — j'utilise l'IA tous les jours et je suis le premier à en vanter la puissance. Ce qui m'intéresse ici, c'est autre chose : la frontière, souvent invisible, entre ce que l'IA fait très bien et ce qu'elle ne fait pas encore seule.

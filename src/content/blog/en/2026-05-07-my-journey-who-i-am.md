@@ -10,7 +10,7 @@ coverCredit:
   author: Tom Swinnen
   authorUrl: https://unsplash.com/@shottrotter
   url: https://unsplash.com/photos/-5M0spOZfc0
-tags: []
+tags: ["Career", "Freelance", "Web development"]
 ---
 
 Welcome to this blog. This first post is my way of introducing myself — not with a résumé, but with the real lines of my story.

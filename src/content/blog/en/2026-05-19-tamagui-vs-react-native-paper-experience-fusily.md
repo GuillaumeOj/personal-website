@@ -11,7 +11,7 @@ coverCredit:
   author: Gustavo Boaron
   authorUrl: https://unsplash.com/@kreamytime
   url: https://unsplash.com/photos/BDpEmeB8HUk
-tags: []
+tags: ["React Native", "Tamagui", "React Native Paper", "UI"]
 ---
 
 Choosing a UI framework in React Native is one of those decisions you make early in a project, somewhat hastily, and sometimes regret for a long time. On Fusily, I went through exactly that: Tamagui first, then React Native Paper. Here's why.

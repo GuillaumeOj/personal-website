@@ -3,6 +3,7 @@ title: "dotcraft: Building an Open-Source QR Code Generator in a Few Hours with 
 description: "How I built dotcraft, an open-source, privacy-first styled QR code editor, in a few hours with Claude Code — and why it works without an account."
 seoTitle: "dotcraft: A QR Code Generator Built with Claude Code"
 pubDate: 2026-06-13
+updatedDate: 2026-10-01
 lang: en
 slug: dotcraft-open-source-qr-code-generator-claude-code
 translationKey: dotcraft
@@ -11,7 +12,7 @@ coverCredit:
   author: Markus Winkler
   authorUrl: https://unsplash.com/@markuswinkler
   url: https://unsplash.com/photos/bgySUDeDCfI
-tags: []
+tags: ["Open source", "React", "QR code", "Claude Code"]
 ---
 
 > **Update (October 2026)**: dotcraft now offers an optional free account to back up and sync your library across devices. Without an account, everything stays in the browser, as described below.

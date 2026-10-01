@@ -1,4 +1,4 @@
-import type { Locale } from "../config";
+import { type Locale, SITE } from "../config";
 import { hero } from "../lib/home";
 
 const dictionaries = {
@@ -42,6 +42,7 @@ const dictionaries = {
       "Notes et retours d’expérience d’un développeur web & mobile freelance à Lyon.",
     "blog.empty": "Aucun article pour le moment.",
     "blog.published": "Publié le",
+    "blog.updated": "Mis à jour le",
     "blog.backToList": "← Tous les articles",
     "blog.tocLabel": "Sommaire",
     "blog.coverCredit.by": "Photo\u00a0:",
@@ -138,6 +139,7 @@ const dictionaries = {
       "Notes and field lessons from a freelance web & mobile developer in Lyon.",
     "blog.empty": "No posts yet.",
     "blog.published": "Published on",
+    "blog.updated": "Updated on",
     "blog.backToList": "← All posts",
     "blog.tocLabel": "On this page",
     "blog.coverCredit.by": "Photo by",
@@ -238,6 +240,10 @@ export const localizedPath = (locale: Locale, path: string): string => {
   const last = prefixed.slice(prefixed.lastIndexOf("/") + 1);
   return last.includes(".") ? prefixed : ensureTrailingSlash(prefixed);
 };
+
+/** Absolute URL on the production origin of a site path. */
+export const absoluteUrl = (path: string): string =>
+  new URL(path, SITE.url).toString();
 
 export const articlePath = (locale: Locale, slug: string): string =>
   localizedPath(locale, `/blog/${slug}`);

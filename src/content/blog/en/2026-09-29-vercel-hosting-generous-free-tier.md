@@ -11,7 +11,7 @@ coverCredit:
   author: Sonny Mauricio
   authorUrl: https://unsplash.com/@northernstatemedia
   url: https://unsplash.com/photos/kIr8e-01eAw
-tags: []
+tags: ["Vercel", "Neon", "Django", "Hosting"]
 ---
 
 For each of my recent projects, the hosting question came up the same way: how do I put something clean online, quickly, without paying for a server that sits idle 95% of the time? [This blog](/en/projects/personal-website/), [dotcraft](/en/projects/dotcraft/), [Ma Garde Sereine](/en/projects/ma-garde-sereine/), [Re-Source Et Moi](/en/projects/re-source-et-moi/), [Maître Eva Biezunski's website](/en/projects/eva-biezunski-avocate/)… they all run on **Vercel** today. Here's how I got there, and what you should know before doing the same.

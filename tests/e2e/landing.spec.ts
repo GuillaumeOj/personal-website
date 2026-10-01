@@ -162,6 +162,6 @@ for (const [path, price] of [
 ]) {
   test(`${path}: pricing shows a floor price`, async ({ page }) => {
     await page.goto(path);
-    await expect(page.getByText(price)).toBeVisible();
+    await expect(page.locator("#cost").getByText(price)).toBeVisible();
   });
 }

@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "24.21.0"
+    "node": "24.22.1"
   },
   "scripts": {
     "dev": "astro dev",
@@ -27,15 +27,15 @@
     "@fontsource/jetbrains-mono": "5.3.0",
     "@tailwindcss/typography": "0.5.20",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.3.8",
+    "astro": "7.4.2",
     "sharp": "0.35.5",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@biomejs/biome": "2.5.15",
-    "@playwright/test": "1.64.0",
+    "@biomejs/biome": "2.6.2",
+    "@playwright/test": "1.64.1",
     "typescript": "6.0.3",
-    "vitest": "5.0.3"
+    "vitest": "5.0.5"
   }
 }
